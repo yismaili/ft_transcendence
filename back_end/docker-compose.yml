@@ -1,0 +1,59 @@
+version: "3"
+services:
+  pg-db:
+    image: postgres:latest
+    container_name: pg-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "pass1337"
+      POSTGRES_DB: "transcendence"
+    volumes:
+      - app-db:/var/lib/postgresql/data
+    networks:
+      - app-net
+
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    # image: adminer:transcendence
+    restart: always
+    ports:
+     - '8080:8080'
+    depends_on:
+      - pg-db
+    networks:
+      - app-net
+
+  trans_app:
+    build: ./app_tools
+    container_name: back_end
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - app-src:/app
+    networks:
+      - app-net
+
+volumes:
+  app-src:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /Users/yismaili/Desktop/ft_transcendence/back_end/transcendence
+
+  app-db:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /Users/yismaili/Desktop/ft_transcendence/postgres 
+
+
+networks:
+  app-net:
+    driver: bridge
