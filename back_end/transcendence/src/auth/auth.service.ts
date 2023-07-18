@@ -6,38 +6,33 @@ import {faker} from '@faker-js/faker';
 
 @Injectable()
 export class AuthService {
-    // users = [
-    //     {
-    //      id: faker.datatype.uuid(),
-    //      userName:"yimaili",
-    //      password:'pass1337',
-    //      role:Role.Admin,
-    //     },
-    //     {
-    //      id: faker.datatype.uuid(),
-    //      userName:"A",
-    //      password:'passA',
-    //      role:Role.User,
-    //     }
-    //  ]
+    users = [
+        {
+         id: faker.datatype.uuid(),
+         userName:"yimaili",
+         password:'pass1337',
+         role:Role.Admin,
+        },
+        {
+         id: faker.datatype.uuid(),
+         userName:"A",
+         password:'passA',
+         role:Role.User,
+        }
+     ]
  
  
  
-    //  authenticate(authenticateDto: AuthenticateDto): IAuthenticate {
-    //      const user = this.users.find(
-    //        (u) =>
-    //          u.userName === authenticateDto.userName &&
-    //          u.password === authenticateDto.password,
-    //      );
+     authenticate(authenticateDto: AuthenticateDto): IAuthenticate {
+         const user = this.users.find(
+           (u) =>
+             u.userName === authenticateDto.userName &&
+             u.password === authenticateDto.password,
+         );
      
-    //      if (!user) throw new NotFoundException('Invalid credentials');
+         if (!user) throw new NotFoundException('Invalid credentials');
      
-    //      const token = sign({ ...user }, 'secrete');
-     
-    //      return { token, user };
-    //    }
- 
- 
- 
- 
+         const token = sign({ ...user }, 'secrete');
+         return { token, user };
+       }
 }

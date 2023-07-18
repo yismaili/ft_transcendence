@@ -10,15 +10,15 @@ import { RoleGuard } from './role/role.guard';
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
-    // @Post()
-    // login(@Res() res, @Body() authenticateDto: AuthenticateDto){
-    //   try{
-    //     const respone = this.authService.authenticate(authenticateDto);
-    //     return res.status(HttpStatus.OK).json({respone});
-    //   }  catch (error){
-    //     return res.status(error.status).json(error.respone);
-    //   }
-    // }
+    @Post()
+    login(@Res() res, @Body() authenticateDto: AuthenticateDto){
+      try{
+        const respone = this.authService.authenticate(authenticateDto);
+        return res.status(HttpStatus.OK).json({respone});
+      }  catch (error){
+        return res.status(error.status).json(error.respone);
+      }
+    }
 
     @Roles('admin')
     @UseGuards(JwtAuthGuard, RoleGuard)//it prevent you from entering to link if not logged

@@ -1,3 +1,4 @@
+import { Options } from '@nestjs/common';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -8,7 +9,7 @@ export class User {
   @Column()
   userName: string;
 
-  @Column()
+  @Column()//{unique: true}
   email: string;
 
   @Column()
