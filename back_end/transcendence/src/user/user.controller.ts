@@ -1,6 +1,9 @@
 import { Controller, HttpStatus, Post, Req, Res, UseGuards, Body, HttpCode, Get} from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
+import { Roles } from 'src/auth/roles/roles.decorator';
+import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { RoleGuard } from 'src/auth/role/role.guard';
 
 @Controller('user')
 export class UserController {
@@ -20,5 +23,11 @@ export class UserController {
     @Post('signIn')
     async signIn(@Body() newUser): Promise<User> {
         return (this.userService.createNewUser(newUser));
+    }
+    @Roles('admin')
+    @UseGuards(JwtAuthGuard, RoleGuard)
+    @Get('profile')
+    profile(@Req() req, @Res() res){
+        return(res.status(HttpStatus.OK).json(req.user));
     }
 }
