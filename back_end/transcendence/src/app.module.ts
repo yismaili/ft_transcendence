@@ -5,6 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entities/user.entity';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStategy } from './auth/jwt.strategy';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
 // The imports property specifies the modules that this module depends on
@@ -25,9 +28,11 @@ import { AuthModule } from './auth/auth.module';
       synchronize: true, // automatically synchronize the database schema with the entities. // Set to false in production
     }), 
     UserModule, AuthModule,
+    PassportModule,//we used passport module
+    JwtModule.register({secret: 'secrete', signOptions: {expiresIn: '1h'}}),//we depandon jwt token
   ],
   controllers: [AppController], // Controllers  handle incoming requests and define the routes and endpoints for the application
-  providers: [AppService], // Providers are responsible for providing business logic and functionality to the application.
+  providers: [AppService, JwtStategy], // Providers are responsible for providing business logic and functionality to the application.
 })
 export class AppModule { // class that represents the main module of application
 
