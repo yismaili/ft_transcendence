@@ -1,38 +1,37 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AuthenticateDto } from './dto/authenticate.dto';
-import { IAuthenticate, Role } from './interface/role';
 import { sign } from 'jsonwebtoken';
-import {faker} from '@faker-js/faker';
+import { User } from './entities/user.entity';
+import { IAuthenticate, Role } from './interface/role';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
-    users = [
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find();
+  }
+
+    async authenticate(userName: string, password: string): Promise<IAuthenticate>  {
+      const user = await this.userRepository.findOne(
         {
-         id: faker.datatype.uuid(),
-         userName:"yimaili",
-         password:'pass1337',
-         role:Role.Admin,
-        },
-        {
-         id: faker.datatype.uuid(),
-         userName:"A",
-         password:'passA',
-         role:Role.User,
+            where:{userName: userName}
         }
-     ]
- 
- 
- 
-     authenticate(authenticateDto: AuthenticateDto): IAuthenticate {
-         const user = this.users.find(
-           (u) =>
-             u.userName === authenticateDto.userName &&
-             u.password === authenticateDto.password,
-         );
-     
-         if (!user) throw new NotFoundException('Invalid credentials');
-     
-         const token = sign({ ...user }, 'secrete');
-         return { token, user };
-       }
+    );
+    if (user?.password !== password) {
+        throw new NotFoundException('Invalid credentials');
+    }
+    const token = sign({ ...user}, 'secrete');
+    return ({token, user});
+}
+
+async createNewUser(user: Partial<User>): Promise<User> {
+
+  const newUser = this.userRepository.create(user);
+  return (this.userRepository.save(newUser));
+}
+
 }

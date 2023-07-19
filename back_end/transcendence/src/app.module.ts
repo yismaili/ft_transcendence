@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/entities/user.entity';
-import { UserModule } from './user/user.module';
+import { User } from './auth/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
@@ -27,7 +26,7 @@ import { JwtStategy } from './auth/jwt.strategy';
       autoLoadEntities: true, // automatically load entity files
       synchronize: true, // automatically synchronize the database schema with the entities. // Set to false in production
     }), 
-    UserModule, AuthModule,
+    AuthModule,
     PassportModule,//we used passport module
     JwtModule.register({secret: 'secrete', signOptions: {expiresIn: '1h'}}),//we depandon jwt token
   ],
