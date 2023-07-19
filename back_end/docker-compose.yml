@@ -1,8 +1,8 @@
 version: "3"
 services:
-  pg-db:
+  postgres_db:
     image: postgres:latest
-    container_name: pg-db
+    container_name: postgres
     restart: always
     ports:
       - "5432:5432"
@@ -23,7 +23,7 @@ services:
     ports:
      - '8080:8080'
     depends_on:
-      - pg-db
+      - postgres_db
     networks:
       - app-net
 
