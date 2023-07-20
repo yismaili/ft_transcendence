@@ -1,10 +1,10 @@
 
-// roles 
+// enumeration representing different user roles
 export enum Role{
     Admin = 'admin',
     User = 'user'
 }
-// info of user
+//the information of a user 
 type User = {
     id: string; // Ensure the type of id is string
     userName: string;
@@ -12,7 +12,7 @@ type User = {
     role: Role;
   };
   
-// if user logged 
+//represents the data returned when a user is successfully authenticated 
 export interface IAuthenticate {
     user:User;
     token:string;
