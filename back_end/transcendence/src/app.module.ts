@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStategy } from './auth/jwt.strategy';
+import { PasswordHashingService } from './password-hashing/password-hashing.service';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
 // The imports property specifies the modules that this module depends on
@@ -17,7 +18,7 @@ import { JwtStategy } from './auth/jwt.strategy';
   imports: [ //import the TypeOrmModule and configure it for connecting to a PostgreSQL database.
     TypeOrmModule.forRoot({ // NestJS module for integrating with TypeORM, an Object-Relational Mapping (ORM) library
       type: 'postgres',
-      host: 'postgres_db',
+      host: 'postgres',
       port: 5432,
       username: 'postgres',
       password: 'pass1337',
@@ -32,6 +33,7 @@ import { JwtStategy } from './auth/jwt.strategy';
   ],
   controllers: [AppController], // Controllers  handle incoming requests and define the routes and endpoints for the application
   providers: [AppService, JwtStategy], // Providers are responsible for providing business logic and functionality to the application.
+  // exports: [PasswordHashingService], // Export the service to be used in other modules
 })
 export class AppModule { // class that represents the main module of application
 

@@ -4,10 +4,12 @@ import { User } from './entities/user.entity';
 import { IAuthenticate, Role } from './interface/role';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { PasswordHashingService } from 'src/password-hashing/password-hashing.service';
 
 @Injectable() // decorator marks the AuthService class as an injectable service that maning alows other classes to inject and use this service using dependency injection.
 export class AuthService {
   constructor(
+    private readonly passwordHashingService: PasswordHashingService,
     @InjectRepository(User) //  decorator The userRepository instance is used to interact with the User entity in the database
     private userRepository: Repository<User>, //class receives an instance of the Repository<User> for the User entity as a parameter
   ) {}
@@ -32,11 +34,19 @@ export class AuthService {
 }
 
 async createNewUser(user: Partial<User>): Promise<User> {
-  // create method is part of the TypeORM
-  const newUser = this.userRepository.create(user);//create a new instance of the User entity
-  return (this.userRepository.save(newUser)); //the new user record to the database
-}
-
+  // const hashedPassword = await this.passwordHashingService.hashPassword(user.password);
+  // // create method is part of the TypeORM
+  // const newUser = this.userRepository.create(user);//create a new instance of the User entity
+  // return (this.userRepository.save(newUser)); //the new user record to the database
+  const hashedPassword = await this.passwordHashingService.hashPassword(user.password);
+    const newUser = this.userRepository.create({
+      userName: user.userName,
+      email: user.email,
+      password: hashedPassword,
+      role: user.role,
+    });
+    return this.userRepository.save(newUser);
+  }
 }
 // This JWT contains three parts separated by dots:
 
