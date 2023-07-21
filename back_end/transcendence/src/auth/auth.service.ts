@@ -24,7 +24,8 @@ export class AuthService {
         where:{userName: userName}
       }
     );
-  if (user?.password !== password) {
+    const dehashpassword = await this.passwordHashingService.verifyPassword(user?.password, password);
+  if (!dehashpassword) {
       throw new NotFoundException('Invalid credentials');
   }
   // generates a JWT token using jsonwebtoken
@@ -34,10 +35,6 @@ export class AuthService {
 }
 
 async createNewUser(user: Partial<User>): Promise<User> {
-  // const hashedPassword = await this.passwordHashingService.hashPassword(user.password);
-  // // create method is part of the TypeORM
-  // const newUser = this.userRepository.create(user);//create a new instance of the User entity
-  // return (this.userRepository.save(newUser)); //the new user record to the database
   const hashedPassword = await this.passwordHashingService.hashPassword(user.password);
     const newUser = this.userRepository.create({
       userName: user.userName,
