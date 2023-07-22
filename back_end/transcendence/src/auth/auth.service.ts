@@ -36,26 +36,54 @@ export class AuthService {
 
 async createNewUser(user: Partial<User>): Promise<User> {
   const hashedPassword = await this.passwordHashingService.hashPassword(user.password);
-    const newUser = this.userRepository.create({
-      userName: user.userName,
-      email: user.email,
-      password: hashedPassword,
-      role: user.role,
-    });
-    return this.userRepository.save(newUser);
-  }
-  
-  async googlelogin(req) {
-    if (!req.user) {
-      return 'No user from google'
-    }
-    return {
-      message: 'User information from google',
-      user: req.user
-    }
-  }
+
+  const newUser = this.userRepository.create({
+    userName: user.userName,
+    email: user.email,
+    password: hashedPassword,
+    role: user.role,
+    firstName: user.firstName || '', // Set a default empty string if firstName is not provided
+    lastName: user.lastName || '',   // Set a default empty string if lastName is not provided
+    picture: user.picture || '',     // Set a default empty string if picture is not provided
+    accessToken: user.accessToken || '', // Set a default empty string if accessToken is not provided
+  });
+
+  return this.userRepository.save(newUser);
 }
 
+  
+  // async googleAuthenticate(req) {
+  //   if (!req.user) {
+  //     return 'No user from google'
+  //   }
+  //   return {
+  //     message: 'User information from google',
+  //     user: req.user
+  //   }
+  // }
+
+  async googleAuthenticate(req: any) {
+    if (!req.user) {
+      return 'No user from google';
+    }
+  
+    // Create a new User entity instance and populate it with the user data from Google OAuth.
+    const user = new User();
+    user.userName = req.user.userName || ''; // Set a default empty string if userName is not provided
+    user.email = req.user.email || '';       // Set a default empty string if email is not provided
+    user.password = req.user.password || ''; // Set a default empty string if password is not provided
+    user.role = req.user.role;
+    user.firstName = req.user.firstName || ''; // Set a default empty string if firstName is not provided
+    user.lastName = req.user.lastName || '';   // Set a default empty string if lastName is not provided
+    user.picture = req.user.picture || '';     // Set a default empty string if picture is not provided
+    user.accessToken = req.user.accessToken || ''; // Set a default empty string if accessToken is not provided
+  
+    // Save the user data to the database using the User repository.
+    const savedUser = this.userRepository.create(user);
+    return this.userRepository.save(savedUser);
+  }
+  
+}
 
 // This JWT contains three parts separated by dots:
 

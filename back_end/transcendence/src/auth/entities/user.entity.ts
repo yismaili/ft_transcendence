@@ -7,22 +7,40 @@ export class User {
   @PrimaryGeneratedColumn()
   id: string; // Update the type of id to string
 
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
-  @Column({ unique: true })
+  // @Column({ unique: true })
+  @Column()
   userName: string;
 
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
-  @Column({ unique: true })//{ unique: true }
+  // @Column({ unique: true })//{ unique: true }
+  @Column()
   email: string;
 
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @IsString()
   @Column()
   password: string;
 
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @Column()
   role: Role;
+
+  @IsString()
+  @Column()
+  firstName: string;
+
+  @IsString()
+  @Column()
+  lastName: string;
+
+  @IsString()
+  @Column()
+  picture: string;
+
+  @IsString()
+  @Column()
+  accessToken: string;
 }
