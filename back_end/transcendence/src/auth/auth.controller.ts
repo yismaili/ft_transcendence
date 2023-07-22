@@ -1,9 +1,13 @@
 import { Body, Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt.guard';
+import { JwtAuthGuard } from './guard/jwt.guard';
 import { Roles } from './roles/roles.decorator';
 import { RoleGuard } from './role/role.guard';
 import { Auth } from 'typeorm';
+import { AuthGuard } from '@nestjs/passport';
+import { Profile } from 'passport-google-oauth20';
+import { Response} from 'express';
+import { GoogleGuard } from './guard/google.guard';
 
 
 @Controller('auth')
@@ -43,4 +47,35 @@ export class AuthController {
     profile(@Req() req, @Res() res){ // return informatin of user
         return res.status(HttpStatus.OK).json(req.user);
     }
+
+  @UseGuards(GoogleGuard)
+  @Get('login')
+  googlelogin(): void {
+      return;
+  }
+
+  @UseGuards(GoogleGuard)
+  @Get('google/redirect')
+  async googleAuthRedirect( @Req() req: any, @Res() res: Response,): Promise<Response> {
+    const { user, authInfo, }:{
+      user: Profile;
+      authInfo: {
+        accessToken: string;
+        refreshToken: string;
+        expires_in: number;
+      };
+    } = req;
+
+    if (!user) {
+      res.redirect('/');
+      return;
+    }
+
+    req.user = undefined;
+    const jwt = this.authService.googlelogin(user);
+
+    res.set('authorization', `Bearer ${jwt}`);
+    return res.status(201).json({ authInfo, user });
+  }
+
 }
