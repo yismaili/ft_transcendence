@@ -72,7 +72,7 @@ export class AuthController {
     }
 
     req.user = undefined;
-    const jwt = this.authService.googlelogin(user);
+    const jwt = this.authService.googleAuthenticate(user);
 
     res.set('authorization', `Bearer ${jwt}`);
     return res.status(201).json({ authInfo, user });
