@@ -44,7 +44,19 @@ async createNewUser(user: Partial<User>): Promise<User> {
     });
     return this.userRepository.save(newUser);
   }
+  
+  async googlelogin(req) {
+    if (!req.user) {
+      return 'No user from google'
+    }
+    return {
+      message: 'User information from google',
+      user: req.user
+    }
+  }
 }
+
+
 // This JWT contains three parts separated by dots:
 
 // Header: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9

@@ -6,7 +6,7 @@ import { User } from './auth/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStategy } from './auth/jwt.strategy';
+import { JwtStategy } from './auth/strategy/jwt.authstrategy';
 import { PasswordHashingService } from './password-hashing/password-hashing.service';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
