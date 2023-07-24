@@ -30,7 +30,6 @@ import { JwtModule } from '@nestjs/jwt';
   ],
   controllers: [AppController], // Controllers  handle incoming requests and define the routes and endpoints for the application
   providers: [AppService], // Providers are responsible for providing business logic and functionality to the application.
-  // exports: [PasswordHashingService], // Export the service to be used in other modules
 })
 export class AppModule { // class that represents the main module of application
 
