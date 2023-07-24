@@ -1,28 +1,28 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { Role } from '../interface/role';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: string; // Update the type of id to string
+  id: string; 
 
-  @IsNotEmpty()
   @IsString()
   @Column({ unique: true })
-  userName: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @Column({ unique: true })//{ unique: true }
   email: string;
 
-  @IsNotEmpty()
   @IsString()
   @Column()
-  password: string;
+  firstName: string;
 
-  @IsNotEmpty()
+  @IsString()
   @Column()
-  role: Role;
+  lastName: string;
+
+  @IsString()
+  @Column()
+  picture: string;
+
+  @IsString()
+  @Column()
+  accessToken: string;
 }
