@@ -36,6 +36,7 @@
     "faker": "^5.5.3",
     "jsonwebtoken": "^9.0.1",
     "passport": "^0.6.0",
+    "passport-42": "^1.2.6",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.11.1",

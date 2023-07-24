@@ -6,11 +6,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { ConfigService } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
 
 //responsible for defining the components related to authentication and user management
 @Module({
   // forFeature() method is used to specify which entities 
-  imports: [TypeOrmModule.forFeature([User]), JwtModule.register({})], // makes the User entity available for use within the AuthModule
+  imports: [TypeOrmModule.forFeature([User]), JwtModule.register({}), PassportModule.register({ defaultStrategy: '42' }),], // makes the User entity available for use within the AuthModule
   controllers: [AuthController],// The controllers property
   providers: [AuthService, GoogleStrategy, ConfigService]
 }) // decorator is define a module 
