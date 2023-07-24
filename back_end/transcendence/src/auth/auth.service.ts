@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { sign } from 'jsonwebtoken';
+import { IAuthenticate } from './interface/role';
 
 @Injectable() // decorator marks the AuthService class as an injectable service that maning alows other classes to inject and use this service using dependency injection.
 export class AuthService {
@@ -9,15 +11,16 @@ export class AuthService {
     @InjectRepository(User) //  decorator The userRepository instance is used to interact with the User entity in the database
     private userRepository: Repository<User>, //class receives an instance of the Repository<User> for the User entity as a parameter
   ) {}
-  
+
   //fetches all users from the database
   async findAll():  Promise<User[]> {
     return this.userRepository.find();
   }
 
-  async googleAuthenticate(user: Partial<User>): Promise<User> {
-
+  async googleAuthenticate(user: Partial<User>): Promise<IAuthenticate> {
+    
     const newUser = this.userRepository.create({
+
       email: user.email || '',
       firstName: user.firstName || '',
       lastName: user.lastName || '',
@@ -25,15 +28,13 @@ export class AuthService {
       accessToken: user.accessToken || '',
     });
 
-    try {
-      const savedUser = await this.userRepository.save(newUser);
-      return savedUser;
-    } catch (error) {
-      // Handle any errors that might occur during saving to the database.
-      console.error('Error saving user to the database:', error.message);
-      throw error;
-    }
-}
+    const savedUser = await this.userRepository.save(newUser);
+    // Generate the JWT token using the 'sign' function and the 'savedUser' object
+    const token = sign({ ...savedUser}, 'secrete');
+    // Return the token and the 'savedUser' object in the 'IAuthenticate' format
+    return { token, user: savedUser};
+  }
+
 }
 // This JWT contains three parts separated by dots:
 
