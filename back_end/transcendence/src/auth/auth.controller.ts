@@ -42,7 +42,7 @@ export class AuthController {
   }
 
   @UseGuards(IntraGuard) // route handler add an extra layer of security and control access to certain routes
-  @Get('intra/redirect')
+  @Get('intra')
   async intraAuthRedirect( @Req() req: any, @Res() res: Response,){
     const { user, authInfo, }:{
       user: Profile;
