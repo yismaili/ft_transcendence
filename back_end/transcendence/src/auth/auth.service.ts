@@ -18,24 +18,49 @@ export class AuthService {
   }
 
   async googleAuthenticate(user: Partial<User>): Promise<IAuthenticate> {
-    
-    const newUser = this.userRepository.create({
+    const { email, firstName, lastName } = user; // Destructure the properties from the 'user' object
 
-      email: user.email || '',
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
-      picture: user.picture || '',
-      accessToken: user.accessToken || '',
+    // Check if the user already exists based on the email, firstName, and lastName
+    const existingUser = await this.userRepository.findOne({
+      where: {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      },
     });
 
-    const savedUser = await this.userRepository.save(newUser);
-    // Generate the JWT token using the 'sign' function and the 'savedUser' object
-    const token = sign({ ...savedUser}, 'secrete');
-    // Return the token and the 'savedUser' object in the 'IAuthenticate' format
-    return { token, user: savedUser};
-  }
+    if (existingUser) {
+      // If the user already exists, update the existing user's data instead of creating a new one
+      existingUser.email = user.email || existingUser.email;
+      existingUser.firstName = user.firstName || existingUser.firstName;
+      existingUser.lastName = user.lastName || existingUser.lastName;
+      existingUser.picture = user.picture || existingUser.picture;
+      existingUser.accessToken = user.accessToken || existingUser.accessToken;
 
+      const savedUser = await this.userRepository.save(existingUser);
+      // Generate the JWT token using the 'sign' function and the 'savedUser' object
+      const token = sign({ ...savedUser }, 'secrete');
+      // Return the token and the 'savedUser' object in the 'IAuthenticate' format
+      return { token, user: savedUser };
+    } else {
+      // If the user does not exist, create a new user
+      const newUser = this.userRepository.create({
+        email: user.email || '',
+        firstName: user.firstName || '',
+        lastName: user.lastName || '',
+        picture: user.picture || '',
+        accessToken: user.accessToken || '',
+      });
+
+      const savedUser = await this.userRepository.save(newUser);
+      // Generate the JWT token using the 'sign' function and the 'savedUser' object
+      const token = sign({ ...savedUser }, 'secrete');
+      // Return the token and the 'savedUser' object in the 'IAuthenticate' format
+      return { token, user: savedUser };
+    }
+  }
 }
+
 // This JWT contains three parts separated by dots:
 
 // Header: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
