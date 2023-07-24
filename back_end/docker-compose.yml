@@ -30,6 +30,8 @@ services:
   trans_app:
     build: ./app_tools
     container_name: back_end
+    env_file:
+      - .env
     restart: always
     ports:
       - "3000:3000"

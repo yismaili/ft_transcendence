@@ -1,39 +1,43 @@
 import { Body, Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './jwt.guard';
-import { Roles } from './roles/roles.decorator';
-import { RoleGuard } from './role/role.guard';
-import { Auth } from 'typeorm';
+import { Profile } from 'passport-google-oauth20';
+import { Response} from 'express';
+import { GoogleGuard } from './guard/google.guard';
+import { User } from './entities/user.entity';
+import { IAuthenticate } from './interface/role';
+import { sign } from 'jsonwebtoken';
 
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    constructor(private readonly authService: AuthService) {} //we used this constructor for 'Dependency Injection'
 
-    @Get()
-    async findAll(): Promise<Auth[]> {
+  @Get('all') // decorator is define an HTTP GET endpoint
+    async findAll(): Promise<User[]> {
         return this.authService.findAll();
     }
+  @UseGuards(GoogleGuard)
+  @Get('login')
+  googlelogin(): void {
+      return;
+  }
 
-    @Post('login')
-    async login(@Res() res, @Body() authenticateDto: Record<string, any>){
-      try{
-        const respone = await this.authService.authenticate(authenticateDto.userName,authenticateDto.password);
-        return res.status(HttpStatus.OK).json(respone);
-      }  catch (error){
-        return res.status(error.status).json(error.respone);
-      }
-    }
+  @UseGuards(GoogleGuard)
+  @Get('google/redirect')
+  async googleAuthRedirect( @Req() req: any, @Res() res: Response,){
+    const { user, authInfo, }:{
+      user: Profile;
+      authInfo: {
+        accessToken: string;
+        refreshToken: string;
+        expires_in: number;
+      };} = req;
 
-    @Post('signIn')
-    async signIn(@Body() newUser): Promise<Auth> {
-        return (this.authService.createNewUser(newUser));
+    if (!user) {
+      res.redirect('/');
+      return;
     }
-
-    @Roles('admin')
-    @UseGuards(JwtAuthGuard, RoleGuard)//it prevent you from entering to link if not logged
-    @Get('profile')
-    profile(@Req() req, @Res() res){ // return informatin of user
-        return res.status(HttpStatus.OK).json(req.user);
-    }
+    const respone = await this.authService.googleAuthenticate(user);
+    return res.status(HttpStatus.OK).json(respone);
+  }
 }
