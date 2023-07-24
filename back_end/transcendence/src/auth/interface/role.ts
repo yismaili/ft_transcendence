@@ -1,4 +1,5 @@
 
+import { User as UserEntity } from '../entities/user.entity';
 // enumeration representing different user roles
 export enum Role{
     Admin = 'admin',
@@ -13,7 +14,10 @@ type User = {
   };
   
 //represents the data returned when a user is successfully authenticated 
+
+
 export interface IAuthenticate {
-    user:User;
-    token:string;
+  token: string;
+  user: UserEntity; // Use the renamed 'UserEntity' type
 }
+

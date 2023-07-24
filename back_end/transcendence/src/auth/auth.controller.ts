@@ -4,6 +4,8 @@ import { Profile } from 'passport-google-oauth20';
 import { Response} from 'express';
 import { GoogleGuard } from './guard/google.guard';
 import { User } from './entities/user.entity';
+import { IAuthenticate } from './interface/role';
+import { sign } from 'jsonwebtoken';
 
 
 @Controller('auth')
@@ -22,25 +24,20 @@ export class AuthController {
 
   @UseGuards(GoogleGuard)
   @Get('google/redirect')
-  async googleAuthRedirect( @Req() req: any, @Res() res: Response,): Promise<Response> {
+  async googleAuthRedirect( @Req() req: any, @Res() res: Response,){
     const { user, authInfo, }:{
       user: Profile;
       authInfo: {
         accessToken: string;
         refreshToken: string;
         expires_in: number;
-      };
-    } = req;
+      };} = req;
 
     if (!user) {
       res.redirect('/');
       return;
     }
-
-    req.user = undefined;
-    const jwt = this.authService.googleAuthenticate(user);
-    res.set('authorization', `Bearer ${jwt}`);
-    return res.status(201).json({ authInfo, user });
+    const respone = await this.authService.googleAuthenticate(user);
+    return res.status(HttpStatus.OK).json(respone);
   }
-
 }
