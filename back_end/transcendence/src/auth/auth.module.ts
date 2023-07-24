@@ -3,7 +3,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { PasswordHashingService } from 'src/password-hashing/password-hashing.service';
+import { PasswordHashingService } from './password-hashing/password-hashing.service';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { ConfigService } from '@nestjs/config';
 

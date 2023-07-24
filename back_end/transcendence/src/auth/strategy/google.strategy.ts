@@ -30,7 +30,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       picture: photos[0].value,
       accessToken,
     };
-
     // Call the 'done' callback to complete the authentication process with the user data
     done(null, user);
   }
