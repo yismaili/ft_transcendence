@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { AuthService } from '../auth.service';
 
 @Injectable()
-export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
+export class IntraStrategy extends PassportStrategy(Strategy, '42') {
     constructor(private readonly configService: ConfigService, private readonly authService: AuthService) {
     super({
         clientID: configService.get<string>('INTRA_CLIENT_ID'),
