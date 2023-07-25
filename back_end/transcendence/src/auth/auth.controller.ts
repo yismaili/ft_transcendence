@@ -57,6 +57,7 @@ export class AuthController {
       res.redirect('/');
       return;
     }
+    console.log(user);
     const respone = await this.authService.googleAuthenticate(user);
     return res.status(HttpStatus.OK).json(respone);
   }

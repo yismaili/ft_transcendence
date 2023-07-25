@@ -11,23 +11,20 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
         clientID: configService.get<string>('INTRA_CLIENT_ID'),
         clientSecret: configService.get<string>('INTRA_CLIENT_SECRET'),
         callbackURL: configService.get<string>('OAUTH_INTRA_REDIRECT_URL'),
-        scope: ['write:jira-work read:jira-work read:jira-user offline_access read:me'], // Optional: Define the scopes to request from Google
+        scope: ['public'],
       });
   }
 
   async validate(accessToken: string, refreshToken: string, profile: any) {
-   // Extract relevant user data from the profile received from Google
-   const { name, emails, photos } = profile;
-
-   // Create a user object with relevant data to be used for authentication or saving to the database
+    // console.log(profile);
    const user = {
-     email: emails[0].value,
-     firstName: name.givenName,
-     lastName: name.familyName,
-     picture: photos[0].value,
-     accessToken,
+    firstName: profile.name.givenName, 
+    lastName: profile.name.familyName, 
+    email: profile.emails?.[0]?.value,
+    picture: profile._json.image.link,
+    accessToken,
    };
-   // Call the 'done' callback to complete the authentication process with the user data
+   console.log(user);
   return(user);
   }
 }
