@@ -59,6 +59,23 @@ export class AuthService {
       return { token, user: savedUser };
     }
   }
+
+  async findUserById(user: Partial<User>): Promise<Partial<User>> {
+    // Use the userRepository to find the user by ID
+    try {
+      const existingUser = await this.userRepository.findOne({
+        where: {
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        },
+      });
+      return existingUser
+    } catch (error) {
+      // Handle any errors that may occur during the database query
+      return null;
+    }
+  }
 }
 
 // This JWT contains three parts separated by dots:
@@ -69,3 +86,4 @@ export class AuthService {
 
 // The header contains the token type and the signing algorithm, the payload contains the user data (ID, username, email, etc.),
 //  and the signature is used to verify the authenticity of the token.
+
