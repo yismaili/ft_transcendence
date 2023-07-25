@@ -1,5 +1,3 @@
 .DS_Store
-node_modules
-bacak_end/.env
 node_modules/
-postgres
+postgres/
