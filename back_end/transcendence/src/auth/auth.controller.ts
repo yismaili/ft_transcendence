@@ -5,6 +5,8 @@ import { Response} from 'express';
 import { GoogleGuard } from './guard/google.guard';
 import { User } from './entities/user.entity';
 import { IntraGuard } from './guard/intra.guard';
+import { JwtAuthGuard } from './guard/jwt.guard';
+import { JwtStrategy } from './strategy/jwt.strategy';
 
 
 @Controller('auth')
@@ -14,7 +16,8 @@ export class AuthController {
   @Get('all') // decorator is define an HTTP GET endpoint
     async findAll(): Promise<User[]> {
         return this.authService.findAll();
-    }
+  }
+
   @UseGuards(GoogleGuard)
   @Get('login')
   googlelogin(): void {
@@ -22,7 +25,7 @@ export class AuthController {
   }
 
   @UseGuards(GoogleGuard) // route handler add an extra layer of security and control access to certain routes
-  @Get('google/redirect')
+  @Get('google/callback')
   async googleAuthRedirect( @Req() req: any, @Res() res: Response,){
     const { user, authInfo, }:{
       user: Profile;
@@ -42,7 +45,7 @@ export class AuthController {
   }
 
   @UseGuards(IntraGuard) // route handler add an extra layer of security and control access to certain routes
-  @Get('intra')
+  @Get('intra/callback')
   async intraAuthRedirect( @Req() req: any, @Res() res: Response,){
     const { user, authInfo, }:{
       user: Profile;
@@ -60,5 +63,11 @@ export class AuthController {
     console.log(user);
     const respone = await this.authService.googleAuthenticate(user);
     return res.status(HttpStatus.OK).json(respone);
+  }
+    
+  @UseGuards(JwtAuthGuard, JwtStrategy)
+  @Get('profile')
+  profile(@Req() req, @Res() res){
+      return(res.status(HttpStatus.OK).json(req.user));
   }
 }

@@ -6,6 +6,7 @@ import { User } from './auth/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
+import { JwtAuthGuard } from './auth/guard/jwt.guard';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
 // The imports property specifies the modules that this module depends on
@@ -25,8 +26,7 @@ import { JwtModule } from '@nestjs/jwt';
       synchronize: true, // automatically synchronize the database schema with the entities. // Set to false in production
     }), 
     AuthModule, // responsible for handling authentication logic
-    PassportModule,//NestJS module for integrating Passport.js, an authentication middleware for Node.js
-    JwtModule.register({secret: 'secrete', signOptions: {expiresIn: '1h'}}),//NestJS module for handling JSON Web Tokens (JWT) and token-based authentication
+    PassportModule,//NestJS module for integrating Passport.js, an authentication middleware for Node.j
   ],
   controllers: [AppController], // Controllers  handle incoming requests and define the routes and endpoints for the application
   providers: [AppService], // Providers are responsible for providing business logic and functionality to the application.
