@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common'; // NestJS common utilities and decorato
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm'; 
-import { User } from './auth/entities/user.entity';
+import {UsreEntity } from './auth/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
-import { JwtAuthGuard } from './auth/guard/jwt.guard';
+import { ProfileEntity } from './auth/entities/profile.entity';
+import { FriendshipEntity } from './auth/entities/friendship.entity';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
 // The imports property specifies the modules that this module depends on
@@ -21,7 +21,7 @@ import { JwtAuthGuard } from './auth/guard/jwt.guard';
       username: 'postgres',
       password: 'pass1337',
       database: 'transcendence',
-      entities: [User],
+      entities: [ProfileEntity, UsreEntity, FriendshipEntity],
       autoLoadEntities: true, // automatically load entity files
       synchronize: true, // automatically synchronize the database schema with the entities. // Set to false in production
     }), 

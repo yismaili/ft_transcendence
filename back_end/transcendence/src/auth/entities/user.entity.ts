@@ -1,28 +1,29 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
+import { ProfileEntity } from './profile.entity';
+import { FriendshipEntity } from './friendship.entity';
 
 @Entity()
-export class User {
+export class UsreEntity {
   @PrimaryGeneratedColumn()
-  id: string; 
+  userID: number;
 
-  @IsString()
-  @Column({ unique: true })
-  email: string;
-
-  @IsString()
-  @Column()
+  @Column({ length: 50 })
   firstName: string;
 
-  @IsString()
-  @Column()
+  @Column({ length: 50 })
   lastName: string;
 
-  @IsString()
-  @Column()
+  @Column({ length: 100 })
+  email: string;
+
+  @Column({ length: 255 })
   picture: string;
 
-  @IsString()
-  @Column()
-  accessToken: string;
+  @OneToOne(() => ProfileEntity)
+  @JoinColumn()
+  profile: ProfileEntity;
+
+  @OneToMany(() => FriendshipEntity, (friendship) => friendship.user)
+  friendships: FriendshipEntity[];
+
 }

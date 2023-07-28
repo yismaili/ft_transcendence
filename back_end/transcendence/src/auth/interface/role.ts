@@ -1,5 +1,5 @@
 
-import { User as UserEntity } from '../entities/user.entity';
+import { UsreEntity as UserEntity } from '../entities/user.entity';
 // enumeration representing different user roles
 export enum Role{
     Admin = 'admin',

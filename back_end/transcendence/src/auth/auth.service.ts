@@ -1,67 +1,101 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { User } from './entities/user.entity';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 import { IAuthenticate } from './interface/role';
-
-@Injectable() // decorator marks the AuthService class as an injectable service that maning alows other classes to inject and use this service using dependency injection.
-export class AuthService {
-  constructor(
-    @InjectRepository(User) //  decorator The userRepository instance is used to interact with the User entity in the database
-    private userRepository: Repository<User>, //class receives an instance of the Repository<User> for the User entity as a parameter
-  ) {}
+import { UsreEntity } from './entities/user.entity';
+import { ProfileEntity } from './entities/profile.entity';
+import { FriendshipEntity } from './entities/friendship.entity';
 
   //fetches all users from the database
-  async findAll():  Promise<User[]> {
-    return this.userRepository.find();
-  }
+  
+  @Injectable()
+  export class AuthService {
+    constructor(
+      @InjectRepository(UsreEntity) private userRepository: Repository<UsreEntity>,
+      @InjectRepository(ProfileEntity)private profileRepository: Repository<ProfileEntity>,
+      @InjectRepository(FriendshipEntity)private friendshipRepository: Repository<FriendshipEntity>,
+      ) {}
+      
+      async findAll() {
+        return this.userRepository.find({ relations: ['profile', 'friendships'], select: {
+          friendships: {
+          // friendship_ID: true,
+          user: {
+            firstName: true,
+            lastName: true,
+            email: true
+          },
+          }
+        } });
+      }
 
-  async googleAuthenticate(user: Partial<User>): Promise<IAuthenticate> {
-    const { email, firstName, lastName } = user; // Destructure the properties from the 'user' object
+  async googleAuthenticate(user: Partial<UsreEntity>): Promise<IAuthenticate> {
+    const { email, firstName, lastName } = user;
 
-    // Check if the user already exists based on the email, firstName, and lastName
     const existingUser = await this.userRepository.findOne({
       where: {
         email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
       },
     });
 
     if (existingUser) {
-      // If the user already exists, update the existing user's data instead of creating a new one
-      existingUser.email = user.email || existingUser.email;
-      existingUser.firstName = user.firstName || existingUser.firstName;
-      existingUser.lastName = user.lastName || existingUser.lastName;
-      existingUser.picture = user.picture || existingUser.picture;
-      existingUser.accessToken = user.accessToken || existingUser.accessToken;
+        existingUser.email = user.email || existingUser.email;
+        existingUser.firstName = user.firstName || existingUser.firstName;
+        existingUser.lastName = user.lastName || existingUser.lastName;
+        existingUser.picture = user.picture || existingUser.picture;
 
-      const savedUser = await this.userRepository.save(existingUser);
-      // Generate the JWT token using the 'sign' function and the 'savedUser' object
-      const token = sign({ ...savedUser }, 'secrete');
-      // Return the token and the 'savedUser' object in the 'IAuthenticate' format
-      return { token, user: savedUser };
+        await this.userRepository.save(existingUser);
+
+        const token = sign({ ...existingUser }, 'secrete');
+        return { token, user: existingUser };
+
     } else {
-      // If the user does not exist, create a new user
       const newUser = this.userRepository.create({
         email: user.email || '',
         firstName: user.firstName || '',
         lastName: user.lastName || '',
         picture: user.picture || '',
-        accessToken: user.accessToken || '',
+        //friendship: user.friendship,
       });
 
+      // Check if the 'user.Profile' object is defined and contains the required properties
+      const profileData = user.profile ?? {
+        TotalGames: 0,
+        Win: 0,
+        Los: 0,
+        History: '',
+        Achievements: '',
+        User: null,
+      };
+
+      // Create a new 'ProfileEntity' object using the data from the 'profileData' object
+      const newProfile = this.profileRepository.create({
+        TotalGames: profileData.TotalGames,
+        Win: profileData.Win,
+        Los: profileData.Los,
+        History: profileData.History,
+        Achievements: profileData.Achievements,
+        // User: profileData.User,
+      });
+      
+      
       const savedUser = await this.userRepository.save(newUser);
-      // Generate the JWT token using the 'sign' function and the 'savedUser' object
+      const savedProfile = await this.profileRepository.save(newProfile);
+      // Create a new 'FriendshipEntity' object with the user from the profile (if available)
+      const new_friendship = this.friendshipRepository.create({
+        user: newUser// Create an array with the user or an empty array if the user is null or undefined
+      });
+      this.friendshipRepository.save(new_friendship);
+      savedUser.profile = savedProfile;
+      savedUser.friendships = [];
+      this.userRepository.save(savedUser);
       const token = sign({ ...savedUser }, 'secrete');
-      // Return the token and the 'savedUser' object in the 'IAuthenticate' format
       return { token, user: savedUser };
     }
   }
 
-  async findUserById(user: Partial<User>): Promise<Partial<User>> {
-    // Use the userRepository to find the user by ID
+  async findUserById(user: Partial<UsreEntity>): Promise<Partial<UsreEntity>> {
     try {
       const existingUser = await this.userRepository.findOne({
         where: {
@@ -70,13 +104,13 @@ export class AuthService {
           lastName: user.lastName,
         },
       });
-      return existingUser
+      return existingUser;
     } catch (error) {
-      // Handle any errors that may occur during the database query
       return null;
     }
   }
 }
+
 
 // This JWT contains three parts separated by dots:
 
