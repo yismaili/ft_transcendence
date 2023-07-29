@@ -2,11 +2,13 @@ import { Module } from '@nestjs/common'; // NestJS common utilities and decorato
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm'; 
-import {UsreEntity } from './auth/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
-import { ProfileEntity } from './auth/entities/profile.entity';
-import { FriendshipEntity } from './auth/entities/friendship.entity';
+import { HistoryEntity } from './typeorm/entities/History.entity';
+import { Achievement } from './typeorm/entities/Achievement.entity';
+import { Relation } from './typeorm/entities/Relation.entity';
+import { Profile } from './typeorm/entities/Profile.entity';
+import { User } from './typeorm/entities/User.entity';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
 // The imports property specifies the modules that this module depends on
@@ -21,7 +23,7 @@ import { FriendshipEntity } from './auth/entities/friendship.entity';
       username: 'postgres',
       password: 'pass1337',
       database: 'transcendence',
-      entities: [ProfileEntity, UsreEntity, FriendshipEntity],
+      entities: [User, Profile, Relation, Achievement, HistoryEntity],
       autoLoadEntities: true, // automatically load entity files
       synchronize: true, // automatically synchronize the database schema with the entities. // Set to false in production
     }), 
