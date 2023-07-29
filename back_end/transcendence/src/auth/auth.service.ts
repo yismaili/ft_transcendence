@@ -20,7 +20,7 @@ import { FriendshipEntity } from './entities/friendship.entity';
       async findAll() {
         return this.userRepository.find({ relations: ['profile', 'friendships'], select: {
           friendships: {
-          // friendship_ID: true,
+           friendship_ID: true,
           user: {
             firstName: true,
             lastName: true,
@@ -84,11 +84,12 @@ import { FriendshipEntity } from './entities/friendship.entity';
       const savedProfile = await this.profileRepository.save(newProfile);
       // Create a new 'FriendshipEntity' object with the user from the profile (if available)
       const new_friendship = this.friendshipRepository.create({
-        user: newUser// Create an array with the user or an empty array if the user is null or undefined
+        user: null,
       });
-      this.friendshipRepository.save(new_friendship);
+
+      const savedFriendship = await this.friendshipRepository.save(new_friendship);
       savedUser.profile = savedProfile;
-      savedUser.friendships = [];
+      savedUser.friendships = savedFriendship;
       this.userRepository.save(savedUser);
       const token = sign({ ...savedUser }, 'secrete');
       return { token, user: savedUser };

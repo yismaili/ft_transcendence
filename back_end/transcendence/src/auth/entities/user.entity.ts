@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, OneToMany, ManyToOne } from 'typeorm';
 import { ProfileEntity } from './profile.entity';
 import { FriendshipEntity } from './friendship.entity';
 
@@ -22,8 +22,8 @@ export class UsreEntity {
   @OneToOne(() => ProfileEntity)
   @JoinColumn()
   profile: ProfileEntity;
-
-  @OneToMany(() => FriendshipEntity, (friendship) => friendship.user)
-  friendships: FriendshipEntity[];
+  
+  @ManyToOne(() => FriendshipEntity, (friendship) => friendship.user)
+  friendships: FriendshipEntity;
 
 }
