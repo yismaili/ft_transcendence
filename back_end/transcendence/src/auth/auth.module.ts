@@ -3,21 +3,23 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsreEntity } from './entities/user.entity';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtAuthGuard } from './guard/jwt.guard';
 import { IntraStrategy } from './strategy/intra.strategy';
-import { ProfileEntity } from './entities/profile.entity';
-import { FriendshipEntity } from './entities/friendship.entity';
 import { Repository } from 'typeorm';
+import { User } from 'src/typeorm/entities/User.entity';
+import { Profile } from 'src/typeorm/entities/Profile.entity';
+import { Relation } from 'src/typeorm/entities/Relation.entity';
+import { Achievement } from 'src/typeorm/entities/Achievement.entity';
+import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 
 //responsible for defining the components related to authentication and user management
 @Module({
   // forFeature() method is used to specify which entities 
   imports: [
-    TypeOrmModule.forFeature([UsreEntity, ProfileEntity, FriendshipEntity]), 
+    TypeOrmModule.forFeature([User, Profile, Relation, Achievement, HistoryEntity]), 
     PassportModule.register({ defaultStrategy: '42' }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     //NestJS module for handling JSON Web Tokens (JWT) and token-based authentication

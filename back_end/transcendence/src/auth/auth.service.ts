@@ -3,24 +3,27 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 import { IAuthenticate } from './interface/role';
-import { UsreEntity } from './entities/user.entity';
-import { ProfileEntity } from './entities/profile.entity';
-import { FriendshipEntity } from './entities/friendship.entity';
+import { User } from 'src/typeorm/entities/User.entity';
+import { Profile } from 'src/typeorm/entities/Profile.entity';
+import { Relation } from 'src/typeorm/entities/Relation.entity';
+import { HistoryEntity } from 'src/typeorm/entities/History.entity';
+import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 
-  //fetches all users from the database
-  
   @Injectable()
   export class AuthService {
     constructor(
-      @InjectRepository(UsreEntity) private userRepository: Repository<UsreEntity>,
-      @InjectRepository(ProfileEntity)private profileRepository: Repository<ProfileEntity>,
-      @InjectRepository(FriendshipEntity)private friendshipRepository: Repository<FriendshipEntity>,
+      @InjectRepository(User) private userRepository: Repository<User>,
+      @InjectRepository(Profile)private profileRepository: Repository<Profile>,
+      @InjectRepository(Relation)private relationRepository: Repository<Relation>,
+      @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
+      @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
       ) {}
       
       async findAll() {
-        return this.userRepository.find({ relations: ['profile', 'friendships'], select: {
-          friendships: {
-           friendship_ID: true,
+        // return this.userRepository.find({ relations: ['profile', 'relation', 'history', 'achievemen']});
+        return this.userRepository.find({ relations: ['profile', 'relation', 'HistoryEntity', 'achievement'], select: {
+          relation: {
+           relation_id: true,
           user: {
             firstName: true,
             lastName: true,
@@ -30,7 +33,7 @@ import { FriendshipEntity } from './entities/friendship.entity';
         } });
       }
 
-  async googleAuthenticate(user: Partial<UsreEntity>): Promise<IAuthenticate> {
+  async googleAuthenticate(user: Partial<User>): Promise<IAuthenticate> {
     const { email, firstName, lastName } = user;
 
     const existingUser = await this.userRepository.findOne({
@@ -51,52 +54,81 @@ import { FriendshipEntity } from './entities/friendship.entity';
         return { token, user: existingUser };
 
     } else {
+
+      // user entity 
       const newUser = this.userRepository.create({
         email: user.email || '',
         firstName: user.firstName || '',
         lastName: user.lastName || '',
         picture: user.picture || '',
-        //friendship: user.friendship,
       });
+      const savedUser = await this.userRepository.save(newUser);
 
       // Check if the 'user.Profile' object is defined and contains the required properties
       const profileData = user.profile ?? {
-        TotalGames: 0,
-        Win: 0,
-        Los: 0,
-        History: '',
-        Achievements: '',
-        User: null,
+        score: 0,
+        win: 0,
+        los: 0,
       };
 
       // Create a new 'ProfileEntity' object using the data from the 'profileData' object
       const newProfile = this.profileRepository.create({
-        TotalGames: profileData.TotalGames,
-        Win: profileData.Win,
-        Los: profileData.Los,
-        History: profileData.History,
-        Achievements: profileData.Achievements,
-        // User: profileData.User,
+        score: profileData.score,
+        los: profileData.los,
+        win: profileData.win,
       });
-      
-      
-      const savedUser = await this.userRepository.save(newUser);
       const savedProfile = await this.profileRepository.save(newProfile);
-      // Create a new 'FriendshipEntity' object with the user from the profile (if available)
-      const new_friendship = this.friendshipRepository.create({
-        user: null,
-      });
+      
+      // Relation entity
+      const relationData = user.relation ?? {
+        // user_id: 0,
+        status: '',
+      };
 
-      const savedFriendship = await this.friendshipRepository.save(new_friendship);
+      const new_Relation = this.relationRepository.create({
+        // user_id: relationData.user_id,
+        status: '',
+      });
+      const savedRelation = await this.relationRepository.save(new_Relation);
+
+      // achievement entity
+      const achievementData = user.achievement ?? {
+        type: '',
+        description: '',
+      };
+      const new_Achievement = this.achievementRepository.create({
+        // type: achievementData.type,
+        // description: achievementData.description,
+        type: '',
+        description: '',
+      });
+      const savedAchievement = await this.achievementRepository.save(new_Achievement);
+     
+      //History Entity
+      const historyData = user.HistoryEntity ??{
+        competitor: null,
+      };
+
+      const new_History = this.historyRepository.create({
+        competitor: historyData.competitor,
+      });
+      const savedHistory = await this.historyRepository.save(new_History);
+
+
       savedUser.profile = savedProfile;
-      savedUser.friendships = savedFriendship;
+      this.userRepository.save(savedUser);
+      savedUser.relation = savedRelation;
+      this.userRepository.save(savedUser);
+      savedUser.achievement = savedAchievement;
+      this.userRepository.save(savedUser);
+      savedUser.HistoryEntity = savedHistory;
       this.userRepository.save(savedUser);
       const token = sign({ ...savedUser }, 'secrete');
       return { token, user: savedUser };
     }
   }
 
-  async findUserById(user: Partial<UsreEntity>): Promise<Partial<UsreEntity>> {
+  async findUserById(user: Partial<User>): Promise<Partial<User>> {
     try {
       const existingUser = await this.userRepository.findOne({
         where: {

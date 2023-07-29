@@ -1,12 +1,12 @@
+import { User } from "src/typeorm/entities/User.entity";
 
-import { UsreEntity as UserEntity } from '../entities/user.entity';
 // enumeration representing different user roles
 export enum Role{
     Admin = 'admin',
     User = 'user'
 }
 //the information of a user 
-type User = {
+type user = {
     id: string; // Ensure the type of id is string
     userName: string;
     password: string;
@@ -18,6 +18,6 @@ type User = {
 
 export interface IAuthenticate {
   token: string;
-  user: UserEntity; // Use the renamed 'UserEntity' type
+  user: User; // Use the renamed 'UserEntity' type
 }
 
