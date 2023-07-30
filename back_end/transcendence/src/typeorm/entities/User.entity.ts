@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany } from 'typeorm';
 import { Profile } from './Profile.entity';
 import { Relation } from './Relation.entity';
 import { Achievement } from './Achievement.entity';
@@ -7,7 +7,7 @@ import { HistoryEntity } from './History.entity';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  user_id: number;
+  id: number;
 
   @Column()
   firstName: string;
@@ -18,25 +18,21 @@ export class User {
   @Column()
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   picture: string;
 
-  @ManyToOne(() => Relation)
-  @JoinColumn({ name: 'Relation' })
-  relation: Relation;
-
-  @ManyToOne(() => Profile)
-  @JoinColumn({ name: 'Profile' })
+  @OneToOne(() => Profile, profile => profile.user, { cascade: true })
   profile: Profile;
 
-  @ManyToOne(() => Achievement)
-  @JoinColumn({ name: 'Achievement' })
-  achievement: Achievement;
+  @OneToMany(() => Relation, relation => relation.userOne)
+  relationsOne: Relation[];
 
-  @OneToMany(() => HistoryEntity, (he: HistoryEntity)=> he.competitor)
-  @JoinColumn({ name: 'HistoryEntity' })
-  HistoryEntity: HistoryEntity;
+  @OneToMany(() => Relation, relation => relation.userTwo)
+  relationsTwo: Relation[];
 
+  @OneToMany(() => Achievement, achievement => achievement.user)
+  achievements: Achievement[];
 
-
+  @OneToMany(() => HistoryEntity, history => history.user)
+  histories: HistoryEntity[];
 }
