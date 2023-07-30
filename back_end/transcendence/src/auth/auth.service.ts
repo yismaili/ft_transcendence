@@ -20,122 +20,129 @@ import { Achievement } from 'src/typeorm/entities/Achievement.entity';
       ) {}
       
       async findAll() {
-        // return this.userRepository.find({ relations: ['profile', 'relation', 'history', 'achievemen']});
-        return this.userRepository.find({ relations: ['profile', 'relation', 'HistoryEntity', 'achievement'], select: {
-          relation: {
-           relation_id: true,
-          user: {
+        return this.userRepository.find({
+          relations: ['profile', 'relationsOne', 'relationsTwo', 'achievements', 'histories'],
+          select: {
+            id: true,
             firstName: true,
             lastName: true,
-            email: true
+            email: true,
+            profile: {
+              id: true,
+              score: true,
+              win: true,
+              los: true,
+            },
+            relationsOne: {
+              id: true,
+              status: true,
+              userOne:{
+
+              }
+            },
+            relationsTwo: {
+              id: true,
+              status: true,
+              userOne: {
+                
+              }
+            },
+            achievements: {
+              id: true,
+              type: true,
+              description: true,
+            },
+            histories: {
+              id: true,
+              competitorId: true,
+            },
           },
-          }
-        } });
+        });
       }
 
-  async googleAuthenticate(user: Partial<User>): Promise<IAuthenticate> {
-    const { email, firstName, lastName } = user;
-
+async googleAuthenticate(user: Partial<User>): Promise<IAuthenticate> {
+  const { email, firstName, lastName, picture, profile } = user;
+      
+  const existingUser = await this.userRepository.findOne({
+    where: {
+      email,
+    },
+    relations: ['profile', 'relationsOne', 'relationsTwo', 'achievements', 'histories'],
+  });
+      
+  if (existingUser) {
+    existingUser.firstName = firstName || existingUser.firstName;
+    existingUser.lastName = lastName || existingUser.lastName;
+    existingUser.picture = picture || existingUser.picture;
+      
+    // Update the existing user's profile if profile data is provided
+    if (profile) {
+        existingUser.profile.score = profile.score || existingUser.profile.score;
+        existingUser.profile.win = profile.win || existingUser.profile.win;
+        existingUser.profile.los = profile.los || existingUser.profile.los;
+    }
+      
+    await this.userRepository.save(existingUser);
+      
+    const token = sign({ ...existingUser }, 'secrete');
+      return { token, user: existingUser };
+    } else {
+      // user entity 
+      const newUser = this.userRepository.create({
+        email,
+        firstName,
+        lastName,
+        picture,
+    });
+      
+  // Create a new 'Profile' entity if profile data is provided
+    const newProfile = profile
+      ? this.profileRepository.create({
+          score: profile.score || 0,
+          win: profile.win || 0,
+          los: profile.los || 0,
+      })
+      : null;
+      
+  // Create a new 'Relation' entity
+    const newRelation = this.relationRepository.create({
+        status: '',
+    });
+      
+  // Create a new 'Achievement' entity
+      const newAchievement = this.achievementRepository.create({
+          type: '',
+          description: '',
+      });
+      
+  // Create a new 'History' entity
+      const newHistory = this.historyRepository.create({
+        competitorId: null,
+      });
+      
+  // Assign the related entities to the new user
+      if (newProfile) {
+        newUser.profile = newProfile;
+      }
+      newUser.relationsOne = [newRelation];
+      newUser.relationsTwo = [];
+      newUser.achievements = [newAchievement];
+      newUser.histories = [newHistory];
+      
+      const savedUser = await this.userRepository.save(newUser);
+      const token = sign({ ...savedUser }, 'secrete');
+    return { token, user: savedUser };
+  }
+}
+      
+async findUserById(user: Partial<User>): Promise<Partial<User>> {
+  try {
     const existingUser = await this.userRepository.findOne({
       where: {
         email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
-    });
-
-    if (existingUser) {
-        existingUser.email = user.email || existingUser.email;
-        existingUser.firstName = user.firstName || existingUser.firstName;
-        existingUser.lastName = user.lastName || existingUser.lastName;
-        existingUser.picture = user.picture || existingUser.picture;
-
-        await this.userRepository.save(existingUser);
-
-        const token = sign({ ...existingUser }, 'secrete');
-        return { token, user: existingUser };
-
-    } else {
-
-      // user entity 
-      const newUser = this.userRepository.create({
-        email: user.email || '',
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        picture: user.picture || '',
-      });
-      const savedUser = await this.userRepository.save(newUser);
-
-      // Check if the 'user.Profile' object is defined and contains the required properties
-      const profileData = user.profile ?? {
-        score: 0,
-        win: 0,
-        los: 0,
-      };
-
-      // Create a new 'ProfileEntity' object using the data from the 'profileData' object
-      const newProfile = this.profileRepository.create({
-        score: profileData.score,
-        los: profileData.los,
-        win: profileData.win,
-      });
-      const savedProfile = await this.profileRepository.save(newProfile);
-      
-      // Relation entity
-      const relationData = user.relation ?? {
-        // user_id: 0,
-        status: '',
-      };
-
-      const new_Relation = this.relationRepository.create({
-        // user_id: relationData.user_id,
-        status: '',
-      });
-      const savedRelation = await this.relationRepository.save(new_Relation);
-
-      // achievement entity
-      const achievementData = user.achievement ?? {
-        type: '',
-        description: '',
-      };
-      const new_Achievement = this.achievementRepository.create({
-        // type: achievementData.type,
-        // description: achievementData.description,
-        type: '',
-        description: '',
-      });
-      const savedAchievement = await this.achievementRepository.save(new_Achievement);
-     
-      //History Entity
-      const historyData = user.HistoryEntity ??{
-        competitor: null,
-      };
-
-      const new_History = this.historyRepository.create({
-        competitor: historyData.competitor,
-      });
-      const savedHistory = await this.historyRepository.save(new_History);
-
-
-      savedUser.profile = savedProfile;
-      this.userRepository.save(savedUser);
-      savedUser.relation = savedRelation;
-      this.userRepository.save(savedUser);
-      savedUser.achievement = savedAchievement;
-      this.userRepository.save(savedUser);
-      savedUser.HistoryEntity = savedHistory;
-      this.userRepository.save(savedUser);
-      const token = sign({ ...savedUser }, 'secrete');
-      return { token, user: savedUser };
-    }
-  }
-
-  async findUserById(user: Partial<User>): Promise<Partial<User>> {
-    try {
-      const existingUser = await this.userRepository.findOne({
-        where: {
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-        },
       });
       return existingUser;
     } catch (error) {
