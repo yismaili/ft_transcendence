@@ -128,6 +128,10 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> 
     return { token, user: savedUser };
   }
 }
+
+async updateProfile(userDetails: UserDto){
+  
+}
       
 async findUserById(user: Partial<User>): Promise<Partial<User>> {
   try {

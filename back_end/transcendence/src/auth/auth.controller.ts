@@ -1,12 +1,18 @@
-import {Controller, Get, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {Controller,
+    Get,
+    HttpStatus, 
+    Req, 
+    Res, 
+    UseGuards
+   } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Response} from 'express';
 import { GoogleGuard } from './guard/google.guard';
 import { IntraGuard } from './guard/intra.guard';
 import { JwtAuthGuard } from './guard/jwt.guard';
 import { JwtStrategy } from './strategy/jwt.strategy';
-import { Profile } from 'passport-google-oauth20';
 import { User } from 'src/typeorm/entities/User.entity';
+
 
 
 @Controller('auth')
@@ -33,7 +39,6 @@ export class AuthController {
       lastName: req.user.lastName,
       picture: req.user.picture,
     };
-    // console.log(user);
     const respone = await this.authService.googleAuthenticate(user);
     return res.status(HttpStatus.OK).json(respone);
   }
@@ -50,7 +55,7 @@ export class AuthController {
     const respone = await this.authService.googleAuthenticate(user);
     return res.status(HttpStatus.OK).json(respone);
   }
-    
+
   @UseGuards(JwtAuthGuard, JwtStrategy)
   @Get('profile')
   profile(@Req() req, @Res() res){
