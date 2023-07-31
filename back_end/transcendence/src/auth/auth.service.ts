@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { sign } from 'jsonwebtoken';
-import { IAuthenticate } from './interface/role';
 import { User } from 'src/typeorm/entities/User.entity';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
 import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
+import { UserDto } from './dtos/user.dto';
+import { IAuthenticate } from 'utils/types';
 
   @Injectable()
   export class AuthService {
@@ -43,7 +44,7 @@ import { Achievement } from 'src/typeorm/entities/Achievement.entity';
             relationsTwo: {
               id: true,
               status: true,
-              userOne: {
+              userTwo: {
                 
               }
             },
@@ -60,9 +61,11 @@ import { Achievement } from 'src/typeorm/entities/Achievement.entity';
         });
       }
 
-async googleAuthenticate(user: Partial<User>): Promise<IAuthenticate> {
-  const { email, firstName, lastName, picture, profile } = user;
-      
+async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> {
+  const { email, firstName, lastName, picture} = userDetails;
+    
+  console.log(firstName);
+  console.log(email);
   const existingUser = await this.userRepository.findOne({
     where: {
       email,
@@ -73,14 +76,7 @@ async googleAuthenticate(user: Partial<User>): Promise<IAuthenticate> {
   if (existingUser) {
     existingUser.firstName = firstName || existingUser.firstName;
     existingUser.lastName = lastName || existingUser.lastName;
-    existingUser.picture = picture || existingUser.picture;
-      
-    // Update the existing user's profile if profile data is provided
-    if (profile) {
-        existingUser.profile.score = profile.score || existingUser.profile.score;
-        existingUser.profile.win = profile.win || existingUser.profile.win;
-        existingUser.profile.los = profile.los || existingUser.profile.los;
-    }
+    existingUser.picture = picture|| existingUser.picture;
       
     await this.userRepository.save(existingUser);
       
@@ -88,7 +84,7 @@ async googleAuthenticate(user: Partial<User>): Promise<IAuthenticate> {
       return { token, user: existingUser };
     } else {
       // user entity 
-      const newUser = this.userRepository.create({
+    const newUser = this.userRepository.create({
         email,
         firstName,
         lastName,
@@ -96,13 +92,11 @@ async googleAuthenticate(user: Partial<User>): Promise<IAuthenticate> {
     });
       
   // Create a new 'Profile' entity if profile data is provided
-    const newProfile = profile
-      ? this.profileRepository.create({
-          score: profile.score || 0,
-          win: profile.win || 0,
-          los: profile.los || 0,
+    const newProfile = this.profileRepository.create({
+        score: 0,
+        win: 0,
+        los:  0,
       })
-      : null;
       
   // Create a new 'Relation' entity
     const newRelation = this.relationRepository.create({
