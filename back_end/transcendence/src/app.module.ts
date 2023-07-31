@@ -9,6 +9,7 @@ import { Achievement } from './typeorm/entities/Achievement.entity';
 import { Relation } from './typeorm/entities/Relation.entity';
 import { Profile } from './typeorm/entities/Profile.entity';
 import { User } from './typeorm/entities/User.entity';
+import { UserModule } from './user/user.module';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
 // The imports property specifies the modules that this module depends on
@@ -28,7 +29,7 @@ import { User } from './typeorm/entities/User.entity';
       synchronize: true, // automatically synchronize the database schema with the entities. // Set to false in production
     }), 
     AuthModule, // responsible for handling authentication logic
-    PassportModule,//NestJS module for integrating Passport.js, an authentication middleware for Node.j
+    PassportModule, UserModule,//NestJS module for integrating Passport.js, an authentication middleware for Node.j
   ],
   controllers: [AppController], // Controllers  handle incoming requests and define the routes and endpoints for the application
   providers: [AppService], // Providers are responsible for providing business logic and functionality to the application.
