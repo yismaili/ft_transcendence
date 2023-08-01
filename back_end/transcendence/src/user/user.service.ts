@@ -18,7 +18,7 @@ export class UserService {
         @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
         ) {}
 
-  async findUserByUsername(userName: string): Promise<User | null> {
+  async findUserByUsername(userName: string): Promise<UserDto| null> {
   try {
     const existingUser = await this.userRepository.findOne({
         where: {

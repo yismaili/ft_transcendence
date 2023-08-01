@@ -1,18 +1,22 @@
 import { Module } from '@nestjs/common';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { AuthService } from 'src/auth/auth.service';
+import { AuthModule } from 'src/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/typeorm/entities/User.entity';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
 import { Relation } from 'src/typeorm/entities/Relation.entity';
-import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
+import { Achievement } from 'src/typeorm/entities/Achievement.entity';
+import { RandomService } from 'src/random/random.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Profile, Relation, Achievement, HistoryEntity]),
+    AuthModule, TypeOrmModule.forFeature([User, Profile, Relation, HistoryEntity, Achievement])
   ],
   controllers: [UserController],
-  providers: [UserService]
+  providers: [UserService, AuthService, RandomService],
 })
 export class UserModule {}
+
