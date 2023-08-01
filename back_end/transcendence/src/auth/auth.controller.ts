@@ -37,6 +37,7 @@ export class AuthController {
       email: req.user.email,
       firstName: req.user.firstName,
       lastName: req.user.lastName,
+      // username: req.user.username,
       picture: req.user.picture,
     };
     const respone = await this.authService.googleAuthenticate(user);
@@ -48,10 +49,12 @@ export class AuthController {
   async intraAuthRedirect( @Req() req: any, @Res() res: Response,){
     const user: Partial<User> = {
       email: req.user.email,
+      username: req.user.username,
       firstName: req.user.firstName,
       lastName: req.user.lastName,
       picture: req.user.picture,
     };
+    console.log(user);
     const respone = await this.authService.googleAuthenticate(user);
     return res.status(HttpStatus.OK).json(respone);
   }

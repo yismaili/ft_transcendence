@@ -10,6 +10,7 @@ import { Relation } from './typeorm/entities/Relation.entity';
 import { Profile } from './typeorm/entities/Profile.entity';
 import { User } from './typeorm/entities/User.entity';
 import { UserModule } from './user/user.module';
+import { RandomService } from './random/random.service';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
 // The imports property specifies the modules that this module depends on
@@ -32,7 +33,7 @@ import { UserModule } from './user/user.module';
     PassportModule, UserModule,//NestJS module for integrating Passport.js, an authentication middleware for Node.j
   ],
   controllers: [AppController], // Controllers  handle incoming requests and define the routes and endpoints for the application
-  providers: [AppService], // Providers are responsible for providing business logic and functionality to the application.
+  providers: [AppService, RandomService], // Providers are responsible for providing business logic and functionality to the application.
 })
 export class AppModule { // class that represents the main module of application
 

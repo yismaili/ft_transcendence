@@ -9,6 +9,7 @@ import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { UserDto } from './dtos/user.dto';
 import { IAuthenticate } from 'utils/types';
+import { RandomService } from 'src/random/random.service';
 
   @Injectable()
   export class AuthService {
@@ -18,6 +19,7 @@ import { IAuthenticate } from 'utils/types';
       @InjectRepository(Relation)private relationRepository: Repository<Relation>,
       @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
       @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
+      private generatenUsename:RandomService,
       ) {}
       
       async findAll() {
@@ -62,10 +64,8 @@ import { IAuthenticate } from 'utils/types';
       }
 
 async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> {
-  const { email, firstName, lastName, picture} = userDetails;
-    
-  console.log(firstName);
-  console.log(email);
+  let { email, firstName, username, lastName, picture } = userDetails;
+
   const existingUser = await this.userRepository.findOne({
     where: {
       email,
@@ -76,6 +76,7 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> 
   if (existingUser) {
     existingUser.firstName = firstName || existingUser.firstName;
     existingUser.lastName = lastName || existingUser.lastName;
+    existingUser.username = username || existingUser.username;
     existingUser.picture = picture|| existingUser.picture;
       
     await this.userRepository.save(existingUser);
@@ -83,11 +84,27 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> 
     const token = sign({ ...existingUser }, 'secrete');
       return { token, user: existingUser };
     } else {
+
+    if (username === undefined) {
+      let newUsername = firstName[0] + lastName;
+      const existingUsername = await this.userRepository.findOne({
+        where: {
+          username: newUsername,
+        },
+      });
+      if (existingUsername) {
+        const randomString = this.generatenUsename.generateRandomString(3);
+        newUsername = lastName + randomString; // Change variable name to 'newUsername'
+      }
+      username = newUsername;
+      console.log(newUsername);
+    }
       // user entity 
     const newUser = this.userRepository.create({
-        email,
         firstName,
         lastName,
+        username,
+        email,
         picture,
     });
       
@@ -128,6 +145,9 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> 
     return { token, user: savedUser };
   }
 }
+    generateRandomString(arg0: number) {
+      throw new Error('Method not implemented.');
+    }
 
 async updateProfile(userDetails: UserDto){
   
