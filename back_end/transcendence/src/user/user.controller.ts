@@ -6,14 +6,15 @@ import { AchievementDto } from 'src/auth/dtos/achievement.dto';
 import { HistoryDto } from 'src/auth/dtos/history.dto';
 import { RelationDto } from 'src/auth/dtos/relation.dto';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
     constructor(private userService: UserService){}
     
-    // @Get(':id')
-    // async getInfoUser(@Param('id', ParseIntPipe) id: number){
-
-    // }
+    @Get(':username')
+    async getDetailsUser(@Param('username') username: string){
+        console.log(username);
+       return this.userService.findUserByUsername(username);
+    }
     // @Put('update/user/:id')
     // async updateUser(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UserDto){
     //     this.userService.updateUser(id, updateUserDto);
