@@ -30,7 +30,8 @@ import { RandomService } from './random/random.service';
       synchronize: true, // automatically synchronize the database schema with the entities. // Set to false in production
     }), 
     AuthModule, // responsible for handling authentication logic
-    PassportModule, UserModule,//NestJS module for integrating Passport.js, an authentication middleware for Node.j
+    PassportModule, 
+    UserModule,//NestJS module for integrating Passport.js, an authentication middleware for Node.j
   ],
   controllers: [AppController], // Controllers  handle incoming requests and define the routes and endpoints for the application
   providers: [AppService, RandomService], // Providers are responsible for providing business logic and functionality to the application.
