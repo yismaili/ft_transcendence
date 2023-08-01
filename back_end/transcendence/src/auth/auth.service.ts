@@ -92,6 +92,7 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> 
           username: newUsername,
         },
       });
+      
       if (existingUsername) {
         const randomString = this.generatenUsename.generateRandomString(3);
         newUsername = lastName + randomString; // Change variable name to 'newUsername'
