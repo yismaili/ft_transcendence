@@ -14,6 +14,7 @@ import { Profile } from 'src/typeorm/entities/Profile.entity';
 import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
+import { RandomService } from 'src/random/random.service';
 
 //responsible for defining the components related to authentication and user management
 @Module({
@@ -26,6 +27,6 @@ import { HistoryEntity } from 'src/typeorm/entities/History.entity';
     JwtModule.register({ secret: 'secrete', signOptions: { expiresIn: '1h' } }),
   ], // makes the User entity available for use within the AuthModule
   controllers: [AuthController],// The controllers property
-  providers: [AuthService, GoogleStrategy, ConfigService, IntraStrategy, JwtAuthGuard, Repository]
+  providers: [AuthService, GoogleStrategy, ConfigService, IntraStrategy, JwtAuthGuard, Repository, RandomService]
 }) // decorator is define a module 
 export class AuthModule {}
