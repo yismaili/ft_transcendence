@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Put, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from 'src/auth/dtos/user.dto';
 import { ProfileDto } from 'src/auth/dtos/profile.dto';
@@ -19,8 +19,13 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username')
-    async getDetailsProfile(@Param('username') username: string): Promise<UserDto> {
-        return this.userService.findUserByUsername(username);
+    async getDetailsProfile(@Req() req, @Param('username') username: string): Promise<UserDto| string> {
+         console.log(username);
+        const authorization = req.user;
+         console.log(authorization.username);
+        if (authorization.username == username){
+            return this.userService.findUserByUsername(username);
+        }
     }
     // @Put('update/user/:id')
     // async updateUser(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UserDto){
