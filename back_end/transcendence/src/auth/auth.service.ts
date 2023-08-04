@@ -29,6 +29,7 @@ import { RandomService } from 'src/random/random.service';
             id: true,
             firstName: true,
             lastName: true,
+            username: true,
             email: true,
             profile: {
               id: true,
