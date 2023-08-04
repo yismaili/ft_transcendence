@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany, ManyToOne } from 'typeorm';
 import { Profile } from './Profile.entity';
 import { Relation } from './Relation.entity';
 import { Achievement } from './Achievement.entity';
@@ -36,6 +36,6 @@ export class User {
   @OneToMany(() => Achievement, achievement => achievement.user)
   achievements: Achievement[];
 
-  @OneToMany(() => HistoryEntity, history => history.user)
+  @OneToMany(() => HistoryEntity, history => history.userCompetitor)
   histories: HistoryEntity[];
 }

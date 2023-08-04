@@ -21,7 +21,8 @@ export class AuthController {
 
   @Get('all') // decorator is define an HTTP GET endpoint
     async findAll(): Promise<User[]> {
-        return this.authService.findAll();
+      const users = this.authService.findAll()
+        return users;
   }
 
   @UseGuards(GoogleGuard)
