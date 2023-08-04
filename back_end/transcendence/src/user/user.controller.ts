@@ -29,7 +29,7 @@ export class UserController {
 
         }
     }
-    
+
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/update')
     async updateUser(@Req() req, @Param('username') username: string, @Body() updateUserDto:ProfileDto){
@@ -43,10 +43,10 @@ export class UserController {
         }
     }
 
-    // @Put('update/profile/:id')
-    // async updateProfile(@Param('id', ParseIntPipe) id: number, @Body() updateProfilerDto: ProfileDto,){
-    //     this.userService.updateProfile(id, updateProfilerDto);
-    // }
+    @Put('update/profile/:id')
+    async updateProfile(@Param('id', ParseIntPipe) id: number, @Body() updateProfilerDto: ProfileDto,){
+        this.userService.updateProfile(id, updateProfilerDto);
+    }
 
     // @Put('update/Achievement/:id')
     // async updateAchievement(@Param('id', ParseIntPipe) id: number, @Body() updateAchievementDto: AchievementDto,){
