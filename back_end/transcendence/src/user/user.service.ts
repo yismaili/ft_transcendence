@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ProfileDto } from 'src/auth/dtos/profile.dto';
 import { UserDto } from 'src/auth/dtos/user.dto';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
@@ -60,6 +61,50 @@ export class UserService {
     return existingUser;
   } catch (error) {
     return null;
+  }
+}
+
+async updateByUsername(userName: string, updateUserDetails: ProfileDto): Promise<ProfileDto | any> {
+  const existingUser = await this.userRepository.findOne({
+    where: {
+      username: userName,
+    },
+    relations: ['profile', 'relationsOne', 'relationsTwo', 'achievements', 'histories'],
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      profile: {
+        id: true,
+        score: true,
+        win: true,
+        los: true,
+      },
+      relationsOne: {
+        id: true,
+        status: true,
+        userOne: {}
+      },
+      relationsTwo: {
+        id: true,
+        status: true,
+        userTwo: {}
+      },
+      achievements: {
+        id: true,
+        type: true,
+        description: true,
+      },
+      histories: {
+        id: true,
+        competitorId: true,
+      },
+    },
+  });
+  if (existingUser.profile) {
+    const primaryKeyValue = existingUser.profile.id; 
+    return this.profileRepository.update(primaryKeyValue, { ...updateUserDetails});
   }
 }
 

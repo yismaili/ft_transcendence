@@ -1,4 +1,4 @@
-import {Controller, ForbiddenException, Get, Param, Req, UseGuards } from '@nestjs/common';
+import {Body, Controller, ForbiddenException, Get, Param, Put, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from 'src/auth/dtos/user.dto';
 import { ProfileDto } from 'src/auth/dtos/profile.dto';
@@ -20,9 +20,7 @@ export class UserController {
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username')
     async getDetailsProfile(@Req() req, @Param('username') username: string): Promise<UserDto| string> {
-        console.log(username);
         const authorization = req.user;
-        console.log(authorization.username);
         if (authorization.username == username){
             return this.userService.findUserByUsername(username);
         }
@@ -31,10 +29,19 @@ export class UserController {
 
         }
     }
-    // @Put('update/user/:id')
-    // async updateUser(@Param('id', ParseIntPipe) id: number, @Body() updateUserDto: UserDto){
-    //     this.userService.updateUser(id, updateUserDto);
-    // }
+    
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Put('profile/:username/update')
+    async updateUser(@Req() req, @Param('username') username: string, @Body() updateUserDto:ProfileDto){
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.updateByUsername(username, updateUserDto); 
+        }
+        else{
+            throw new ForbiddenException();
+
+        }
+    }
 
     // @Put('update/profile/:id')
     // async updateProfile(@Param('id', ParseIntPipe) id: number, @Body() updateProfilerDto: ProfileDto,){
