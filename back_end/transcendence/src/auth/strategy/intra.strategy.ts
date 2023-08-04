@@ -16,9 +16,10 @@ export class IntraStrategy extends PassportStrategy(Strategy, '42') {
   }
 
   async validate(accessToken: string, refreshToken: string, profile: any) {
-    //  console.log(profile);
+   // console.log(profile);
    const user = {
     firstName: profile.name.givenName, 
+    username: profile.username,
     lastName: profile.name.familyName, 
     email: profile.emails?.[0]?.value,
     picture: profile._json.image.link,
