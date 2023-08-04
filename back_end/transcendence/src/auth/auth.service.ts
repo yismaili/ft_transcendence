@@ -23,45 +23,10 @@ import { RandomService } from 'src/random/random.service';
       ) {}
       
       async findAll() {
-        return this.userRepository.find({
-          relations: ['profile', 'relationsOne', 'relationsTwo', 'achievements', 'histories'],
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            username: true,
-            email: true,
-            profile: {
-              id: true,
-              score: true,
-              win: true,
-              los: true,
-            },
-            relationsOne: {
-              id: true,
-              status: true,
-              userOne:{
-
-              }
-            },
-            relationsTwo: {
-              id: true,
-              status: true,
-              userTwo: {
-                
-              }
-            },
-            achievements: {
-              id: true,
-              type: true,
-              description: true,
-            },
-            histories: {
-              id: true,
-              competitorId: true,
-            },
-          },
+       const users =  this.userRepository.find({
+          relations: ['profile', 'relationsOne', 'relationsTwo', 'achievements', 'histories']
         });
+        return users;
       }
 
 async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> {
@@ -130,7 +95,7 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> 
       
   // Create a new 'History' entity
       const newHistory = this.historyRepository.create({
-        competitorId: null,
+        userCompetitor: null,
       });
       
   // Assign the related entities to the new user
