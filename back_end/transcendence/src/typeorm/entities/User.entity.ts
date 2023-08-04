@@ -36,6 +36,6 @@ export class User {
   @OneToMany(() => Achievement, achievement => achievement.user)
   achievements: Achievement[];
 
-  @OneToMany(() => HistoryEntity, history => history.userCompetitor)
+  @OneToMany(() => HistoryEntity, history => history.user)
   histories: HistoryEntity[];
 }
