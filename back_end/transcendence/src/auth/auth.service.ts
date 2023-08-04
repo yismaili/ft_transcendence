@@ -1,82 +1,176 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { User } from './entities/user.entity';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { sign } from 'jsonwebtoken';
-import { IAuthenticate } from './interface/role';
+import { User } from 'src/typeorm/entities/User.entity';
+import { Profile } from 'src/typeorm/entities/Profile.entity';
+import { Relation } from 'src/typeorm/entities/Relation.entity';
+import { HistoryEntity } from 'src/typeorm/entities/History.entity';
+import { Achievement } from 'src/typeorm/entities/Achievement.entity';
+import { UserDto } from './dtos/user.dto';
+import { IAuthenticate } from 'utils/types';
+import { RandomService } from 'src/random/random.service';
 
-@Injectable() // decorator marks the AuthService class as an injectable service that maning alows other classes to inject and use this service using dependency injection.
-export class AuthService {
-  constructor(
-    @InjectRepository(User) //  decorator The userRepository instance is used to interact with the User entity in the database
-    private userRepository: Repository<User>, //class receives an instance of the Repository<User> for the User entity as a parameter
-  ) {}
+  @Injectable()
+  export class AuthService {
+    constructor(
+      @InjectRepository(User) private userRepository: Repository<User>,
+      @InjectRepository(Profile)private profileRepository: Repository<Profile>,
+      @InjectRepository(Relation)private relationRepository: Repository<Relation>,
+      @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
+      @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
+      private generatenUsename:RandomService,
+      ) {}
+      
+      async findAll() {
+        return this.userRepository.find({
+          relations: ['profile', 'relationsOne', 'relationsTwo', 'achievements', 'histories'],
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            username: true,
+            email: true,
+            profile: {
+              id: true,
+              score: true,
+              win: true,
+              los: true,
+            },
+            relationsOne: {
+              id: true,
+              status: true,
+              userOne:{
 
-  //fetches all users from the database
-  async findAll():  Promise<User[]> {
-    return this.userRepository.find();
+              }
+            },
+            relationsTwo: {
+              id: true,
+              status: true,
+              userTwo: {
+                
+              }
+            },
+            achievements: {
+              id: true,
+              type: true,
+              description: true,
+            },
+            histories: {
+              id: true,
+              competitorId: true,
+            },
+          },
+        });
+      }
+
+async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> {
+  let { email, firstName, username, lastName, picture } = userDetails;
+
+  const existingUser = await this.userRepository.findOne({
+    where: {
+      email,
+    },
+    relations: ['profile', 'relationsOne', 'relationsTwo', 'achievements', 'histories'],
+  });
+      
+  if (existingUser) {
+    existingUser.firstName = firstName || existingUser.firstName;
+    existingUser.lastName = lastName || existingUser.lastName;
+    existingUser.username = username || existingUser.username;
+    existingUser.picture = picture|| existingUser.picture;
+      
+    await this.userRepository.save(existingUser);
+      
+    const token = sign({ ...existingUser }, 'secrete');
+      return { token, user: existingUser };
+    } else {
+
+    if (username === undefined) {
+      let newUsername = firstName[0] + lastName;
+      const existingUsername = await this.userRepository.findOne({
+        where: {
+          username: newUsername,
+        },
+      });
+      
+      if (existingUsername) {
+        const randomString = this.generatenUsename.generateRandomString(3);
+        newUsername = lastName + randomString; // Change variable name to 'newUsername'
+      }
+      username = newUsername;
+      console.log(newUsername);
+    }
+      // user entity 
+    const newUser = this.userRepository.create({
+        firstName,
+        lastName,
+        username,
+        email,
+        picture,
+    });
+      
+  // Create a new 'Profile' entity if profile data is provided
+    const newProfile = this.profileRepository.create({
+        score: 0,
+        win: 0,
+        los:  0,
+      })
+      
+  // Create a new 'Relation' entity
+    const newRelation = this.relationRepository.create({
+        status: '',
+    });
+      
+  // Create a new 'Achievement' entity
+      const newAchievement = this.achievementRepository.create({
+          type: '',
+          description: '',
+      });
+      
+  // Create a new 'History' entity
+      const newHistory = this.historyRepository.create({
+        competitorId: null,
+      });
+      
+  // Assign the related entities to the new user
+      if (newProfile) {
+        newUser.profile = newProfile;
+      }
+      newUser.relationsOne = [newRelation];
+      newUser.relationsTwo = [];
+      newUser.achievements = [newAchievement];
+      newUser.histories = [newHistory];
+      
+      const savedUser = await this.userRepository.save(newUser);
+      const token = sign({ ...savedUser }, 'secrete');
+    return { token, user: savedUser };
   }
+}
+    generateRandomString(arg0: number) {
+      throw new Error('Method not implemented.');
+    }
 
-  async googleAuthenticate(user: Partial<User>): Promise<IAuthenticate> {
-    const { email, firstName, lastName } = user; // Destructure the properties from the 'user' object
-
-    // Check if the user already exists based on the email, firstName, and lastName
+async updateProfile(userDetails: UserDto){
+  
+}
+      
+async findUserById(user: Partial<User>): Promise<Partial<User>> {
+  try {
     const existingUser = await this.userRepository.findOne({
       where: {
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
       },
-    });
-
-    if (existingUser) {
-      // If the user already exists, update the existing user's data instead of creating a new one
-      existingUser.email = user.email || existingUser.email;
-      existingUser.firstName = user.firstName || existingUser.firstName;
-      existingUser.lastName = user.lastName || existingUser.lastName;
-      existingUser.picture = user.picture || existingUser.picture;
-      existingUser.accessToken = user.accessToken || existingUser.accessToken;
-
-      const savedUser = await this.userRepository.save(existingUser);
-      // Generate the JWT token using the 'sign' function and the 'savedUser' object
-      const token = sign({ ...savedUser }, 'secrete');
-      // Return the token and the 'savedUser' object in the 'IAuthenticate' format
-      return { token, user: savedUser };
-    } else {
-      // If the user does not exist, create a new user
-      const newUser = this.userRepository.create({
-        email: user.email || '',
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        picture: user.picture || '',
-        accessToken: user.accessToken || '',
       });
-
-      const savedUser = await this.userRepository.save(newUser);
-      // Generate the JWT token using the 'sign' function and the 'savedUser' object
-      const token = sign({ ...savedUser }, 'secrete');
-      // Return the token and the 'savedUser' object in the 'IAuthenticate' format
-      return { token, user: savedUser };
-    }
-  }
-
-  async findUserById(user: Partial<User>): Promise<Partial<User>> {
-    // Use the userRepository to find the user by ID
-    try {
-      const existingUser = await this.userRepository.findOne({
-        where: {
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-        },
-      });
-      return existingUser
+      return existingUser;
     } catch (error) {
-      // Handle any errors that may occur during the database query
       return null;
     }
   }
 }
+
 
 // This JWT contains three parts separated by dots:
 

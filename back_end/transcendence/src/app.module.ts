@@ -2,11 +2,15 @@ import { Module } from '@nestjs/common'; // NestJS common utilities and decorato
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm'; 
-import { User } from './auth/entities/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
-import { JwtAuthGuard } from './auth/guard/jwt.guard';
+import { HistoryEntity } from './typeorm/entities/History.entity';
+import { Achievement } from './typeorm/entities/Achievement.entity';
+import { Relation } from './typeorm/entities/Relation.entity';
+import { Profile } from './typeorm/entities/Profile.entity';
+import { User } from './typeorm/entities/User.entity';
+import { UserModule } from './user/user.module';
+import { RandomService } from './random/random.service';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
 // The imports property specifies the modules that this module depends on
@@ -21,15 +25,16 @@ import { JwtAuthGuard } from './auth/guard/jwt.guard';
       username: 'postgres',
       password: 'pass1337',
       database: 'transcendence',
-      entities: [User],
+      entities: [User, Profile, Relation, Achievement, HistoryEntity],
       autoLoadEntities: true, // automatically load entity files
       synchronize: true, // automatically synchronize the database schema with the entities. // Set to false in production
     }), 
     AuthModule, // responsible for handling authentication logic
-    PassportModule,//NestJS module for integrating Passport.js, an authentication middleware for Node.j
+    PassportModule, 
+    UserModule,//NestJS module for integrating Passport.js, an authentication middleware for Node.j
   ],
   controllers: [AppController], // Controllers  handle incoming requests and define the routes and endpoints for the application
-  providers: [AppService], // Providers are responsible for providing business logic and functionality to the application.
+  providers: [AppService, RandomService], // Providers are responsible for providing business logic and functionality to the application.
 })
 export class AppModule { // class that represents the main module of application
 
