@@ -29,7 +29,7 @@ export class UserController {
 
         }
     }
-    
+
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/update')
     async updateUser(@Req() req, @Param('username') username: string, @Body() updateUserDto:ProfileDto){
