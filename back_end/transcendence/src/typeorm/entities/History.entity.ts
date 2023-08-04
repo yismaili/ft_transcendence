@@ -6,6 +6,9 @@ export class HistoryEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ManyToOne(() => User, user => user.histories)
+  user: User;
+  
   @Column()
   date:Date
 

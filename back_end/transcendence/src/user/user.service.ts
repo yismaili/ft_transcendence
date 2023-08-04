@@ -84,29 +84,27 @@ async addHistoryByUsername(userName: string, addhistoryDto: HistoryDto): Promise
 
 async findAllHistoryOfUser(username: string): Promise<UserDto| any> {
   const user = await this.historyRepository.findOne({
-    where: { userCompetitor: {
+    where: { user: {
     username,
     }},
     relations: {
+      user: true,
       userCompetitor: true,
     },
     select : {
       id: true,
-      userCompetitor: {
+      user: {
         username: true,
       },
+      userCompetitor: {
+        username : true,
+      }
     }
   });
 
   if (!user) {
     return [];
   }
-  // const allHistory = [...user.histories { 
-  //   id :true,
-  //   username: true,
-  //   firstname: true,
-  // }];
-  // console.log(allHistory);
   return user;
 }
 }
