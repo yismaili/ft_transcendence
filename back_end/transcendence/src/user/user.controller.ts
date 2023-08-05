@@ -68,4 +68,16 @@ export class UserController {
 
         }
     }
+    
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Post('profile/:username/achievements')
+    async addAchievementOfUser(@Req() req, @Param('username') username: string, @Body() achievementDto:AchievementDto){
+        const authorization = req.user;
+        if(authorization.username == username){
+            return this.userService.addAchievementOfUser(username, achievementDto);
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
 }
