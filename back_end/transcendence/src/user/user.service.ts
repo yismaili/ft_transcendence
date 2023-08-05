@@ -110,5 +110,27 @@ async addAchievementOfUser(userName: string, addAchievementOfUser: AchievementDt
     return this.achievementRepository.save(newHistory);
   }
 }
+
+async findAllAchievementOfUser(username: string): Promise<AchievementDto[] | []> {
+  const achievements = await this.achievementRepository.find({
+    where: { user: { username } },
+    relations: ['user'],
+    select: ['id', 'type', 'description', 'user'], 
+  });
+
+  if (!achievements || achievements.length === 0) {
+    return [];
+  }
+
+  const achievementDtos: AchievementDto[] = achievements.map((achievement) => ({
+    id: achievement.id,
+    type: achievement.type,
+    description: achievement.description,
+    user: achievement.user
+  }));
+
+  return achievementDtos;
+}
+
 }
 
