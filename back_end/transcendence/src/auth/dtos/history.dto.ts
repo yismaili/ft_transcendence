@@ -1,3 +1,7 @@
+import { User } from "src/typeorm/entities/User.entity";
+
 export class HistoryDto{
-    competitorId: number;
+    user:User
+    date: Date;
+    userCompetitor: User;
 }
