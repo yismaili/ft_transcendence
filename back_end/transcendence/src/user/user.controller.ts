@@ -80,4 +80,17 @@ export class UserController {
             throw new ForbiddenException();
         }
     }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/achievements')
+    async getachievementOfUser(@Req() req, @Param('username') username: string){
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.findAllAchievementOfUser(username); 
+        }
+        else{
+            throw new ForbiddenException();
+
+        }
+    }
 }
