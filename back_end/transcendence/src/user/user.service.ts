@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AchievementDto } from 'src/auth/dtos/achievement.dto';
 import { HistoryDto } from 'src/auth/dtos/history.dto';
 import { ProfileDto } from 'src/auth/dtos/profile.dto';
 import { UserDto } from 'src/auth/dtos/user.dto';
@@ -10,11 +11,7 @@ import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { User } from 'src/typeorm/entities/User.entity';
 import { Repository } from 'typeorm';
 
-// interface HistoryDto {
-//   id: number;
-//   user: User;
-//   userCompetitor: User;
-// }
+
 @Injectable()
 export class UserService {
     constructor(
@@ -80,8 +77,6 @@ async updateProfileByUsername(userName: string, updateUserDetails: ProfileDto): 
 async addHistoryByUsername(userName: string, addhistoryDto: HistoryDto): Promise<HistoryDto | any>{
   const existingUser = await this.findProfileByUsername(userName);
   if (existingUser) {
-    console.log(addhistoryDto);
-    // const primaryKeyValue = existingUser.HistoryEntity.id; 
     const newHistory =  this.historyRepository.create({...addhistoryDto});
     return this.historyRepository.save(newHistory);
   }
@@ -91,20 +86,29 @@ async findAllHistoryOfUser(username: string): Promise<HistoryDto[] | []> {
   const histories = await this.historyRepository.find({
     where: { user: { username } },
     relations: ['userCompetitor'],
-    select: ['id'],
+    select: ['id', 'date'], 
   });
 
   if (!histories || histories.length === 0) {
     return [];
   }
 
-  // Map the histories to the desired DTO format
   const historyDtos: HistoryDto[] = histories.map((history) => ({
     id: history.id,
+    date: history.date,
+    user: history.user,
     userCompetitor: history.userCompetitor,
   }));
 
   return historyDtos;
+}
+
+async addAchievementOfUser(userName: string, addAchievementOfUser: AchievementDto) : Promise<ProfileDto | any> {
+  const existingUser = await this.findProfileByUsername(userName);
+  if (existingUser) {
+    const newHistory =  this.achievementRepository.create({...addAchievementOfUser});
+    return this.achievementRepository.save(newHistory);
+  }
 }
 }
 
