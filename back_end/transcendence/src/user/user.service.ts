@@ -10,6 +10,11 @@ import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { User } from 'src/typeorm/entities/User.entity';
 import { Repository } from 'typeorm';
 
+// interface HistoryDto {
+//   id: number;
+//   user: User;
+//   userCompetitor: User;
+// }
 @Injectable()
 export class UserService {
     constructor(
@@ -82,30 +87,24 @@ async addHistoryByUsername(userName: string, addhistoryDto: HistoryDto): Promise
   }
 }
 
-async findAllHistoryOfUser(username: string): Promise<UserDto| any> {
-  const user = await this.historyRepository.findOne({
-    where: { user: {
-    username,
-    }},
-    relations: {
-      user: true,
-      userCompetitor: true,
-    },
-    select : {
-      id: true,
-      user: {
-        username: true,
-      },
-      userCompetitor: {
-        username : true,
-      }
-    }
+async findAllHistoryOfUser(username: string): Promise<HistoryDto[] | []> {
+  const histories = await this.historyRepository.find({
+    where: { user: { username } },
+    relations: ['userCompetitor'],
+    select: ['id'],
   });
 
-  if (!user) {
+  if (!histories || histories.length === 0) {
     return [];
   }
-  return user;
+
+  // Map the histories to the desired DTO format
+  const historyDtos: HistoryDto[] = histories.map((history) => ({
+    id: history.id,
+    userCompetitor: history.userCompetitor,
+  }));
+
+  return historyDtos;
 }
 }
 
