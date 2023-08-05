@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { HistoryDto } from 'src/auth/dtos/history.dto';
 import { ProfileDto } from 'src/auth/dtos/profile.dto';
 import { UserDto } from 'src/auth/dtos/user.dto';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
@@ -19,7 +20,7 @@ export class UserService {
         @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
         ) {}
 
-  async findUserByUsername(userName: string): Promise<UserDto| null> {
+  async findProfileByUsername(userName: string): Promise<UserDto| any> {
   try {
     const existingUser = await this.userRepository.findOne({
         where: {
@@ -54,7 +55,6 @@ export class UserService {
           },
           histories: {
             id: true,
-            competitorId: true,
           },
         },
       });
@@ -64,49 +64,48 @@ export class UserService {
   }
 }
 
-async updateByUsername(userName: string, updateUserDetails: ProfileDto): Promise<ProfileDto | any> {
-  const existingUser = await this.userRepository.findOne({
-    where: {
-      username: userName,
-    },
-    relations: ['profile', 'relationsOne', 'relationsTwo', 'achievements', 'histories'],
-    select: {
-      id: true,
-      firstName: true,
-      lastName: true,
-      email: true,
-      profile: {
-        id: true,
-        score: true,
-        win: true,
-        los: true,
-      },
-      relationsOne: {
-        id: true,
-        status: true,
-        userOne: {}
-      },
-      relationsTwo: {
-        id: true,
-        status: true,
-        userTwo: {}
-      },
-      achievements: {
-        id: true,
-        type: true,
-        description: true,
-      },
-      histories: {
-        id: true,
-        competitorId: true,
-      },
-    },
-  });
+async updateProfileByUsername(userName: string, updateUserDetails: ProfileDto): Promise<ProfileDto | any> {
+  const existingUser = await this.findProfileByUsername(userName);
   if (existingUser.profile) {
     const primaryKeyValue = existingUser.profile.id; 
     return this.profileRepository.update(primaryKeyValue, { ...updateUserDetails});
   }
 }
 
+async addHistoryByUsername(userName: string, addhistoryDto: HistoryDto): Promise<HistoryDto | any>{
+  const existingUser = await this.findProfileByUsername(userName);
+  if (existingUser) {
+    console.log(addhistoryDto);
+    // const primaryKeyValue = existingUser.HistoryEntity.id; 
+    const newHistory =  this.historyRepository.create({...addhistoryDto});
+    return this.historyRepository.save(newHistory);
+  }
+}
+
+async findAllHistoryOfUser(username: string): Promise<UserDto| any> {
+  const user = await this.historyRepository.findOne({
+    where: { user: {
+    username,
+    }},
+    relations: {
+      user: true,
+      userCompetitor: true,
+    },
+    select : {
+      id: true,
+      user: {
+        username: true,
+      },
+      userCompetitor: {
+        username : true,
+      }
+    }
+  });
+
+  if (!user) {
+    return [];
+  }
+  return user;
+}
 }
 
