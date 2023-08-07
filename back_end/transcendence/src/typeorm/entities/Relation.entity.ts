@@ -10,8 +10,8 @@ export class Relation {
   status: string;
 
   @ManyToOne(() => User, user => user.relationsOne)
-  userOne: User;
+  friend: User;
 
   @ManyToOne(() => User, user => user.relationsTwo)
-  userTwo: User;
+  user: User;
 }

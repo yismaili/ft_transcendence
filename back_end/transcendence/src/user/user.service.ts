@@ -29,7 +29,7 @@ export class UserService {
         where: {
           username: userName,
         },
-        relations: ['profile', 'relationsOne', 'relationsTwo', 'achievements', 'histories'],
+        relations: ['profile', 'relationsOne', 'achievements', 'histories'],
         select: {
           id: true,
           firstName: true,
@@ -44,12 +44,7 @@ export class UserService {
           relationsOne: {
             id: true,
             status: true,
-            userOne: {}
-          },
-          relationsTwo: {
-            id: true,
-            status: true,
-            userTwo: {}
+            friend: {}
           },
           achievements: {
             id: true,
@@ -129,36 +124,93 @@ async findAllAchievementOfUser(username: string): Promise<AchievementDto[] | []>
     description: achievement.description,
     user: achievement.user
   }));
-
   return achievementDtos;
 }
 
-async addFriendOfUser(userName: string, addFriend: RelationDto) : Promise<RelationDto| any> {
-  const existingUser = await this.findProfileByUsername(userName);
-  if (existingUser) {
-    const newFriend =  this.relationRepository.create({...addFriend});
-    return this.relationRepository.save(newFriend);
+async addFriendOfUser(userName: string, addFriend: RelationDto): Promise<RelationDto | any> {
+  try {
+    const existingUser = await this.findProfileByUsername(userName);
+    if (existingUser) {
+      // Check if the user exists in the relation
+      // console.log(existingUser);
+      // const relation = await this.relationRepository.findOne({
+      //   where: {
+      //      friend:existingUser.relation,
+      //   },
+      // });
+
+      // if (relation) {
+      //   console.log("User already exists in the relation.");
+      //   return relation; // Return the existing relation if found
+      // } else {
+        // If the relation doesn't exist, proceed to add the new friend
+        const newFriend = this.relationRepository.create({ ...addFriend });
+        return this.relationRepository.save(newFriend);
+      // }
+    } else {
+      throw new Error("User not found");
+    }
+  } catch (error) {
+    console.error("Error adding friend:", error);
+    return { error: "An error occurred while adding a friend." };
   }
 }
 
-async findAllFriendsOfUser(username: string): Promise<RelationDto[] | []> {
+async findAllFriendsOfUser(username: string): Promise<RelationDto[]> {
   const friends = await this.relationRepository.find({
-    where: { userOne: { username } },
-    relations: ['user'],
-    select: ['id', 'status', 'userOne', 'userTwo'], 
+    where: { user: { username }, status: 'friends' },
+    relations: ['friend'],
   });
 
-  if (!friends || friends.length === 0) {
-    return [];
-  }
+  const relationDtos: RelationDto[] = friends.map((relation) => ({
+        status: relation.status,
+        friend: relation.friend,
+        user: relation.user,
+      }));
+    return relationDtos;
+}
+
+async findAllBlockedOfUser(username: string): Promise<RelationDto[]> {
+  const friends = await this.relationRepository.find({
+    where: { user: { username }, status: 'blocked' },
+    relations: ['friend'],
+  });
 
   const relationDtos: RelationDto[] = friends.map((relation) => ({
-    status: relation.status,
-    userOne: relation.userOne,
-    userTwo: relation.userTwo,
-  }));
-
-  return relationDtos;
+        status: relation.status,
+        friend: relation.friend,
+        user: relation.user,
+      }));
+    return relationDtos;
 }
+
+async findAllSendRequistOfUser(username: string): Promise<RelationDto[]> {
+  const friends = await this.relationRepository.find({
+    where: { user: { username }, status: 'sendRequist' },
+    relations: ['friend'],
+  });
+
+  const relationDtos: RelationDto[] = friends.map((relation) => ({
+        status: relation.status,
+        friend: relation.friend,
+        user: relation.user,
+      }));
+    return relationDtos;
+}
+
+// not finished this method !!!!
+async findAllSuggestOfUser(username: string): Promise<RelationDto[]> {
+  const friends = await this.relationRepository.find({
+    where: { user: { username }, status: '' },
+    relations: ['friend'],
+  });
+  const relationDtos: RelationDto[] = friends.map((relation) => ({
+        status: relation.status,
+        friend: relation.friend,
+        user: relation.user,
+      }));
+    return relationDtos;
+}
+
 }
 
