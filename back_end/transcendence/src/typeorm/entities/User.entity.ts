@@ -27,10 +27,10 @@ export class User {
   @OneToOne(() => Profile, profile => profile.user, { cascade: true })
   profile: Profile;
 
-  @OneToMany(() => Relation, relation => relation.userOne)
+  @OneToMany(() => Relation, relation => relation.user)
   relationsOne: Relation[];
 
-  @OneToMany(() => Relation, relation => relation.userTwo)
+  @OneToMany(() => Relation, relation => relation.friend)
   relationsTwo: Relation[];
 
   @OneToMany(() => Achievement, achievement => achievement.user)

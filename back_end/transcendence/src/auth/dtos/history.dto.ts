@@ -1,7 +1,9 @@
 import { User } from "src/typeorm/entities/User.entity";
 
-export class HistoryDto{
-    user:User
+export interface HistoryDto {
+    id: number;
     date: Date;
+    user: User;
     userCompetitor: User;
-}
+  }
+  
