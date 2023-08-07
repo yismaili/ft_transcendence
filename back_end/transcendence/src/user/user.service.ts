@@ -212,5 +212,40 @@ async findAllSuggestOfUser(username: string): Promise<RelationDto[]> {
     return relationDtos;
 }
 
+// async blockUserFromFriend(username: string, relationDetils: RelationDto): Promise<RelationDto| any>{
+//   const existingUser =  await this.relationRepository.find({
+//     where: { user: { relationDetils.username }},
+//     relations: ['friend'],
+//   });
+//   console.log(existingUser);
+//   // if (existingUser.profile) {
+//   //   const primaryKeyValue = existingUser.relationsOne.Relation.id; 
+//   //   return this.relationRepository.update(primaryKeyValue, { ...relationDetils});
+//   // }
+// }
+
+async blockUserFromFriend(username: string, relationDetails: RelationDto): Promise<RelationDto | undefined> {
+  const existingRelation = await this.relationRepository.findOne({
+    where: { user: { username } },
+    relations: ['friend'],
+  });
+
+  if (!existingRelation) {
+    // The relation does not exist, cannot block the user
+    return undefined;
+  }
+
+  // Update the relation status to indicate the user is blocked
+  existingRelation.status = 'blocked';
+
+  try {
+    await this.relationRepository.save(existingRelation);
+    return relationDetails;
+  } catch (error) {
+    console.error('Error while blocking user:', error);
+    return undefined;
+  }
+
+}
 }
 
