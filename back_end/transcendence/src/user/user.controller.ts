@@ -118,4 +118,30 @@ export class UserController {
 
         }
     }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/blocked')
+    async getBlockedOfUser(@Req() req, @Param('username') username: string){
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.findAllBlockedOfUser(username); 
+        }
+        else{
+            throw new ForbiddenException();
+
+        }
+    }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/requists')
+    async getSuggestOfUser(@Req() req, @Param('username') username: string){
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.findAllSendRequistOfUser(username); 
+        }
+        else{
+            throw new ForbiddenException();
+
+        }
+    }
 }
