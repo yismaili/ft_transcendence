@@ -144,4 +144,17 @@ export class UserController {
 
         }
     }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Put('profile/:username/blockUser')
+    async UpdateStatusOfUser(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto){
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.blockUserFromFriend(username, relationDto); 
+        }
+        else{
+            throw new ForbiddenException();
+
+        }
+    }
 }
