@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { error } from 'console';
 import { AchievementDto } from 'src/auth/dtos/achievement.dto';
 import { HistoryDto } from 'src/auth/dtos/history.dto';
-import { ProfileDto } from 'src/auth/dtos/profile.dto';
+import { OutcomeDto } from 'src/auth/dtos/outcome.dto';
 import { RelationDto } from 'src/auth/dtos/relation.dto';
+import { updateProfileDto } from 'src/auth/dtos/updateProfile.dto';
 import { UserDto } from 'src/auth/dtos/user.dto';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
@@ -63,11 +63,19 @@ export class UserService {
   }
 }
 
-async updateProfileByUsername(userName: string, updateUserDetails: ProfileDto): Promise<ProfileDto | any> {
+async updateProfileOutcomeByUsername(userName: string, updateUserDetails: OutcomeDto): Promise<OutcomeDto | any> {
   const existingUser = await this.findProfileByUsername(userName);
   if (existingUser.profile) {
     const primaryKeyValue = existingUser.profile.id; 
     return this.profileRepository.update(primaryKeyValue, { ...updateUserDetails});
+  }
+}
+
+async updateProfileByUsername(userName: string, updateUserDetails: updateProfileDto): Promise<updateProfileDto | any> {
+  const existingUser = await this.findProfileByUsername(userName);
+  if (existingUser.profile) {
+    const primaryKeyValue = existingUser.id; 
+    return this.userRepository.update(primaryKeyValue, { ...updateUserDetails});
   }
 }
 

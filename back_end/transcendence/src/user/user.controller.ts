@@ -1,12 +1,13 @@
 import {Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from 'src/auth/dtos/user.dto';
-import { ProfileDto } from 'src/auth/dtos/profile.dto';
 import { AchievementDto } from 'src/auth/dtos/achievement.dto';
 import { HistoryDto } from 'src/auth/dtos/history.dto';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 import { RelationDto } from 'src/auth/dtos/relation.dto';
+import { OutcomeDto} from 'src/auth/dtos/outcome.dto';
+import { updateProfileDto } from 'src/auth/dtos/updateProfile.dto';
 
 @Controller('users')
 export class UserController {
@@ -26,20 +27,30 @@ export class UserController {
         }
         else{
             throw new ForbiddenException();
+        }
+    }
 
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Put('profile/:username/updateOutcome')
+    async updateProfileOutcome(@Req() req, @Param('username') username: string, @Body() updateProfileDto:OutcomeDto){
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.updateProfileOutcomeByUsername(username, updateProfileDto); 
+        }
+        else{
+            throw new ForbiddenException();
         }
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/updateProfile')
-    async updateProfileDetails(@Req() req, @Param('username') username: string, @Body() updateProfileDto:ProfileDto){
+    async updateProfileDetails(@Req() req, @Param('username') username: string, @Body() updateProfileDto: updateProfileDto){
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.updateProfileByUsername(username, updateProfileDto); 
         }
         else{
             throw new ForbiddenException();
-
         }
     }
 
@@ -52,7 +63,6 @@ export class UserController {
         }
         else{
             throw new ForbiddenException();
-
         }
     }
 
@@ -65,7 +75,6 @@ export class UserController {
         }
         else{
             throw new ForbiddenException();
-
         }
     }
     
@@ -90,7 +99,6 @@ export class UserController {
         }
         else{
             throw new ForbiddenException();
-
         }
     }
 
@@ -115,7 +123,6 @@ export class UserController {
         }
         else{
             throw new ForbiddenException();
-
         }
     }
 
@@ -141,7 +148,6 @@ export class UserController {
         }
         else{
             throw new ForbiddenException();
-
         }
     }
 
@@ -154,7 +160,6 @@ export class UserController {
         }
         else{
             throw new ForbiddenException();
-
         }
     }
 
@@ -167,7 +172,6 @@ export class UserController {
         }
         else{
             throw new ForbiddenException();
-
         }
     }
 
@@ -180,7 +184,6 @@ export class UserController {
         }
         else{
             throw new ForbiddenException();
-
         }
     }
     
@@ -193,7 +196,6 @@ export class UserController {
         }
         else{
             throw new ForbiddenException();
-
         }
     }
 
@@ -206,7 +208,6 @@ export class UserController {
         }
         else{
             throw new ForbiddenException();
-
         }
     }
 }
