@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { sign } from 'jsonwebtoken';
 import { AchievementDto } from 'src/auth/dtos/achievement.dto';
 import { HistoryDto } from 'src/auth/dtos/history.dto';
 import { OutcomeDto } from 'src/auth/dtos/outcome.dto';
@@ -12,6 +13,7 @@ import { Profile } from 'src/typeorm/entities/Profile.entity';
 import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { User } from 'src/typeorm/entities/User.entity';
 import { Repository } from 'typeorm';
+import { IAuthenticate } from 'utils/types';
 
 
 @Injectable()
@@ -71,11 +73,15 @@ async updateProfileOutcomeByUsername(userName: string, updateUserDetails: Outcom
   }
 }
 
-async updateProfileByUsername(userName: string, updateUserDetails: updateProfileDto): Promise<updateProfileDto | any> {
+async updateProfileByUsername(userName: string, updateUserDetails: updateProfileDto): Promise<IAuthenticate> {
   const existingUser = await this.findProfileByUsername(userName);
   if (existingUser.profile) {
     const primaryKeyValue = existingUser.id; 
-    return this.userRepository.update(primaryKeyValue, { ...updateUserDetails});
+    this.userRepository.update(primaryKeyValue, { ...updateUserDetails});
+
+    const userUpdate = await this.findProfileByUsername(userName);
+    const token = sign({ ...userUpdate }, 'secrete');
+    return { token, user: userUpdate };
   }
 }
 
