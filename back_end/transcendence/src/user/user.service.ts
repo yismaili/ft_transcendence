@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { error } from 'console';
 import { AchievementDto } from 'src/auth/dtos/achievement.dto';
 import { HistoryDto } from 'src/auth/dtos/history.dto';
 import { ProfileDto } from 'src/auth/dtos/profile.dto';
@@ -163,6 +164,7 @@ async findAllFriendsOfUser(username: string): Promise<RelationDto[]> {
   });
 
   const relationDtos: RelationDto[] = friends.map((relation) => ({
+    id: relation.id,
         status: relation.status,
         friend: relation.friend,
         user: relation.user,
@@ -177,6 +179,7 @@ async findAllBlockedOfUser(username: string): Promise<RelationDto[]> {
   });
 
   const relationDtos: RelationDto[] = friends.map((relation) => ({
+    id: relation.id,
         status: relation.status,
         friend: relation.friend,
         user: relation.user,
@@ -191,6 +194,7 @@ async findAllSendRequistOfUser(username: string): Promise<RelationDto[]> {
   });
 
   const relationDtos: RelationDto[] = friends.map((relation) => ({
+    id: relation.id,
         status: relation.status,
         friend: relation.friend,
         user: relation.user,
@@ -205,11 +209,110 @@ async findAllSuggestOfUser(username: string): Promise<RelationDto[]> {
     relations: ['friend'],
   });
   const relationDtos: RelationDto[] = friends.map((relation) => ({
+        id: relation.id,
         status: relation.status,
         friend: relation.friend,
         user: relation.user,
       }));
     return relationDtos;
+}
+
+async blockUserFromFriend(username: string, relationDetails: RelationDto): Promise<RelationDto | any> {
+  const existingRelation = await this.relationRepository.findOne({
+    where: { id: relationDetails.id },
+    relations: ['friend'],
+  });
+
+  if (!existingRelation) {
+    return [];
+  }
+
+  existingRelation.status = 'blocked';
+
+  try {
+    await this.relationRepository.save(existingRelation);
+    return existingRelation;
+  } catch (error) {
+    return [];
+  }
+}
+
+async sendRequisteToUser(username: string, relationDetails: RelationDto): Promise<RelationDto | any> {
+  const existingRelation = await this.relationRepository.findOne({
+      where: {
+        id: relationDetails.id
+      },
+      relations: ['friend'],
+  });
+  if (!existingRelation) {
+    return [];
+  }
+  existingRelation.status = 'sendRequist';
+
+  try{
+    await this.relationRepository.save(existingRelation);
+    return existingRelation;
+  }catch(error){
+    return [];
+  }
+}
+
+async unblockUser(username: string, relationDetails: RelationDto): Promise<RelationDto | any> {
+  const existingRelation = await this.relationRepository.findOne({
+    where: { id: relationDetails.id },
+    relations: ['friend'],
+  });
+
+  if (!existingRelation) {
+    return [];
+  }
+
+  existingRelation.status = 'friends';
+
+  try {
+    await this.relationRepository.save(existingRelation);
+    return existingRelation;
+  } catch (error) {
+    return [];
+  }
+}
+
+async acceptRequest(username: string, relationDetails: RelationDto): Promise<RelationDto | any> {
+  const existingRelation = await this.relationRepository.findOne({
+    where: { id: relationDetails.id },
+    relations: ['friend'],
+  });
+
+  if (!existingRelation) {
+    return [];
+  }
+
+  existingRelation.status = 'friends';
+
+  try {
+    await this.relationRepository.save(existingRelation);
+    return existingRelation;
+  } catch (error) {
+    return [];
+  }
+}
+
+async rejectRequest(username: string, relationDetails: RelationDto): Promise<RelationDto | any> {
+  const existingRelation = await this.relationRepository.findOne({
+    where: { id: relationDetails.id },
+    relations: ['friend'],
+  });
+
+  if (!existingRelation) {
+    return [];
+  }
+
+  try {
+    await this.relationRepository.remove(existingRelation);
+    return existingRelation;
+  } catch (error) {
+    return [];
+  }
 }
 
 }
