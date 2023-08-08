@@ -1,4 +1,4 @@
-import {Body, Controller, ForbiddenException, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import {Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto } from 'src/auth/dtos/user.dto';
 import { ProfileDto } from 'src/auth/dtos/profile.dto';
@@ -151,6 +151,58 @@ export class UserController {
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.blockUserFromFriend(username, relationDto); 
+        }
+        else{
+            throw new ForbiddenException();
+
+        }
+    }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Put('profile/:username/sendRequist')
+    async sendRequistTofriend(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto){
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.sendRequisteToUser(username, relationDto); 
+        }
+        else{
+            throw new ForbiddenException();
+
+        }
+    }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Put('profile/:username/unblockUser')
+    async unblockUser(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto){
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.unblockUser(username, relationDto); 
+        }
+        else{
+            throw new ForbiddenException();
+
+        }
+    }
+    
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Put('profile/:username/acceptRequist')
+    async acceptRequist(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto){
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.acceptRequest(username, relationDto); 
+        }
+        else{
+            throw new ForbiddenException();
+
+        }
+    }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Delete('profile/:username/rejectRequist')
+    async rejectRequist(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto){
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.rejectRequest(username, relationDto); 
         }
         else{
             throw new ForbiddenException();
