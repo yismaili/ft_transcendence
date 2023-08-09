@@ -20,7 +20,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username')
-    async getDetailsProfile(@Req() req, @Param('username') username: string): Promise<UserDto| string> {
+    async getDetailsProfile(@Req() req, @Param('username') username: string): Promise<UserDto | any> {
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.findProfileByUsername(username);

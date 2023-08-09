@@ -64,7 +64,7 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> 
         newUsername = lastName + randomString; // Change variable name to 'newUsername'
       }
       username = newUsername;
-      console.log(newUsername);
+      // console.log(newUsername);
     }
       // user entity 
     const newUser = this.userRepository.create({
