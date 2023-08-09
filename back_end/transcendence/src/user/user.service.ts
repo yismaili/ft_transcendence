@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { error } from 'console';
+import { sign } from 'jsonwebtoken';
 import { AchievementDto } from 'src/auth/dtos/achievement.dto';
 import { HistoryDto } from 'src/auth/dtos/history.dto';
-import { ProfileDto } from 'src/auth/dtos/profile.dto';
+import { OutcomeDto } from 'src/auth/dtos/outcome.dto';
 import { RelationDto } from 'src/auth/dtos/relation.dto';
+import { updateProfileDto } from 'src/auth/dtos/updateProfile.dto';
 import { UserDto } from 'src/auth/dtos/user.dto';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
@@ -12,6 +13,7 @@ import { Profile } from 'src/typeorm/entities/Profile.entity';
 import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { User } from 'src/typeorm/entities/User.entity';
 import { Repository } from 'typeorm';
+import { IAuthenticate, UserParams } from 'utils/types';
 
 
 @Injectable()
@@ -24,7 +26,7 @@ export class UserService {
         @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
         ) {}
 
-  async findProfileByUsername(userName: string): Promise<UserDto| any> {
+  async findProfileByUsername(userName: string): Promise<UserParams | any> {
   try {
     const existingUser = await this.userRepository.findOne({
         where: {
@@ -63,13 +65,35 @@ export class UserService {
   }
 }
 
-async updateProfileByUsername(userName: string, updateUserDetails: ProfileDto): Promise<ProfileDto | any> {
+async updateProfileOutcomeByUsername(userName: string, updateUserDetails: OutcomeDto): Promise<OutcomeDto | any> {
   const existingUser = await this.findProfileByUsername(userName);
   if (existingUser.profile) {
     const primaryKeyValue = existingUser.profile.id; 
     return this.profileRepository.update(primaryKeyValue, { ...updateUserDetails});
   }
 }
+
+async updateProfileByUsername(userName: string, updateUserDetails: updateProfileDto): Promise<IAuthenticate> {
+  try {
+    const existingUser = await this.findProfileByUsername(userName);
+    
+    if (!existingUser) {
+      throw new Error('User not found'); // Handle the case where the user does not exist
+    }
+    
+    existingUser.firstName = updateUserDetails.firstName;
+    existingUser.lastName = updateUserDetails.lastName;
+    existingUser.picture = updateUserDetails.picture;
+    
+    const updatedUser = await this.userRepository.save(existingUser);
+    const token = sign({ ...updatedUser }, 'secrete'); // Make sure to replace 'secrete' with an actual secret key
+    
+    return { token, user: updatedUser };
+  } catch (error) {
+    throw new Error('Failed to update profile: ' + error.message); // Handle and rethrow errors
+  }
+}
+
 
 async addHistoryByUsername(userName: string, addhistoryDto: HistoryDto): Promise<HistoryDto | any>{
   const existingUser = await this.findProfileByUsername(userName);
