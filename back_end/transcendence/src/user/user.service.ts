@@ -73,17 +73,45 @@ async updateProfileOutcomeByUsername(userName: string, updateUserDetails: Outcom
   }
 }
 
-async updateProfileByUsername(userName: string, updateUserDetails: updateProfileDto): Promise<IAuthenticate> {
-  const existingUser = await this.findProfileByUsername(userName);
-  if (existingUser.profile) {
-    const primaryKeyValue = existingUser.id; 
-    this.userRepository.update(primaryKeyValue, { ...updateUserDetails});
+// async updateProfileByUsername(userName: string, updateUserDetails: updateProfileDto): Promise<IAuthenticate> {
+//   const existingUser = await this.findProfileByUsername(userName);
+//   if (existingUser.profile) {
+//     // const primaryKeyValue = existingUser.id; 
+//     // this.userRepository.update(primaryKeyValue, { ...updateUserDetails});
 
-    const userUpdate = await this.findProfileByUsername(userName);
-    const token = sign({ ...userUpdate }, 'secrete');
-    return { token, user: userUpdate };
+//     existingUser.firstName = updateUserDetails.firstName;
+//     existingUser.lastName = updateUserDetails.lastName;
+//     existingUser.picture= updateUserDetails.picture;
+//     const hhh = this.userRepository.save(existingUser);
+//     const userUpdate = await this.findProfileByUsername(userName);
+//     console.log('--------------------------------');
+//     console.log(hhh);
+//     const token = sign({ ...userUpdate }, 'secrete');
+//     return { token, user: userUpdate };
+//   }
+// }
+async updateProfileByUsername(userName: string, updateUserDetails: updateProfileDto): Promise<IAuthenticate> {
+  try {
+    const existingUser = await this.findProfileByUsername(userName);
+    
+    if (!existingUser) {
+      throw new Error('User not found'); // Handle the case where the user does not exist
+    }
+    
+    existingUser.firstName = updateUserDetails.firstName;
+    existingUser.lastName = updateUserDetails.lastName;
+    existingUser.picture = updateUserDetails.picture;
+    
+    const updatedUser = await this.userRepository.save(existingUser);
+    console.log(updatedUser);
+    const token = sign({ ...updatedUser }, 'secrete'); // Make sure to replace 'secrete' with an actual secret key
+    
+    return { token, user: updatedUser };
+  } catch (error) {
+    throw new Error('Failed to update profile: ' + error.message); // Handle and rethrow errors
   }
 }
+
 
 async addHistoryByUsername(userName: string, addhistoryDto: HistoryDto): Promise<HistoryDto | any>{
   const existingUser = await this.findProfileByUsername(userName);
