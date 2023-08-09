@@ -12,6 +12,7 @@ import { IntraGuard } from './guard/intra.guard';
 import { JwtAuthGuard } from './guard/jwt.guard';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { User } from 'src/typeorm/entities/User.entity';
+import { UserParams } from 'utils/types';
 
 
 
