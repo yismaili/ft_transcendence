@@ -21,23 +21,23 @@ export type ProfileParams = {
 
 export type HistoryParams = {
     id:number;
-    user: UserParams;
+    user: User;
     date:Date;
-    userCompetitor:UserParams;
+    userCompetitor:User;
 };
 
 export type RelationParams = {
     id: number;
     status: string;
-    friend: UserParams;
-    user: UserParams;
+    friend: User;
+    user: User;
 };
 
 export type AchievementParams = {
     id: number;
     type: string;
     description: string;
-    user: UserParams;
+    user: User;
 };
 
 export interface IAuthenticate {

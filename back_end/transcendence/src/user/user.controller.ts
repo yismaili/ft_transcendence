@@ -8,6 +8,7 @@ import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 import { RelationDto } from 'src/auth/dtos/relation.dto';
 import { OutcomeDto} from 'src/auth/dtos/outcome.dto';
 import { updateProfileDto } from 'src/auth/dtos/updateProfile.dto';
+import { AchievementParams, HistoryParams, IAuthenticate, ProfileParams, RelationParams, UserParams } from 'utils/types';
 
 @Controller('users')
 export class UserController {
@@ -20,7 +21,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username')
-    async getDetailsProfile(@Req() req, @Param('username') username: string): Promise<UserDto | any> {
+    async getDetailsProfile(@Req() req, @Param('username') username: string): Promise<UserParams> {
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.findProfileByUsername(username);
@@ -32,7 +33,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/updateOutcome')
-    async updateProfileOutcome(@Req() req, @Param('username') username: string, @Body() updateProfileDto:OutcomeDto){
+    async updateProfileOutcome(@Req() req, @Param('username') username: string, @Body() updateProfileDto:OutcomeDto) : Promise<ProfileParams>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.updateProfileOutcomeByUsername(username, updateProfileDto); 
@@ -44,7 +45,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/updateProfile')
-    async updateProfileDetails(@Req() req, @Param('username') username: string, @Body() updateProfileDto: updateProfileDto){
+    async updateProfileDetails(@Req() req, @Param('username') username: string, @Body() updateProfileDto: updateProfileDto) : Promise<IAuthenticate>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.updateProfileByUsername(username, updateProfileDto); 
@@ -56,7 +57,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Post('profile/:username/history')
-    async addHistory(@Req() req, @Param('username') username: string, @Body() historyDto:HistoryDto){
+    async addHistory(@Req() req, @Param('username') username: string, @Body() historyDto:HistoryDto): Promise<HistoryParams>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.addHistoryByUsername(username, historyDto); 
@@ -68,7 +69,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username/history')
-    async getFriendsOfUser(@Req() req, @Param('username') username: string){
+    async getFriendsOfUser(@Req() req, @Param('username') username: string): Promise<HistoryDto[]>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.findAllHistoryOfUser(username); 
@@ -80,7 +81,7 @@ export class UserController {
     
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Post('profile/:username/achievements')
-    async addAchievementOfUser(@Req() req, @Param('username') username: string, @Body() achievementDto:AchievementDto){
+    async addAchievementOfUser(@Req() req, @Param('username') username: string, @Body() achievementDto:AchievementDto): Promise<AchievementParams>{
         const authorization = req.user;
         if(authorization.username == username){
             return this.userService.addAchievementOfUser(username, achievementDto);
@@ -92,7 +93,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username/achievements')
-    async getachievementOfUser(@Req() req, @Param('username') username: string){
+    async getachievementOfUser(@Req() req, @Param('username') username: string): Promise<AchievementDto[]>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.findAllAchievementOfUser(username); 
@@ -104,7 +105,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Post('profile/:username/friends')
-    async addFriendOfUser(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto){
+    async addFriendOfUser(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto): Promise<RelationParams>{
         const authorization = req.user;
         if(authorization.username == username){
             return this.userService.addFriendOfUser(username, relationDto);
@@ -116,7 +117,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username/friends')
-    async getFriendOfUser(@Req() req, @Param('username') username: string){
+    async getFriendOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.findAllFriendsOfUser(username); 
@@ -128,7 +129,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username/blocked')
-    async getBlockedOfUser(@Req() req, @Param('username') username: string){
+    async getBlockedOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.findAllBlockedOfUser(username); 
@@ -141,7 +142,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username/requists')
-    async getSuggestOfUser(@Req() req, @Param('username') username: string){
+    async getSuggestOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.findAllSendRequistOfUser(username); 
@@ -153,7 +154,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/blockUser')
-    async UpdateStatusOfUser(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto){
+    async UpdateStatusOfUser(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto): Promise<RelationParams>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.blockUserFromFriend(username, relationDto); 
@@ -165,7 +166,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/sendRequist')
-    async sendRequistTofriend(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto){
+    async sendRequistTofriend(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto): Promise<RelationParams>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.sendRequisteToUser(username, relationDto); 
@@ -177,7 +178,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/unblockUser')
-    async unblockUser(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto){
+    async unblockUser(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto): Promise<RelationParams>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.unblockUser(username, relationDto); 
@@ -189,7 +190,7 @@ export class UserController {
     
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/acceptRequist')
-    async acceptRequist(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto){
+    async acceptRequist(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto): Promise<RelationParams>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.acceptRequest(username, relationDto); 
@@ -201,7 +202,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Delete('profile/:username/rejectRequist')
-    async rejectRequist(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto){
+    async rejectRequist(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto): Promise<RelationParams>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.rejectRequest(username, relationDto); 
