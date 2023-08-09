@@ -13,7 +13,7 @@ import { Profile } from 'src/typeorm/entities/Profile.entity';
 import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { User } from 'src/typeorm/entities/User.entity';
 import { Repository } from 'typeorm';
-import { IAuthenticate } from 'utils/types';
+import { IAuthenticate, UserParams } from 'utils/types';
 
 
 @Injectable()
@@ -26,7 +26,7 @@ export class UserService {
         @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
         ) {}
 
-  async findProfileByUsername(userName: string): Promise<UserDto| any> {
+  async findProfileByUsername(userName: string): Promise<UserParams | any> {
   try {
     const existingUser = await this.userRepository.findOne({
         where: {
@@ -73,23 +73,6 @@ async updateProfileOutcomeByUsername(userName: string, updateUserDetails: Outcom
   }
 }
 
-// async updateProfileByUsername(userName: string, updateUserDetails: updateProfileDto): Promise<IAuthenticate> {
-//   const existingUser = await this.findProfileByUsername(userName);
-//   if (existingUser.profile) {
-//     // const primaryKeyValue = existingUser.id; 
-//     // this.userRepository.update(primaryKeyValue, { ...updateUserDetails});
-
-//     existingUser.firstName = updateUserDetails.firstName;
-//     existingUser.lastName = updateUserDetails.lastName;
-//     existingUser.picture= updateUserDetails.picture;
-//     const hhh = this.userRepository.save(existingUser);
-//     const userUpdate = await this.findProfileByUsername(userName);
-//     console.log('--------------------------------');
-//     console.log(hhh);
-//     const token = sign({ ...userUpdate }, 'secrete');
-//     return { token, user: userUpdate };
-//   }
-// }
 async updateProfileByUsername(userName: string, updateUserDetails: updateProfileDto): Promise<IAuthenticate> {
   try {
     const existingUser = await this.findProfileByUsername(userName);
@@ -103,7 +86,6 @@ async updateProfileByUsername(userName: string, updateUserDetails: updateProfile
     existingUser.picture = updateUserDetails.picture;
     
     const updatedUser = await this.userRepository.save(existingUser);
-    console.log(updatedUser);
     const token = sign({ ...updatedUser }, 'secrete'); // Make sure to replace 'secrete' with an actual secret key
     
     return { token, user: updatedUser };
