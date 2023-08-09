@@ -43,6 +43,8 @@ export class UserService {
             score: true,
             win: true,
             los: true,
+            xp: true,
+            level: true,
           },
           relationsOne: {
             id: true,
@@ -66,14 +68,24 @@ export class UserService {
 }
 
 async updateProfileOutcomeByUsername(userName: string, updateUserDetails: OutcomeDto): Promise<ProfileParams> {
-  const existingUser = await this.findProfileByUsername(userName);
-  if (existingUser.profile) {
-    const primaryKeyValue = existingUser.profile.id; 
-    this.profileRepository.update(primaryKeyValue, { ...updateUserDetails});
-    return await this.findProfileByUsername(userName);
+  try {
+    const existingUser = await this.findProfileByUsername(userName);
+
+    if (!existingUser.profile) {
+      throw new Error('User profile not found');
+    }
+
+    const profileId = existingUser.profile.id;
+    await this.profileRepository.update(profileId,  updateUserDetails);
+
+    const updatedUser = await this.findProfileByUsername(userName);
+
+    return updatedUser;
+  } catch (error) {
+    throw new Error('Failed to update profile outcome: ' + error.message);
   }
-  return existingUser;
 }
+
 
 async updateProfileByUsername(userName: string, updateUserDetails: updateProfileDto): Promise<IAuthenticate> {
   try {
@@ -133,8 +145,10 @@ async findAllHistoryOfUser(username: string): Promise<HistoryDto[]> {
 
   const historyDtos: HistoryDto[] = histories.map((history) => ({
     id: history.id,
-    user: history.user,
+    resulteOfCompetitor: history.resulteOfCompetitor,
+    resulteOfUser: history.resulteOfUser,
     date: history.date,
+    user: history.user,
     userCompetitor: history.userCompetitor,
   }));
 
