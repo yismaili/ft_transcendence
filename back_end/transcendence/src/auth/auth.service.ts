@@ -80,6 +80,8 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> 
         score: 0,
         win: 0,
         los:  0,
+        xp: 0,
+        level: 0,
       })
       
   // Create a new 'Relation' entity

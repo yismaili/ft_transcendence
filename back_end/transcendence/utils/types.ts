@@ -4,6 +4,7 @@ export type UserParams = {
     id: number;
     firstName: string;
     lastName: string;
+    username: string,
     email: string;
     picture: string;
     profile: ProfileParams;
@@ -17,12 +18,16 @@ export type ProfileParams = {
     score: number;
     los: number;
     win: number;
+    xp: number;
+    level: number;
 };
 
 export type HistoryParams = {
     id:number;
-    user: User;
     date:Date;
+    resulteOfUser: number;
+    resulteOfCompetitor: number;
+    user: User;
     userCompetitor:User;
 };
 
