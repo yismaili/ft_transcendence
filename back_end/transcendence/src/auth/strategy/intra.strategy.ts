@@ -25,7 +25,7 @@ export class IntraStrategy extends PassportStrategy(Strategy, '42') {
     picture: profile._json.image.link,
     accessToken,
    };
-   console.log(user);
+  //  console.log(user);
   return(user);
   }
 }
