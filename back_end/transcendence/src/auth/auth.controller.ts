@@ -55,7 +55,7 @@ export class AuthController {
       lastName: req.user.lastName,
       picture: req.user.picture,
     };
-    console.log(user);
+    // console.log(user);
     const respone = await this.authService.googleAuthenticate(user);
     return res.status(HttpStatus.OK).json(respone);
   }
