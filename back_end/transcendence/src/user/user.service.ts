@@ -97,7 +97,7 @@ async updateProfileByUsername(userName: string, updateUserDetails: updateProfile
   try {
     const existingUser = await this.findProfileByUsername(userName);
     if (!existingUser) {
-      throw new Error('User not found'); // Handle the case where the user does not exist
+      throw new Error('User not found');
     }
     
     existingUser.firstName = updateUserDetails.firstName;
@@ -206,14 +206,12 @@ async findAllAchievementOfUser(username: string): Promise<AchievementDto[]> {
 }
 
 async addFriendOfUser(userName: string, addFriend: RelationDto): Promise<RelationParams> {
-    try {
-      // const existingUser = await this.userRepository.findOne({
-      //   where :{
-      //     username: userName,
-      //   }
-      // });
-      // console.log(existingUser)
-      const existingUser = await this.findProfileByUsername(userName);
+     try {
+      const existingUser = await this.userRepository.findOne({
+        where :{
+          username: userName,
+        }
+      });
       if (!existingUser) {
         throw new Error('User not found');
       }
@@ -242,7 +240,7 @@ async findAllFriendsOfUser(username: string): Promise<RelationDto[]> {
     ],
     relations: ['user'],
   });
-  console.log(friends);
+  // console.log(friends);
 
   const relationDtos: RelationDto[] = friends.map((relation) => ({
         id: relation.id,
@@ -256,8 +254,11 @@ async findAllFriendsOfUser(username: string): Promise<RelationDto[]> {
 async findAllBlockedOfUser(username: string): Promise<RelationDto[]> {
 
   const friends = await this.relationRepository.find({
-    where: { user: { username }, status: 'blocked' },
-    relations: ['friend'],
+    where: [
+      { friend: { username }, status: 'blocked' },
+      { user: { username }, status: 'blocked' }
+    ],
+    relations: ['user'],
   });
 
   const relationDtos: RelationDto[] = friends.map((relation) => ({
@@ -287,7 +288,7 @@ async findAllSendRequistOfUser(username: string): Promise<RelationDto[]> {
 
 // The method is not yet finished!!! not working. It's still a student, ahahahah!
 
-  async findAllSuggestOfUser(username: string): Promise<RelationDto[]> {
+async findAllSuggestOfUser(username: string): Promise<RelationDto[]> {
     const user = await this.userRepository.find();
     const potentialFriends = await this.userRepository.find({
       where: {
