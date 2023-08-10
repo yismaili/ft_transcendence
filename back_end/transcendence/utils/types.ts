@@ -4,6 +4,7 @@ export type UserParams = {
     id: number;
     firstName: string;
     lastName: string;
+    username: string,
     email: string;
     picture: string;
     profile: ProfileParams;
@@ -17,27 +18,31 @@ export type ProfileParams = {
     score: number;
     los: number;
     win: number;
+    xp: number;
+    level: number;
 };
 
 export type HistoryParams = {
     id:number;
-    user: UserParams;
     date:Date;
-    userCompetitor:UserParams;
+    resulteOfUser: number;
+    resulteOfCompetitor: number;
+    user: User;
+    userCompetitor:User;
 };
 
 export type RelationParams = {
     id: number;
     status: string;
-    friend: UserParams;
-    user: UserParams;
+    friend: User;
+    user: User;
 };
 
 export type AchievementParams = {
     id: number;
     type: string;
     description: string;
-    user: UserParams;
+    user: User;
 };
 
 export interface IAuthenticate {

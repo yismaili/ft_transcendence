@@ -3,4 +3,6 @@ export class OutcomeDto{
     score: number;
     win: number;
     los: number;
+    xp: number;
+    level: number;
 }

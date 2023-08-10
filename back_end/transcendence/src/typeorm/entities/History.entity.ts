@@ -6,11 +6,17 @@ export class HistoryEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, user => user.histories)
-  user: User;
+  @Column()
+  date:Date;
+
+  @Column()
+  resulteOfUser: number;
   
   @Column()
-  date:Date
+  resulteOfCompetitor: number;
+  
+  @ManyToOne(() => User, user => user.histories)
+  user: User;
 
   @ManyToOne(() => User, user => user.histories)
   userCompetitor: User;
