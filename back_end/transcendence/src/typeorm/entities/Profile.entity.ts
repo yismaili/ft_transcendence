@@ -15,6 +15,12 @@ export class Profile {
   @Column({ nullable: true })
   win: number;
 
+  @Column({ nullable: true })
+  xp: number;
+
+  @Column({ nullable: true })
+  level: number;
+  
   @OneToOne(() => User, user => user.profile)
   @JoinColumn()
   user: User;

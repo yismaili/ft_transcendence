@@ -8,7 +8,7 @@ import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { UserDto } from './dtos/user.dto';
-import { IAuthenticate } from 'utils/types';
+import { IAuthenticate, UserParams } from 'utils/types';
 import { RandomService } from 'src/random/random.service';
 
   @Injectable()
@@ -80,6 +80,8 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> 
         score: 0,
         win: 0,
         los:  0,
+        xp: 0,
+        level: 0,
       })
       
   // Create a new 'Relation' entity
@@ -120,7 +122,7 @@ async updateProfile(userDetails: UserDto){
   
 }
       
-async findUserById(user: Partial<User>): Promise<Partial<User>> {
+async findUserById(user: Partial<User>): Promise<Partial<UserParams>> {
   try {
     const existingUser = await this.userRepository.findOne({
       where: {
