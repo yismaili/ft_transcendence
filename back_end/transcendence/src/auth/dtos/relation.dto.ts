@@ -4,5 +4,5 @@ export interface RelationDto {
     id: number;
     status: string;
     friend: User;
-    user: User
+    // user: User
 }
