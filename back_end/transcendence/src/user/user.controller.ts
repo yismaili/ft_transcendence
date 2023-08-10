@@ -15,7 +15,7 @@ export class UserController {
     constructor(private userService: UserService){}
     
     @Get(':username')
-    async getDetailsUser(@Param('username') username: string){
+    async getDetailsUser(@Param('username') username: string): Promise<UserParams>{
        return this.userService.findProfileByUsername(username);
     }
 
@@ -206,6 +206,18 @@ export class UserController {
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.rejectRequest(username, relationDto); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/suggest')
+    async suggestOfUser(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto): Promise<RelationDto[]>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.findAllSuggestOfUser(username); 
         }
         else{
             throw new ForbiddenException();

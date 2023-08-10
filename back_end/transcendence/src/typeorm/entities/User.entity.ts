@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne, OneToMany } from 'typeorm';
 import { Profile } from './Profile.entity';
 import { Relation } from './Relation.entity';
 import { Achievement } from './Achievement.entity';
@@ -28,10 +28,10 @@ export class User {
   profile: Profile;
 
   @OneToMany(() => Relation, relation => relation.user)
-  relationsOne: Relation[];
+  userRelations: Relation[];
 
   @OneToMany(() => Relation, relation => relation.friend)
-  relationsTwo: Relation[];
+  friendRelations: Relation[];
 
   @OneToMany(() => Achievement, achievement => achievement.user)
   achievements: Achievement[];

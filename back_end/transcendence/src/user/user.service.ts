@@ -12,7 +12,7 @@ import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
 import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { User } from 'src/typeorm/entities/User.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Not, Repository } from 'typeorm';
 import { AchievementParams, HistoryParams, IAuthenticate, ProfileParams, RelationParams, UserParams } from 'utils/types';
 
 
@@ -32,11 +32,12 @@ export class UserService {
         where: {
           username: userName,
         },
-        relations: ['profile', 'relationsOne', 'achievements', 'histories'],
+        relations: ['profile','userRelations', 'friendRelations', 'achievements', 'histories'],
         select: {
           id: true,
           firstName: true,
           lastName: true,
+          username: true,
           email: true,
           profile: {
             id: true,
@@ -46,7 +47,12 @@ export class UserService {
             xp: true,
             level: true,
           },
-          relationsOne: {
+          userRelations: {
+            id: true,
+            status: true,
+            friend: {}
+          },
+          friendRelations: {
             id: true,
             status: true,
             friend: {}
@@ -201,15 +207,20 @@ async findAllAchievementOfUser(username: string): Promise<AchievementDto[]> {
 
 async addFriendOfUser(userName: string, addFriend: RelationDto): Promise<RelationParams> {
     try {
+      // const existingUser = await this.userRepository.findOne({
+      //   where :{
+      //     username: userName,
+      //   }
+      // });
+      // console.log(existingUser)
       const existingUser = await this.findProfileByUsername(userName);
-  
       if (!existingUser) {
         throw new Error('User not found');
       }
   
       const newHistory = this.relationRepository.create({
         ...addFriend,
-        user: existingUser, 
+        user: existingUser,
       });
   
       await this.relationRepository.save(newHistory);
@@ -225,12 +236,16 @@ async addFriendOfUser(userName: string, addFriend: RelationDto): Promise<Relatio
 async findAllFriendsOfUser(username: string): Promise<RelationDto[]> {
 
   const friends = await this.relationRepository.find({
-    where: { user: { username }, status: 'friends' },
-    relations: ['friend'],
+    where: [
+      { friend: { username }, status: 'friends' },
+      { user: { username }, status: 'friends' }
+    ],
+    relations: ['user'],
   });
+  console.log(friends);
 
   const relationDtos: RelationDto[] = friends.map((relation) => ({
-    id: relation.id,
+        id: relation.id,
         status: relation.status,
         friend: relation.friend,
         user: relation.user,
@@ -270,21 +285,31 @@ async findAllSendRequistOfUser(username: string): Promise<RelationDto[]> {
     return relationDtos;
 }
 
-// not finished this method !!!!
-async findAllSuggestOfUser(username: string): Promise<RelationDto[]> {
+// The method is not yet finished!!! not working. It's still a student, ahahahah!
 
-  const friends = await this.relationRepository.find({
-    where: { user: { username }, status: '' },
-    relations: ['friend'],
-  });
-  const relationDtos: RelationDto[] = friends.map((relation) => ({
-        id: relation.id,
-        status: relation.status,
-        friend: relation.friend,
-        user: relation.user,
-      }));
-    return relationDtos;
-}
+  async findAllSuggestOfUser(username: string): Promise<RelationDto[]> {
+    const user = await this.userRepository.find();
+    const potentialFriends = await this.userRepository.find({
+      where: {
+        username: Not(username),
+        friendRelations: Not(username),
+      },
+    });
+
+    // const potentia = await this.relationRepository.find({
+    //   where: {
+    //     friend: Not(username),
+    //   },
+    // });
+    // const relationDtos: RelationDto[] = potentialFriends.map((friend) => ({
+    //   id: friend.id,
+    //   status: 'suggest',
+    //   friend: friend,
+    //   user: user,
+    // }));
+console.log(potentialFriends);
+    return [];
+  }
 
 async blockUserFromFriend(username: string, relationDetails: RelationDto): Promise<RelationParams> {
 
