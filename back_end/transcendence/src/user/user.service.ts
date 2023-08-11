@@ -433,8 +433,28 @@ async acceptRequest(username: string, relationId: number): Promise<RelationParam
 async rejectRequest(username: string, relationId: number): Promise<RelationParams> {
 
   const existingRelation = await this.relationRepository.findOne({
-    where: { id: relationId },
+    // where: { id: relationId },
+    where: { friend: { username }, status: 'sendRequist' },
     relations: ['friend'],
+  });
+
+  if (!existingRelation) {
+    return (await this.findProfileByUsername(username));
+  }
+
+  try {
+    await this.relationRepository.remove(existingRelation);
+    return (await this.findProfileByUsername(username));
+  } catch (error) {
+    return (await this.findProfileByUsername(username));
+  }
+}
+
+async cancelRequist(username: string, relationId: number): Promise<RelationParams> {
+
+  const existingRelation = await this.relationRepository.findOne({
+    where: { user: { username }, status: 'sendRequist' },
+    relations: ['user'],
   });
 
   if (!existingRelation) {
