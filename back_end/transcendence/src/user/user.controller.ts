@@ -201,7 +201,7 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Delete('profile/:username/rejectRequist')
+    @Delete('profile/:username/rejectRequist/:relationId')
     async rejectRequist(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationParams>{
         const authorization = req.user;
         if (authorization.username == username){
@@ -213,14 +213,26 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Get('profile/:username/suggest')
-    async suggestOfUser(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationDto[]>{
+    @Delete('profile/:username/cancelRequist/:relationId')
+    async cancelRequist(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationParams>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.findAllSuggestOfUser(username); 
+            return this.userService.cancelRequist(username, relationId); 
         }
         else{
             throw new ForbiddenException();
         }
     }
+
+    // @UseGuards(JwtAuthGuard, JwtStrategy)
+    // @Get('profile/:username/suggest')
+    // async suggestOfUser(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationDto[]>{
+    //     const authorization = req.user;
+    //     if (authorization.username == username){
+    //         return this.userService.findAllSuggestOfUser(username); 
+    //     }
+    //     else{
+    //         throw new ForbiddenException();
+    //     }
+    // }
 }
