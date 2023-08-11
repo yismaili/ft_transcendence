@@ -140,17 +140,29 @@ export class UserController {
         }
     }
 
-    // @UseGuards(JwtAuthGuard, JwtStrategy)
-    // @Get('profile/:username/requists')
-    // async getSuggestOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
-    //     const authorization = req.user;
-    //     if (authorization.username == username){
-    //         return this.userService.findAllSendRequistOfUser(username); 
-    //     }
-    //     else{
-    //         throw new ForbiddenException();
-    //     }
-    // }
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/requists')
+    async getAllRequistsOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.getAllRequistsOfUser(username); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/requistsSend')
+    async getAllRequistsSendFromUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.getAllRequistsSendFromUser(username); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/block/:relationId')
@@ -163,18 +175,6 @@ export class UserController {
             throw new ForbiddenException();
         }
     }
-
-    // @UseGuards(JwtAuthGuard, JwtStrategy)
-    // @Put('profile/:username/sendRequist/:relationId')
-    // async sendRequistTofriend(@Req() req, @Param('username') username: string,@Param('relationId') relationId: number): Promise<RelationParams>{
-    //     const authorization = req.user;
-    //     if (authorization.username == username){
-    //         return this.userService.sendRequisteToUser(username, relationId); 
-    //     }
-    //     else{
-    //         throw new ForbiddenException();
-    //     }
-    // }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/unblock/:relationId')

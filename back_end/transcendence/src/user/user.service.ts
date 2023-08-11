@@ -306,21 +306,39 @@ async findAllBlockedOfUser(username: string): Promise<RelationDto[]> {
     return relationDtos;
 }
 
-// async findAllSendRequistOfUser(username: string): Promise<RelationDto[]> {
+async getAllRequistsOfUser(username: string): Promise<RelationDto[]> {
 
-//   const friends = await this.relationRepository.find({
-//     where: { user: { username }, status: 'sendRequist' },
-//     relations: ['friend'],
-//   });
+  const friends = await this.relationRepository.find({
+    where: { friend: { username }, status: 'sendRequist' },
+    relations: ['friend'],
+  });
 
-//   const relationDtos: RelationDto[] = friends.map((relation) => ({
-//     id: relation.id,
-//         status: relation.status,
-//         friend: relation.friend,
-//         user: relation.user,
-//       }));
-//     return relationDtos;
-// }
+  const relationDtos: RelationDto[] = friends.map((relation) => ({
+    id: relation.id,
+        status: relation.status,
+        friend: relation.friend,
+        user: relation.user,
+      }));
+    return relationDtos;
+}
+
+
+
+async getAllRequistsSendFromUser(username: string): Promise<RelationDto[]> {
+
+  const friends = await this.relationRepository.find({
+    where: { user: { username }, status: 'sendRequist' },
+    relations: ['user'],
+  });
+
+  const relationDtos: RelationDto[] = friends.map((relation) => ({
+    id: relation.id,
+        status: relation.status,
+        friend: relation.friend,
+        user: relation.user,
+      }));
+    return relationDtos;
+}
 
 // The method is not yet finished!!! not working. It's still a student, ahahahah!
 
