@@ -9,9 +9,9 @@ export class Relation {
   @Column()
   status: string;
 
-  @ManyToOne(() => User, user => user.relationsOne)
+  @ManyToOne(() => User, user => user.friendRelations)
   friend: User;
 
-  @ManyToOne(() => User, user => user.relationsTwo)
+  @ManyToOne(() => User, user => user.userRelations)
   user: User;
 }
