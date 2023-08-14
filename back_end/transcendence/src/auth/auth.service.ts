@@ -24,7 +24,7 @@ import { RandomService } from 'src/random/random.service';
       
       async findAll() {
        const users =  this.userRepository.find({
-          relations: ['profile', 'relationsOne', 'relationsTwo', 'achievements', 'histories']
+          relations: ['profile', 'userRelations', 'friendRelations', 'achievements', 'histories']
         });
         return users;
       }
@@ -36,7 +36,7 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> 
     where: {
       email,
     },
-    relations: ['profile', 'relationsOne', 'relationsTwo', 'achievements', 'histories'],
+    relations: ['profile', 'userRelations', 'friendRelations', 'achievements', 'histories'],
   });
       
   if (existingUser) {
@@ -104,8 +104,8 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> 
       if (newProfile) {
         newUser.profile = newProfile;
       }
-      newUser.relationsOne = [newRelation];
-      newUser.relationsTwo = [];
+      newUser.userRelations = [newRelation];
+      newUser.friendRelations = [newRelation];
       newUser.achievements = [newAchievement];
       newUser.histories = [newHistory];
       

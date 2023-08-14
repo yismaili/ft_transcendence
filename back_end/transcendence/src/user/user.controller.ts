@@ -15,7 +15,7 @@ export class UserController {
     constructor(private userService: UserService){}
     
     @Get(':username')
-    async getDetailsUser(@Param('username') username: string){
+    async getDetailsUser(@Param('username') username: string): Promise<UserParams>{
        return this.userService.findProfileByUsername(username);
     }
 
@@ -104,11 +104,11 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Post('profile/:username/friends')
-    async addFriendOfUser(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto): Promise<RelationParams>{
+    @Post('profile/:username/sendRequist/:id')
+    async sendRequist(@Req() req, @Param('username') username: string, @Param('id') idOfuser: number): Promise<RelationParams>{
         const authorization = req.user;
         if(authorization.username == username){
-            return this.userService.addFriendOfUser(username, relationDto);
+            return this.userService.sendRequist(username, idOfuser);
         }
         else{
             throw new ForbiddenException();
@@ -142,10 +142,10 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username/requists')
-    async getSuggestOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
+    async getAllRequistsOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.findAllSendRequistOfUser(username); 
+            return this.userService.getAllRequistsOfUser(username); 
         }
         else{
             throw new ForbiddenException();
@@ -153,11 +153,11 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Put('profile/:username/blockUser')
-    async UpdateStatusOfUser(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto): Promise<RelationParams>{
+    @Get('profile/:username/requistsSend')
+    async getAllRequistsSendFromUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.blockUserFromFriend(username, relationDto); 
+            return this.userService.getAllRequistsSendFromUser(username); 
         }
         else{
             throw new ForbiddenException();
@@ -165,11 +165,11 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Put('profile/:username/sendRequist')
-    async sendRequistTofriend(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto): Promise<RelationParams>{
+    @Put('profile/:username/block/:relationId')
+    async UpdateStatusOfUser(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationParams>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.sendRequisteToUser(username, relationDto); 
+            return this.userService.blockUserFromFriend(username, relationId); 
         }
         else{
             throw new ForbiddenException();
@@ -177,11 +177,11 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Put('profile/:username/unblockUser')
-    async unblockUser(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto): Promise<RelationParams>{
+    @Put('profile/:username/unblock/:relationId')
+    async unblockUser(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationParams>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.unblockUser(username, relationDto); 
+            return this.userService.unblockUser(username, relationId); 
         }
         else{
             throw new ForbiddenException();
@@ -189,11 +189,11 @@ export class UserController {
     }
     
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Put('profile/:username/acceptRequist')
-    async acceptRequist(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto): Promise<RelationParams>{
+    @Put('profile/:username/acceptRequist/:relationId')
+    async acceptRequist(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationParams>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.acceptRequest(username, relationDto); 
+            return this.userService.acceptRequest(username, relationId); 
         }
         else{
             throw new ForbiddenException();
@@ -201,14 +201,38 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Delete('profile/:username/rejectRequist')
-    async rejectRequist(@Req() req, @Param('username') username: string, @Body() relationDto:RelationDto): Promise<RelationParams>{
+    @Delete('profile/:username/rejectRequist/:relationId')
+    async rejectRequist(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationParams>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.rejectRequest(username, relationDto); 
+            return this.userService.rejectRequest(username, relationId); 
         }
         else{
             throw new ForbiddenException();
         }
     }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Delete('profile/:username/cancelRequist/:relationId')
+    async cancelRequist(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationParams>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.cancelRequist(username, relationId); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
+
+    // @UseGuards(JwtAuthGuard, JwtStrategy)
+    // @Get('profile/:username/suggest')
+    // async suggestOfUser(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationDto[]>{
+    //     const authorization = req.user;
+    //     if (authorization.username == username){
+    //         return this.userService.findAllSuggestOfUser(username); 
+    //     }
+    //     else{
+    //         throw new ForbiddenException();
+    //     }
+    // }
 }
