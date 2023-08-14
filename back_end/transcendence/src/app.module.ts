@@ -11,6 +11,7 @@ import { Profile } from './typeorm/entities/Profile.entity';
 import { User } from './typeorm/entities/User.entity';
 import { UserModule } from './user/user.module';
 import { RandomService } from './random/random.service';
+import { ChatModule } from './chat/chat.module';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
 // The imports property specifies the modules that this module depends on
@@ -31,7 +32,7 @@ import { RandomService } from './random/random.service';
     }), 
     AuthModule, // responsible for handling authentication logic
     PassportModule, 
-    UserModule,//NestJS module for integrating Passport.js, an authentication middleware for Node.j
+    UserModule, ChatModule,//NestJS module for integrating Passport.js, an authentication middleware for Node.j
   ],
   controllers: [AppController], // Controllers  handle incoming requests and define the routes and endpoints for the application
   providers: [AppService, RandomService], // Providers are responsible for providing business logic and functionality to the application.
