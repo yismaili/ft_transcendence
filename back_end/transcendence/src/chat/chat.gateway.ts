@@ -11,19 +11,19 @@ export class ChatGateway {
 
   @SubscribeMessage('createChat')
   create(@MessageBody() createChatDto: CreateChatDto, @ConnectedSocket() client: Socket) {
-    const message = this.chatService.create(createChatDto, client.id);
+    const message = this.chatService.createChatMessage(createChatDto, client.id);
     this.server.emit('message', message); //emit to all clients
     return message;
   }
 
   @SubscribeMessage('findAllChat')
   findAll() {
-    return this.chatService.findAll();
+    return this.chatService.findAllMessages();
   }
 
   @SubscribeMessage('findOneChat')
   findOne(@MessageBody() id: number) {
-    return this.chatService.findOne(id);
+    return this.chatService.findMessageById(id);
   }
 
   @SubscribeMessage('updateChat')
@@ -36,13 +36,13 @@ export class ChatGateway {
     return this.chatService.remove(id);
   }
 
-  @SubscribeMessage('jion')
-  joinRoom(@MessageBody('username') usernsme: string, @ConnectedSocket() client: Socket){
-    return this.chatService.identify(name, client.id);
-  }
+  // @SubscribeMessage('jion')
+  // joinRoom(@MessageBody('username') usernsme: string, @ConnectedSocket() client: Socket){
+  //   return this.chatService.identify(name, client.id);
+  // }
   
-  @SubscribeMessage('typing')
-  async typing(@MessageBody('isTyping') isTyping: boolean, @ConnectedSocket() client: Socket){
-    const username = await this.chatService.getClientUsername(client.id);
-  }
+  // @SubscribeMessage('typing')
+  // async typing(@MessageBody('isTyping') isTyping: boolean, @ConnectedSocket() client: Socket){
+  //   const username = await this.chatService.getClientUsername(client.id);
+  // }
 }

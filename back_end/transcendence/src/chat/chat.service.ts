@@ -16,26 +16,32 @@ export class ChatService {
   ) {}
 
   async createChatMessage(createChatDto: CreateChatDto, sender: string): Promise<any> {
-    // Assuming you have a method to fetch user by sender name
     const user = await this.userService.findProfileByUsername(sender);
 
     const newChatMessage = this.chatRepository.create({
       ...createChatDto,
-      // sender: user, // Assign the user entity as the sender
     });
     return this.chatRepository.save(newChatMessage);
   }
 
-  findAll(): Promise<Chat[]> {
-    return this.chatRepository.find(); // Retrieve all chat messages
+  async findAllMessages(): Promise<Chat[]> {
+    return this.chatRepository.find();
   }
 
-  findOne(id: number): Promise<Chat> {
-    return this.chatRepository.findOne(id); // Retrieve a chat message by ID
+  async findMessageById(id: number): Promise<Chat> {
+    return this.chatRepository.findOne({
+      where: {
+        id: id,
+      }
+    });
   }
 
   async update(id: number, updateChatDto: UpdateChatDto): Promise<Chat> {
-    const chat = await this.chatRepository.findOne(id);
+    const chat = await this.chatRepository.findOne({
+      where: {
+        id: id,
+      }
+    });
     if (!chat) {
       throw new NotFoundException(`Chat message with ID ${id} not found`);
     }
@@ -48,7 +54,11 @@ export class ChatService {
   }
 
   async remove(id: number): Promise<void> {
-    const chat = await this.chatRepository.findOne(id);
+    const chat = await this.chatRepository.findOne({
+      where: {
+        id: id,
+      }
+    });
     if (!chat) {
       throw new NotFoundException(`Chat message with ID ${id} not found`);
     }
