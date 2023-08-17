@@ -14,18 +14,20 @@ export class ChatService {
     private readonly chatRepository: Repository<Chat>,
     private readonly userService: UserService
   ) {}
-
+  clientToUser = {};
   async createChatMessage(createChatDto: CreateChatDto, sender: string): Promise<any> {
-    const user = await this.userService.findProfileByUsername(sender);
-
+    // const user = await this.userService.findProfileByUsername(sender);
     const newChatMessage = this.chatRepository.create({
-      ...createChatDto,
+     text: createChatDto.text,
+     user: createChatDto.user,
     });
-    return this.chatRepository.save(newChatMessage);
+    this.chatRepository.save(newChatMessage);
+    return newChatMessage;
   }
 
   async findAllMessages(): Promise<Chat[]> {
-    return this.chatRepository.find();
+    const messages = this.chatRepository.find();
+    return messages;
   }
 
   async findMessageById(id: number): Promise<Chat> {
@@ -45,12 +47,17 @@ export class ChatService {
     if (!chat) {
       throw new NotFoundException(`Chat message with ID ${id} not found`);
     }
-
-    // Update the chat message properties
-    chat.property1 = updateChatDto.property1;
-    chat.property2 = updateChatDto.property2;
-
     return this.chatRepository.save(chat); // Save the updated chat message
+  }
+
+
+  async identify(name: string, clientId: string){
+    this.clientToUser[clientId] = name;
+    return Object.values(this.clientToUser);
+  }
+
+  getClientName(clientId: string) {
+    return this.clientToUser[clientId];
   }
 
   async remove(id: number): Promise<void> {

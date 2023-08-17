@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import './App.css';
 
-const socket = io('http://localhost:3000');
+const socket = io('http://10.13.10.1:3000');
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -12,7 +12,7 @@ function App() {
   const [typingDisplay, setTypingDisplay] = useState('');
 
   useEffect(() => {
-    socket.emit('findAllMessages', {}, (response) => {
+    socket.emit('findAllChat', {}, (response) => {
       setMessages(response);
     });
 
@@ -37,7 +37,7 @@ function App() {
   };
 
   const sendMessage = () => {
-    socket.emit('createMessage', { text: messageText }, () => {
+    socket.emit('createChat', { text: messageText}, () => {
       setMessageText('');
     });
   };
