@@ -10,10 +10,11 @@ import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { RandomService } from 'src/random/random.service';
+import { Chat } from 'src/typeorm/entities/chat.entity';
 
 @Module({
   imports: [
-    AuthModule, TypeOrmModule.forFeature([User, Profile, Relation, HistoryEntity, Achievement])
+    AuthModule, TypeOrmModule.forFeature([User, Profile, Relation, HistoryEntity, Achievement, Chat])
   ],
   controllers: [UserController],
   providers: [UserService, AuthService, RandomService],

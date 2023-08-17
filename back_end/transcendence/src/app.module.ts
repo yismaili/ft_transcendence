@@ -11,6 +11,8 @@ import { Profile } from './typeorm/entities/Profile.entity';
 import { User } from './typeorm/entities/User.entity';
 import { UserModule } from './user/user.module';
 import { RandomService } from './random/random.service';
+import { ChatModule } from './chat/chat.module';
+import { Chat } from './typeorm/entities/chat.entity';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
 // The imports property specifies the modules that this module depends on
@@ -25,13 +27,14 @@ import { RandomService } from './random/random.service';
       username: 'postgres',
       password: 'pass1337',
       database: 'transcendence',
-      entities: [User, Profile, Relation, Achievement, HistoryEntity],
+      entities: [User, Profile, Relation, Achievement, HistoryEntity, Chat],
       autoLoadEntities: true, // automatically load entity files
       synchronize: true, // automatically synchronize the database schema with the entities. // Set to false in production
     }), 
     AuthModule, // responsible for handling authentication logic
     PassportModule, 
-    UserModule,//NestJS module for integrating Passport.js, an authentication middleware for Node.j
+    UserModule, ChatModule,//NestJS module for integrating Passport.js, an authentication middleware for Node.j
+    ChatModule,
   ],
   controllers: [AppController], // Controllers  handle incoming requests and define the routes and endpoints for the application
   providers: [AppService, RandomService], // Providers are responsible for providing business logic and functionality to the application.

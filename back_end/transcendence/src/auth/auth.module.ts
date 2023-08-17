@@ -15,12 +15,13 @@ import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { RandomService } from 'src/random/random.service';
+import { Chat } from 'src/typeorm/entities/chat.entity';
 
 //responsible for defining the components related to authentication and user management
 @Module({
   // forFeature() method is used to specify which entities 
   imports: [
-    TypeOrmModule.forFeature([User, Profile, Relation, Achievement, HistoryEntity]), 
+    TypeOrmModule.forFeature([User, Profile, Relation, Achievement, HistoryEntity, Chat]), 
     PassportModule.register({ defaultStrategy: '42' }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     //NestJS module for handling JSON Web Tokens (JWT) and token-based authentication
