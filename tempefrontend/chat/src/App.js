@@ -53,43 +53,31 @@ function App() {
   };
 
   return (
-    <div className="chat">
-      {/* {!joined ? ( */}
-        <div>
-          <form onSubmit={join}>
-            <label>What's your name?</label>
-            <input value={name} onChange={(e) => setName(e.target.value)} />
-            <button type="submit" disabled={name === ''}>
-              Join
-            </button>
+    <div className="app">
+      <div className="chat-container">
+        <div className="messages-container">
+          {messages.map((msg, index) => (
+            <div key={index} className="message">
+              <span className="sender">{msg.name}:</span> {msg.text}
+            </div>
+          ))}
+        </div>
+        <div className="typing">{typingDisplay}</div>
+        {/* <hr /> */}
+        <div className="message-input">
+          <form onSubmit={sendMessage}>
+            <input
+              value={messageText}
+              onChange={(e) => {
+                setMessageText(e.target.value);
+                emitTyping();
+              }}
+              className="input-field"
+            />
+            <button type="submit" className="send-button">Send</button>
           </form>
         </div>
-      {/* ) : ( */}
-        <div className="chat-container">
-          <div className="messages-container">
-            {messages.map((msg, index) => (
-              <div key={index}>
-                [{msg.name}]: {msg.text}
-              </div>
-            ))}
-          </div>
-          {typingDisplay && <div>{typingDisplay}</div>}
-          <hr />
-          <div className="message-input">
-            <form onSubmit={sendMessage}>
-              <label>Message:</label>
-              <input
-                value={messageText}
-                onChange={(e) => {
-                  setMessageText(e.target.value);
-                  emitTyping();
-                }}
-              />
-              <button type="submit">Send</button>
-            </form>
-          </div>
-        </div>
-      {/* )} */}
+      </div>
     </div>
   );
 }

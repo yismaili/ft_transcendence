@@ -16,10 +16,15 @@ export class ChatService {
   ) {}
   clientToUser = {};
   async createChatMessage(createChatDto: CreateChatDto, sender: string): Promise<any> {
-    // const user = await this.userService.findProfileByUsername(sender);
     const newChatMessage = this.chatRepository.create({
-     text: createChatDto.text,
-     user: createChatDto.user,
+      status: createChatDto.status,
+      password: createChatDto.password,
+      time: createChatDto.time,
+      statusPermissions: createChatDto.statusPermissions,
+      statusUser: createChatDto.statusUser,
+      text: createChatDto.text,
+      user: createChatDto.user,
+      messager: createChatDto.messager,
     });
     this.chatRepository.save(newChatMessage);
     return newChatMessage;
