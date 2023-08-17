@@ -28,6 +28,12 @@ export class ChatGateway {
     return this.chatService.findMessageById(id);
   }
 
+  @SubscribeMessage('join')
+  joinRoom(@MessageBody('name') name: string, @ConnectedSocket() client: Socket) {
+    const ret = this.chatService.identify(name, client.id)
+    return ret;
+  }
+
   @SubscribeMessage('updateChat')
   update(@MessageBody() updateChatDto: UpdateChatDto) {
     return this.chatService.update(updateChatDto.id, updateChatDto);
@@ -37,5 +43,11 @@ export class ChatGateway {
   remove(@MessageBody() id: number) {
     return this.chatService.remove(id);
   }
+
+  @SubscribeMessage('typing')
+  async typing(@MessageBody('isTyping') isTyping: boolean, @ConnectedSocket() client: Socket) {
+    const name = await this.chatService.getClientName(client.id);
+    client.broadcast.emit('typing', { name, isTyping });
+}
 }
 

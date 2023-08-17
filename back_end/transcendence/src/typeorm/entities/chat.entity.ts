@@ -6,22 +6,22 @@ export class Chat {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ default: '' })
   status: string;
 
-  @Column()
+  @Column({ default: '' })
   password: string;
 
-  @Column()
+  @Column({ default: '' })
   time: string;
 
-  @Column()
+  @Column({ default: '' })
   statusPermissions: string;
 
-  @Column()
+  @Column({ default: '' })
   statusUser: string;
 
-  @Column()
+  @Column({ default: '' })
   text: string;
 
   @ManyToOne(() => User, user => user.chats)
@@ -29,6 +29,4 @@ export class Chat {
 
   @ManyToOne(() => User, user => user.messages)
   messager: User;
-  property1: any;
-  property2: any;
 }
