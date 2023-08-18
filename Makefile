@@ -1,6 +1,6 @@
 build:
 	docker-compose -f ./back_end/docker-compose.yml build
-	mkdir -p /Users/yismaili/Desktop/ft_transcendence/postgres
+	mkdir -p /Users/eel-moun/Desktop/ft_transcendence/postgres
 
 up:
 	docker-compose -f ./back_end/docker-compose.yml up #-d
@@ -23,5 +23,5 @@ clean:
 	docker rmi -f $$(docker images -qa);\
 	docker volume rm $$(docker volume ls -q);\
 	docker network rm $$(docker network ls -q);\
-	rm -rf /Users/yismaili/Desktop/ft_transcendence/postgres/\
+	rm -rf /Users/eel-moun/Desktop/ft_transcendence/postgres/\
 .PHONY: build up down restart clean	

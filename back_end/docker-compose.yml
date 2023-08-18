@@ -34,7 +34,7 @@ services:
       - .env
     restart: always
     ports:
-      - "3000:3000"
+      - "3001:3001"
     volumes:
       - app-src:/app
     networks:
@@ -45,7 +45,7 @@ services:
     container_name: frontend
     restart: always
     ports:
-      - "5000:5000"
+      - "3000:3000"
     volumes:
       - frontend_app:/app
     networks:
@@ -58,21 +58,21 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: /Users/yismaili/Desktop/ft_transcendence/back_end/transcendence
+      device: /Users/eel-moun/Desktop/ft_transcendence/back_end/transcendence
 
   app-db:
     driver: local
     driver_opts:
       o: bind
       type: none
-      device: /Users/yismaili/Desktop/ft_transcendence/postgres 
+      device: /Users/eel-moun/Desktop/ft_transcendence/postgres 
 
   frontend_app:
     driver: local
     driver_opts:
       o: bind
       type: none
-      device: /Users/yismaili/Desktop/ft_transcendence//tempefrontend/chat
+      device: /Users/eel-moun/Desktop/ft_transcendence/front-end
 
 
 networks:
