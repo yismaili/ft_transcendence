@@ -30,8 +30,7 @@ export class ChatGateway {
 
   @SubscribeMessage('join')
   joinRoom(@MessageBody('name') name: string, @ConnectedSocket() client: Socket) {
-    const ret = this.chatService.identify(name, client.id)
-    return ret;
+    return (this.chatService.identify(name, client.id));
   }
 
   @SubscribeMessage('updateChat')
