@@ -56,9 +56,16 @@ export class ChatService {
   }
 
 
-  async identify(name: string, clientId: string){
-    this.clientToUser[clientId] = name;
-    return Object.values(this.clientToUser);
+  async identify(username: string, clientId: string){
+    const user = await this.userService.findProfileByUsername(username);
+    if (user)
+    {
+      this.clientToUser[clientId] = user;
+      return Object.values(this.clientToUser);
+    }
+    else {
+      throw new NotFoundException(`User with username '${username}' not found`);
+    }
   }
 
   getClientName(clientId: string) {

@@ -44,6 +44,8 @@ services:
     build: ./frontend_tools
     container_name: frontend
     restart: always
+    depends_on:
+      - trans_app
     ports:
       - "5000:5000"
     volumes:
