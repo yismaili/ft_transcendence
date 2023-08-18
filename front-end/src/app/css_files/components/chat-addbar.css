@@ -1,0 +1,47 @@
+.chatroom__sidebar__addbar{
+   display: flex;
+   justify-self: flex-end;
+   align-items: center;
+   flex: 0.1;
+   width: 90%;
+   height: 40px;
+}
+
+.add__btn{
+   display: inline-block;
+   position: absolute;
+   height: 40px;
+   width: 40px;
+   align-items: center;
+   order: 0;
+   z-index: 2;
+}
+
+
+.add__bar{
+   order: 1;
+   position: relative;
+   background-color: transparent;
+   text-align: center;
+   initial-value: "";
+   border: none;
+   height: 45px;
+   width: 0px;
+   z-index: 1;
+   transition: width 0.7s,background-color 1s;
+   content: none;
+   border-radius: 15px;
+}
+
+.add__bar:focus{
+   width: 95%;
+   background-color: #3E3E56;
+}
+
+.add__icon{
+   transition: transform 0.7s;
+}
+
+.add__bar:focus + .add__btn .add__icon{
+   transform: rotateZ(360deg);
+}

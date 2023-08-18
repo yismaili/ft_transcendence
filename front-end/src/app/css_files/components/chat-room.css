@@ -1,0 +1,4 @@
+.chatRoom{
+    height: calc(100dvh - 70px);
+    display:flex;
+}
