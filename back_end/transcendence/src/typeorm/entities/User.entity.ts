@@ -43,7 +43,6 @@ export class User {
   @OneToMany(() => Chat, chat => chat.user)
   chats: Chat[];
 
-  @OneToMany(() => Chat, chat => chat.messager)
-  messages: Chat[];
-
+  @OneToMany(() => Chat, chat => chat.secondUser)
+  secondUser: Chat[];
 }

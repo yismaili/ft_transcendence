@@ -27,6 +27,6 @@ export class Chat {
   @ManyToOne(() => User, user => user.chats)
   user: User;
 
-  @ManyToOne(() => User, user => user.messages)
-  messager: User;
+  @ManyToOne(() => User, user => user.secondUser)
+  secondUser: User;
 }

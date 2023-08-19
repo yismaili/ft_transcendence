@@ -6,37 +6,45 @@ const ChatApp = () => {
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
   const [joined, setJoined] = useState(false);
-  const [name, setName] = useState('');
+  const [username, setName] = useState('');
+  const [secondUsername, setSecondUsername] = useState('');
   const [typingDisplay, setTypingDisplay] = useState('');
 
   useEffect(() => {
-    socket.emit('findAllChat', {}, (response) => {
-      setMessages(response);
-    });
-
+    
     socket.on('message', (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
-
-    socket.on('typing', ({ name, isTyping }) => {
+    
+    socket.emit('findAllChat', {}, (response) => {
+      setMessages(response);
+    });
+    socket.on('typing', ({ username, isTyping }) => {
       if (isTyping) {
-        setTypingDisplay(`${name} is typing...`);
+        setTypingDisplay(`${username} is typing...`);
       } else {
         setTypingDisplay('');
       }
     });
   }, [socket]);
 
+
   const join = () => {
-    console.log('Joining with name:', name);
-    socket.emit('join', { name }, () => {
+    console.log('Joining with username:', username);
+    socket.emit('join', { username, secondUsername }, () => {
       setJoined(true);
     });
   };
 
   const sendMessage = () => {
-    socket.emit('createChat', { text: messageText }, () => {
+    socket.emit('createChat', { text: messageText, username: username, secondUsername: secondUsername }, () => {
       setMessageText('');
+    });
+  };
+
+  const getdMessage = () => {
+    socket.emit('findAllChat', {username: username, secondUsername: secondUsername },(response) => {
+      setMessages(response);
     });
   };
 
@@ -44,9 +52,9 @@ const ChatApp = () => {
 
   const emitTyping = () => {
     clearTimeout(typingTimeout);
-    socket.emit('typing', { name, isTyping: true });
+    socket.emit('typing', { username, isTyping: true });
     typingTimeout = setTimeout(() => {
-      socket.emit('typing', { name, isTyping: false });
+      socket.emit('typing', { username, isTyping: false });
     }, 2000);
   };
 
@@ -58,17 +66,22 @@ const ChatApp = () => {
             e.preventDefault();
             join();
           }}>
-            <label>What's your name?</label>
-            <input value={name} onChange={(e) => setName(e.target.value)} />
-            <button type="submit" disabled={name === ''}>Join</button>
+            <label>your username </label>
+            <input value={username} onChange={(e) => {setName(e.target.value);
+                                                      getdMessage();
+            }} />
+            <label>username of second user </label>
+            <input value={secondUsername} onChange={(s) => setSecondUsername(s.target.value)} />
+            <button type="submit" disabled={username === '' || secondUsername === ''}>Join</button>
           </form>
+
         </div>
       ) : (
         <div className="chat-container">
           <div className="messages-container">
             {messages.map((msg, index) => (
               <div key={index}>
-                [{msg.name}]: {msg.text}
+                [{msg.username}]: {msg.text}
               </div>
             ))}
           </div>
