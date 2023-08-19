@@ -67,7 +67,12 @@ export class UserService {
           },
         },
       });
-    return existingUser;
+      if (existingUser){
+        return existingUser;
+      }
+      else{
+        return (null);
+      }
   } catch (error) {
     return null;
   }

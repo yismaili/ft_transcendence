@@ -3,6 +3,7 @@ import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { Socket, Server } from 'socket.io';
+import { MessageChatDto } from './dto/message-chat.dto';
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
 export class ChatGateway {
@@ -12,15 +13,15 @@ export class ChatGateway {
   constructor(private readonly chatService: ChatService) {}
 
   @SubscribeMessage('createChat')
-  create(@MessageBody() createChatDto: CreateChatDto, @ConnectedSocket() client: Socket) {
+  create(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket) {
     const message = this.chatService.createChatMessage(createChatDto, client.id);
     this.server.emit('message', message); // Emit to all clients
     return message;
   }
 
   @SubscribeMessage('findAllChat')
-  findAll() {
-    return this.chatService.findAllMessages();
+  findAll(@MessageBody() createChatDto: MessageChatDto) {
+    return this.chatService.findAllMessages(createChatDto);
   }
 
   @SubscribeMessage('findOneChat')
@@ -29,8 +30,8 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('join')
-  joinRoom(@MessageBody('name') name: string, @ConnectedSocket() client: Socket) {
-    return (this.chatService.identify(name, client.id));
+  joinRoom(@MessageBody('username') username: string,@MessageBody('secondUsername') secondUsername: string, @ConnectedSocket() client: Socket) {
+    return (this.chatService.identify(username, secondUsername, client.id));
   }
 
   @SubscribeMessage('updateChat')
