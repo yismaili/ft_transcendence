@@ -1,0 +1,43 @@
+.container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: #ff00007a;
+    width: 100%;
+    height: 6rem;
+    max-width: 100%;
+}
+
+.container li a{
+    margin-right: 4rem;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: larger;
+}
+
+.container li:nth-child(-n + 1) {
+    margin-right: auto;
+    margin-left: 2.75rem;
+}
+
+.container li:nth-child(2) {
+    position: absolute;
+    left: 7.25rem;
+}
+
+/* .container > :last-child > :last-child {
+    /* Rectangle 1 *
+
+} */
+
+.imageRes {
+    width: 4rem;
+    height: 4rem;
+}
+
+.title {
+    color: #37EEB1;
+    font-weight: 700;
+    font-size: 200%;
+    letter-spacing: 0.2rem;
+}
