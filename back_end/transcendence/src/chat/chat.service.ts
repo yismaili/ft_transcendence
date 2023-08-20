@@ -46,23 +46,25 @@ export class ChatService {
     return newChatMessage;
   }
 
-  async findAllMessages(createChatDto: MessageChatDto): Promise<Chat[]> {
-    console.log(createChatDto);
-    const user = await this.userRepository.findOne({
-      where: {
-        username: createChatDto.username,
-      }
+  async findAllMessagesOfUser(createChatDto: MessageChatDto): Promise<Chat[]> {
+    const user1 = await this.userRepository.findOne({ where: { username: createChatDto.username } });
+    const user2 = await this.userRepository.findOne({ where: { username: createChatDto.secondUsername } });
+  
+    if (!user1 || !user2) {
+      return [];
+    }
+  
+    const chats = await this.chatRepository.find({
+      where: [
+        { user: { id: user1.id }, secondUser: { id: user2.id } },
+        { user: { id: user2.id }, secondUser: { id: user1.id } },
+      ]
     });
-    const messages = await this.chatRepository.find(
-      // {
-      //   where: {
-      //     user: user.chats,
-      //   }
-      // }
-    );
-    return messages;
+  
+    return chats;
   }
   
+
   async findMessageById(id: number): Promise<Chat> {
     return this.chatRepository.findOne({
       where: {
@@ -77,6 +79,7 @@ export class ChatService {
         id: id,
       }
     });
+
     if (!chat) {
       throw new NotFoundException(`Chat message with ID ${id} not found`);
     }
