@@ -15,7 +15,7 @@ export class ChatGateway {
   @SubscribeMessage('createChat')
   create(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket) {
     const message = this.chatService.createChatMessage(createChatDto, client.id);
-    this.server.emit('message', message); // Emit to all clients
+    this.server.emit('message', message);
     return message;
   }
 

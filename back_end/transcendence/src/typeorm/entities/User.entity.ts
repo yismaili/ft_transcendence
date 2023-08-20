@@ -41,8 +41,8 @@ export class User {
   histories: HistoryEntity[];
   
   @OneToMany(() => Chat, chat => chat.user)
-  chats: Chat[];
+  firstChats: Chat[];
 
   @OneToMany(() => Chat, chat => chat.secondUser)
-  secondUser: Chat[];
+  secondChats: Chat[];
 }

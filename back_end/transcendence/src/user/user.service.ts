@@ -12,6 +12,7 @@ import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
 import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { User } from 'src/typeorm/entities/User.entity';
+import { Chat } from 'src/typeorm/entities/chat.entity';
 import { IsNull, Not, Repository } from 'typeorm';
 import { AchievementParams, HistoryParams, IAuthenticate, ProfileParams, RelationParams, UserParams } from 'utils/types';
 
@@ -24,6 +25,7 @@ export class UserService {
         @InjectRepository(Relation)private relationRepository: Repository<Relation>,
         @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
         @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
+        @InjectRepository(Chat)private chatRepository: Repository<Chat>,
         ) {}
 
   async findProfileByUsername(userName: string): Promise<UserParams | any> {
@@ -32,7 +34,7 @@ export class UserService {
         where: {
           username: userName,
         },
-        relations: ['profile','userRelations', 'friendRelations', 'achievements', 'histories'],
+        relations: ['profile','userRelations', 'friendRelations', 'achievements', 'histories', 'firstChats', 'secondChats'],
         select: {
           id: true,
           firstName: true,
@@ -64,6 +66,24 @@ export class UserService {
           },
           histories: {
             id: true,
+          },
+          firstChats: {
+            id: true,
+            status:true,
+            password:true,
+            time:true,
+            statusPermissions: true,
+            statusUser: true,
+            text: true,
+          },
+          secondChats: {
+            id: true,
+            status:true,
+            password:true,
+            time:true,
+            statusPermissions: true,
+            statusUser: true,
+            text: true,
           },
         },
       });
