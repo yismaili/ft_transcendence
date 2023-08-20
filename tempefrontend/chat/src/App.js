@@ -11,22 +11,23 @@ const ChatApp = () => {
   const [typingDisplay, setTypingDisplay] = useState('');
 
   useEffect(() => {
-    
     socket.on('message', (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
     
-    socket.emit('findAllChat', {username: username, secondUsername: secondUsername}, (response) => {
-      setMessages(response);
-    });
-    socket.on('typing', ({ username, isTyping }) => {
-      if (isTyping) {
-        setTypingDisplay(`${username} is typing...`);
-      } else {
-        setTypingDisplay('');
-      }
-    });
-  }, [socket]);
+   
+      // socket.emit('findAllChat', {username: username, secondUsername: secondUsername}, (response) => {
+      //   setMessages(response);
+      // });
+
+      socket.on('typing', ({ username, isTyping }) => {
+        if (isTyping) {
+          setTypingDisplay(`${username} is typing...`);
+        } else {
+          setTypingDisplay('');
+        }
+      });
+    }, [socket]);
 
 
   const join = () => {
@@ -65,14 +66,17 @@ const ChatApp = () => {
           <form onSubmit={(e) => {
             e.preventDefault();
             join();
+            getdMessage();
           }}>
             <label>your username </label>
-            <input value={username} onChange={(e) => {setName(e.target.value);
-                                                      getdMessage();
+            <input value={username} onChange={(e) => {
+                                                      setName(e.target.value);
             }} />
             <label>username of second user </label>
-            <input value={secondUsername} onChange={(s) => setSecondUsername(s.target.value)} />
-            <button type="submit" disabled={username === '' || secondUsername === ''}>Join</button>
+            <input value={secondUsername} onChange={(s) => {
+                                                      setSecondUsername(s.target.value);
+            }} />
+            <button type="submit" disabled={username === '' || secondUsername === ''} >Join</button>
           </form>
 
         </div>

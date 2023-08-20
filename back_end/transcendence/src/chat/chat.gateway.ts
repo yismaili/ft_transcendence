@@ -20,8 +20,8 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('findAllChat')
-  findAll(@MessageBody() createChatDto: MessageChatDto) {
-    return this.chatService.findAllMessages(createChatDto);
+  findAllMessagesOfUser(@MessageBody() createChatDto: MessageChatDto) {
+    return this.chatService.findAllMessagesOfUser(createChatDto);
   }
 
   @SubscribeMessage('findOneChat')
