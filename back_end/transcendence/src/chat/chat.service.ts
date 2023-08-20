@@ -47,7 +47,6 @@ export class ChatService {
   }
 
   async findAllMessages(createChatDto: MessageChatDto): Promise<Chat[]> {
-
     console.log(createChatDto);
     const user = await this.userRepository.findOne({
       where: {
@@ -55,15 +54,15 @@ export class ChatService {
       }
     });
     const messages = await this.chatRepository.find(
-      {
-        where: {
-          user: user.chats,
-        }
-      }
+      // {
+      //   where: {
+      //     user: user.chats,
+      //   }
+      // }
     );
     return messages;
   }
-
+  
   async findMessageById(id: number): Promise<Chat> {
     return this.chatRepository.findOne({
       where: {

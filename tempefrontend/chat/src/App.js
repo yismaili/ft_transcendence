@@ -16,7 +16,7 @@ const ChatApp = () => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
     
-    socket.emit('findAllChat', {}, (response) => {
+    socket.emit('findAllChat', {username: username, secondUsername: secondUsername}, (response) => {
       setMessages(response);
     });
     socket.on('typing', ({ username, isTyping }) => {

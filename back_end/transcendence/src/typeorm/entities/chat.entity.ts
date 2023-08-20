@@ -24,9 +24,11 @@ export class Chat {
   @Column({ default: '' })
   text: string;
 
-  @ManyToOne(() => User, user => user.chats)
+  @ManyToOne(() => User, user => user.firstChats)
   user: User;
 
-  @ManyToOne(() => User, user => user.secondUser)
+  @ManyToOne(() => User, user => user.secondChats)
   secondUser: User;
 }
+
+
