@@ -1,6 +1,5 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
-import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { Socket, Server } from 'socket.io';
 import { MessageChatDto } from './dto/message-chat.dto';

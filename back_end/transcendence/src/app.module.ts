@@ -12,7 +12,8 @@ import { User } from './typeorm/entities/User.entity';
 import { UserModule } from './user/user.module';
 import { RandomService } from './random/random.service';
 import { ChatModule } from './chat/chat.module';
-import { Chat } from './typeorm/entities/chat.entity';
+import { ChatRoom } from './typeorm/entities/chat-room.entity';
+import { ChatRoomUsers } from './typeorm/entities/chat-room-users.entity';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
 // The imports property specifies the modules that this module depends on
@@ -27,7 +28,7 @@ import { Chat } from './typeorm/entities/chat.entity';
       username: 'postgres',
       password: 'pass1337',
       database: 'transcendence',
-      entities: [User, Profile, Relation, Achievement, HistoryEntity, Chat],
+      entities: [User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUsers],
       autoLoadEntities: true, // automatically load entity files
       synchronize: true, // automatically synchronize the database schema with the entities. // Set to false in production
     }), 
