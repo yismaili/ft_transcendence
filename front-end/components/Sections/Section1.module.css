@@ -1,0 +1,56 @@
+.Main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    /* background-color: rgb(196, 22, 22); */
+    height: 100dvh;
+    width: 50dvw;
+}
+
+.Main p, .Main h1{
+    font-size: 200%;
+    color: #14143B;
+    letter-spacing: 0.4rem;
+    font-weight: 500;
+}
+
+.Main span {
+    color: #37EEB1;
+}
+
+.Main button {
+    margin-top: 1rem;
+    color: #14143B;
+    font-Size: 40px;
+    font-weight: bolder;
+
+    width: 238px;
+    height: 67px;
+    border-Radius: 20px;
+    background: #FFD699;
+    border: none;
+    box-Shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.MainImg {
+    /* background-color: blueviolet; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.BallImg {
+    /* background-color: #14143B; */
+    height: 30rem;
+    width: 30rem;
+    position: relative;
+}
+
+.MoonImg {
+    height: 10rem;
+    width: 10rem;
+    position: relative;
+    margin-bottom: 20rem;
+}
