@@ -6,15 +6,19 @@ import { HistoryDto } from 'src/auth/dtos/history.dto';
 import { OutcomeDto } from 'src/auth/dtos/outcome.dto';
 import { RelationDto } from 'src/auth/dtos/relation.dto';
 import { updateProfileDto } from 'src/auth/dtos/updateProfile.dto';
-import { UserDto } from 'src/auth/dtos/user.dto';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
 import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { User } from 'src/typeorm/entities/User.entity';
-import { Chat } from 'src/typeorm/entities/chat.entity';
-import { IsNull, Not, Repository } from 'typeorm';
-import { AchievementParams, HistoryParams, IAuthenticate, ProfileParams, RelationParams, UserParams } from 'utils/types';
+import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
+import {Not, Repository } from 'typeorm';
+import { AchievementParams,
+   HistoryParams, 
+   IAuthenticate, 
+   ProfileParams, 
+   RelationParams, 
+   UserParams } from 'utils/types';
 
 
 @Injectable()
@@ -25,7 +29,7 @@ export class UserService {
         @InjectRepository(Relation)private relationRepository: Repository<Relation>,
         @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
         @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
-        @InjectRepository(Chat)private chatRepository: Repository<Chat>,
+        @InjectRepository(ChatRoom)private chatRepository: Repository<ChatRoom>,
         ) {}
 
   async findProfileByUsername(userName: string): Promise<UserParams | any> {
@@ -34,58 +38,13 @@ export class UserService {
         where: {
           username: userName,
         },
-        relations: ['profile','userRelations', 'friendRelations', 'achievements', 'histories', 'firstChats', 'secondChats'],
-        select: {
-          id: true,
-          firstName: true,
-          lastName: true,
-          username: true,
-          email: true,
-          profile: {
-            id: true,
-            score: true,
-            win: true,
-            los: true,
-            xp: true,
-            level: true,
-          },
-          userRelations: {
-            id: true,
-            status: true,
-            friend: {}
-          },
-          friendRelations: {
-            id: true,
-            status: true,
-            friend: {}
-          },
-          achievements: {
-            id: true,
-            type: true,
-            description: true,
-          },
-          histories: {
-            id: true,
-          },
-          firstChats: {
-            id: true,
-            status:true,
-            password:true,
-            time:true,
-            statusPermissions: true,
-            statusUser: true,
-            text: true,
-          },
-          secondChats: {
-            id: true,
-            status:true,
-            password:true,
-            time:true,
-            statusPermissions: true,
-            statusUser: true,
-            text: true,
-          },
-        },
+        relations: ['profile',
+                    'userRelations', 
+                    'friendRelations', 
+                    'achievements', 
+                    'histories', 
+                    'chatRoomUsers'
+                  ],
       });
       if (existingUser){
         return existingUser;

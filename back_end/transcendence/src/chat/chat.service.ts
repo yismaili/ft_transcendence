@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
-import { Chat } from 'src/typeorm/entities/chat.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/typeorm/entities/User.entity';
@@ -11,6 +10,8 @@ import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { MessageChatDto } from './dto/message-chat.dto';
+import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
+import { ChatRoomUsers } from 'src/typeorm/entities/chat-room-users.entity';
 
 @Injectable()
 export class ChatService {
@@ -20,12 +21,14 @@ export class ChatService {
     @InjectRepository(Relation)private relationRepository: Repository<Relation>,
     @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
     @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
-    @InjectRepository(Chat) private chatRepository: Repository<Chat>,
+    @InjectRepository(ChatRoom) private chatRoomRepository: Repository<ChatRoom>,
+    @InjectRepository(ChatRoomUsers) private chatRoomUsersRepository: Repository<ChatRoomUsers>,
     private readonly userService: UserService
   ) {}
   clientToUser = {};
   
   async createChatMessage(createChatDto: MessageChatDto, sender: string): Promise<any> {
+    // Finding the user and the second user based on their usernames
     const user = await this.userRepository.findOne({
       where: {
         username: createChatDto.username,
@@ -36,45 +39,49 @@ export class ChatService {
         username: createChatDto.secondUsername,
       }
     });
-    const newChatMessage = this.chatRepository.create({
+    // Creating a new chat room with the provided text
+    const newChat = this.chatRoomRepository.create({
       text: createChatDto.text,
-      user: user,
-      secondUser: secondUser,
     });
+    const chat =  await this.chatRoomRepository.save(newChat);
     
-    this.chatRepository.save(newChatMessage);
-    return newChatMessage;
+    const newUser = this.chatRoomUsersRepository.create({
+      user: user,
+      chatRoom: chat,
+    });
+    const newsecondUser = this.chatRoomUsersRepository.create({
+      user: secondUser,
+      chatRoom: chat,
+    });
+  
+    // Saving the associations
+    this.chatRoomUsersRepository.save(newUser);
+    this.chatRoomUsersRepository.save(newsecondUser);
+    return newChat;
   }
+  
 
-  async findAllMessagesOfUser(createChatDto: MessageChatDto): Promise<Chat[]> {
-    const user1 = await this.userRepository.findOne({ where: { username: createChatDto.username } });
-    const user2 = await this.userRepository.findOne({ where: { username: createChatDto.secondUsername } });
-  
-    if (!user1 || !user2) {
-      return [];
-    }
-  
-    const chats = await this.chatRepository.find({
+  async findAllMessagesOfUser(createChatDto: MessageChatDto): Promise<any> {
+    const chats = await this.userRepository.find({
       where: [
-        { user: { id: user1.id }, secondUser: { id: user2.id } },
-        { user: { id: user2.id }, secondUser: { id: user1.id } },
+        {username: createChatDto.username},
       ]
     });
-  
+  console.log(chats);
     return chats;
   }
   
 
-  async findMessageById(id: number): Promise<Chat> {
-    return this.chatRepository.findOne({
+  async findMessageById(id: number): Promise<ChatRoomUsers> {
+    return this.chatRoomUsersRepository.findOne({
       where: {
         id: id,
       }
     });
   }
 
-  async update(id: number, updateChatDto: UpdateChatDto): Promise<Chat> {
-    const chat = await this.chatRepository.findOne({
+  async update(id: number, updateChatDto: UpdateChatDto): Promise<ChatRoomUsers> {
+    const chat = await this.chatRoomUsersRepository.findOne({
       where: {
         id: id,
       }
@@ -83,7 +90,7 @@ export class ChatService {
     if (!chat) {
       throw new NotFoundException(`Chat message with ID ${id} not found`);
     }
-    return this.chatRepository.save(chat); // Save the updated chat message
+    return this.chatRoomUsersRepository.save(chat); // Save the updated chat message
   }
 
 
@@ -114,7 +121,7 @@ export class ChatService {
   }
 
   async remove(id: number): Promise<void> {
-    const chat = await this.chatRepository.findOne({
+    const chat = await this.chatRoomUsersRepository.findOne({
       where: {
         id: id,
       }
@@ -123,7 +130,7 @@ export class ChatService {
       throw new NotFoundException(`Chat message with ID ${id} not found`);
     }
 
-    await this.chatRepository.remove(chat); // Remove the chat message
+    await this.chatRoomUsersRepository.remove(chat); // Remove the chat message
   }
 }
 
