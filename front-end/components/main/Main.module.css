@@ -1,0 +1,5 @@
+.pageWraper {
+    display: flex;
+    height: 100dvh;
+    background: linear-gradient(203deg, #14143B 0%, #14143B 27%, #14143B 32%, #2CAB8D 79.27%, #37EEB1 100%);
+}

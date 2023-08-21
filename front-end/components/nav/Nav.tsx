@@ -4,7 +4,7 @@ import Style from './Nav.module.css'
 
 export default function Nav() {
     return (
-        <header>
+        <header >
             <ul className={Style.container}>
                 <li className={Style.imageRes}>
                     <Image 
@@ -14,9 +14,9 @@ export default function Nav() {
                     height={75}
                     src="/logo.png" alt="logo for pong game" 
                     priority={true}/>
+                    <h1 className={Style.title}>PONG</h1>
                 </li>
                 <li>
-                    <h1 className={Style.title}>PONG</h1>
                 </li>
                 <li>
                     <Link href="#">home</Link>
