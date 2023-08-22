@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 
 const ChatApp = () => {
-  const [socket] = useState(io('http://localhost:3000'));
+  const [socket] = useState(io('http://localhost:3001'));
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
   const [joined, setJoined] = useState(false);
-  const [username, setName] = useState('');
-  const [secondUsername, setSecondUsername] = useState('');
+  const [user, setName] = useState('');
+  const [secondUser, setSecondUsername] = useState('');
   const [typingDisplay, setTypingDisplay] = useState('');
 
   useEffect(() => {
@@ -16,13 +16,13 @@ const ChatApp = () => {
     });
     
    
-      // socket.emit('findAllChat', {username: username, secondUsername: secondUsername}, (response) => {
+      // socket.emit('findAllChat', {user: user, secondUser: secondUser}, (response) => {
       //   setMessages(response);
       // });
 
-      socket.on('typing', ({ username, isTyping }) => {
+      socket.on('typing', ({ user, isTyping }) => {
         if (isTyping) {
-          setTypingDisplay(`${username} is typing...`);
+          setTypingDisplay(`${user} is typing...`);
         } else {
           setTypingDisplay('');
         }
@@ -31,20 +31,20 @@ const ChatApp = () => {
 
 
   const join = () => {
-    console.log('Joining with username:', username);
-    socket.emit('join', { username, secondUsername }, () => {
+    console.log('Joining with user:', user);
+    socket.emit('join', { user, secondUser }, () => {
       setJoined(true);
     });
   };
 
   const sendMessage = () => {
-    socket.emit('createChat', { text: messageText, username: username, secondUsername: secondUsername }, () => {
+    socket.emit('createChat', { message: messageText, user: user, secondUser: secondUser }, () => {
       setMessageText('');
     });
   };
 
   const getdMessage = () => {
-    socket.emit('findAllChat', {username: username, secondUsername: secondUsername },(response) => {
+    socket.emit('findAllChat', {user: user, secondUser: secondUser },(response) => {
       setMessages(response);
     });
   };
@@ -53,9 +53,9 @@ const ChatApp = () => {
 
   const emitTyping = () => {
     clearTimeout(typingTimeout);
-    socket.emit('typing', { username, isTyping: true });
+    socket.emit('typing', { user, isTyping: true });
     typingTimeout = setTimeout(() => {
-      socket.emit('typing', { username, isTyping: false });
+      socket.emit('typing', { user, isTyping: false });
     }, 2000);
   };
 
@@ -68,15 +68,15 @@ const ChatApp = () => {
             join();
             getdMessage();
           }}>
-            <label>your username </label>
-            <input value={username} onChange={(e) => {
+            <label>your user </label>
+            <input value={user} onChange={(e) => {
                                                       setName(e.target.value);
             }} />
-            <label>username of second user </label>
-            <input value={secondUsername} onChange={(s) => {
+            <label>user of second user </label>
+            <input value={secondUser} onChange={(s) => {
                                                       setSecondUsername(s.target.value);
             }} />
-            <button type="submit" disabled={username === '' || secondUsername === ''} >Join</button>
+            <button type="submit" disabled={user === '' || secondUser === ''} >Join</button>
           </form>
 
         </div>
@@ -85,7 +85,7 @@ const ChatApp = () => {
           <div className="messages-container">
             {messages.map((msg, index) => (
               <div key={index}>
-                [{msg.username}]: {msg.text}
+                [{msg.user}]: {msg.message}
               </div>
             ))}
           </div>

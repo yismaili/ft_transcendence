@@ -1,23 +1,22 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { ChatRoomUsers } from "./chat-room-users.entity";
-
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { ChatRoomUser } from "./chat-room-users.entity";
+import { Message } from "./message-entity";
 
 @Entity()
 export class ChatRoom {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column('text')
   status: string;
 
-  @Column({ nullable: true })
+  @Column('text')
   password: string;
 
-  @Column({ nullable: true })
-  text: string;
+  @OneToMany(() => Message, message => message.chatRoom)
+  messages: Message[];
 
-  @OneToMany(() => ChatRoomUsers, chatRoomUser => chatRoomUser.chatRoom)
-  chatRoomUsers: ChatRoomUsers[];
+  @ManyToOne(() => ChatRoomUser, chatRoomUser => chatRoomUser.chatRooms)
+  @JoinColumn({ name: 'chatRoomUserId' })
+  chatRoomUser: ChatRoomUser;
 }
-
-

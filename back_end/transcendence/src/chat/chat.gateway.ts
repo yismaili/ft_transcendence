@@ -3,7 +3,7 @@ import { ChatService } from './chat.service';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { Socket, Server } from 'socket.io';
 import { MessageChatDto } from './dto/message-chat.dto';
-import { ChatRoomUsers } from 'src/typeorm/entities/chat-room-users.entity';
+
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
 export class ChatGateway {

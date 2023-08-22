@@ -11,16 +11,17 @@ import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { UserModule } from 'src/user/user.module';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
-import { ChatRoomUsers } from 'src/typeorm/entities/chat-room-users.entity';
+import { ChatRoomUser } from 'src/typeorm/entities/chat-room-users.entity';
+import { Message } from 'src/typeorm/entities/message-entity';
+import { Chat } from 'src/typeorm/entities/chat-entity';
 
 
 @Module({
   imports: [
     AuthModule,
     UserModule,
-    TypeOrmModule.forFeature([User, Profile, Relation, HistoryEntity, Achievement, ChatRoom, ChatRoomUsers])
+    TypeOrmModule.forFeature([User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUser, Message, Chat]),
   ],
-  // controllers: [ChatGateway],
   providers: [ChatService, UserService, AuthModule, ChatGateway],
 })
 export class ChatModule {}
