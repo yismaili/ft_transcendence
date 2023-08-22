@@ -77,4 +77,4 @@ volumes:
 
 networks:
   app-net:
-    driver: bridge
+    name: transcendance_network
