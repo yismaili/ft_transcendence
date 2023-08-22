@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { User } from 'src/typeorm/entities/User.entity';
 import { UserService } from 'src/user/user.service';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
@@ -60,19 +60,70 @@ export class ChatService {
     return newChat;
   }
   
+  // async findConversationBetweenUsers(createChatDto: MessageChatDto): Promise<ChatRoom[]> {
+  //   const chatUsers = await this.chatRoomUsersRepository.find({
+  //     where: {
+  //       user: [
+  //         { username: createChatDto.username },
+  //       ],
+  //     },  
+  //     relations: ['chatRoom'], 
+  //   });
 
-  async findAllMessagesOfUser(createChatDto: MessageChatDto): Promise<any> {
-    const chats = await this.userRepository.find({
-      where: [
-        {username: createChatDto.username},
-      ]
-    });
-  console.log(chats);
-    return chats;
-  }
+  //   const chatSecondUsers = await this.chatRoomUsersRepository.find({
+  //     where: {
+  //       user:
+  //         { username: createChatDto.secondUsername },
+  //     },  
+  //     relations: ['chatRoom'], 
+  //   });
+  
+  //   const chatRoomIds = chatUsers.map(chatUser => chatUser.chatRoom.id);
+  //   const chatRoomIdsOfsecondUser = chatSecondUsers.map(chatUser => chatUser.chatRoom.id);
+  //   console.log(chatRoomIds);
+  //   console.log(chatRoomIdsOfsecondUser);
+  //   const chatRooms = await this.chatRoomRepository.find({
+  //     where: {
+  //       id: In(chatRoomIds == chatRoomIdsOfsecondUser),
+  //     },
+  //   });
+  //   return chatRooms;
+  // }
   
 
-  async findMessageById(id: number): Promise<ChatRoomUsers> {
+  async findConversationBetweenUsers(createChatDto: MessageChatDto): Promise<ChatRoom[]> {
+    const chatUsers = await this.chatRoomUsersRepository.find({
+      where: {
+        user: {
+          username: createChatDto.username,
+        },
+      },  
+      relations: ['chatRoom'], 
+    });
+
+    const chatSecondUsers = await this.chatRoomUsersRepository.find({
+      where: {
+        user: {
+          username: createChatDto.secondUsername,
+        },
+      },  
+      relations: ['chatRoom'], 
+    });
+  
+    const chatRoomIds = chatUsers.map(chatUser => chatUser.chatRoom.id);
+    const chatRoomIdsOfsecondUser = chatSecondUsers.map(chatUser => chatUser.chatRoom.id);
+
+    // Find the common chat room IDs between the two users
+    const commonChatRoomIds = chatRoomIds.filter(id => chatRoomIdsOfsecondUser.includes(id));
+
+    // Retrieve the chat rooms based on the common IDs
+    const chatRooms = await this.chatRoomRepository.findByIds(commonChatRoomIds);
+
+    return chatRooms;
+}
+
+
+async findMessageById(id: number): Promise<ChatRoomUsers> {
     return this.chatRoomUsersRepository.findOne({
       where: {
         id: id,

@@ -95,6 +95,7 @@ const ChatApp = () => {
             <form onSubmit={(e) => {
               e.preventDefault();
               sendMessage();
+              getdMessage();
             }}>
               <label>Message:</label>
               <input
