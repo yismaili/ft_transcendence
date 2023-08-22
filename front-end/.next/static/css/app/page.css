@@ -1,3 +1,108 @@
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./src/app/css_files/components/auth-page-css/auth-page.css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************/
+body{
+    background-image: linear-gradient(270deg, rgba(38,37,69,1) 0%, rgba(47,42,96,1) 50%, rgba(20,16,49,1) 100%);
+}
+
+.auth__card{
+    display: flex;
+    flex-direction: column;
+    width: 380px;
+    margin: 10rem auto;
+    align-items: center;
+    background-color: rgba(20, 20, 59, 0.56);
+    font-size: 1.5rem;
+    color: #6F6FA5;
+    font-weight: 700;
+    border-radius: 16px;
+    border-style: solid;
+    border-color: black;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+.auth__msg{
+    text-align: center;
+    line-height: 1 ;
+    letter-spacing: 0.1rem;
+    margin: 1rem 0 ;
+}
+
+.auth__credentials{
+    display: flex;
+    width: 250px;
+    flex-direction: column;
+}
+
+
+
+.auth__btn{
+    color: #EDEEFF;
+    font-size: 1.2rem;
+    text-transform: capitalize;
+    margin: 0.6rem 0;
+    border-style: solid;
+    background-color: rgba(193, 184, 237, 0.6);
+    border-radius: 8px;
+    cursor: pointer;
+}
+.auth__or{
+    align-self: center;
+}
+
+.auth__btn:hover{
+    color: #4D4692;
+    background-color: rgba(20, 20, 59, 0.73);
+}
+
+
+@media (max-width: 1536px) {
+
+}
+  
+  /* xl */
+@media (max-width: 1280px) {
+
+}
+  
+  /* lg */
+@media (max-width: 1024px) {
+
+}
+  
+  /* md */
+@media (max-width: 768px) {
+
+}
+  
+  /* sm */
+  @media (max-width: 640px) {
+
+  }
+  
+  /* xs */
+  @media (max-width: 475px) {
+    .auth__card{
+        width: 100dvw;
+        height: 100dvh;
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 500;
+
+    }
+    .auth__btn{
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    .intra__btn{
+        font-size: 1rem;
+    }
+
+  }
+
+
+
 /*!************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./src/app/css_files/resets.css ***!
   \************************************************************************************************************************************************************************************************************************************************************************/
@@ -51,387 +156,4 @@ body{
 /* xs */
 @media (max-width: 475px) {
 
-}
-/*!***************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./src/app/css_files/components/App-header.css ***!
-  \***************************************************************************************************************************************************************************************************************************************************************************************/
-.app__header{
-    width: 100%;
-    height: 70px;
-    background-color: white;
-    text-align: center;
-    font-size: 3rem;
-}
-
-.app__header__chat{
-    width: 50%;
-    height: 70px;
-    display: inline-block;
-    background-color: #14143B;
-    color: #C1B8ED;
-}
-
-.app__header__profile{
-    width: 50%;
-    height: 70px;
-    display: inline-block;
-    background-color: #14143B;
-    color: #C1B8ED;
-    opacity: 0.6;
-}
-
-@media (max-width: 1536px) {
-
-}
-
-/* xl */
-@media (max-width: 1280px) {
-
-}
-
-/* lg */
-@media (max-width: 1024px) {
-
-}
-
-/* md */
-@media (max-width: 768px) {
-    .app__header{
-       display: none;
-    }
-}
-
-/* sm */
-@media (max-width: 640px) {
-
-}
-
-/* xs */
-@media (max-width: 475px) {
-
-}
-
-/*!**************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./src/app/css_files/components/chat-room.css ***!
-  \**************************************************************************************************************************************************************************************************************************************************************************************/
-.chatRoom{
-    height: calc(100dvh - 70px);
-    display:flex;
-}
-/*!*****************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./src/app/css_files/components/chat-section.css ***!
-  \*****************************************************************************************************************************************************************************************************************************************************************************************/
-.chat__section{
-    width: 65%;
-    background-image: linear-gradient(270deg, rgba(38,37,69,1) 0%, rgba(47,42,96,1) 50%, rgba(20,16,49,1) 100%);
-}
-
-.chat__pattern{
-    width: 100%;
-    height: 100%;
-    background-image: url(
-        /_next/static/media/pattern-9.d5d3e7c3.svg
-    );
-
-}
-
-@media (max-width: 1536px) {
-
-}
-
-/* xl */
-@media (max-width: 1280px) {
-
-}
-
-/* lg */
-@media (max-width: 1024px) {
-
-}
-
-/* md */
-@media (max-width: 768px) {
-    .chat__section{
-        width: 85%;
-    }
-}
-
-
-
-/* sm */
-@media (max-width: 640px) {
-
-}
-
-/* xs */
-@media (max-width: 475px) {
-
-}
-/*!******************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./src/app/css_files/components/chat-side-bar.css ***!
-  \******************************************************************************************************************************************************************************************************************************************************************************************/
-.chatroom__sidebar{
-    width: 35%;
-    display: flex;
-    background-color: #292944;
-    flex-direction: column;
-    align-items: center;
-}
-
-@media (max-width: 1536px) {
-
-}
-
-/* xl */
-@media (max-width: 1280px) {
-
-}
-
-/* lg */
-@media (max-width: 1024px) {
-
-}
-
-/* md */
-@media (max-width: 768px) {
-    .chatroom__sidebar{
-        width: 15%;
-    }
-}
-
-/* sm */
-@media (max-width: 640px) {
-
-}
-
-/* xs */
-@media (max-width: 475px) {
-
-}
-/*!******************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./src/app/css_files/components/toggle-switch.css ***!
-  \******************************************************************************************************************************************************************************************************************************************************************************************/
-.chat__toggle__switch{
-    flex: 0.1;
-}
-.toggle__switch{
-    position: relative;
-    cursor: pointer;
-    display: inline-block;
-    width: 360px;
-    height: 60px;
-    background-color: #14143B;
-    border-radius: 20px;
-    margin: 2rem;
-}
-
-.toggle__switch__checkbox{
-    position: absolute;
-    -webkit-appearance: none;
-       -moz-appearance: none;
-            appearance: none;
-    width: 360px;
-    height: 60px;
-    border-radius: 20px;
-    outline: none;
-    cursor: pointer;
-}
-
-.toggle__switch__checkbox::before,
-.toggle__switch__checkbox::after{
-    z-index: 2;
-    position: absolute;
-    top:50%;
-    transform: translateY(-50%);
-    font-size: 2rem;
-}
-
-.toggle__switch__checkbox::before{
-    content: "groups";
-    color: #FFFADE;
-    left: 40px;
-}
-
-.toggle__switch__checkbox::after{
-    content: "direct";
-    color: #fffadea8;
-    right: 48px;   
-}
-
-.toggle__switch__slider::before{
-    position: absolute;
-    content: "";
-    height: 60px;
-    width: 180px;
-    background-color: #54527D;
-    border-radius: 20px;
-    transition: .6s;
-}
-
-.toggle__switch__checkbox:checked + .toggle__switch__slider::before{
-    transform: translateX(180px);
-}
-
-.toggle__switch__checkbox:checked:before{
-    color: #fffadea8;
-}
-
-.toggle__switch__checkbox:checked::after{
-    color: #FFFADE;
-}
-
-/* 2xl */
-@media (max-width: 1536px) {
-
-}
-  
-  /* xl */
-  @media (max-width: 1280px) {
-    .toggle__switch{
-        width: 280px;
-        height: 50px;
-    }
-    .toggle__switch__checkbox{
-        width: 280px;
-        height: 50px;
-    }
-    .toggle__switch__checkbox::before,
-    .toggle__switch__checkbox::after{
-        font-size: 1.8rem;
-    }
-
-    .toggle__switch__checkbox::before{
-        left: 28px;
-    }
-    .toggle__switch__checkbox::after{
-        right: 38px;   
-    }
-
-    .toggle__switch__slider::before{
-        height: 50px;
-        width: 140px;
-        border-radius: 20px;
-    }
-
-    .toggle__switch__checkbox:checked + .toggle__switch__slider::before{
-        transform: translateX(140px);
-    }
-  }
-  
-  /* lg */
-  @media (max-width: 1024px) {
-    .toggle__switch{
-        width: 240px;
-        height: 50px;
-    }
-    .toggle__switch__checkbox{
-        width: 240px;
-        height: 50px;
-    }
-    .toggle__switch__checkbox::before,
-    .toggle__switch__checkbox::after{
-        font-size: 1.5rem;
-    }
-
-    .toggle__switch__checkbox::before{
-        left: 24px;
-    }
-    .toggle__switch__checkbox::after{
-        right: 32px;   
-    }
-
-    .toggle__switch__slider::before{
-        height: 50px;
-        width: 120px;
-        border-radius: 20px;
-    }
-
-    .toggle__switch__checkbox:checked + .toggle__switch__slider::before{
-        transform: translateX(120px);
-    }
-  }
-  
-  /* md */
-  @media (max-width: 768px) {
-    .chat__toggle__switch{
-        display: none;
-    }
-  }
-  
-  /* sm */
-  @media (max-width: 640px) {
-
-  }
-  
-  /* xs */
-  @media (max-width: 475px) {
-
-  }
-
-
-
-/*!***************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./src/app/css_files/components/side-icons.css ***!
-  \***************************************************************************************************************************************************************************************************************************************************************************************/
-.side__icons{
-    display: none;
-}
-.side__icons__btn{
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    font-size: 1.5rem;
-    color: white;
-}
-
-@media (max-width: 1536px) {
-
-}
-
-/* xl */
-@media (max-width: 1280px) {
-
-}
-
-/* lg */
-@media (max-width: 1024px) {
-
-}
-
-/* md */
-@media (max-width: 768px) {
-    .side__icons{
-        display: block;
-        width: 100%;
-        > div{
-            position: unset !important;
-        }
-
-        .side__icons__btn__icon{
-            -o-object-fit: contain;
-               object-fit: contain;
-            width: 100% !important;
-            position: relative !important;
-            height: unset !important;
-        }
-    }
-}
-
-/* sm */
-@media (max-width: 640px) {
-    .side__icons__btn{
-        padding: 0.7rem;
-        font-size: 1.3rem;
-    }
-}
-
-/* xs */
-@media (max-width: 475px) {
-    .side__icons__btn{
-        padding: 0.5rem;
-        font-size: 1rem;
-    }
 }
