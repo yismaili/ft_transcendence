@@ -1,4 +1,24 @@
-.pageWraper {
+.pageWraper1 {
+    display: flex;
+    height: 100vh;
+    background: linear-gradient(203deg, #14143B 0%, #14143B 25%, #14143B 30%, #2CAB8D 79.27%, #37EEB1 100%);
+    /* background: linear-gradient(203deg, #14143B 0%, #14143B 25%, #2CAB8D 68.75%, #2CAB8D 69.27%, #37EEB1 100%, #37EEB1 100%); */
+}
+
+.pageWraper2 {
+    display: flex;
+    height: 100vh;
+    /* background: linear-gradient(153deg, #37EEB1 0%,  #37EEB1 25%,  #37EEB1 30%, #14143B 79.27%, #14143B 100%); */
+    background: linear-gradient(153deg, #37EEB1 0%, #14143B 70%, #14143B 100%);
+}
+
+.pageWraper3 {
+    display: flex;
+    height: 100dvh;
+    background: linear-gradient(203deg, #14143B 0%, #14143B 27%, #14143B 32%, #2CAB8D 79.27%, #37EEB1 100%);
+}
+
+.pageWraper4 {
     display: flex;
     height: 100dvh;
     background: linear-gradient(203deg, #14143B 0%, #14143B 27%, #14143B 32%, #2CAB8D 79.27%, #37EEB1 100%);

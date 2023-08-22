@@ -1,0 +1,42 @@
+.container {
+    /* background-color: blueviolet; */
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.gameImg {
+    /* background-color: #14143B; */
+    height: 30rem;
+    width: 30rem;
+    position: relative;
+}
+
+.txt {
+    height: 30rem;
+    width: 30rem;
+}
+
+.txt p {
+    color: #C7F8FF;
+    font-weight: 500;
+    font-size: clamp(1.5rem, 4vw, 4rem);
+}
+
+.scrollElm {
+    width: 18px;
+    height: 250px;
+    border-Radius: 15px;
+    background: #FFF;
+    margin-bottom: 2rem;
+}
+
+.bar {
+
+}
+
+.friend {
+    display: flex;
+    align-items: center;
+}

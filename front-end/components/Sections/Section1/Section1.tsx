@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Style from "./Section1.module.css"
-import { ST } from "next/dist/shared/lib/utils";
 
-interface me {
+interface props {
     className: string;
 }
-export default function Section1(props: me) {
+
+export default function Section1(props: props) {
     return (
         <section className={props.className}>
             <div className={Style.Main}>
