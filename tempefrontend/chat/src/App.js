@@ -20,9 +20,9 @@ const ChatApp = () => {
       //   setMessages(response);
       // });
 
-      socket.on('typing', ({ user, isTyping }) => {
+      socket.on('typing', ({ name, isTyping }) => {
         if (isTyping) {
-          setTypingDisplay(`${user} is typing...`);
+          setTypingDisplay(`${name} is typing...`);
         } else {
           setTypingDisplay('');
         }
@@ -43,7 +43,7 @@ const ChatApp = () => {
     });
   };
 
-  const getdMessage = () => {
+  function getdMessage (){
     socket.emit('findAllChat', {user: user, secondUser: secondUser },(response) => {
       setMessages(response);
     });

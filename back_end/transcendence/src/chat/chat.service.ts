@@ -38,6 +38,7 @@ export class ChatService {
       }
     });
 
+    this.clientToUser[sender] = createChatDto.user;
     const secondUser = await this.userRepository.findOne({
       where: {
         username: createChatDto.secondUser,
@@ -117,11 +118,11 @@ export class ChatService {
     }
   }
 
-  getClientName(clientId: string) {
+  async getClientName(clientId: string) {
     return this.clientToUser[clientId];
   }
 
-  async remove(id: number): Promise<void> {
+   async remove(id: number): Promise<void> {
     const chat = await this.chatRepository.findOne({
       where: {
         id: id,
