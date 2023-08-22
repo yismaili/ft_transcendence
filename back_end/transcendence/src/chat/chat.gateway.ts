@@ -47,6 +47,7 @@ export class ChatGateway {
   @SubscribeMessage('typing')
   async typing(@MessageBody('isTyping') isTyping: boolean, @ConnectedSocket() client: Socket) {
     const name = await this.chatService.getClientName(client.id);
+    // console.log(name);
     client.broadcast.emit('typing', { name, isTyping });
 }
 }
