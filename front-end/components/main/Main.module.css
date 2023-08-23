@@ -2,7 +2,6 @@
     display: flex;
     height: 100vh;
     background: linear-gradient(203deg, #14143B 0%, #14143B 25%, #14143B 30%, #2CAB8D 79.27%, #37EEB1 100%);
-    /* background: linear-gradient(203deg, #14143B 0%, #14143B 25%, #2CAB8D 68.75%, #2CAB8D 69.27%, #37EEB1 100%, #37EEB1 100%); */
 }
 
 .pageWraper2 {

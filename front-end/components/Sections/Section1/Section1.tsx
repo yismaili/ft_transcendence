@@ -9,8 +9,7 @@ export default function Section1(props: props) {
     return (
         <section className={props.className}>
             <div className={Style.Main}>
-                <h1>FUTURE OF <span>PONG</span></h1>
-                <p>START NOW</p>
+                <h1 className={Style.title}>FUTURE OF <span>PONG</span> START NOW</h1>
                 <button>PLAY NOW</button>
             </div>
             <div className={Style.MainImg}>
