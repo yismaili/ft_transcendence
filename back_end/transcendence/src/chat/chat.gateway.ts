@@ -34,14 +34,18 @@ export class ChatGateway {
     return (this.chatService.identify(username, secondUsername, client.id));
   }
 
-  @SubscribeMessage('updateChat')
+  @SubscribeMessage('editMessage')
   update(@MessageBody() updateChatDto: UpdateChatDto) {
-    return this.chatService.update(updateChatDto.id, updateChatDto);
+    return this.chatService.update(updateChatDto);
   }
 
-  @SubscribeMessage('removeChat')
-  remove(@MessageBody() id: number) {
-    return this.chatService.remove(id);
+  @SubscribeMessage('deleteMessage')
+  remove(@MessageBody() updateChatDto: UpdateChatDto) {
+    return this.chatService.remove(updateChatDto);
+  }
+  @SubscribeMessage('deleteConversation')
+  removeConversation(@MessageBody() updateChatDto: UpdateChatDto) {
+    return this.chatService.removeConversation(updateChatDto);
   }
 
   @SubscribeMessage('typing')
