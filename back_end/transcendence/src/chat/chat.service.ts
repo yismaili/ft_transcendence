@@ -67,7 +67,7 @@ export class ChatService {
       where: [
         { user: { id: user1.id }, secondUser: { id: user2.id } },
         { user: { id: user2.id }, secondUser: { id: user1.id } },
-      ]
+      ],
     });
   
     return chats;
@@ -82,18 +82,18 @@ export class ChatService {
     });
   }
 
-  async update(id: number, updateChatDto: UpdateChatDto): Promise<Chat> {
-    const chat = await this.chatRepository.findOne({
-      where: {
-        id: id,
-      }
-    });
-
+  async update(updateChatDto: UpdateChatDto): Promise<Chat> {
+    const chat = await this.findMessageById(updateChatDto.id);
+    // console.log(chat);
     if (!chat) {
-      throw new NotFoundException(`Chat message with ID ${id} not found`);
+      throw new NotFoundException(`Chat message with ID ${updateChatDto.id} not found`);
     }
-    return this.chatRepository.save(chat); // Save the updated chat message
+    chat.message = updateChatDto.message;
+    const upadteMessage = await this.chatRepository.save(chat);
+    // console.log(upadteMessage);
+    return upadteMessage;
   }
+  
 
 
   async identify(username: string, secondUsername: string,  clientId: string){
@@ -122,16 +122,31 @@ export class ChatService {
     return this.clientToUser[clientId];
   }
 
-   async remove(id: number): Promise<void> {
-    const chat = await this.chatRepository.findOne({
-      where: {
-        id: id,
+   async remove(updateChatDto: UpdateChatDto): Promise<any> {
+     const chat = await this.chatRepository.findOne({
+      where:{
+        id: updateChatDto.id,
       }
-    });
+     });
+    //  console.log(updateChatDto);
     if (!chat) {
-      throw new NotFoundException(`Chat message with ID ${id} not found`);
+      throw new NotFoundException(`Chat message with ID ${ updateChatDto.id} not found`);
     }
-
-    await this.chatRepository.remove(chat); // Remove the chat message
+    await this.chatRepository.remove(chat);
   }
+  
+  async removeConversation(updateChatDto: UpdateChatDto): Promise<any> {
+    const user1 = await this.userRepository.findOne({ where: { username: updateChatDto.user } });
+    const user2 = await this.userRepository.findOne({ where: { username: updateChatDto.secondUser } });
+    const chats = await this.chatRepository.find({
+      where: [
+        { user: { id: user1.id }, secondUser: { id: user2.id } },
+        { user: { id: user2.id }, secondUser: { id: user1.id } },
+      ],
+    });
+   if (!chats) {
+     throw new NotFoundException(`Chat message with ID ${ updateChatDto.id} not found`);
+   }
+   await this.chatRepository.remove(chats);
+ }
 }
