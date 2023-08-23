@@ -4,29 +4,19 @@
     align-items: center;
     background-color: #00000000;
     width: 100%;
+    max-width: inherit;
     height: 6rem;
-    max-width: 100%;
     position: fixed;
 }
 
-.container li a{
+.links a{
     margin-right: 4rem;
     color: #ffffff;
     font-weight: 700;
     font-size: larger;
 }
 
-.container li:nth-child(-n + 1) {
-    margin-right: auto;
-    margin-left: 2.75rem;
-}
-
-.container li:nth-child(2) {
-    position: absolute;
-    left: 7.25rem;
-}
-
-.container > :last-child > :last-child {
+.links > :last-child {
     background-color: #37EEB1;
     padding: 0.6rem 1.2rem;
     border-radius: 17px;
@@ -40,6 +30,7 @@
     align-items: center;
     width: 4rem;
     height: 4rem;
+    margin-left: 2.75rem;
 }
 
 .title {
@@ -47,4 +38,5 @@
     font-weight: 700;
     font-size: 200%;
     letter-spacing: 0.2rem;
+    margin-left: .75rem;
 }

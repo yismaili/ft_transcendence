@@ -4,9 +4,8 @@ import Style from './Nav.module.css'
 
 export default function Nav() {
     return (
-        <header >
-            <ul className={Style.container}>
-                <li className={Style.imageRes}>
+            <div className={Style.container}>
+                <div className={Style.imageRes}>
                     <Image 
                     quality={100}
                     className={Style.imageRes} 
@@ -15,16 +14,13 @@ export default function Nav() {
                     src="/logo.png" alt="logo for pong game" 
                     priority={true}/>
                     <h1 className={Style.title}>PONG</h1>
-                </li>
-                <li>
-                </li>
-                <li>
+                </div>
+                <div className={Style.links}>
                     <Link href="#">home</Link>
                     <Link href="#">about</Link>
                     <Link href="#">faq</Link>
                     <Link href="#">Sign up</Link>
-                </li>
-            </ul>
-        </header>
+                </div>
+            </div>
     );
 };
