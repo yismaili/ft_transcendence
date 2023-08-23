@@ -6,16 +6,21 @@
     /* background-color: rgb(196, 22, 22); */
     height: 100vh;
     width: 50dvw;
+    margin-left: 2rem;
 }
 
-.Main p, .Main h1{
-    font-size: 200%;
+.title {
     color: #14143B;
-    letter-spacing: 0.4rem;
-    font-weight: 500;
+    font-family: 'probert';
+    font-weight: bolder;
+    text-align: center;
+    font-size: calc(35px + 1.5vw);
+    width: 15ch;
+    letter-spacing: 0.2rem;
+    /* max-width: 65%; */
 }
 
-.Main span {
+.title span {
     color: #37EEB1;
 }
 

@@ -3,6 +3,18 @@
    License: none (public domain)
 */
 
+@font-face {
+	font-family: probert;
+	src: url(../public/fonts/probert/Probert.otf);
+	font-weight: normal;
+}
+
+@font-face {
+	font-family: probert;
+	src: url(../public/fonts/probert/Probert_Bold.otf);
+	font-weight: bold;
+}
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
