@@ -3,7 +3,6 @@ import { UpdateChatDto } from './dto/update-chat.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from 'src/typeorm/entities/User.entity';
-import { UserService } from 'src/user/user.service';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
 import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
@@ -18,15 +17,14 @@ import { ChatRoomUser } from 'src/typeorm/entities/chat-room-users.entity';
 export class ChatService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    // @InjectRepository(Profile)private profileRepository: Repository<Profile>,
-    // @InjectRepository(Relation)private relationRepository: Repository<Relation>,
-    // @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
-    // @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
-    // @InjectRepository(Message)private messageRepository: Repository<Message>,
+    @InjectRepository(Profile)private profileRepository: Repository<Profile>,
+    @InjectRepository(Relation)private relationRepository: Repository<Relation>,
+    @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
+    @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
+    @InjectRepository(Message)private messageRepository: Repository<Message>,
     @InjectRepository(Chat) private chatRepository: Repository<Chat>,
-    // @InjectRepository(ChatRoom)private chartRoomRepository: Repository<ChatRoom>,
-    // @InjectRepository(ChatRoomUser)private chartRoomUserRepository: Repository<ChatRoomUser>,
-    private readonly userService: UserService
+    @InjectRepository(ChatRoom)private chartRoomRepository: Repository<ChatRoom>,
+    @InjectRepository(ChatRoomUser)private chartRoomUserRepository: Repository<ChatRoomUser>
   ) {}
   clientToUser = {};
   
@@ -148,5 +146,12 @@ export class ChatService {
      throw new NotFoundException(`Chat message with ID ${ updateChatDto.id} not found`);
    }
    await this.chatRepository.remove(chats);
+
+   return await this.chatRepository.find({
+    where: [
+      { user: { id: user1.id }, secondUser: { id: user2.id } },
+      { user: { id: user2.id }, secondUser: { id: user1.id } },
+    ],
+  });
  }
 }

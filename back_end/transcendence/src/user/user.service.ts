@@ -42,8 +42,11 @@ export class UserService {
                     'userRelations', 
                     'friendRelations', 
                     'achievements', 
-                    'histories', 
-                    'chatRoomUsers'
+                    'histories',
+                    'userChats',
+                    'secondUserChats',
+                    // 'chatRoomUsers',
+                    // 'messages',
                   ],
       });
       if (existingUser){
