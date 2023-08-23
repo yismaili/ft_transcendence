@@ -13,7 +13,14 @@ export class ChatGateway {
   constructor(private readonly chatService: ChatService) {}
 
   @SubscribeMessage('createChat')
-  create(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket) {
+  createChat(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket) {
+    const message = this.chatService.createChatMessage(createChatDto, client.id);
+    this.server.emit('message', message);
+    return message;
+  }
+
+  @SubscribeMessage('createChat')
+  createChatRoom(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket) {
     const message = this.chatService.createChatMessage(createChatDto, client.id);
     this.server.emit('message', message);
     return message;
@@ -51,7 +58,6 @@ export class ChatGateway {
   @SubscribeMessage('typing')
   async typing(@MessageBody('isTyping') isTyping: boolean, @ConnectedSocket() client: Socket) {
     const name = await this.chatService.getClientName(client.id);
-    // console.log(name);
     client.broadcast.emit('typing', { name, isTyping });
 }
 }

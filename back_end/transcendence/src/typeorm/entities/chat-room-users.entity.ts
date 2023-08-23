@@ -20,6 +20,6 @@ export class ChatRoomUser {
   @JoinColumn({ name: 'userId' })
   user: User;
 
-  @OneToMany(() => ChatRoom, chatRoom => chatRoom.chatRoomUser)
+  @ManyToOne(() => ChatRoom, chatRoom => chatRoom.chatRoomUser)
   chatRooms: ChatRoom[];
 }
