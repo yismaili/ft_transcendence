@@ -12,6 +12,8 @@ import { Chat } from 'src/typeorm/entities/chat-entity';
 import { Message } from 'src/typeorm/entities/message-entity';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import { ChatRoomUser } from 'src/typeorm/entities/chat-room-users.entity';
+import { CreateChatRoomDto } from './dto/create-chatRoom.dto';
+import { HashingPasswordService } from 'src/hashing-password/hashing-password.service';
 
 @Injectable()
 export class ChatService {
@@ -23,8 +25,9 @@ export class ChatService {
     @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
     @InjectRepository(Message)private messageRepository: Repository<Message>,
     @InjectRepository(Chat) private chatRepository: Repository<Chat>,
-    @InjectRepository(ChatRoom)private chartRoomRepository: Repository<ChatRoom>,
-    @InjectRepository(ChatRoomUser)private chartRoomUserRepository: Repository<ChatRoomUser>
+    @InjectRepository(ChatRoom)private chatRoomRepository: Repository<ChatRoom>,
+    @InjectRepository(ChatRoomUser)private chatRoomUserRepository: Repository<ChatRoomUser>,
+    private hashingPasswordSrvice: HashingPasswordService,
   ) {}
   clientToUser = {};
   
@@ -51,6 +54,36 @@ export class ChatService {
     
     this.chatRepository.save(newChatMessage);
     return newChatMessage;
+  }
+
+  async createChatRoom(createChatRoomDto: CreateChatRoomDto) : Promise<any> {
+
+    const nameOfRoom = await this.chatRoomRepository.findOne({
+      where: {
+        name: createChatRoomDto.name,
+      }
+    });
+    if (nameOfRoom){
+      return "exist Room";
+    }
+
+    const hashedPassword = await this.hashingPasswordSrvice.hashPassword(createChatRoomDto.password);
+    const newChatRoom = this.chatRoomRepository.create({
+      name: createChatRoomDto.name,
+      status: createChatRoomDto.status,
+      password: hashedPassword,
+    });
+    const savenewChatRoom = await this.chatRoomRepository.save(newChatRoom);
+
+    const newChatRoomUser = this.chatRoomUserRepository.create({
+        time: createChatRoomDto.user.time,
+        statusPermissions: createChatRoomDto.user.statusPermissions,
+        statusUser: createChatRoomDto.user.statusUser,
+        user: createChatRoomDto.user.user,
+        // chatRooms: savenewChatRoom.id,
+    });
+    const saveNewChatRoomUser = await this.chatRoomUserRepository.save(newChatRoom);
+
   }
 
   async findConversationBetweenUsers(createChatDto: MessageChatDto): Promise<Chat[]> {
