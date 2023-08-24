@@ -7,6 +7,6 @@ async function bootstrap() { // asynchronous function, the entry point of the ap
    dotenv.config();
   const app = await NestFactory.create(AppModule); // class is responsible for creating the application instance.
   // keyword can use await to wait for promises to resolve
-  await app.listen(3000); // the listen method is called on the app instance to start the server and make it listen on port 3000
+  await app.listen(3001); // the listen method is called on the app instance to start the server and make it listen on port 3000
 }
 bootstrap();
