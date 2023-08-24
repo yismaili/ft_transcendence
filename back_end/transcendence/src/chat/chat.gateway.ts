@@ -1,8 +1,9 @@
 import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
-import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { Socket, Server } from 'socket.io';
+import { MessageChatDto } from './dto/message-chat.dto';
+
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
 export class ChatGateway {
@@ -12,15 +13,22 @@ export class ChatGateway {
   constructor(private readonly chatService: ChatService) {}
 
   @SubscribeMessage('createChat')
-  create(@MessageBody() createChatDto: CreateChatDto, @ConnectedSocket() client: Socket) {
+  createChat(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket) {
     const message = this.chatService.createChatMessage(createChatDto, client.id);
-    this.server.emit('message', message); // Emit to all clients
+    this.server.emit('message', message);
+    return message;
+  }
+
+  @SubscribeMessage('createChat')
+  createChatRoom(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket) {
+    const message = this.chatService.createChatMessage(createChatDto, client.id);
+    this.server.emit('message', message);
     return message;
   }
 
   @SubscribeMessage('findAllChat')
-  findAll() {
-    return this.chatService.findAllMessages();
+  findAllMessagesOfUser(@MessageBody() createChatDto: MessageChatDto) {
+    return this.chatService.findConversationBetweenUsers(createChatDto);
   }
 
   @SubscribeMessage('findOneChat')
@@ -29,19 +37,22 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('join')
-  joinRoom(@MessageBody('name') name: string, @ConnectedSocket() client: Socket) {
-    const ret = this.chatService.identify(name, client.id)
-    return ret;
+  joinRoom(@MessageBody('username') username: string,@MessageBody('secondUsername') secondUsername: string, @ConnectedSocket() client: Socket) {
+    return (this.chatService.identify(username, secondUsername, client.id));
   }
 
-  @SubscribeMessage('updateChat')
+  @SubscribeMessage('editMessage')
   update(@MessageBody() updateChatDto: UpdateChatDto) {
-    return this.chatService.update(updateChatDto.id, updateChatDto);
+    return this.chatService.update(updateChatDto);
   }
 
-  @SubscribeMessage('removeChat')
-  remove(@MessageBody() id: number) {
-    return this.chatService.remove(id);
+  @SubscribeMessage('deleteMessage')
+  remove(@MessageBody() updateChatDto: UpdateChatDto) {
+    return this.chatService.remove(updateChatDto);
+  }
+  @SubscribeMessage('deleteConversation')
+  removeConversation(@MessageBody() updateChatDto: UpdateChatDto) {
+    return this.chatService.removeConversation(updateChatDto);
   }
 
   @SubscribeMessage('typing')
