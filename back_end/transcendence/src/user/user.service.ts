@@ -80,7 +80,7 @@ async updateProfileOutcomeByUsername(userName: string, updateUserDetails: Outcom
 }
 
 
-async updateProfileByUsername(userName: string, updateUserDetails: updateProfileDto): Promise<IAuthenticate> {
+async updateProfileByUsername(userName: string, updateUserDetails: updateProfileDto): Promise<any> {
   try {
     const existingUser = await this.findProfileByUsername(userName);
     if (!existingUser) {
