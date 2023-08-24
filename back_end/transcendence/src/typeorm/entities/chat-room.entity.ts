@@ -8,6 +8,9 @@ export class ChatRoom {
   id: number;
 
   @Column('text')
+  name: string;
+
+  @Column('text')
   status: string;
 
   @Column('text')
