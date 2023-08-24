@@ -19,7 +19,7 @@ export class IntraStrategy extends PassportStrategy(Strategy, '42') {
    // console.log(profile);
    const user = {
     firstName: profile.name.givenName, 
-    username: profile.username,
+    // username: profile.username,
     lastName: profile.name.familyName, 
     email: profile.emails?.[0]?.value,
     picture: profile._json.image.link,
