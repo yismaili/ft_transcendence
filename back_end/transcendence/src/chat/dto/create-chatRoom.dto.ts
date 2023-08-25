@@ -1,10 +1,11 @@
-import { ChatRoomUser } from "src/typeorm/entities/chat-room-users.entity";
-import { ChatRoom } from "src/typeorm/entities/chat-room.entity";
-export class  CreateChatRoomDto extends ChatRoom {
-    user: ChatRoomUser;
+import { User } from "src/typeorm/entities/User.entity";
 
-    constructor(user: ChatRoomUser) {
-        super();
-        this.user = user;
-    }
+export class  CreateChatRoomDto {
+    user: string;
+    name: string;
+    status: string;
+    password: string;
+    statusPermissions: string;
+    time: string;
+    statusUser: string;
 }
