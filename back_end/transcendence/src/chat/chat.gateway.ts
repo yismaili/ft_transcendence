@@ -4,6 +4,7 @@ import { UpdateChatDto } from './dto/update-chat.dto';
 import { Socket, Server } from 'socket.io';
 import { MessageChatDto } from './dto/message-chat.dto';
 import { CreateChatRoomDto } from './dto/create-chatRoom.dto';
+import { JoinUsertoChatRoom } from './dto/join-user-to-chatRoom.dto';
 
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
@@ -23,6 +24,13 @@ export class ChatGateway {
   @SubscribeMessage('createChatRoom')
   createChatRoom(@MessageBody() createChatRoomDto: CreateChatRoomDto, @ConnectedSocket() client: Socket) {
     const message = this.chatService.createChatRoom(createChatRoomDto);
+    this.server.emit('message', message);
+    return message;
+  }
+
+  @SubscribeMessage('JoinUsertoRoom')
+  joinUsarToChatRoom(@MessageBody() joinUsertoChatRoom: JoinUsertoChatRoom, @ConnectedSocket() client: Socket) {
+    const message = this.chatService.joinUsarToChatRoom(joinUsertoChatRoom);
     this.server.emit('message', message);
     return message;
   }

@@ -14,6 +14,7 @@ import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import { ChatRoomUser } from 'src/typeorm/entities/chat-room-users.entity';
 import { CreateChatRoomDto } from './dto/create-chatRoom.dto';
 import { HashingPasswordService } from 'src/hashing-password/hashing-password.service';
+import { JoinUsertoChatRoom } from './dto/join-user-to-chatRoom.dto';
 
 @Injectable()
 export class ChatService {
@@ -57,14 +58,16 @@ export class ChatService {
   }
 
   async createChatRoom(createChatRoomDto: CreateChatRoomDto): Promise<any> {
-    
+
     try {
         const user = await this.userRepository.findOne({
             where: {
                 username: createChatRoomDto.user,
             },
         });
-
+        if (!user){
+          return "this user not exist";
+        }
         const newChatRoom = this.chatRoomRepository.create({
             name: createChatRoomDto.name,
             status: createChatRoomDto.status,
@@ -89,12 +92,39 @@ export class ChatService {
 
         const savedNewChatRoomUser = await this.chatRoomUserRepository.save(newChatRoomUser);
 
-        return savedNewChatRoomUser; 
+        return savedNewChatRoom; 
     } catch (error) {
         console.error(error);
         throw new Error('Error creating chat room');
     }
 }
+
+
+  async joinUsarToChatRoom(joinUserToChatRoom: JoinUsertoChatRoom): Promise<any>{
+
+    const user =  await this.userRepository.findOne({
+      where: {
+        username: joinUserToChatRoom.username,
+      }
+    });
+
+    if (!user){
+      return "this user not exist";
+    }
+  console.log(joinUserToChatRoom);
+    const chatRoom =  await this.chatRoomRepository.findOne({
+      where: {
+        id: joinUserToChatRoom.chatRoomId,
+      }
+    });
+
+    const createChatRoomUser = await this.chatRoomUserRepository.create({
+      statusPermissions: joinUserToChatRoom.statusPermissions,
+      user: user,
+      chatRooms: chatRoom,
+    });
+    return await this.chatRoomUserRepository.save(createChatRoomUser);
+  }
 
   async findConversationBetweenUsers(createChatDto: MessageChatDto): Promise<Chat[]> {
     const user1 = await this.userRepository.findOne({ where: { username: createChatDto.user } });

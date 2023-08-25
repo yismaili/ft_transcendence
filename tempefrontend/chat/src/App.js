@@ -1,85 +1,3 @@
-  // const [name, setName] = useState('');
-  // const [status, setStatus] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [statusPermissions, setstatusPermissions] = useState('');
-
-  
-  // const createChatRoomm = () => {
-  //   setstatusPermissions('admin');
-  //   socket.emit('createChatRoom', {name: name, status: status , user: user, statusPermissions: statusPermissions}, () => {
-  //     setMessageText('');
-  //   });
-  // };
-  
-  // return (
-  //   <div className="chat">
-  //     {!joined ? (
-  //       <div>
-  //         <form
-  //           onSubmit={(e) => {
-  //             e.preventDefault();
-  //             createChatRoomm();
-  //             // getMessage();
-  //           }}
-  //         >
-  //           <label>user:</label>
-  //               <input value={user} onChange={(e) => setUser(e.target.value)} />
-  //           <label> name: </label>
-  //               <input value={name} onChange={(j) => setName(j.target.value)} />
-  //           <label> status: </label>
-  //               <input value={status} onChange={(k) => setStatus(k.target.value)} />
-  //           <label>password:</label>
-  //               <input value={password} onChange={(l) => setPassword(l.target.value)} />
-  //           <button type="submit">
-  //             Join
-  //           </button>
-  //         </form>
-  //       </div>
-  //         ) : (
-  //       <div className="chat-container">
-  //         <div className="messages-container">
-  //           {messages.map((msg, index) => (
-  //             <div key={index}>
-  //               {editingIndex === index ? (
-  //                 <div>
-  //                   <input
-  //                     value={editMessageText}
-  //                     onChange={(e) => setEditMessageText(e.target.value)}
-  //                   />
-  //                 </div>
-  //               ) : (
-  //                 <div>
-  //                   [{msg.user}]: {msg.message}
-  //                 </div>
-  //               )}
-  //             </div>
-  //           ))}
-  //         </div>
-  //         {typingDisplay && <div>{typingDisplay}</div>}
-  //         <hr />
-  //         <div className="message-input">
-  //           <form
-  //             onSubmit={(e) => {
-  //               e.preventDefault();
-  //               sendMessage();
-  //               getMessage();
-  //             }}
-  //           >
-  //             <input
-  //               value={messageText}
-  //               onChange={(e) => setMessageText(e.target.value)}
-  //               onInput={emitTyping}
-  //             />
-  //               <span>
-  //                     <button onClick={() => deleteConversation()}>Delete</button>
-  //               </span>
-  //             <button type="submit">Send</button>
-  //           </form>
-  //         </div>
-  //       </div>
-  //         )};
-  //   </div>
-  // );
 
 
   import React, { useState, useEffect } from 'react';
@@ -91,7 +9,9 @@ const ChatApp = () => {
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
   const [joined, setJoined] = useState(false);
+  const [chatRoomId, setchatRoom] = useState('');
   const [user, setName] = useState('');
+  const [users, setUsers] = useState([]);
   const [secondUser, setSecondUsername] = useState('');
   const [typingDisplay, setTypingDisplay] = useState('');
   const [editingIndex, setEditingIndex] = useState(-1);
@@ -170,11 +90,18 @@ const ChatApp = () => {
 
 const createChatRoom = () => {
     setstatusPermissions('admin');
-    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, () => {
+    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, (response) => {
       setMessageText('');
+      setJoined(true);
+      setchatRoom(response.id)
+      console.log(chatRoomId);
     });
   };
-  
+const JoinUsertoRoom = () =>{
+  socket.emit('JoinUsertoRoom', { username: users, statusPermissions: statusPermissions, chatRoomId: chatRoomId}, () => {
+    setJoined(true);
+  });
+}
 
 //   return (
 //     <div className="chat">
@@ -261,7 +188,6 @@ return (
             onSubmit={(e) => {
               e.preventDefault();
               createChatRoom();
-              // getMessage();
             }}
           >
             <label>user:</label>
@@ -280,6 +206,13 @@ return (
           ) : (
         <div className="chat-container">
           <div className="messages-container">
+            <span>
+            <label> user: </label>
+            <input value={users} onChange={(h) => setUsers(h.target.value)} />
+            <label> statusPermissions: </label>
+            <input value={statusPermissions} onChange={(k) => setstatusPermissions(k.target.value)} />
+            <button onClick={() => JoinUsertoRoom()}>add</button>
+            </span>
             {messages.map((msg, index) => (
               <div key={index}>
                 {editingIndex === index ? (
@@ -307,8 +240,7 @@ return (
                 getMessage();
               }}
             >
-              <input
-                value={messageText}
+              <input value={messageText}
                 onChange={(e) => setMessageText(e.target.value)}
                 onInput={emitTyping}
               />
