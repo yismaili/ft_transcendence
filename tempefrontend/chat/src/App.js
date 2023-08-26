@@ -51,7 +51,7 @@ const ChatApp = () => {
 
   const sendMessageToChatRoom = () => {
     socket.emit('sendMessageToChatRoom', { message: messageTextToChatRoom, username: users, chatRoomId: chatRoomId}, () => {
-      sendMessageToChatRoom('');
+     setMessageTextToChatRoom('');
     });
   };
 
@@ -248,7 +248,7 @@ return (
                 getMessage();
               }}
             >
-              <input value={messageText}
+              <input value={messageTextToChatRoom}
                 onChange={(e) => setMessageTextToChatRoom(e.target.value)}
                 onInput={emitTyping}
               />

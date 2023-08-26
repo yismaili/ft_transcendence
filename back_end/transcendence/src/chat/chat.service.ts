@@ -128,7 +128,25 @@ export class ChatService {
   }
 
   async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom) : Promise<any>{
-    console.log(sendMessageToChatRoom);
+    const user = await this.userRepository.findOne({
+      where: {
+        username: sendMessageToChatRoom.username,
+      },
+    });
+
+    const chatRoom = await this.chatRoomRepository.findOne({
+      where: {
+        id: sendMessageToChatRoom.chatRoomId,
+      },
+    });
+
+    const createNewMessage = await this.messageRepository.create({
+      user: user,
+      message: sendMessageToChatRoom.message,
+      chatRoom: chatRoom,
+    });
+
+    return await this.messageRepository.save(createNewMessage);
   }
 
   async findConversationBetweenUsers(createChatDto: MessageChatDto): Promise<Chat[]> {
