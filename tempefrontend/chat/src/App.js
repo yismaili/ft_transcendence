@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+
+
+  import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import './App.css';
 
@@ -6,12 +8,22 @@ const ChatApp = () => {
   const [socket] = useState(io('http://localhost:3001'));
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
+  const [messageTextToChatRoom, setMessageTextToChatRoom] = useState('');
   const [joined, setJoined] = useState(false);
+  const [chatRoomId, setchatRoom] = useState('');
   const [user, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [chatRoomName, setchatRoomName] = useState('');
+  const [users, setUsers] = useState([]);
   const [secondUser, setSecondUsername] = useState('');
   const [typingDisplay, setTypingDisplay] = useState('');
   const [editingIndex, setEditingIndex] = useState(-1);
   const [editMessageText, setEditMessageText] = useState('');
+  const [editMessageFomChatRoom, setEditMessageFomChatRoom] = useState('');
+  const [name, setNameOfRomm] = useState('');
+  const [status, setStatus] = useState('');
+  const [password, setPassword] = useState('');
+  const [statusPermissions, setstatusPermissions] = useState('admin');
 
   useEffect(() => {
     socket.on('message', (message) => {
@@ -36,6 +48,12 @@ const ChatApp = () => {
   const sendMessage = () => {
     socket.emit('createChat', { message: messageText, user, secondUser }, () => {
       setMessageText('');
+    });
+  };
+
+  const sendMessageToChatRoom = () => {
+    socket.emit('sendMessageToChatRoom', { message: messageTextToChatRoom, username: users, chatRoomId: chatRoomId}, () => {
+     setMessageTextToChatRoom('');
     });
   };
 
@@ -79,50 +97,165 @@ const ChatApp = () => {
     }, 2000);
   };
 
-  return (
+
+const createChatRoom = () => {
+    setstatusPermissions('admin');
+    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, (response) => {
+      setMessageText('');
+      setJoined(true);
+      setchatRoom(response.id)
+      console.log(chatRoomId);
+    });
+  };
+const JoinUsertoRoom = () =>{
+  socket.emit('JoinUsertoRoom', { username: users, statusPermissions: statusPermissions, chatRoomId: chatRoomId}, () => {
+    setJoined(true);
+  });
+}
+
+function getMessageFromchatRoom() {
+  socket.emit('findAllChatRoomConversation', { username: users, chatRoomId: chatRoomId}, (response) => {
+    setMessages(response);
+  });
+}
+
+const joinChatRoom = () => {
+  socket.emit('joinChatRoom', {username: username,  chatRoomName: chatRoomName}, (response) => {
+    setJoined(true);
+    setMessages(response);
+  });
+}
+
+//   return (
+//     <div className="chat">
+//       {!joined ? (
+//         <div>
+//           <form
+//             onSubmit={(e) => {
+//               e.preventDefault();
+//               join();
+//               getMessage();
+//             }}
+//           >
+//             <label>Your user:</label>
+//             <input value={user} onChange={(e) => setName(e.target.value)} />
+//             <label>User of second user:</label>
+//             <input
+//               value={secondUser}
+//               onChange={(s) => setSecondUsername(s.target.value)}
+//             />
+//             <button type="submit" disabled={user === '' || secondUser === ''}>
+//               Join
+//             </button>
+//           </form>
+//         </div>
+//       ) : (
+//         <div className="chat-container">
+//           <div className="messages-container">
+//             {messages.map((msg, index) => (
+//               <div key={index}>
+//                 {editingIndex === index ? (
+//                   <div>
+//                     <input
+//                       value={editMessageText}
+//                       onChange={(e) => setEditMessageText(e.target.value)}
+//                     />
+//                     {/* <button onClick={() => updateMessage(index)}>Save</button>
+//                     <button onClick={() => setEditingIndex(-1)}>Cancel</button> */}
+//                   </div>
+//                 ) : (
+//                   <div>
+//                     [{msg.user}]: {msg.message}
+//                     {/* <span>
+//                       <button onClick={() => deleteMessage(index)}>Delete</button>
+//                       <button onClick={() => setEditingIndex(index)}>Edit</button>
+//                     </span> */}
+//                   </div>
+//                 )}
+//               </div>
+//             ))}
+//           </div>
+//           {typingDisplay && <div>{typingDisplay}</div>}
+//           <hr />
+//           <div className="message-input">
+//             <form
+//               onSubmit={(e) => {
+//                 e.preventDefault();
+//                 sendMessage();
+//                 getMessage();
+//               }}
+//             >
+//               <input
+//                 value={messageText}
+//                 onChange={(e) => setMessageText(e.target.value)}
+//                 onInput={emitTyping}
+//               />
+//                 <span>
+//                       <button onClick={() => deleteConversation()}>Delete</button>
+//                 </span>
+//               <button type="submit">Send</button>
+//             </form>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+
+return (
     <div className="chat">
       {!joined ? (
         <div>
+          <spam>
+          <label> chatName: </label>
+          <input value={chatRoomName} onChange={(e) => setchatRoomName(e.target.value)} />
+          <label> user: </label>
+          <input value={username} onChange={(e) => setUsername(e.target.value)} />
+          <button onClick={() => joinChatRoom()}>Jion ChatRomm</button>
+        </spam>
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              join();
-              getMessage();
+              createChatRoom();
             }}
           >
-            <label>Your user:</label>
-            <input value={user} onChange={(e) => setName(e.target.value)} />
-            <label>User of second user:</label>
-            <input
-              value={secondUser}
-              onChange={(s) => setSecondUsername(s.target.value)}
-            />
-            <button type="submit" disabled={user === '' || secondUser === ''}>
+            <label>user:</label>
+                <input value={user} onChange={(e) => setName(e.target.value)} />
+            <label> name: </label>
+                <input value={name} onChange={(j) => setNameOfRomm(j.target.value)} />
+            <label> status: </label>
+                <input value={status} onChange={(k) => setStatus(k.target.value)} />
+            <label>password:</label>
+                <input value={password} onChange={(l) => setPassword(l.target.value)} />
+            <button type="submit">
               Join
             </button>
+
           </form>
         </div>
-      ) : (
+          ) : (
         <div className="chat-container">
           <div className="messages-container">
+            <span>
+            <label> user: </label>
+            <input value={users} onChange={(h) => setUsers(h.target.value)} />
+            <label> statusPermissions: </label>
+            <input value={statusPermissions} onChange={(k) => setstatusPermissions(k.target.value)} />
+            <button onClick={() => JoinUsertoRoom()}>add</button>
+            </span>
             {messages.map((msg, index) => (
               <div key={index}>
                 {editingIndex === index ? (
                   <div>
                     <input
-                      value={editMessageText}
-                      onChange={(e) => setEditMessageText(e.target.value)}
+                      value={editMessageFomChatRoom}
+                      onChange={(e) => setEditMessageFomChatRoom(e.target.value)}
                     />
-                    {/* <button onClick={() => updateMessage(index)}>Save</button>
-                    <button onClick={() => setEditingIndex(-1)}>Cancel</button> */}
                   </div>
                 ) : (
                   <div>
                     [{msg.user}]: {msg.message}
-                    {/* <span>
-                      <button onClick={() => deleteMessage(index)}>Delete</button>
-                      <button onClick={() => setEditingIndex(index)}>Edit</button>
-                    </span> */}
                   </div>
                 )}
               </div>
@@ -134,13 +267,12 @@ const ChatApp = () => {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                sendMessage();
-                getMessage();
+                sendMessageToChatRoom();
+                getMessageFromchatRoom();
               }}
             >
-              <input
-                value={messageText}
-                onChange={(e) => setMessageText(e.target.value)}
+              <input value={messageTextToChatRoom}
+                onChange={(e) => setMessageTextToChatRoom(e.target.value)}
                 onInput={emitTyping}
               />
                 <span>
@@ -150,9 +282,9 @@ const ChatApp = () => {
             </form>
           </div>
         </div>
-      )}
+          )};
     </div>
-  );
-};
-
+  )
+}
 export default ChatApp;
+

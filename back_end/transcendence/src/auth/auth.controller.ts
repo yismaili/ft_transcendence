@@ -13,7 +13,6 @@ import { JwtAuthGuard } from './guard/jwt.guard';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { User } from 'src/typeorm/entities/User.entity';
 
-
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {} //we used this constructor for 'Dependency Injection'
@@ -25,7 +24,6 @@ export class AuthController {
   }
 
   response: any;
-
   @Get('home')
   googlelogin(@Res() res: Response,) {
 
@@ -43,8 +41,9 @@ export class AuthController {
         picture: req.user.picture,
       };
 
-    this.response = await this.authService.googleAuthenticate(user);
-    if (this.response.success){
+    const response = await this.authService.googleAuthenticate(user);
+    if (response.success){
+      res.cookie('userData', {response})
       return res.redirect('/auth/home'); // Redirect to home page
     }
     return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
@@ -63,10 +62,11 @@ export class AuthController {
       picture: req.user.picture,
     };
 
-    this.response = await this.authService.googleAuthenticate(user);
-
-    if (this.response.success){
-      return res.redirect('/auth/home'); // Redirect to home page
+    const response = await this.authService.googleAuthenticate(user);
+    
+    if (response.success){
+      res.cookie('userData', {response})
+      return res.redirect('/auth/home');
     }
     return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
   }

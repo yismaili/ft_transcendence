@@ -7,10 +7,13 @@ export class ChatRoom {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('text')
+  @Column({ nullable: true })
+  name: string;
+ 
+  @Column({ nullable: true })
   status: string;
 
-  @Column('text')
+  @Column({ nullable: true })
   password: string;
 
   @OneToMany(() => Message, message => message.chatRoom)

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, BeforeInsert, BeforeUpdate } from 'typeorm';
 import { User } from './User.entity';
 import { ChatRoom } from './chat-room.entity';
 
@@ -21,5 +21,16 @@ export class Message {
   @ManyToOne(() => ChatRoom, chatRoom => chatRoom.messages)
   @JoinColumn({ name: 'chatRoomId' })
   chatRoom: ChatRoom;
+
+  @BeforeInsert()
+  setDateOnInsert() {
+    this.date = new Date();
+  }
+
+  @BeforeUpdate()
+  setDateOnUpdate() {
+    this.date = new Date();
+  }
+  
 }
 
