@@ -11,10 +11,10 @@
 }
 
 .links a{
-    margin-right: 4rem;
+    font-family: 'probert';
+    margin-right: clamp(2rem, 4vw, 4rem);
     color: #ffffff;
-    font-weight: 700;
-    font-size: larger;
+    font-size: clamp(1rem, 2vw, 2rem);
 }
 
 .links > :last-child {
@@ -41,4 +41,14 @@
     font-size: 40px;
     letter-spacing: 0.2rem;
     margin-left: .75rem;
+}
+
+.bar {
+    background-color: #ffffff;
+    position: absolute;
+    width: clamp(32px, 6vw , 93px);
+    height: clamp(3px, 2vw, 7px);
+    top: 4.5rem;
+    right: clamp(41.2rem, 1vw, 5rem);
+    border-radius: 5px;
 }

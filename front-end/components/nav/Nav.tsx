@@ -17,10 +17,11 @@ export default function Nav() {
                 </div>
                 <div className={Style.links}>
                     <Link href="#">home</Link>
-                    <Link href="#">about</Link>
+                    <Link href="#">about us</Link>
                     <Link href="#">faq</Link>
                     <Link href="#">Sign up</Link>
                 </div>
+                    <div className={Style.bar}></div>
             </div>
     );
 };

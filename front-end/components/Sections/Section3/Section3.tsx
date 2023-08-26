@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Style from "./Section2.module.css"
+import Style from "./Section3.module.css"
 
 interface props {
     className: string;
@@ -19,7 +19,7 @@ export default function Section2(props: props) {
                         fill
                         className={Style.side__icons__btn__icon}
                         />
-                    </div>
+                    <   /div>
                     <div className={Style.txt}>
                         <p>We are a team of three student developers who are passionate, curious, and hardworking.</p>
                         <p>We are always eager to learn new things and love to solve problems.</p>
