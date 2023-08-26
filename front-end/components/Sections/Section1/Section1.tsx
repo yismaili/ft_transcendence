@@ -13,21 +13,27 @@ export default function Section1(props: props) {
                 <button>PLAY NOW</button>
             </div>
             <div className={Style.MainImg}>
-                <div className={Style.BallImg}>
-                    <Image
-                    src="/img/ball.png"
-                    alt="a ping ball image"
-                    priority={true}
-                    quality={100}
-                    fill/>
+                <div className={Style.side__icons}>
+                        <Image
+                        src="/img/ball.png"
+                        alt="a ping ball image"
+                        priority={true}
+                        quality={100}
+                        fill
+                        className={Style.side__icons__btn__icon}
+                        />
                 </div>
-                <div className={Style.MoonImg}>
-                    <Image
-                    src="/img/moon.png"
-                    alt="moon image"
-                    priority={true}
-                    quality={100}
-                    fill/>
+                <div className={Style.side__icons}>
+                    <div className={Style.MoonBall}>
+                        <Image
+                        src="/img/moon.png"
+                        alt="moon image"
+                        priority={true}
+                        quality={100}
+                        fill
+                        className={Style.side__icons__btn__icon}
+                        />
+                    </div>
                 </div>
             </div>
         </section>

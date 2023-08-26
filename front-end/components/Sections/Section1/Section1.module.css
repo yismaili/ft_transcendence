@@ -14,7 +14,8 @@
     font-family: 'probert';
     font-weight: bolder;
     text-align: center;
-    font-size: calc(35px + 1.5vw);
+    /* font-size:   4rem; */
+    font-size: clamp(1rem, 4vw, 4rem);
     width: 15ch;
     letter-spacing: 0.2rem;
     /* max-width: 65%; */
@@ -27,11 +28,12 @@
 .Main button {
     margin-top: 1rem;
     color: #14143B;
-    font-Size: 40px;
+    font-Size: clamp(1.5rem, 2vw, 2.4rem);
     font-weight: bolder;
-
-    width: 238px;
-    height: 67px;
+    /* width: 238px; */
+    width: clamp(10rem, 12vw, 14.8rem);
+    /* height: 67px; */
+    height: clamp(.1rem, 8vw, 3.5rem);
     border-Radius: 20px;
     background: #FFD699;
     border: none;
@@ -46,16 +48,23 @@
     width: 100%;
 }
 
-.BallImg {
-    /* background-color: #14143B; */
-    height: 30rem;
-    width: 30rem;
-    position: relative;
+.side__icons
+{
+    display: block;
+    width: 100%;
+}
+.side__icons > div {
+    position: unset !important;
 }
 
-.MoonImg {
-    height: 10rem;
-    width: 10rem;
-    position: relative;
-    margin-bottom: 20rem;
+.side__icons .side__icons__btn__icon {
+    object-fit: contain;
+    width: 100% !important;
+    position: relative !important;
+    height: unset !important;
+}
+
+.MoonBall {
+    width: clamp(2.5rem, 10vw, 12rem);
+    padding-bottom: 15vw;
 }
