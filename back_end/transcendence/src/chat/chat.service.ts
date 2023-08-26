@@ -15,6 +15,7 @@ import { ChatRoomUser } from 'src/typeorm/entities/chat-room-users.entity';
 import { CreateChatRoomDto } from './dto/create-chatRoom.dto';
 import { HashingPasswordService } from 'src/hashing-password/hashing-password.service';
 import { JoinUsertoChatRoom } from './dto/join-user-to-chatRoom.dto';
+import { SendMessageToChatRoom } from './dto/send-message-to-chatRomm';
 
 @Injectable()
 export class ChatService {
@@ -124,6 +125,10 @@ export class ChatService {
       chatRooms: chatRoom,
     });
     return await this.chatRoomUserRepository.save(createChatRoomUser);
+  }
+
+  async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom) : Promise<any>{
+    console.log(sendMessageToChatRoom);
   }
 
   async findConversationBetweenUsers(createChatDto: MessageChatDto): Promise<Chat[]> {

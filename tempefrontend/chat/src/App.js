@@ -8,6 +8,7 @@ const ChatApp = () => {
   const [socket] = useState(io('http://localhost:3001'));
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
+  const [messageTextToChatRoom, setMessageTextToChatRoom] = useState('');
   const [joined, setJoined] = useState(false);
   const [chatRoomId, setchatRoom] = useState('');
   const [user, setName] = useState('');
@@ -16,6 +17,7 @@ const ChatApp = () => {
   const [typingDisplay, setTypingDisplay] = useState('');
   const [editingIndex, setEditingIndex] = useState(-1);
   const [editMessageText, setEditMessageText] = useState('');
+  const [editMessageFomChatRoom, setEditMessageFomChatRoom] = useState('');
   const [name, setNameOfRomm] = useState('');
   const [status, setStatus] = useState('');
   const [password, setPassword] = useState('');
@@ -44,6 +46,12 @@ const ChatApp = () => {
   const sendMessage = () => {
     socket.emit('createChat', { message: messageText, user, secondUser }, () => {
       setMessageText('');
+    });
+  };
+
+  const sendMessageToChatRoom = () => {
+    socket.emit('sendMessageToChatRoom', { message: messageTextToChatRoom, username: users, chatRoomId: chatRoomId}, () => {
+      sendMessageToChatRoom('');
     });
   };
 
@@ -218,8 +226,8 @@ return (
                 {editingIndex === index ? (
                   <div>
                     <input
-                      value={editMessageText}
-                      onChange={(e) => setEditMessageText(e.target.value)}
+                      value={editMessageFomChatRoom}
+                      onChange={(e) => setEditMessageFomChatRoom(e.target.value)}
                     />
                   </div>
                 ) : (
@@ -236,12 +244,12 @@ return (
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                sendMessage();
+                sendMessageToChatRoom();
                 getMessage();
               }}
             >
               <input value={messageText}
-                onChange={(e) => setMessageText(e.target.value)}
+                onChange={(e) => setMessageTextToChatRoom(e.target.value)}
                 onInput={emitTyping}
               />
                 <span>
