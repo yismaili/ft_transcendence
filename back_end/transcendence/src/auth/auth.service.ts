@@ -22,12 +22,17 @@ import { RandomService } from 'src/random/random.service';
       private generatenUsename:RandomService,
       ) {}
       
-      async findAll() {
-       const users =  this.userRepository.find({
-          relations: ['profile', 'userRelations', 'friendRelations', 'achievements', 'histories']
-        });
-        return users;
-      }
+async findAll() {
+  const users =  this.userRepository.find({
+   relations: ['profile', 
+    'userRelations', 
+    'friendRelations', 
+    'achievements', 
+    'histories'
+  ]
+  });
+ return users;
+}
 
 async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
 

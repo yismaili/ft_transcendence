@@ -7,13 +7,13 @@ export class ChatRoomUser {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('text')
+  @Column({ nullable: true })
   time: string;
 
-  @Column('text')
+  @Column({ nullable: true })
   statusPermissions: string;
 
-  @Column('text')
+  @Column({ nullable: true })
   statusUser: string;
 
   @ManyToOne(() => User, user => user.chatRoomUsers)
@@ -21,5 +21,5 @@ export class ChatRoomUser {
   user: User;
 
   @ManyToOne(() => ChatRoom, chatRoom => chatRoom.chatRoomUser)
-  chatRooms: ChatRoom[];
+  chatRooms: ChatRoom;
 }
