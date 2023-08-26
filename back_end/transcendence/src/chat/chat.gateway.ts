@@ -6,6 +6,8 @@ import { MessageChatDto } from './dto/message-chat.dto';
 import { CreateChatRoomDto } from './dto/create-chatRoom.dto';
 import { JoinUsertoChatRoom } from './dto/join-user-to-chatRoom.dto';
 import { SendMessageToChatRoom } from './dto/send-message-to-chatRomm';
+import { GetChatRoomMessages } from './dto/get-chatRoom-messages';
+import { JoinChatRoom } from './dto/join-chat-room';
 
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
@@ -41,6 +43,16 @@ export class ChatGateway {
     const message = this.chatService.sendMessage(sendMessageToChatRoom);
     this.server.emit('message', message);
     return message;
+  }
+
+  @SubscribeMessage('findAllChatRoomConversation')
+  findAllChatRoomConversation(@MessageBody() getChatRoomMessages: GetChatRoomMessages) {
+    return this.chatService.findAllChatRoomConversation(getChatRoomMessages);
+  }
+
+  @SubscribeMessage('joinChatRoom')
+  joinChatRoom(@MessageBody() joinChatRoom:JoinChatRoom) {
+    return this.chatService.joinChatRoom(joinChatRoom);
   }
 
   @SubscribeMessage('findAllChat')

@@ -16,6 +16,8 @@ import { CreateChatRoomDto } from './dto/create-chatRoom.dto';
 import { HashingPasswordService } from 'src/hashing-password/hashing-password.service';
 import { JoinUsertoChatRoom } from './dto/join-user-to-chatRoom.dto';
 import { SendMessageToChatRoom } from './dto/send-message-to-chatRomm';
+import { GetChatRoomMessages } from './dto/get-chatRoom-messages';
+import { JoinChatRoom } from './dto/join-chat-room';
 
 @Injectable()
 export class ChatService {
@@ -112,7 +114,6 @@ export class ChatService {
     if (!user){
       return "this user not exist";
     }
-  console.log(joinUserToChatRoom);
     const chatRoom =  await this.chatRoomRepository.findOne({
       where: {
         id: joinUserToChatRoom.chatRoomId,
@@ -128,6 +129,7 @@ export class ChatService {
   }
 
   async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom) : Promise<any>{
+
     const user = await this.userRepository.findOne({
       where: {
         username: sendMessageToChatRoom.username,
@@ -145,8 +147,41 @@ export class ChatService {
       message: sendMessageToChatRoom.message,
       chatRoom: chatRoom,
     });
-
+  //  console.log(chatRoomConversation);
     return await this.messageRepository.save(createNewMessage);
+  }
+
+  async findAllChatRoomConversation(getChatRoomMessages: GetChatRoomMessages) : Promise<any>{
+
+    const chatRoom = await this.chatRoomRepository.findOne({
+      where: {
+        id: getChatRoomMessages.chatRoomId,
+      },
+    });
+
+    const chatRoomConversation =  await this.messageRepository.find({
+      where: {
+          chatRoom:{id: chatRoom.id},
+      }
+    });
+    return chatRoomConversation;
+
+  }
+
+  async joinChatRoom (joinChatRoom: JoinChatRoom) :Promise<any> {
+
+    const chatRoom = await this.chatRoomRepository.findOne({
+      where:{
+        name:joinChatRoom.chatRoomName,
+      }
+    });
+
+    const conversation = await this.messageRepository.find({
+      where:{
+        chatRoom: {id: chatRoom.id},
+      }
+    });
+    return conversation;
   }
 
   async findConversationBetweenUsers(createChatDto: MessageChatDto): Promise<Chat[]> {

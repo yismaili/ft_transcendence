@@ -12,6 +12,8 @@ const ChatApp = () => {
   const [joined, setJoined] = useState(false);
   const [chatRoomId, setchatRoom] = useState('');
   const [user, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [chatRoomName, setchatRoomName] = useState('');
   const [users, setUsers] = useState([]);
   const [secondUser, setSecondUsername] = useState('');
   const [typingDisplay, setTypingDisplay] = useState('');
@@ -111,6 +113,19 @@ const JoinUsertoRoom = () =>{
   });
 }
 
+function getMessageFromchatRoom() {
+  socket.emit('findAllChatRoomConversation', { username: users, chatRoomId: chatRoomId}, (response) => {
+    setMessages(response);
+  });
+}
+
+const joinChatRoom = () => {
+  socket.emit('joinChatRoom', {username: username,  chatRoomName: chatRoomName}, (response) => {
+    setJoined(true);
+    setMessages(response);
+  });
+}
+
 //   return (
 //     <div className="chat">
 //       {!joined ? (
@@ -192,6 +207,13 @@ return (
     <div className="chat">
       {!joined ? (
         <div>
+          <spam>
+          <label> chatName: </label>
+          <input value={chatRoomName} onChange={(e) => setchatRoomName(e.target.value)} />
+          <label> user: </label>
+          <input value={username} onChange={(e) => setUsername(e.target.value)} />
+          <button onClick={() => joinChatRoom()}>Jion ChatRomm</button>
+        </spam>
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -209,6 +231,7 @@ return (
             <button type="submit">
               Join
             </button>
+
           </form>
         </div>
           ) : (
@@ -245,7 +268,7 @@ return (
               onSubmit={(e) => {
                 e.preventDefault();
                 sendMessageToChatRoom();
-                getMessage();
+                getMessageFromchatRoom();
               }}
             >
               <input value={messageTextToChatRoom}
