@@ -1,64 +1,69 @@
 .container {
-    /* background-color: rgb(36, 34, 39); */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
 }
 
-.gameImg {
-    /* background-color: #14143B; */
-    height: 35vw;
-    width: 35vw;
-    position: relative;
-    /* margin-right: 250px; */
-    /* padding-right: 100px; */
+.group {
+  display: flex;
+  /* align-items: center; */
+  /* justify-content: space-around; */
 }
 
-.txt {
-    /* height: 30rem; */
-    width: 180ch;
-    margin-right: 100px;
+/* ///////////// */
+
+.arrow_container {
+  /* background-color: #F2F3F5; */
+  width: 91px;
+  height: 91px;
+  /* position: relative; */
+  /* top: 1000px; */
 }
 
-.txt p {
-    font-family: 'probert';
-    color: #C7F8FF;
-    font-weight: 500;
-    font-size: clamp(1.5rem, 3.5vw, 3rem);
-}
+/* //////////////// */
 
 .scrollElm {
-    width: 1.1rem;
-    height: 15.5rem;
-    border-Radius: 15px;
-    background: #FFF;
-    /* margin: 2rem 2rem 3rem 2rem; */
-    margin-bottom: 2rem;
-    margin-right: 8rem;
-    /* margin-right: 8vw; */
+  width: 1.1rem;
+  height: 15.5rem;
+  border-radius: 15px;
+  background: #fff;
+  /* margin: 2rem 2rem 3rem 2rem; */
+  margin-bottom: 2rem;
+  margin-right: 8rem;
+  /* margin-right: 8vw; */
 }
 
-.friend {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+.side__icons {
+  display: block;
+  width: 100%;
 }
-
-.side__icons
-{
-    display: block;
-    width: 100%;
+.side__icons2 {
+  position: absolute;
+  width: 50px;
 }
 
 .side__icons > div {
-    position: unset !important;
+  position: unset !important;
 }
 
 .side__icons .side__icons__btn__icon {
-    object-fit: contain;
-    width: 100% !important;
-    position: relative !important;
-    height: unset !important;
+  object-fit: contain;
+  width: 100% !important;
+  position: relative !important;
+  height: unset !important;
+}
+
+.side__icons2 .side__icons__btn__icon {
+  object-fit: contain;
+  width: 100% !important;
+  position: relative !important;
+  height: unset !important;
+}
+
+.ParentDiv {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
