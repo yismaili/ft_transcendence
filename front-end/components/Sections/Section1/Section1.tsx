@@ -15,7 +15,7 @@ export default function Section1(props: props) {
             <div className={Style.MainImg}>
                 <div className={Style.side__icons}>
                         <Image
-                        src="/img/ball.png"
+                        src="/img/section1/ball.png"
                         alt="a ping ball image"
                         priority={true}
                         quality={100}
@@ -26,7 +26,7 @@ export default function Section1(props: props) {
                 <div className={Style.side__icons}>
                     <div className={Style.MoonBall}>
                         <Image
-                        src="/img/moon.png"
+                        src="/img/section1/moon.png"
                         alt="moon image"
                         priority={true}
                         quality={100}

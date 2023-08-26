@@ -12,7 +12,7 @@ export default function Section2(props: props) {
                 <div className={Style.friend}>
                     <div className={Style.side__icons}>
                         <Image
-                        src="/img/game.png"
+                        src="/img/section2/game.png"
                         alt="a game image"
                         quality={100}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
