@@ -1,22 +1,28 @@
 import Image from "next/image";
-import Style from "./AboutUs.module.css";
-import { ST } from "next/dist/shared/lib/utils";
+import "./AboutUs.css";
 
-export default function AboutUs() {
+interface props {
+  src: string;
+  name: string;
+  title: string;
+}
+
+export default function AboutUs(props: props) {
   return (
-    <div className={Style.ParentDiv}>
-      <div className={Style.imageDiv}>
+    <div className="ParentDiv">
+      <div className="imageDiv">
         <Image
-          src="/img/section3/markman.png"
+          src={props.src}
           alt="a game image"
           quality={100}
-          sizes="(max-width: 744px) 50vw, (max-width: 1200px) 25vw, 100vw"
+          sizes="(max-width: 744px) 100%, (max-width: 1200px) 100%, 100%"
+          priority={true}
           width={100}
           height={100}
-          className={Style.image}
+          className="image"
         />
       </div>
-      {/* <div className={Style.imageDiv2}>
+      <div className="imageDiv2">
         <Image
           src="/img/section3/arrow.png"
           alt="a game image"
@@ -24,13 +30,13 @@ export default function AboutUs() {
           sizes="(max-width: 744px) 50vw, (max-width: 1200px) 25vw, 100vw"
           width={100}
           height={100}
-          className={Style.image}
+          className="image"
         />
-      </div> */}
-      {/* <div className={Style.textContainer}>
-        <h2 className={Style.name}>El Amine El Mountassir</h2>
-        <p className={Style.title}>Front End Dev</p>
-      </div> */}
+      </div>
+      <div className="textContainer">
+        <h2 className="name">{props.name}</h2>
+        <p className="title">{props.title}</p>
+      </div>
     </div>
   );
 }

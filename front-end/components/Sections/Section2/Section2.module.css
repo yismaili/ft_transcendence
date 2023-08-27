@@ -41,10 +41,6 @@
     /* margin-right: 8vw; */
 }
 
-.bar {
-
-}
-
 .friend {
     display: flex;
     align-items: center;
@@ -54,6 +50,7 @@
 
 .side__icons
 {
+    position: relative;
     display: block;
     width: 100%;
 }

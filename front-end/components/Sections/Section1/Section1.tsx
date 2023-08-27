@@ -13,9 +13,10 @@ export default function Section1() {
                         <Image
                         src="/img/section1/ball.png"
                         alt="a ping ball image"
+                        width={100}
+                        height={100}
                         priority={true}
                         quality={100}
-                        fill
                         className={Style.side__icons__btn__icon}
                         />
                 </div>
@@ -26,7 +27,8 @@ export default function Section1() {
                         alt="moon image"
                         priority={true}
                         quality={100}
-                        fill
+                        width={100}
+                        height={100}
                         className={Style.side__icons__btn__icon}
                         />
                     </div>
