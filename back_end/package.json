@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@nestjs/cli": "^10.1.9",
+    "@nestjs/cli": "^10.1.16",
     "@nestjs/typeorm": "^10.0.0",
     "argon2": "^0.30.3",
     "typeorm": "^0.3.17"
