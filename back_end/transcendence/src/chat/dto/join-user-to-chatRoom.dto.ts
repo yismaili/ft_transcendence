@@ -1,6 +1,6 @@
 
 export class JoinUsertoChatRoom {
-    chatRoomId: number;
+    chatRoomName: string;
     username: string;
     statusPermissions: string;
 }

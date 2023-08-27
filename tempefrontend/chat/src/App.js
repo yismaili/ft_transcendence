@@ -52,7 +52,7 @@ const ChatApp = () => {
   };
 
   const sendMessageToChatRoom = () => {
-    socket.emit('sendMessageToChatRoom', { message: messageTextToChatRoom, username: users, chatRoomId: chatRoomId}, () => {
+    socket.emit('sendMessageToChatRoom', { message: messageTextToChatRoom, username: user, chatRoomName: chatRoomName}, () => {
      setMessageTextToChatRoom('');
     });
   };
@@ -103,18 +103,17 @@ const createChatRoom = () => {
     socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, (response) => {
       setMessageText('');
       setJoined(true);
-      setchatRoom(response.id)
-      console.log(chatRoomId);
+      setchatRoomName(response.name);
     });
   };
 const JoinUsertoRoom = () =>{
-  socket.emit('JoinUsertoRoom', { username: users, statusPermissions: statusPermissions, chatRoomId: chatRoomId}, () => {
+  socket.emit('JoinUsertoRoom', { username: users, statusPermissions: statusPermissions, chatRoomName: chatRoomName}, () => {
     setJoined(true);
   });
 }
 
 function getMessageFromchatRoom() {
-  socket.emit('findAllChatRoomConversation', { username: users, chatRoomId: chatRoomId}, (response) => {
+  socket.emit('findAllChatRoomConversation', { username: users, chatRoomName: chatRoomName}, (response) => {
     setMessages(response);
   });
 }

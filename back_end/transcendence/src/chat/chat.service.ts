@@ -110,13 +110,13 @@ export class ChatService {
         username: joinUserToChatRoom.username,
       }
     });
-
+console.log(joinUserToChatRoom);
     if (!user){
       return "this user not exist";
     }
     const chatRoom =  await this.chatRoomRepository.findOne({
       where: {
-        id: joinUserToChatRoom.chatRoomId,
+        name: joinUserToChatRoom.chatRoomName,
       }
     });
 
@@ -138,7 +138,7 @@ export class ChatService {
 
     const chatRoom = await this.chatRoomRepository.findOne({
       where: {
-        id: sendMessageToChatRoom.chatRoomId,
+        name: sendMessageToChatRoom.chatRoomName,
       },
     });
 
@@ -147,7 +147,6 @@ export class ChatService {
       message: sendMessageToChatRoom.message,
       chatRoom: chatRoom,
     });
-  //  console.log(chatRoomConversation);
     return await this.messageRepository.save(createNewMessage);
   }
 
@@ -155,17 +154,16 @@ export class ChatService {
 
     const chatRoom = await this.chatRoomRepository.findOne({
       where: {
-        id: getChatRoomMessages.chatRoomId,
+        name: getChatRoomMessages.chatRoomName,
       },
     });
-
+console.log(getChatRoomMessages);
     const chatRoomConversation =  await this.messageRepository.find({
       where: {
           chatRoom:{id: chatRoom.id},
       }
     });
     return chatRoomConversation;
-
   }
 
   async joinChatRoom (joinChatRoom: JoinChatRoom) :Promise<any> {
