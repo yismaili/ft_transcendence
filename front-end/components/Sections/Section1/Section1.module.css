@@ -57,6 +57,7 @@
 .side__icons
 {
     display: block;
+    position: relative;
     width: 100%;
 }
 .side__icons > div {
@@ -71,6 +72,7 @@
 }
 
 .MoonBall {
+    position: relative;
     width: clamp(2.5rem, 10vw, 12rem);
     padding-bottom: 15vw;
 }
