@@ -12,7 +12,10 @@ import { User } from './typeorm/entities/User.entity';
 import { UserModule } from './user/user.module';
 import { RandomService } from './random/random.service';
 import { ChatModule } from './chat/chat.module';
-import { Chat } from './typeorm/entities/chat.entity';
+import { ChatRoom } from './typeorm/entities/chat-room.entity';
+import { ChatRoomUser } from './typeorm/entities/chat-room-users.entity';
+import { Message } from './typeorm/entities/message-entity';
+import { Chat } from './typeorm/entities/chat-entity';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
 // The imports property specifies the modules that this module depends on
@@ -27,13 +30,13 @@ import { Chat } from './typeorm/entities/chat.entity';
       username: 'postgres',
       password: 'pass1337',
       database: 'transcendence',
-      entities: [User, Profile, Relation, Achievement, HistoryEntity, Chat],
+      entities: [User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUser, Message, Chat],
       autoLoadEntities: true, // automatically load entity files
       synchronize: true, // automatically synchronize the database schema with the entities. // Set to false in production
     }), 
     AuthModule, // responsible for handling authentication logic
     PassportModule, 
-    UserModule, ChatModule,//NestJS module for integrating Passport.js, an authentication middleware for Node.j
+    UserModule, 
     ChatModule,
   ],
   controllers: [AppController], // Controllers  handle incoming requests and define the routes and endpoints for the application

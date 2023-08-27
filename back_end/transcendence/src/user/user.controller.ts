@@ -102,7 +102,7 @@ export class UserController {
             throw new ForbiddenException();
         }
     }
-
+   
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Post('profile/:username/sendRequist/:id')
     async sendRequist(@Req() req, @Param('username') username: string, @Param('id') idOfuser: number): Promise<RelationParams>{
