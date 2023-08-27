@@ -1,14 +1,9 @@
 import Image from "next/image";
 import Style from "./Section2.module.css"
 
-interface props {
-    className: string;
-}
-
-export default function Section2(props: props) {
+export default function Section2() {
     return (
-        <section className={props.className}>
-            <div className={Style.container}>
+        <section className={Style.container}>
                 <div className={Style.friend}>
                     <div className={Style.side__icons}>
                         <Image
@@ -29,7 +24,6 @@ export default function Section2(props: props) {
                     <div className={Style.scrollElm}></div>
                 </div>
                 </div>
-            </div>
         </section>
     );
 }

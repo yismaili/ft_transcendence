@@ -4,6 +4,8 @@
     align-items: center;
     justify-content: center;
     width: 100%;
+    height: 100vh;
+    background: linear-gradient(203deg, #14143B 0%, #14143B 25%, #14143B 30%, #2CAB8D 79.27%, #37EEB1 100%);
 }
 
 .gameImg {

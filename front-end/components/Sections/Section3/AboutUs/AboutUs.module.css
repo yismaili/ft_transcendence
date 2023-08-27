@@ -1,0 +1,30 @@
+.imageDiv {
+    display: block;
+    width: 100%;
+}
+
+.imageDiv2 {
+    position: absolute;
+    width: 50px;
+}
+  
+.imageDiv .image {
+    object-fit: contain;
+    width: 100% !important;
+    position: relative !important;
+    height: unset !important;
+}
+
+.imageDiv2 .image2 {
+    object-fit: contain;
+    width: 100% !important;
+    position: relative !important;
+    height: unset !important;
+}
+
+.ParentDiv {
+    background-color: rgb(117, 0, 0);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
