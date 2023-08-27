@@ -1,3 +1,4 @@
+'use client'
 import AboutUs from "./AboutUs/AboutUs";
 import Style from "./Section3.module.css";
 
