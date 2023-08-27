@@ -113,13 +113,13 @@ const JoinUsertoRoom = () =>{
 }
 
 function getMessageFromchatRoom() {
-  socket.emit('findAllChatRoomConversation', { username: users, chatRoomName: chatRoomName}, (response) => {
+  socket.emit('findAllChatRoomConversation', { username: user, chatRoomName: chatRoomName}, (response) => {
     setMessages(response);
   });
 }
 
 const joinChatRoom = () => {
-  socket.emit('joinChatRoom', {username: username,  chatRoomName: chatRoomName}, (response) => {
+  socket.emit('joinChatRoom', {username: user,  chatRoomName: chatRoomName}, (response) => {
     setJoined(true);
     setMessages(response);
   });
@@ -210,7 +210,7 @@ return (
           <label> chatName: </label>
           <input value={chatRoomName} onChange={(e) => setchatRoomName(e.target.value)} />
           <label> user: </label>
-          <input value={username} onChange={(e) => setUsername(e.target.value)} />
+          <input value={user} onChange={(e) => setName(e.target.value)} />
           <button onClick={() => joinChatRoom()}>Jion ChatRomm</button>
         </spam>
           <form
