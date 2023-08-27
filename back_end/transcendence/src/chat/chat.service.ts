@@ -68,8 +68,17 @@ export class ChatService {
                 username: createChatRoomDto.user,
             },
         });
+
         if (!user){
-          return "this user not exist";
+          throw new Error('his user not exist');
+        }
+
+        const ischatRoomExist = await this.chatRoomRepository.findOne({
+          where:[ {chatRoomUser: { id: user.id}}, {name: createChatRoomDto.name}]
+        });
+
+        if (ischatRoomExist){
+          throw new Error('his chat room exist');
         }
         const newChatRoom = this.chatRoomRepository.create({
             name: createChatRoomDto.name,
@@ -110,16 +119,26 @@ export class ChatService {
         username: joinUserToChatRoom.username,
       }
     });
-console.log(joinUserToChatRoom);
+
     if (!user){
-      return "this user not exist";
+      throw new Error('this user not exist');
     }
+    
     const chatRoom =  await this.chatRoomRepository.findOne({
       where: {
         name: joinUserToChatRoom.chatRoomName,
       }
     });
 
+    const isUserExistInchatRoom =  await this.chatRoomRepository.findOne({
+      where: {
+          chatRoomUser: {id: user.id},
+      }
+    });
+
+    if(isUserExistInchatRoom){
+      throw new Error ('this user exist in this chat room');
+    }
     const createChatRoomUser = await this.chatRoomUserRepository.create({
       statusPermissions: joinUserToChatRoom.statusPermissions,
       user: user,
@@ -157,7 +176,6 @@ console.log(joinUserToChatRoom);
         name: getChatRoomMessages.chatRoomName,
       },
     });
-console.log(getChatRoomMessages);
     const chatRoomConversation =  await this.messageRepository.find({
       where: {
           chatRoom:{id: chatRoom.id},
@@ -167,12 +185,23 @@ console.log(getChatRoomMessages);
   }
 
   async joinChatRoom (joinChatRoom: JoinChatRoom) :Promise<any> {
+    
+    const user = await this.userRepository.findOne({
+      where:{username: joinChatRoom.username}
+    });
 
     const chatRoom = await this.chatRoomRepository.findOne({
-      where:{
-        name:joinChatRoom.chatRoomName,
-      }
+      where:{name:joinChatRoom.chatRoomName}
     });
+
+    const isUserExistInchatRoom = await this.chatRoomUserRepository.findOne({
+      where:{user:{id: user.id}}
+    });
+    console.log(user);
+  
+    if (!isUserExistInchatRoom){
+      throw new Error('this user not in this chat room');
+    }
 
     const conversation = await this.messageRepository.find({
       where:{

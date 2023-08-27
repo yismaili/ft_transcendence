@@ -106,6 +106,7 @@ const createChatRoom = () => {
       setchatRoomName(response.name);
     });
   };
+  
 const JoinUsertoRoom = () =>{
   socket.emit('JoinUsertoRoom', { username: users, statusPermissions: statusPermissions, chatRoomName: chatRoomName}, () => {
     setJoined(true);
