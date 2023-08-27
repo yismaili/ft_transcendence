@@ -1,13 +1,9 @@
 import Image from "next/image";
 import Style from "./Section1.module.css"
 
-interface props {
-    className: string;
-}
-
-export default function Section1(props: props) {
+export default function Section1() {
     return (
-        <section className={props.className}>
+        <section className={Style.container}>
             <div className={Style.Main}>
                 <h1 className={Style.title}>FUTURE OF <span>PONG</span> START NOW</h1>
                 <button>PLAY NOW</button>
