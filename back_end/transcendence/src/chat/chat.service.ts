@@ -13,7 +13,6 @@ import { Message } from 'src/typeorm/entities/message-entity';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import { ChatRoomUser } from 'src/typeorm/entities/chat-room-users.entity';
 import { CreateChatRoomDto } from './dto/create-chatRoom.dto';
-import { HashingPasswordService } from 'src/hashing-password/hashing-password.service';
 import { JoinUsertoChatRoom } from './dto/join-user-to-chatRoom.dto';
 import { SendMessageToChatRoom } from './dto/send-message-to-chatRomm';
 import { GetChatRoomMessages } from './dto/get-chatRoom-messages';
@@ -31,7 +30,6 @@ export class ChatService {
     @InjectRepository(Chat) private chatRepository: Repository<Chat>,
     @InjectRepository(ChatRoom)private chatRoomRepository: Repository<ChatRoom>,
     @InjectRepository(ChatRoomUser)private chatRoomUserRepository: Repository<ChatRoomUser>,
-    private hashingPasswordSrvice: HashingPasswordService,
   ) {}
   clientToUser = {};
   

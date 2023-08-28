@@ -1,3 +1,6 @@
 {
-  "/page": "app/page.js"
+  "/page": "app/page.js",
+  "/Auth/page": "app/Auth/page.js",
+  "/Home/page": "app/Home/page.js",
+  "/Auth/2FA/page": "app/Auth/2FA/page.js"
 }
