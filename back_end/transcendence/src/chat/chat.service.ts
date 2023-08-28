@@ -18,6 +18,7 @@ import { JoinUsertoChatRoom } from './dto/join-user-to-chatRoom.dto';
 import { SendMessageToChatRoom } from './dto/send-message-to-chatRomm';
 import { GetChatRoomMessages } from './dto/get-chatRoom-messages';
 import { JoinChatRoom } from './dto/join-chat-room';
+import { use } from 'passport';
 
 @Injectable()
 export class ChatService {
@@ -112,40 +113,68 @@ export class ChatService {
 }
 
 
-  async joinUsarToChatRoom(joinUserToChatRoom: JoinUsertoChatRoom): Promise<any>{
-
-    const user =  await this.userRepository.findOne({
+async joinUserToChatRoom(joinUserToChatRoom: JoinUsertoChatRoom): Promise<any> {
+  const user = await this.userRepository.findOne({
       where: {
-        username: joinUserToChatRoom.username,
-      }
-    });
+          username: joinUserToChatRoom.username,
+      },
+  });
 
-    if (!user){
-      throw new Error('this user not exist');
-    }
-    
-    const chatRoom =  await this.chatRoomRepository.findOne({
-      where: {
-        name: joinUserToChatRoom.chatRoomName,
-      }
-    });
-
-    const isUserExistInchatRoom =  await this.chatRoomRepository.findOne({
-      where: {
-          chatRoomUser: {id: user.id},
-      }
-    });
-
-    if(isUserExistInchatRoom){
-      throw new Error ('this user exist in this chat room');
-    }
-    const createChatRoomUser = await this.chatRoomUserRepository.create({
-      statusPermissions: joinUserToChatRoom.statusPermissions,
-      user: user,
-      chatRooms: chatRoom,
-    });
-    return await this.chatRoomUserRepository.save(createChatRoomUser);
+  if (!user) {
+      throw new Error('User does not exist');
   }
+
+  const adminUser = await this.userRepository.findOne({
+      where: {
+          username: joinUserToChatRoom.adminUsername,
+      },
+  });
+
+  if (!adminUser) {
+      throw new Error('Admin user does not exist');
+  }
+
+  const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
+      where: {
+          user: {id: adminUser.id},
+          statusPermissions: 'admin',
+      },
+  });
+
+  if (!adminUserChatRoom) {
+      throw new Error('You are not an admin to add users');
+  }
+
+  const chatRoom = await this.chatRoomRepository.findOne({
+      where: {
+          name: joinUserToChatRoom.chatRoomName,
+      },
+  });
+
+  if (!chatRoom) {
+      throw new Error('Chat room does not exist');
+  }
+
+  const isUserExistInChatRoom = await this.chatRoomUserRepository.findOne({
+      where: {
+        user: {id: user.id},
+        chatRooms: {id: chatRoom.id},
+      },
+  });
+
+  if (isUserExistInChatRoom) {
+      throw new Error('User already exists in this chat room');
+  }
+
+  const createChatRoomUser = this.chatRoomUserRepository.create({
+      statusPermissions: joinUserToChatRoom.statusPermissions,
+      user,
+      chatRooms: chatRoom,
+  });
+
+  return await this.chatRoomUserRepository.save(createChatRoomUser);
+}
+
 
   async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom) : Promise<any>{
 
@@ -197,8 +226,7 @@ export class ChatService {
     const isUserExistInchatRoom = await this.chatRoomUserRepository.findOne({
       where:{user:{id: user.id}}
     });
-    console.log(user);
-  
+    
     if (!isUserExistInchatRoom){
       throw new Error('this user not in this chat room');
     }

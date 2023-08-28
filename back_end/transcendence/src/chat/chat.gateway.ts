@@ -33,7 +33,7 @@ export class ChatGateway {
 
   @SubscribeMessage('JoinUsertoRoom')
   joinUsarToChatRoom(@MessageBody() joinUsertoChatRoom: JoinUsertoChatRoom, @ConnectedSocket() client: Socket) {
-    const message = this.chatService.joinUsarToChatRoom(joinUsertoChatRoom);
+    const message = this.chatService.joinUserToChatRoom(joinUsertoChatRoom);
     this.server.emit('message', message);
     return message;
   }
