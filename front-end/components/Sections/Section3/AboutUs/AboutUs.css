@@ -3,6 +3,8 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  border-style: solid;
+  border-width: 1px;
   margin: 0 2rem;
 }
 
@@ -12,12 +14,16 @@
   clip-path: circle(37% at 50% 39%);
 }
 
-.imageDiv:hover {
+.ParentDiv:hover {
   position: relative;
+  cursor: pointer;
+}
+
+.ParentDiv:hover .imageDiv{
   clip-path: none;
 }
 
-.imageDiv:hover::after {
+.ParentDiv:hover::after {
   content: "";
   position: absolute;
   top: 0;
@@ -27,8 +33,6 @@
   background-image: url(/img/section3/gif_test.gif);
   opacity: 0.5;
   background-size: cover;
-  animation: gifAnimation 1s steps(1) forwards;
-  animation-play-state: repeat;
 }
 
 .imageDiv2 {

@@ -1,15 +1,21 @@
 import Image from "next/image";
 import "./AboutUs.css";
+import { useState } from "react";
 
 interface props {
   src: string;
   name: string;
   title: string;
+  set: Function;
 }
 
 export default function AboutUs(props: props) {
+  function openPopUp() {
+    props.set(props.name);
+  }
+
   return (
-    <div className="ParentDiv">
+    <div className="ParentDiv" onClick={openPopUp}>
       <div className="imageDiv">
         <Image
           src={props.src}
