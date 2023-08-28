@@ -19,6 +19,9 @@ import { SendMessageToChatRoom } from './dto/send-message-to-chatRomm';
 import { GetChatRoomMessages } from './dto/get-chatRoom-messages';
 import { JoinChatRoom } from './dto/join-chat-room';
 import { use } from 'passport';
+import { BanUserDto } from './dto/ban-user.dto';
+import { KickUserDto } from './dto/kick-user.dto';
+import { MutUserDto } from './dto/mut-user.dto';
 
 @Injectable()
 export class ChatService {
@@ -220,9 +223,8 @@ async joinUserToChatRoom(joinUserToChatRoom: JoinUsertoChatRoom): Promise<any> {
     });
 
     const chatRoom = await this.chatRoomRepository.findOne({
-      where:{name:joinChatRoom.chatRoomName}
+      where:{name: joinChatRoom.chatRoomName}
     });
-
     const isUserExistInchatRoom = await this.chatRoomUserRepository.findOne({
       where:{user:{id: user.id}}
     });
@@ -340,4 +342,122 @@ async joinUserToChatRoom(joinUserToChatRoom: JoinUsertoChatRoom): Promise<any> {
     ],
   });
  }
+
+ async banUser(banUserDto: BanUserDto) {
+
+  const isAdmin = await this.userRepository.findOne({
+    where: {username: banUserDto.username},
+  });
+
+  const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
+    where: {
+        user: {id: isAdmin.id},
+        statusPermissions: 'admin',
+    },
+  });
+
+  if (!adminUserChatRoom) {
+    throw new Error('You are not an admin to baned users');
+  }
+
+  const user = await this.userRepository.findOne({
+    where: {
+      username: banUserDto.userGetBan,
+    },
+  });
+
+  const chatRoomUser = await this.chatRoomUserRepository.findOne({
+    where: {
+      user: { id: user.id },
+    },
+  });
+
+  if (chatRoomUser) {
+    chatRoomUser.statusUser = 'baned';
+    await this.chatRoomUserRepository.save(chatRoomUser);
+
+    return { message: 'User banned successfully' };
+  } else {
+    return { message: 'User not found in the chat room' };
+  }
+}
+
+async kickUser(kickUserDto: KickUserDto) {
+
+  const isAdmin = await this.userRepository.findOne({
+    where: {username: kickUserDto.username},
+  });
+
+  const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
+    where: {
+        user: {id: isAdmin.id},
+        statusPermissions: 'admin',
+    },
+  });
+
+  if (!adminUserChatRoom) {
+    throw new Error('You are not an admin to kicked users');
+  }
+
+  const user = await this.userRepository.findOne({
+    where: {
+      username: kickUserDto.userGetkick,
+    },
+  });
+
+  const chatRoomUser = await this.chatRoomUserRepository.findOne({
+    where: {
+      user: { id: user.id },
+    },
+  });
+
+  if (chatRoomUser) {
+    chatRoomUser.statusUser = 'kicked';
+    await this.chatRoomUserRepository.save(chatRoomUser);
+
+    return { message: 'User kicked successfully' };
+  } else {
+    return { message: 'User not found in the chat room' };
+  }
+}
+
+async mutUser(mutUserDto: MutUserDto) {
+
+  const isAdmin = await this.userRepository.findOne({
+    where: {username: mutUserDto.username},
+  });
+
+  const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
+    where: {
+        user: {id: isAdmin.id},
+        statusPermissions: 'admin',
+    },
+  });
+
+  if (!adminUserChatRoom) {
+    throw new Error('You are not an admin to mut users');
+  }
+
+  const user = await this.userRepository.findOne({
+    where: {
+      username: mutUserDto.userGetmut,
+    },
+  });
+
+  const chatRoomUser = await this.chatRoomUserRepository.findOne({
+    where: {
+      user: { id: user.id },
+    },
+  });
+
+  if (chatRoomUser) {
+    chatRoomUser.statusUser = 'muted';
+    chatRoomUser.time = mutUserDto.time;
+    await this.chatRoomUserRepository.save(chatRoomUser);
+
+    return { message: 'User muted successfully' };
+  } else {
+    return { message: 'User not found in the chat room' };
+  }
+}
 }
