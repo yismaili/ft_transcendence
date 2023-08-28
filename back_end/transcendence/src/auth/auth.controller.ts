@@ -21,7 +21,7 @@ export class AuthController {
   async findAll(): Promise<User[]> {
     const users = this.authService.findAll()
     return users;
-  }
+  }.0
 
   response: any;
   @Get('home')

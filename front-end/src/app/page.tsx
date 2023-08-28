@@ -1,12 +1,8 @@
 import React from 'react';
-import "./css_files/resets.css";
-import "./css_files/utilityClasses.css";
-import AuthSection from './react_components/auth-page/auth_page';
+import "./global_css/resets.css";
+import "./global_css/utilityClasses.css";
 function App() {
-  return (<div className='container'>
-    <AuthSection />
-  </div>
-  );
+  return (<></>);
 }
 
 export default App;
