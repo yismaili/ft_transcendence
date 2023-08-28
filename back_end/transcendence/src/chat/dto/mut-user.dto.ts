@@ -1,5 +1,5 @@
 export class MutUserDto {
-    time:string;
+    time:number;
     username: string;
     chatRoomName: string;
     userGetmut: string;
