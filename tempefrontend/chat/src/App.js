@@ -24,6 +24,8 @@ const ChatApp = () => {
   const [status, setStatus] = useState('');
   const [password, setPassword] = useState('');
   const [statusPermissions, setstatusPermissions] = useState('admin');
+  const [userstatus, setUserstatus] = useState('');
+  const [time, setTime] = useState('');
 
   useEffect(() => {
     socket.on('message', (message) => {
@@ -126,6 +128,23 @@ const joinChatRoom = () => {
   });
 }
 
+const banUser = () => {
+  socket.emit('banUser', {username: user, chatRoomName: chatRoomName, userGetBan:users ,userstatus: userstatus}, (response) => {
+    setJoined(true);
+  });
+}
+
+function kickUser(){
+  socket.emit('kickUser', {username: user, chatRoomName: chatRoomName, userGetkick:users ,userstatus: userstatus}, (response) => {
+    setJoined(true);
+  });
+}
+
+const mutUser = () => {
+  socket.emit('mutUser', {username: user, chatRoomName: chatRoomName, userGetmut:users, time:time,userstatus: userstatus}, (response) => {
+    setJoined(true);
+  });
+}
 //   return (
 //     <div className="chat">
 //       {!joined ? (
@@ -231,13 +250,23 @@ return (
             <button type="submit">
               Join
             </button>
-
           </form>
         </div>
           ) : (
         <div className="chat-container">
           <div className="messages-container">
             <span>
+            <spam>
+              <label> user: </label>
+              <input value={users} onChange={(e) => setUsers(e.target.value)} />
+              <label> User status : </label>
+              <input value={userstatus} onChange={(e) => setUserstatus(e.target.value)}/>
+              <label> time : </label>
+              <input value={time} onChange={(e) => setTime(e.target.value)} />
+              <button onClick={() => banUser()}>Ban user</button>
+              <button onClick={() => kickUser()}>kick user</button>
+              <button onClick={() => mutUser()}>Mut user</button>
+           </spam>
             <label> user: </label>
             <input value={users} onChange={(h) => setUsers(h.target.value)} />
             <label> statusPermissions: </label>

@@ -8,6 +8,9 @@ import { JoinUsertoChatRoom } from './dto/join-user-to-chatRoom.dto';
 import { SendMessageToChatRoom } from './dto/send-message-to-chatRomm';
 import { GetChatRoomMessages } from './dto/get-chatRoom-messages';
 import { JoinChatRoom } from './dto/join-chat-room';
+import { BanUserDto } from './dto/ban-user.dto';
+import { KickUserDto } from './dto/kick-user.dto';
+import { MutUserDto } from './dto/mut-user.dto';
 
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
@@ -79,15 +82,32 @@ export class ChatGateway {
   remove(@MessageBody() updateChatDto: UpdateChatDto) {
     return this.chatService.remove(updateChatDto);
   }
+
   @SubscribeMessage('deleteConversation')
   removeConversation(@MessageBody() updateChatDto: UpdateChatDto) {
     return this.chatService.removeConversation(updateChatDto);
   }
 
-  @SubscribeMessage('typing')
+  @SubscribeMessage('banUser')
+  async banUser(@MessageBody() banUserDto: BanUserDto) {
+   return this.chatService.banUser(banUserDto);
+  }
+
+  @SubscribeMessage('kickUser')
+  async kickUser(@MessageBody() kickUserDto: KickUserDto) {
+   return this.chatService.kickUser(kickUserDto);
+  }
+
+  @SubscribeMessage('mutUser')
+  async mutUser(@MessageBody() mutUserDto: MutUserDto) {
+   return this.chatService.mutUser(mutUserDto);
+  }
+
+  @SubscribeMessage('isTyping')
   async typing(@MessageBody('isTyping') isTyping: boolean, @ConnectedSocket() client: Socket) {
     const name = await this.chatService.getClientName(client.id);
     client.broadcast.emit('typing', { name, isTyping });
-}
+  }
+
 }
 
