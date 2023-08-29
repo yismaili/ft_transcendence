@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { User } from 'src/typeorm/entities/User.entity';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
 import { Relation } from 'src/typeorm/entities/Relation.entity';
@@ -22,6 +22,7 @@ import { use } from 'passport';
 import { BanUserDto } from './dto/ban-user.dto';
 import { KickUserDto } from './dto/kick-user.dto';
 import { MutUserDto } from './dto/mut-user.dto';
+import { ChatRoomOfUserDto } from './dto/chatRoom-of-user.dto';
 
 @Injectable()
 export class ChatService {
@@ -558,6 +559,23 @@ async mutUser(mutUserDto: MutUserDto) {
   } else {
     return { message: 'User not found in the chat room' };
   }
+}
+
+async getAllChatRoomOfUser(chatRoomOfUserDto: ChatRoomOfUserDto): Promise<any>{
+    const user = await this.userRepository.findOne({
+      where: {
+        username: chatRoomOfUserDto.username,
+      }
+    });
+
+    const allChatRooms = await this.chatRoomUserRepository.find({
+      where: {
+        user:{id: user.id},
+        statusUser: Not('baned'),
+      }
+    });
+    console.log(allChatRooms);
+    return allChatRooms;
 }
 
 }

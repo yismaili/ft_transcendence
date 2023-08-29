@@ -11,6 +11,7 @@ import { JoinChatRoom } from './dto/join-chat-room';
 import { BanUserDto } from './dto/ban-user.dto';
 import { KickUserDto } from './dto/kick-user.dto';
 import { MutUserDto } from './dto/mut-user.dto';
+import { ChatRoomOfUserDto } from './dto/chatRoom-of-user.dto';
 
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
@@ -103,6 +104,10 @@ export class ChatGateway {
    return this.chatService.mutUser(mutUserDto);
   }
 
+  @SubscribeMessage('chatRoomOfUser')
+  async getAllChatRoom(@MessageBody() chatRoomOfUserDto: ChatRoomOfUserDto) {
+    return this.chatService.getAllChatRoomOfUser(chatRoomOfUserDto);
+  }
   @SubscribeMessage('isTyping')
   async typing(@MessageBody('isTyping') isTyping: boolean, @ConnectedSocket() client: Socket) {
     const name = await this.chatService.getClientName(client.id);
