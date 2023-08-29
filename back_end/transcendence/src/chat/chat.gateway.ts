@@ -10,7 +10,7 @@ import { GetChatRoomMessages } from './dto/get-chatRoom-messages';
 import { JoinChatRoom } from './dto/join-chat-room';
 import { BanUserDto } from './dto/ban-user.dto';
 import { KickUserDto } from './dto/kick-user.dto';
-import { MutUserDto } from './dto/mut-user.dto';
+import { MuteUserDto } from './dto/mut-user.dto';
 import { ChatRoomOfUserDto } from './dto/chatRoom-of-user.dto';
 
 
@@ -99,15 +99,21 @@ export class ChatGateway {
    return this.chatService.kickUser(kickUserDto);
   }
 
-  @SubscribeMessage('mutUser')
-  async mutUser(@MessageBody() mutUserDto: MutUserDto) {
-   return this.chatService.mutUser(mutUserDto);
+  @SubscribeMessage('muteUser')
+  async muteUser(@MessageBody() muteUserDto: MuteUserDto) {
+   return this.chatService.muteUser(muteUserDto);
   }
 
   @SubscribeMessage('chatRoomOfUser')
   async getAllChatRoom(@MessageBody() chatRoomOfUserDto: ChatRoomOfUserDto) {
     return this.chatService.getAllChatRoomOfUser(chatRoomOfUserDto);
   }
+
+  @SubscribeMessage('unbannedUser')
+  async unbannedUser(@MessageBody() unbannedUserDtoo: BanUserDto) {
+    return this.chatService.unbannedUser(unbannedUserDtoo);
+  }
+
   @SubscribeMessage('isTyping')
   async typing(@MessageBody('isTyping') isTyping: boolean, @ConnectedSocket() client: Socket) {
     const name = await this.chatService.getClientName(client.id);
