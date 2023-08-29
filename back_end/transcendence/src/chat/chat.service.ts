@@ -472,7 +472,7 @@ async kickUser(kickUserDto: KickUserDto) {
   const isBanned = await this.chatRoomUserRepository.findOne({
     where: {
       user: { id: user.id },
-      statusUser: 'band',
+      statusUser: 'baned',
     },
   });
 
@@ -534,7 +534,7 @@ async mutUser(mutUserDto: MutUserDto) {
   const isBanned = await this.chatRoomUserRepository.findOne({
     where: {
       user: { id: user.id },
-      statusUser: 'band',
+      statusUser: 'baned',
     },
   });
 
