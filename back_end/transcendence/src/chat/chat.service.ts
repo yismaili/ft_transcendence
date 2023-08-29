@@ -23,6 +23,7 @@ import { BanUserDto } from './dto/ban-user.dto';
 import { KickUserDto } from './dto/kick-user.dto';
 import { MuteUserDto } from './dto/mut-user.dto';
 import { ChatRoomOfUserDto } from './dto/chatRoom-of-user.dto';
+import { LeaveChatRoomDto } from './dto/leave-ChatRoom.dto';
 
 @Injectable()
 export class ChatService {
@@ -149,26 +150,29 @@ async joinUserToChatRoom(joinUserToChatRoom: JoinUsertoChatRoom): Promise<any> {
       throw new Error('Admin user does not exist');
   }
 
+  
+  const chatRoom = await this.chatRoomRepository.findOne({
+    where: {
+      name: joinUserToChatRoom.chatRoomName,
+    },
+  });
+
+  if (!chatRoom) {
+      throw new Error('Chat room does not exist');
+  }
+  
   const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
       where: {
           user: {id: adminUser.id},
           statusPermissions: 'admin',
+          chatRooms: {id: chatRoom.id},
       },
   });
 
   if (!adminUserChatRoom) {
       throw new Error('You are not an admin to add users');
   }
-
-  const chatRoom = await this.chatRoomRepository.findOne({
-      where: {
-          name: joinUserToChatRoom.chatRoomName,
-      },
-  });
-
-  if (!chatRoom) {
-      throw new Error('Chat room does not exist');
-  }
+  
 
   const isUserExistInChatRoom = await this.chatRoomUserRepository.findOne({
       where: {
@@ -264,13 +268,16 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom): Promise<any> {
       where:{name: joinChatRoom.chatRoomName}
     });
     const isUserExistInchatRoom = await this.chatRoomUserRepository.findOne({
-      where:{user:{id: user.id}}
+      where:{
+        user:{id: user.id},
+        chatRooms: {id: chatRoom.id},
+    }
     });
     
     if (!isUserExistInchatRoom){
       throw new Error('this user not in this chat room');
     }
-
+    
     const conversation = await this.messageRepository.find({
       where:{
         chatRoom: {id: chatRoom.id},
@@ -637,6 +644,89 @@ async unbannedUser (unbannedUserDtoo: BanUserDto) {
     await this.chatRoomUserRepository.save(chatRoomUser);
 
     return { message: 'User unbanned successfully' };
+  } else {
+    return { message: 'User not found in the chat room' };
+  }
+}
+
+async changePermissionToUser (changePermissionToUserDto: BanUserDto): Promise<any>{
+
+    const isAdmin = await this.userRepository.findOne({
+      where: { username: changePermissionToUserDto.username },
+    });
+  
+    const chatRoom = await this.chatRoomRepository.findOne({
+      where: {
+            name : changePermissionToUserDto.chatRoomName,
+      }
+    });
+    const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
+      where: {
+        user: { id: isAdmin.id },
+        statusPermissions: 'admin',
+        chatRooms: {id: chatRoom.id},
+      },
+    });
+  
+    if (!adminUserChatRoom) {
+      throw new Error('You are not an admin to unbanned users');
+    }
+ 
+    const user = await this.userRepository.findOne({
+      where: {
+        username: changePermissionToUserDto.userGetBan,
+      },
+    });
+  
+    const chatRoomUser = await this.chatRoomUserRepository.findOne({
+      where: {
+        user: { id: user.id },
+      },
+    });
+  
+    if (chatRoomUser) {
+      chatRoomUser.statusPermissions = 'admin';
+      await this.chatRoomUserRepository.save(chatRoomUser);
+  
+      return { message: 'User unbanned successfully' };
+    } else {
+      return { message: 'User not found in the chat room' };
+    }
+}
+
+async leaveChatRoom (leaveChatRoomDto: LeaveChatRoomDto) : Promise<any>{
+
+  const isAdmin = await this.userRepository.findOne({
+    where: { username: leaveChatRoomDto.username },
+  });
+
+  const chatRoom = await this.chatRoomRepository.findOne({
+    where: {
+          name : leaveChatRoomDto.chatRoomName,
+    }
+  });
+  const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
+    where: {
+      user: { id: isAdmin.id },
+      statusPermissions: 'admin',
+      chatRooms: {id: chatRoom.id},
+    },
+  });
+
+  if (adminUserChatRoom) {
+    throw new Error('you have not leave this chat room!');
+  }
+
+  const chatRoomUser = await this.chatRoomUserRepository.findOne({
+    where: {
+      user: { id: isAdmin.id },
+      chatRooms: {id: chatRoom.id},
+    },
+  });
+
+  if (chatRoomUser) {
+    await this.chatRoomUserRepository.delete(chatRoomUser.id);
+    return { message: 'User kicked successfully' };
   } else {
     return { message: 'User not found in the chat room' };
   }
