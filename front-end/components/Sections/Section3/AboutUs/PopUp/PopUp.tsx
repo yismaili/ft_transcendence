@@ -1,5 +1,5 @@
-import { url } from "inspector";
 import Style from "./PopUp.module.css";
+import ReactPlayer from 'react-player';
 
 type props = {
   src: string;
@@ -8,6 +8,7 @@ type props = {
   set: Function;
   about: string;
   url: string;
+  music: string;
 };
 
 export default function PopUp(props: props) {
@@ -21,6 +22,11 @@ export default function PopUp(props: props) {
 
   return (
     <>
+    <ReactPlayer
+        url={props.music}
+        playing={true} // Set to true if you want the audio to auto-play
+        controls={false} // Show player controls (play, pause, volume, etc.)
+      />
       <div className={Style.backdrop} onClick={closePopUp}></div>
       <div className={Style.window}>
         <div className={Style.leftside}>
