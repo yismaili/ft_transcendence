@@ -12,6 +12,7 @@ import { BanUserDto } from './dto/ban-user.dto';
 import { KickUserDto } from './dto/kick-user.dto';
 import { MuteUserDto } from './dto/mut-user.dto';
 import { ChatRoomOfUserDto } from './dto/chatRoom-of-user.dto';
+import { LeaveChatRoomDto } from './dto/leave-ChatRoom.dto';
 
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
@@ -112,6 +113,16 @@ export class ChatGateway {
   @SubscribeMessage('unbannedUser')
   async unbannedUser(@MessageBody() unbannedUserDtoo: BanUserDto) {
     return this.chatService.unbannedUser(unbannedUserDtoo);
+  }
+
+  @SubscribeMessage('changePermission')
+  async changePermissionToUser(@MessageBody() changePermissionToUserDto: BanUserDto) {
+    return this.chatService.changePermissionToUser(changePermissionToUserDto);
+  }
+
+  @SubscribeMessage('leaveChatRoom')
+  async leaveChatRoom(@MessageBody() leaveChatRoomDto: LeaveChatRoomDto) {
+    return this.chatService.leaveChatRoom(leaveChatRoomDto);
   }
 
   @SubscribeMessage('isTyping')

@@ -158,6 +158,15 @@ const getChatRoom = () => {
     setJoined(true);
   });
 }
+const changePermission = () => {
+  socket.emit('changePermission', {username: user, chatRoomName: chatRoomName, userGetBan:users}, (response) => {
+    setJoined(true);
+  });
+}
+const leaveChatRoom = () => {
+  socket.emit('leaveChatRoom', {username: user, chatRoomName: chatRoomName}, (response) => {
+  });
+}
 //   return (
 //     <div className="chat">
 //       {!joined ? (
@@ -284,6 +293,8 @@ return (
               <button onClick={() => kickUser()}>kick user</button>
               <button onClick={() => muteUser()}>Mut user</button>
               <button onClick={() => unbannedUser()}>unbanned User</button>
+              <button onClick={() => changePermission()}>change Permission</button>
+              <button onClick={() => leaveChatRoom()}>leave ChatRoom</button>
            </spam>
             <label> user: </label>
             <input value={users} onChange={(h) => setUsers(h.target.value)} />

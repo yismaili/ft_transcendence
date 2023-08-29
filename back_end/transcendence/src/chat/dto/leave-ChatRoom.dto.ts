@@ -1,5 +1,4 @@
-export class BanUserDto {
+export class LeaveChatRoomDto {
     username: string;
     chatRoomName: string;
-    userGetBan: string;
 };
