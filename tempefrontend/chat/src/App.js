@@ -17,6 +17,7 @@ const ChatApp = () => {
   const [users, setUsers] = useState([]);
   const [secondUser, setSecondUsername] = useState('');
   const [typingDisplay, setTypingDisplay] = useState('');
+  const [allchatroomOfuser, setallchatroomOfuser] = useState('');
   const [editingIndex, setEditingIndex] = useState(-1);
   const [editMessageText, setEditMessageText] = useState('');
   const [editMessageFomChatRoom, setEditMessageFomChatRoom] = useState('');
@@ -145,6 +146,12 @@ const mutUser = () => {
     setJoined(true);
   });
 }
+
+const getChatRoom = () => {
+  socket.emit('chatRoomOfUser', {username: user}, (response) => {
+        setallchatroomOfuser(response);
+  });
+ }
 //   return (
 //     <div className="chat">
 //       {!joined ? (
@@ -232,6 +239,7 @@ return (
           <label> user: </label>
           <input value={user} onChange={(e) => setName(e.target.value)} />
           <button onClick={() => joinChatRoom()}>Jion ChatRomm</button>
+          <button onClick={() => getChatRoom()}>get chatRooms</button>
         </spam>
           <form
             onSubmit={(e) => {
@@ -251,8 +259,11 @@ return (
               Join
             </button>
           </form>
+            {/* {allchatroomOfuser && <div>{allchatroomOfuser}</div>}
+         <hr /> */}
         </div>
-          ) : (
+         
+         ) : (
         <div className="chat-container">
           <div className="messages-container">
             <span>
