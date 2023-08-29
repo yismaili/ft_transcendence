@@ -167,6 +167,10 @@ const leaveChatRoom = () => {
   socket.emit('leaveChatRoom', {username: user, chatRoomName: chatRoomName}, (response) => {
   });
 }
+const deleteChatRoom = () => {
+  socket.emit('deleteChatRoom', {username: user, chatRoomName: chatRoomName}, (response) => {
+  });
+}
 //   return (
 //     <div className="chat">
 //       {!joined ? (
@@ -334,7 +338,7 @@ return (
                 onInput={emitTyping}
               />
                 <span>
-                      <button onClick={() => deleteConversation()}>Delete</button>
+                      <button onClick={() => deleteChatRoom()}>Delete</button>
                 </span>
               <button type="submit">Send</button>
             </form>

@@ -125,6 +125,11 @@ export class ChatGateway {
     return this.chatService.leaveChatRoom(leaveChatRoomDto);
   }
 
+  @SubscribeMessage('deleteChatRoom')
+  async deleteChatRoom(@MessageBody() deleteChatRoomDto: LeaveChatRoomDto) {
+    return this.chatService.deleteChatRoom(deleteChatRoomDto);
+  }
+
   @SubscribeMessage('isTyping')
   async typing(@MessageBody('isTyping') isTyping: boolean, @ConnectedSocket() client: Socket) {
     const name = await this.chatService.getClientName(client.id);

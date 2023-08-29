@@ -731,5 +731,43 @@ async leaveChatRoom (leaveChatRoomDto: LeaveChatRoomDto) : Promise<any>{
     return { message: 'User not found in the chat room' };
   }
 }
+// delete chat room not working
+async deleteChatRoom (deleteChatRoomDto: LeaveChatRoomDto) : Promise<any>{
+
+  const isAdmin = await this.userRepository.findOne({
+    where: { username: deleteChatRoomDto.username },
+  });
+
+  const chatRoom = await this.chatRoomRepository.findOne({
+    where: {
+          name : deleteChatRoomDto.chatRoomName,
+    }
+  });
+  const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
+    where: {
+      user: { id: isAdmin.id },
+      statusPermissions: 'admin',
+      chatRooms: {id: chatRoom.id},
+    },
+  });
+
+  if (!adminUserChatRoom) {
+    throw new Error('you are not admin');
+  }
+
+  const chatRoomUser = await this.chatRoomRepository.findOne({
+    where: {
+      chatRoomUser: { id: isAdmin.id },
+    },
+  });
+
+  if (chatRoomUser) {
+    await this.chatRoomRepository.delete(chatRoomUser.id);
+    return { message: 'User kicked successfully' };
+  } else {
+    return { message: 'User not found in the chat room' };
+  }
+}
+
 
 }
