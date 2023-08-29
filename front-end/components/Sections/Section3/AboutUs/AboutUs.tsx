@@ -1,8 +1,9 @@
 import Image from "next/image";
+import { type } from "os";
 import { useEffect, useState } from "react";
 import "./AboutUs.css";
 
-interface props {
+type props = {
   src: string;
   name: string;
   title: string;
@@ -10,10 +11,9 @@ interface props {
 }
 
 export default function AboutUs(props: props) {
- 
+
   function openPopUp() {
     props.set(props.name);
-
   }
 
   return (

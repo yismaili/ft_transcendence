@@ -43,6 +43,7 @@ export default function Section3() {
           set={closePopUp}
           about="I'm a passionate front-end developer with a strong IT foundation, dedicated to crafting impressive user experiences through creativity and technical expertise."
           url="https://www.linkedin.com/in/eel-moun"
+          music={"img/section3/alouane04.mp3"}
         />
       )}
       {isClick === "Ali Achraf Riahi" && (
@@ -53,6 +54,7 @@ export default function Section3() {
           set={closePopUp}
           about="A passionate front-end dev, Currently a student at 1337, honing my skills in responsive design and exploring modern frameworks(React.js/Next.js).Staying updated"
           url="https://www.linkedin.com/in/alouane04"
+          music={"img/section3/alouane04.mp3"}
         />
       )}
       {isClick === "Younes Ismaili" && (
@@ -63,6 +65,7 @@ export default function Section3() {
           set={closePopUp}
           about="I'm a student at @1337FIL, and I'm really passionate about DevOps | Cybersecurity."
           url="https://www.linkedin.com/in/yo-ismaili"
+          music={"img/section3/alouane04.mp3"}
         />
       )}
       <div>
