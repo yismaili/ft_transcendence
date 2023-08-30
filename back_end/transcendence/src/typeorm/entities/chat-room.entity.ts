@@ -7,10 +7,10 @@ export class ChatRoom {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column()
   name: string;
  
-  @Column({ nullable: true })
+  @Column()
   status: string;
 
   @Column({ nullable: true })
