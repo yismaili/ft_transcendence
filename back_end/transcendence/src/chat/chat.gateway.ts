@@ -106,7 +106,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('chatRoomOfUser')
-  async getAllChatRoom(@MessageBody() chatRoomOfUserDto: ChatRoomOfUserDto) {
+  async getAllChatRoomOfUser(@MessageBody() chatRoomOfUserDto: ChatRoomOfUserDto) {
     return this.chatService.getAllChatRoomOfUser(chatRoomOfUserDto);
   }
 
@@ -134,6 +134,11 @@ export class ChatGateway {
   async typing(@MessageBody('isTyping') isTyping: boolean, @ConnectedSocket() client: Socket) {
     const name = await this.chatService.getClientName(client.id);
     client.broadcast.emit('typing', { name, isTyping });
+  }
+
+  @SubscribeMessage('AllchatRoom')
+  async getAllChatRoom(@MessageBody() chatRoomOfUserDto: ChatRoomOfUserDto) {
+    return this.chatService.getAllChatRoom(chatRoomOfUserDto);
   }
 
 }

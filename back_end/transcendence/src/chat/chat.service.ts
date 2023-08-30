@@ -769,5 +769,25 @@ async deleteChatRoom (deleteChatRoomDto: LeaveChatRoomDto) : Promise<any>{
   }
 }
 
+async getAllChatRoom(chatRoomOfUserDto: ChatRoomOfUserDto) : Promise<any>{
+  const user = await this.userRepository.findOne({
+    where: {
+      username: chatRoomOfUserDto.username,
+    }
+  });
+
+  if (!user){
+    throw new Error('this user not exist');
+  }
+  const chatRoom = await this.chatRoomRepository.find(
+    {
+      where: {
+        status: Not('private'),
+      }
+    }
+  );
+  console.log(chatRoom);
+  return chatRoom;
+}
 
 }
