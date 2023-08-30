@@ -183,6 +183,11 @@ const getAllChatRoom = () => {
   socket.emit('AllchatRoom', {username: user}, (response) => {
   });
 }
+
+const getAllUserOfChatRoom = () => {
+  socket.emit('getAllUserOfChatRoom', {username: user, chatRoomName:chatRoomName}, (response) => {
+  });
+}
 //   return (
 //     <div className="chat">
 //       {!joined ? (
@@ -312,6 +317,7 @@ return (
               <button onClick={() => unbannedUser()}>unbanned User</button>
               <button onClick={() => changePermission()}>change Permission</button>
               <button onClick={() => leaveChatRoom()}>leave ChatRoom</button>
+              <button onClick={() => getAllUserOfChatRoom()}>User Of ChatRoom</button>
            </spam>
             <label> user: </label>
             <input value={users} onChange={(h) => setUsers(h.target.value)} />

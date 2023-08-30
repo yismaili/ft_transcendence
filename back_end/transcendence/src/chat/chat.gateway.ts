@@ -14,6 +14,7 @@ import { MuteUserDto } from './dto/mut-user.dto';
 import { ChatRoomOfUserDto } from './dto/chatRoom-of-user.dto';
 import { LeaveChatRoomDto } from './dto/leave-ChatRoom.dto';
 import { JoinRoom } from './dto/join-room.dto';
+import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
 
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
@@ -146,6 +147,10 @@ export class ChatGateway {
     return this.chatService.joinChatRoom(joinRoom);
   }
 
+  @SubscribeMessage('getAllUserOfChatRoom')
+  getAllUserOfChatRoom(@MessageBody() usersOfChatRoom:UsersOfChatRoom ) {
+    return this.chatService.getAllUserOfChatRoom(usersOfChatRoom);
+  }
 
 }
 
