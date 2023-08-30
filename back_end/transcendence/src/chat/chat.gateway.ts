@@ -13,6 +13,7 @@ import { KickUserDto } from './dto/kick-user.dto';
 import { MuteUserDto } from './dto/mut-user.dto';
 import { ChatRoomOfUserDto } from './dto/chatRoom-of-user.dto';
 import { LeaveChatRoomDto } from './dto/leave-ChatRoom.dto';
+import { JoinRoom } from './dto/join-room.dto';
 
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
@@ -55,9 +56,9 @@ export class ChatGateway {
     return this.chatService.findAllChatRoomConversation(getChatRoomMessages);
   }
 
-  @SubscribeMessage('joinChatRoom')
-  joinChatRoom(@MessageBody() joinChatRoom:JoinChatRoom) {
-    return this.chatService.joinChatRoom(joinChatRoom);
+  @SubscribeMessage('joinChatRoomWithAdmin')
+  joinChatRoomWithAdmin(@MessageBody() joinChatRoom:JoinChatRoom) {
+    return this.chatService.joinChatRoomWithAdmin(joinChatRoom);
   }
 
   @SubscribeMessage('findAllChat')
@@ -140,6 +141,13 @@ export class ChatGateway {
   async getAllChatRoom(@MessageBody() chatRoomOfUserDto: ChatRoomOfUserDto) {
     return this.chatService.getAllChatRoom(chatRoomOfUserDto);
   }
+
+  @SubscribeMessage('joinChatRoom')
+  joinChatRoom(@MessageBody() joinRoom:JoinRoom ) {
+    console.log(joinRoom);
+    return this.chatService.joinChatRoom(joinRoom);
+  }
+
 
 }
 

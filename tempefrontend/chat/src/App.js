@@ -122,8 +122,15 @@ function getMessageFromchatRoom() {
   });
 }
 
+const joinChatRoomWithAdmin = () => {
+  socket.emit('joinChatRoomWithAdmin', {username: user,  chatRoomName: chatRoomName}, (response) => {
+    setJoined(true);
+    setMessages(response);
+  });
+}
+
 const joinChatRoom = () => {
-  socket.emit('joinChatRoom', {username: user,  chatRoomName: chatRoomName}, (response) => {
+  socket.emit('joinChatRoom', {username: user,  chatRoomName: chatRoomName, password:password}, (response) => {
     setJoined(true);
     setMessages(response);
   });
@@ -262,8 +269,9 @@ return (
           <input value={chatRoomName} onChange={(e) => setchatRoomName(e.target.value)} />
           <label> user: </label>
           <input value={user} onChange={(e) => setName(e.target.value)} />
-          <button onClick={() => joinChatRoom()}>Jion ChatRomm</button>
+          <button onClick={() => joinChatRoomWithAdmin()}>Jion my ChatRomm</button>
           <button onClick={() => getAllChatRoom()}>get chatRooms</button>
+          <button onClick={() => joinChatRoom()}>Jion chatRoom</button>
         </spam>
           <form
             onSubmit={(e) => {
