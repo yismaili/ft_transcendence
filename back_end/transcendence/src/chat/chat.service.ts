@@ -25,6 +25,7 @@ import { MuteUserDto } from './dto/mut-user.dto';
 import { ChatRoomOfUserDto } from './dto/chatRoom-of-user.dto';
 import { LeaveChatRoomDto } from './dto/leave-ChatRoom.dto';
 import { JoinRoom } from './dto/join-room.dto';
+import { UnmuteUserDto } from './dto/unmute-user.dto';
 
 @Injectable()
 export class ChatService {
@@ -103,7 +104,6 @@ export class ChatService {
         });
 
         const newChatRoomUser = this.chatRoomUserRepository.create({
-            time: 0,
             statusPermissions: createChatRoomDto.statusPermissions,
             statusUser: 'member',
             user: user,
@@ -188,7 +188,6 @@ async joinUserToChatRoom(joinUserToChatRoom: JoinUsertoChatRoom): Promise<any> {
   }
 
   const createChatRoomUser = this.chatRoomUserRepository.create({
-      time: 0,
       statusPermissions: joinUserToChatRoom.statusPermissions,
       user,
       statusUser: 'member',
@@ -200,31 +199,52 @@ async joinUserToChatRoom(joinUserToChatRoom: JoinUsertoChatRoom): Promise<any> {
 
 
 async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom): Promise<any> {
+
   const user = await this.userRepository.findOne({
     where: { username: sendMessageToChatRoom.username }
   });
-
-  const ismember = await this.chatRoomUserRepository.findOne({
-    where: {
-      user:{id: user.id},
-      statusUser: 'member',
-    },
-  });
-
-  if (!ismember) {
-    throw new Error('You are not allowed here; you are banned or not a member.');
-  }
 
   const chatRoom = await this.chatRoomRepository.findOne({
     where: {
       name: sendMessageToChatRoom.chatRoomName,
     },
   });
-
+  
   if (!chatRoom) {
     throw new Error('Chat room not found.');
   }
 
+  let ismember = await this.chatRoomUserRepository.findOne({
+    where: {
+      user:{id: user.id},
+      statusUser: 'member',
+      chatRooms: {id: chatRoom.id},
+    },
+  });
+  
+  if (!ismember) {
+     ismember = await this.chatRoomUserRepository.findOne({
+      where: {
+        user:{id: user.id},
+        statusUser: 'muted',
+        chatRooms: {id: chatRoom.id},
+      },
+    });
+    if (!ismember){
+      throw new Error('You are not allowed here; you are muted or not a member.');
+    }
+  }
+  const date = new Date();
+  if ( date < ismember.time) {
+    throw new Error('You are not allowed here; you are muted or not a member.');
+  }else if (date > ismember.time){
+    const tmp: UnmuteUserDto = {
+      username: sendMessageToChatRoom.username,
+      chatRoomName: sendMessageToChatRoom.chatRoomName,
+    };
+    this.unmuteUser(tmp);
+  }
+  
   const newMessage = this.messageRepository.create({
     user: user,
     message: sendMessageToChatRoom.message,
@@ -289,6 +309,7 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom): Promise<any> {
   }
 
   async findConversationBetweenUsers(createChatDto: MessageChatDto): Promise<Chat[]> {
+
     const user1 = await this.userRepository.findOne({ where: { username: createChatDto.user } });
     const user2 = await this.userRepository.findOne({ where: { username: createChatDto.secondUser } });
   
@@ -551,6 +572,7 @@ async muteUser(muteUserDto: MuteUserDto) {
     where: {
       user: { id: user.id },
       statusPermissions: 'admin',
+      chatRooms: {id: chatRoom.id},
     },
   });
 
@@ -577,9 +599,20 @@ async muteUser(muteUserDto: MuteUserDto) {
     },
   });
 
+  const originalTimestamp = new Date();
+  const additionalMinutes = muteUserDto.time;
+  // Convert the original timestamp to Unix epoch time in milliseconds
+  const originalUnixTime = originalTimestamp.getTime();
+
+  // Calculate the new Unix epoch time after adding the minutes
+  const newUnixTime = originalUnixTime + additionalMinutes * 60 * 1000;
+
+  // Convert the new Unix epoch time back to a human-readable timestamp
+  const newTimestamp = new Date(newUnixTime);
+
   if (chatRoomUser) {
     chatRoomUser.statusUser = 'muted';
-    chatRoomUser.time = muteUserDto.time;
+    chatRoomUser.time = newTimestamp;
     await this.chatRoomUserRepository.save(chatRoomUser);
 
     return { message: 'User muted successfully' };
@@ -850,7 +883,6 @@ if (isUserExistInChatRoom) {
 }
 
 const createChatRoomUser = this.chatRoomUserRepository.create({
-    time: 0,
     statusPermissions: 'member',
     user,
     statusUser: 'member',
@@ -865,4 +897,27 @@ const conversation = await this.messageRepository.find({
 return  conversation;
 }
 
+
+async unmuteUser(unmuteUserDto: UnmuteUserDto) : Promise<any>{
+
+  const user = await this.userRepository.findOne({
+    where: {
+      username: unmuteUserDto.username,
+    }
+  });
+
+  const charRoom = await this.chatRoomRepository.findOne({
+    where: {name: unmuteUserDto.chatRoomName},
+  });
+
+  const chatRoomUser = await this.chatRoomUserRepository.findOne({
+    where:{
+      user: {id: user.id},
+      chatRooms: {id: charRoom.id},
+    },
+  });
+
+  chatRoomUser.statusUser = 'member';
+  await this.chatRoomUserRepository.save(chatRoomUser);
+  }
 }

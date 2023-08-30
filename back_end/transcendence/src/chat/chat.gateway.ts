@@ -33,7 +33,6 @@ export class ChatGateway {
   @SubscribeMessage('createChatRoom')
   createChatRoom(@MessageBody() createChatRoomDto: CreateChatRoomDto, @ConnectedSocket() client: Socket) {
     const message = this.chatService.createChatRoom(createChatRoomDto);
-    this.server.emit('message', message);
     return message;
   }
 
@@ -144,7 +143,6 @@ export class ChatGateway {
 
   @SubscribeMessage('joinChatRoom')
   joinChatRoom(@MessageBody() joinRoom:JoinRoom ) {
-    console.log(joinRoom);
     return this.chatService.joinChatRoom(joinRoom);
   }
 
