@@ -26,6 +26,7 @@ import { ChatRoomOfUserDto } from './dto/chatRoom-of-user.dto';
 import { LeaveChatRoomDto } from './dto/leave-ChatRoom.dto';
 import { JoinRoom } from './dto/join-room.dto';
 import { UnmuteUserDto } from './dto/unmute-user.dto';
+import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
 
 @Injectable()
 export class ChatService {
@@ -897,7 +898,6 @@ const conversation = await this.messageRepository.find({
 return  conversation;
 }
 
-
 async unmuteUser(unmuteUserDto: UnmuteUserDto) : Promise<any>{
 
   const user = await this.userRepository.findOne({
@@ -919,5 +919,36 @@ async unmuteUser(unmuteUserDto: UnmuteUserDto) : Promise<any>{
 
   chatRoomUser.statusUser = 'member';
   await this.chatRoomUserRepository.save(chatRoomUser);
-  }
+}
+
+async getAllUserOfChatRoom(usersOfChatRoom: UsersOfChatRoom) : Promise<any>{
+
+  const user = await this.userRepository.findOne({
+    where: {
+      username: usersOfChatRoom.username,
+    }
+  });
+
+  const charRoom = await this.chatRoomRepository.findOne({
+    where: {name: usersOfChatRoom.chatRoomName},
+  });
+
+  const chatRoomUser = await this.chatRoomUserRepository.find({
+    where:{
+      chatRooms: {id: charRoom.id},
+    },
+  });
+
+//   if (!chatRoomUser){
+//     throw new Error('User not exists in this chat room');
+//   }
+ const users =  await this.userRepository.find({
+    where: {
+      chatRoomUsers:{chatRooms:{id :charRoom.id}},
+    }
+  });
+  console.log(users);
+  return (chatRoomUser);
+}
+
 }
