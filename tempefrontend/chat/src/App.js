@@ -171,6 +171,11 @@ const deleteChatRoom = () => {
   socket.emit('deleteChatRoom', {username: user, chatRoomName: chatRoomName}, (response) => {
   });
 }
+
+const getAllChatRoom = () => {
+  socket.emit('AllchatRoom', {username: user}, (response) => {
+  });
+}
 //   return (
 //     <div className="chat">
 //       {!joined ? (
@@ -258,7 +263,7 @@ return (
           <label> user: </label>
           <input value={user} onChange={(e) => setName(e.target.value)} />
           <button onClick={() => joinChatRoom()}>Jion ChatRomm</button>
-          <button onClick={() => getChatRoom()}>get chatRooms</button>
+          <button onClick={() => getAllChatRoom()}>get chatRooms</button>
         </spam>
           <form
             onSubmit={(e) => {
