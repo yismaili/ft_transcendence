@@ -24,6 +24,7 @@ import { KickUserDto } from './dto/kick-user.dto';
 import { MuteUserDto } from './dto/mut-user.dto';
 import { ChatRoomOfUserDto } from './dto/chatRoom-of-user.dto';
 import { LeaveChatRoomDto } from './dto/leave-ChatRoom.dto';
+import { JoinRoom } from './dto/join-room.dto';
 
 @Injectable()
 export class ChatService {
@@ -86,10 +87,11 @@ export class ChatService {
         if (ischatRoomExist){
           throw new Error('his chat room exist');
         }
+        const passwordHashed = await this.hashingPasswordSrvice.hashPassword(createChatRoomDto.password);
         const newChatRoom = this.chatRoomRepository.create({
             name: createChatRoomDto.name,
             status: createChatRoomDto.status,
-            password: createChatRoomDto.password,
+            password: passwordHashed,
         });
 
         const savedNewChatRoom = await this.chatRoomRepository.save(newChatRoom);
@@ -248,7 +250,7 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom): Promise<any> {
     return chatRoomConversation;
   }
 
-  async joinChatRoom (joinChatRoom: JoinChatRoom) :Promise<any> {
+  async joinChatRoomWithAdmin (joinChatRoom: JoinChatRoom) :Promise<any> {
     
     const user = await this.userRepository.findOne({
       where:{username: joinChatRoom.username}
@@ -261,7 +263,7 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom): Promise<any> {
       },
     });
     if (!ismember) {
-      throw new Error('You are not allowed here; you are banned or not a member.');
+      throw new Error('You are not allowed here');
     }
 
     const chatRoom = await this.chatRoomRepository.findOne({
@@ -786,8 +788,81 @@ async getAllChatRoom(chatRoomOfUserDto: ChatRoomOfUserDto) : Promise<any>{
       }
     }
   );
-  console.log(chatRoom);
+  // console.log(chatRoom);
   return chatRoom;
+}
+
+async joinChatRoom (joinRoom: JoinRoom) {
+
+  const user = await this.userRepository.findOne({
+    where: {
+        username: joinRoom.username,
+    },
+});
+
+if (!user) {
+    throw new Error('User does not exist');
+}
+
+const ismember = await this.chatRoomUserRepository.findOne({
+  where: {
+    user:{id: user.id},
+    statusUser: 'banned',
+  },
+});
+
+if (ismember) {
+  throw new Error('You are not allowed here; you are banned or not a member.');
+}
+
+
+let chatRoom = await this.chatRoomRepository.findOne({
+  where: {
+    name: joinRoom.chatRoomName,
+    status: 'protected',
+  },
+});
+
+if (chatRoom) {
+  const dehashpassword = await this.hashingPasswordSrvice.verifyPassword(chatRoom?.password, joinRoom.password);
+  if (!dehashpassword) {
+      throw new NotFoundException('Invalid password');
+  }
+}
+else{
+   chatRoom = await this.chatRoomRepository.findOne({
+    where: {
+      name: joinRoom.chatRoomName,
+      status: 'public',
+    },
+  });
+}
+
+const isUserExistInChatRoom = await this.chatRoomUserRepository.findOne({
+    where: {
+      user: {id: user.id},
+      chatRooms: {id: chatRoom.id},
+    },
+});
+
+if (isUserExistInChatRoom) {
+    throw new Error('User already exists in this chat room');
+}
+
+const createChatRoomUser = this.chatRoomUserRepository.create({
+    time: 0,
+    statusPermissions: 'member',
+    user,
+    statusUser: 'member',
+    chatRooms: chatRoom,
+});
+await this.chatRoomUserRepository.save(createChatRoomUser);
+const conversation = await this.messageRepository.find({
+  where:{
+    chatRoom: {id: chatRoom.id},
+  }
+});
+return  conversation;
 }
 
 }
