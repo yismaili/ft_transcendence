@@ -1,0 +1,89 @@
+.container {
+  display: flex;
+  /* align-items: center; */
+  /* justify-content: space-around; */
+  flex-wrap: wrap;
+  /* background-color: aqua; */
+  width: 100%;
+  height: 80%;
+  margin-top: 10%;
+}
+
+.container > div {
+  display: inline-block;
+}
+
+.title {
+  width: 100%;
+  text-align: center;
+  color: #C7F8FF;
+  font-family: 'probert';
+  font-weight: 500;
+  font-size: clamp(.8rem, 2vw, 1.8rem);
+  /* margin-bottom: 5%; */
+}
+
+.leftImage,
+.text,
+.rightImage {
+    /* background-color: red; */
+  text-align: center;
+  flex: 1;
+  margin-bottom: 30rem;
+  height: 80%;
+  position: relative;
+}
+
+.textChild {
+  /* background-color: white; */
+  position: absolute;
+  height: 50%;
+  margin-top: 20%;
+  font-family: "probert";
+  font-weight: 700;
+  font-size: clamp(1rem, 2.8vw, 2.5rem);
+  letter-spacing: 0.1rem;
+  color: #C7F8FF;
+}
+
+.ImageChild {
+  /* background-color: blue; */
+  width: 100%;
+  height: 100%;
+  max-height: 75%;
+  margin: 0 auto;
+  margin-top: 20%;
+
+  background-size: clamp(20rem, 30vw, 40rem);
+  background-position: center;
+  background-repeat: no-repeat;
+  /* object-fit: cover; */
+}
+
+
+
+
+
+.imageContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* flex-direction: column; */
+}
+
+.side__icons {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.side__icons > div {
+  position: unset !important;
+}
+
+.side__icons .side__icons__btn__icon {
+  object-fit: contain;
+  width: 100% !important;
+  position: relative !important;
+  height: unset !important;
+}
