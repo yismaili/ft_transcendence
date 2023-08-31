@@ -923,11 +923,11 @@ async unmuteUser(unmuteUserDto: UnmuteUserDto) : Promise<any>{
 
 async getAllUserOfChatRoom(usersOfChatRoom: UsersOfChatRoom) : Promise<any>{
 
-  const user = await this.userRepository.findOne({
-    where: {
-      username: usersOfChatRoom.username,
-    }
-  });
+  // const user = await this.userRepository.findOne({
+  //   where: {
+  //     username: usersOfChatRoom.username,
+  //   }
+  // });
 
   const charRoom = await this.chatRoomRepository.findOne({
     where: {name: usersOfChatRoom.chatRoomName},
@@ -939,9 +939,9 @@ async getAllUserOfChatRoom(usersOfChatRoom: UsersOfChatRoom) : Promise<any>{
     },
   });
 
-//   if (!chatRoomUser){
-//     throw new Error('User not exists in this chat room');
-//   }
+  if (!chatRoomUser){
+    throw new Error('User not exists in this chat room');
+  }
  const users =  await this.userRepository.find({
     where: {
       chatRoomUsers:{chatRooms:{id :charRoom.id}},
