@@ -17,6 +17,7 @@ const ChatApp = () => {
   const [users, setUsers] = useState([]);
   const [secondUser, setSecondUsername] = useState('');
   const [typingDisplay, setTypingDisplay] = useState('');
+  const [allchatroomOfuser, setallchatroomOfuser] = useState('');
   const [editingIndex, setEditingIndex] = useState(-1);
   const [editMessageText, setEditMessageText] = useState('');
   const [editMessageFomChatRoom, setEditMessageFomChatRoom] = useState('');
@@ -24,6 +25,8 @@ const ChatApp = () => {
   const [status, setStatus] = useState('');
   const [password, setPassword] = useState('');
   const [statusPermissions, setstatusPermissions] = useState('admin');
+  const [userstatus, setUserstatus] = useState('');
+  const [time, setTime] = useState('');
 
   useEffect(() => {
     socket.on('message', (message) => {
@@ -52,7 +55,7 @@ const ChatApp = () => {
   };
 
   const sendMessageToChatRoom = () => {
-    socket.emit('sendMessageToChatRoom', { message: messageTextToChatRoom, username: users, chatRoomId: chatRoomId}, () => {
+    socket.emit('sendMessageToChatRoom', { message: messageTextToChatRoom, username: user, chatRoomName: chatRoomName}, () => {
      setMessageTextToChatRoom('');
     });
   };
@@ -103,29 +106,88 @@ const createChatRoom = () => {
     socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, (response) => {
       setMessageText('');
       setJoined(true);
-      setchatRoom(response.id)
-      console.log(chatRoomId);
+      setchatRoomName(response.name);
     });
   };
+  
 const JoinUsertoRoom = () =>{
-  socket.emit('JoinUsertoRoom', { username: users, statusPermissions: statusPermissions, chatRoomId: chatRoomId}, () => {
+  socket.emit('JoinUsertoRoom', { adminUsername: user, username: users, statusPermissions: statusPermissions, chatRoomName: chatRoomName}, () => {
     setJoined(true);
   });
 }
 
 function getMessageFromchatRoom() {
-  socket.emit('findAllChatRoomConversation', { username: users, chatRoomId: chatRoomId}, (response) => {
+  socket.emit('findAllChatRoomConversation', { username: user, chatRoomName: chatRoomName}, (response) => {
     setMessages(response);
   });
 }
 
-const joinChatRoom = () => {
-  socket.emit('joinChatRoom', {username: username,  chatRoomName: chatRoomName}, (response) => {
+const joinChatRoomWithAdmin = () => {
+  socket.emit('joinChatRoomWithAdmin', {username: user,  chatRoomName: chatRoomName}, (response) => {
     setJoined(true);
     setMessages(response);
   });
 }
 
+const joinChatRoom = () => {
+  socket.emit('joinChatRoom', {username: user,  chatRoomName: chatRoomName, password:password}, (response) => {
+    setJoined(true);
+    setMessages(response);
+  });
+}
+
+const banUser = () => {
+  socket.emit('banUser', {username: user, chatRoomName: chatRoomName, userGetBan:users ,userstatus: userstatus}, (response) => {
+    setJoined(true);
+  });
+}
+
+function kickUser(){
+  socket.emit('kickUser', {username: user, chatRoomName: chatRoomName, userGetkick:users ,userstatus: userstatus}, (response) => {
+    setJoined(true);
+  });
+}
+
+const muteUser = () => {
+  socket.emit('muteUser', {username: user, chatRoomName: chatRoomName, userGetmute:users, time:time,userstatus: userstatus}, (response) => {
+    setJoined(true);
+  });
+}
+
+const getChatRoom = () => {
+  socket.emit('chatRoomOfUser', {username: user}, (response) => {
+        setallchatroomOfuser(response);
+  });
+ }
+
+ const unbannedUser = () => {
+  socket.emit('unbannedUser', {username: user, chatRoomName: chatRoomName, userGetBan:users ,userstatus: userstatus}, (response) => {
+    setJoined(true);
+  });
+}
+const changePermission = () => {
+  socket.emit('changePermission', {username: user, chatRoomName: chatRoomName, userGetBan:users}, (response) => {
+    setJoined(true);
+  });
+}
+const leaveChatRoom = () => {
+  socket.emit('leaveChatRoom', {username: user, chatRoomName: chatRoomName}, (response) => {
+  });
+}
+const deleteChatRoom = () => {
+  socket.emit('deleteChatRoom', {username: user, chatRoomName: chatRoomName}, (response) => {
+  });
+}
+
+const getAllChatRoom = () => {
+  socket.emit('AllchatRoom', {username: user}, (response) => {
+  });
+}
+
+const getAllUserOfChatRoom = () => {
+  socket.emit('getAllUserOfChatRoom', {username: user, chatRoomName:chatRoomName}, (response) => {
+  });
+}
 //   return (
 //     <div className="chat">
 //       {!joined ? (
@@ -211,8 +273,10 @@ return (
           <label> chatName: </label>
           <input value={chatRoomName} onChange={(e) => setchatRoomName(e.target.value)} />
           <label> user: </label>
-          <input value={username} onChange={(e) => setUsername(e.target.value)} />
-          <button onClick={() => joinChatRoom()}>Jion ChatRomm</button>
+          <input value={user} onChange={(e) => setName(e.target.value)} />
+          <button onClick={() => joinChatRoomWithAdmin()}>Jion my ChatRomm</button>
+          <button onClick={() => getAllChatRoom()}>get chatRooms</button>
+          <button onClick={() => joinChatRoom()}>Jion chatRoom</button>
         </spam>
           <form
             onSubmit={(e) => {
@@ -231,13 +295,30 @@ return (
             <button type="submit">
               Join
             </button>
-
           </form>
+            {/* {allchatroomOfuser && <div>{allchatroomOfuser}</div>}
+         <hr /> */}
         </div>
-          ) : (
+         
+         ) : (
         <div className="chat-container">
           <div className="messages-container">
             <span>
+            <spam>
+              <label> user: </label>
+              <input value={users} onChange={(e) => setUsers(e.target.value)} />
+              <label> User status : </label>
+              <input value={userstatus} onChange={(e) => setUserstatus(e.target.value)}/>
+              <label> time : </label>
+              <input value={time} onChange={(e) => setTime(e.target.value)} />
+              <button onClick={() => banUser()}>Ban user</button>
+              <button onClick={() => kickUser()}>kick user</button>
+              <button onClick={() => muteUser()}>Mut user</button>
+              <button onClick={() => unbannedUser()}>unbanned User</button>
+              <button onClick={() => changePermission()}>change Permission</button>
+              <button onClick={() => leaveChatRoom()}>leave ChatRoom</button>
+              <button onClick={() => getAllUserOfChatRoom()}>User Of ChatRoom</button>
+           </spam>
             <label> user: </label>
             <input value={users} onChange={(h) => setUsers(h.target.value)} />
             <label> statusPermissions: </label>
@@ -276,7 +357,7 @@ return (
                 onInput={emitTyping}
               />
                 <span>
-                      <button onClick={() => deleteConversation()}>Delete</button>
+                      <button onClick={() => deleteChatRoom()}>Delete</button>
                 </span>
               <button type="submit">Send</button>
             </form>
