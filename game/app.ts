@@ -1,7 +1,8 @@
 // init canvas
 const cnvs = document.getElementById('canvas') as HTMLCanvasElement;
+let cntx:any;
 if (cnvs.getContext){
-    const cntx = cnvs.getContext('2d') as CanvasRenderingContext2D;
+    cntx = cnvs.getContext('2d') as CanvasRenderingContext2D;
 }
 
 // define ball properties
@@ -22,3 +23,8 @@ let firstPlayerScore: number = 0;
 let scondPlayerScore: number = 0;
 const maxPlayerScore: number = 8;
 
+void function drowObject(){
+    // method clears an area of the canvas
+    cntx.clearRect(0, 0, cnvs.width, cnvs.height);
+    
+}
