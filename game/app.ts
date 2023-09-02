@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 class Canvas {
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
@@ -5,7 +7,7 @@ class Canvas {
     constructor() {
         this.canvas = document.getElementById('canvas') as HTMLCanvasElement;
         this.context = this.canvas.getContext('2d') as CanvasRenderingContext2D;
-        this.canvas.width = 800; 
+        this.canvas.width = 800;
         this.canvas.height = 600;
     }
 
@@ -49,12 +51,12 @@ class Ball {
         context.closePath();
     }
 
-    getSpeedX(): number{
-        return (this.speedX);
+    getSpeedX(): number {
+        return this.speedX;
     }
 
-    getSpeedY(): number{
-        return (this.speedY);
+    getSpeedY(): number {
+        return this.speedY;
     }
 }
 
@@ -64,17 +66,13 @@ class Paddle {
     private width: number;
     private height: number;
     private paddleSpeed: number;
-    private rightPaddle: number;
-    private leftPaddle: number;
 
-    constructor(x: number, y: number, width: number, height: number, paddleSpeed: number, rightPaddle: number, leftPaddle: number) {
+    constructor(x: number, y: number, width: number, height: number, paddleSpeed: number) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.paddleSpeed = paddleSpeed;
-        this.rightPaddle = rightPaddle;
-        this.leftPaddle = leftPaddle;
     }
 
     draw(context: CanvasRenderingContext2D) {
@@ -82,15 +80,16 @@ class Paddle {
         context.fillRect(this.x, this.y, this.width, this.height);
     }
 
-    getPaddleSpeed(): number{
-        return (this.paddleSpeed);
+    getPaddleSpeed(): number {
+        return this.paddleSpeed;
     }
 }
 
-class MiddleLine{
+class MiddleLine {
     private firstPoint: number;
     private endPoint: number;
-    constructor(firstPoint: number, endPoint: number){
+
+    constructor(firstPoint: number, endPoint: number) {
         this.firstPoint = firstPoint;
         this.endPoint = endPoint;
     }
@@ -109,18 +108,17 @@ class Score {
     private leftPlayerScore: number;
     private rightPlayerScore: number;
 
-    constructor(leftPlayerScore: number, rightPlayerScore: number){
+    constructor(leftPlayerScore: number, rightPlayerScore: number) {
         this.leftPlayerScore = leftPlayerScore;
         this.rightPlayerScore = rightPlayerScore;
     }
 
-    draw (context: CanvasRenderingContext2D){
+    draw(context: CanvasRenderingContext2D) {
         context.fillStyle = "#ffffff";
         context.font = "small-caps 18px Arial";
         context.fillText('SCORE: ' + this.leftPlayerScore, 200, 20);
         context.fillText('SCORE: ' + this.rightPlayerScore, 500, 20);
     }
-
 }
 
 class StartBtn {
@@ -130,10 +128,16 @@ class StartBtn {
     constructor() {
         this.startBtn = document.getElementById('start-btn');
         this.isRunning = false;
+
+        if (this.startBtn) {
+            this.startBtn.addEventListener('click', this.start.bind(this));
+        }
     }
-    start(){
-        if (!this.isRunning){
-            // gameLoop();
+
+    start() {
+        if (!this.isRunning) {
+            // Implement game start logic here
+
             this.isRunning = true;
         }
     }
@@ -148,7 +152,6 @@ class PongGame {
     private leftPlayerScore: number = 0;
     private rightPlayerScore: number = 0;
     private score: Score;
-    private startBtn: StartBtn;
     private ballX: number;
     private ballY: number;
     private ballSpeedX: number;
@@ -163,7 +166,9 @@ class PongGame {
     private leftPaddle: number;
     private rightPaddle: number;
     private paddleWidth: number;
-
+    private player: string;
+    private startBtn: HTMLElement | null;
+    private isRunning: boolean;
 
     constructor() {
         this.canvas = new Canvas();
@@ -173,40 +178,40 @@ class PongGame {
             this.canvas.getHeight() / 2 - 50,
             10,
             100,
-            10,
-            this.canvas.getHeight() / 2 - 50,
-            this.canvas.getHeight() / 2 - 50
+            10
         );
-        
+
         this.rightPaddle_ = new Paddle(
             this.canvas.getWidth() - 10,
             this.canvas.getHeight() / 2 - 50,
             10,
             100,
-            10,
-            this.canvas.getHeight() / 2 - 50,
-            this.canvas.getHeight() / 2 - 50
+            10
         );
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
-        this.startBtn = new StartBtn();
- 
-         this.ballX = this.canvas.getWidth() / 2;
-         this.ballY = this.canvas.getHeight() / 2;
-         this.ballSpeedX = 5; 
-         this.ballSpeedY = 5; 
-         this.ballRadius = 10;
-         this.paddleHeight = 10;
-         this.paddleWidth = 10;
-         this.paddleSpeed = 10;
-         this.leftPaddle = this.canvas.getHeight() / 2 - this.paddleHeight / 2;
-         this.rightPaddle = this.canvas.getHeight() / 2 - this.paddleHeight / 2;
- 
-         // Add keyboard event listeners
-         document.addEventListener("keydown", this.keyDownHandler.bind(this));
-         document.addEventListener("keyup", this.keyUpHandler.bind(this));
+
+        this.ballX = this.canvas.getWidth() / 2;
+        this.ballY = this.canvas.getHeight() / 2;
+        this.ballSpeedX = 5;
+        this.ballSpeedY = 5;
+        this.ballRadius = 10;
+        this.player = '';
+        this.paddleHeight = 100;
+        this.paddleWidth = 10;
+        this.paddleSpeed = 10;
+        this.leftPaddle = this.canvas.getHeight() / 2 - this.paddleHeight / 2;
+        this.rightPaddle = this.canvas.getHeight() / 2 - this.paddleHeight / 2;
+        this.startBtn = document.getElementById('start-btn');
+        this.isRunning = false;
+        if (this.startBtn) {
+            this.startBtn.addEventListener('click', this.start.bind(this));
+        }
+        // Add keyboard event listeners
+        document.addEventListener("keydown", this.keyDownHandler.bind(this));
+        document.addEventListener("keyup", this.keyUpHandler.bind(this));
     }
-    
+
     private keyDownHandler(e: KeyboardEvent) {
         if (e.key === "ArrowUp") {
             this.upPressed = true;
@@ -238,12 +243,11 @@ class PongGame {
         this.rightPaddle_.draw(this.canvas.getContext());
         this.middleLine.draw(this.canvas.getContext());
         this.score.draw(this.canvas.getContext());
-        this.startBtn.start();
     }
 
     private update() {
-        // move paddles
-        if (this.upPressed && this.rightPaddle > 0){
+         // move paddles
+         if (this.upPressed && this.rightPaddle > 0){
             this.rightPaddle -= this.paddleSpeed;
         }else if (this.downPressed && this.rightPaddle + this.paddleHeight < this.canvas.getHeight()){
             this.rightPaddle += this.paddleSpeed;
@@ -266,13 +270,49 @@ class PongGame {
             this.ballSpeedX = -this.ballSpeedX;
         }
         // check if ball collides with right paddle
-        
+        if (this.ballX + this.ballRadius > this.canvas.getWidth() - this.paddleWidth && this.ballY > this.rightPaddle && this.ballY < this.rightPaddle + this.paddleHeight) {
+            this.ballSpeedX = -this.ballSpeedX;
+        }
+        // check if ball goes out of bounds on left or right side
+        if (this.ballX < 0){
+            this.rightPlayerScore++;
+            this.reset();
+        }else if (this.ballX > this.canvas.getWidth()){
+            this.leftPlayerScore++;
+            this.reset();
+        }
+        // check if player has won
+        if (this.leftPlayerScore === 5){
+            this.player = 'left player';
+            this.playerWin();
+        }else if (this.rightPlayerScore == 5){
+            this.player = 'right player';
+            this.playerWin();
+        }
     }
-
+    private playerWin() {
+        var message = "Congratulations! " + this.player + " win!";
+        $('#message').text(message); // Set the message text
+        $('#message-modal').modal('show'); // Display the message modal
+        this.reset();
+    }
+    private  reset() {
+       this.ballX = this.canvas.getWidth() / 2;
+       this.ballY = this.canvas.getHeight() / 2;
+       this.ballSpeedX = -this.ballSpeedX;
+       this.ballSpeedY = Math.random() * 10 - 5;
+      }
     start() {
-        this.draw();
-        this.start();
-        requestAnimationFrame(this.start);
+        if (!this.isRunning) {
+            const gameLoop = () => {
+                this.update();
+                this.draw();
+                requestAnimationFrame(gameLoop);
+            };
+            this.isRunning = true;
+            gameLoop();
+        }
+
     }
 }
 
