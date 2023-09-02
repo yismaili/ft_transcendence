@@ -3,7 +3,6 @@ class Canvas {
     constructor() {
         this.canvas = document.getElementById('canvas');
         this.context = this.canvas.getContext('2d');
-        // Set canvas size
         this.canvas.width = 800;
         this.canvas.height = 600;
     }
@@ -48,25 +47,39 @@ class Paddle {
         context.fillRect(this.x, this.y, this.width, this.height);
     }
 }
+class MiddleLine {
+    constructor(width, height) {
+        this.width = width;
+        this.height = height;
+    }
+    draw(context) {
+        context.strokeStyle = '#ffffff';
+        context.beginPath();
+        context.moveTo(this.width / 2, 0);
+        context.lineTo(this.width / 2, this.height);
+        context.stroke();
+        context.closePath();
+    }
+}
 class PongGame {
     constructor() {
         this.canvas = new Canvas();
         this.ball = new Ball(this.canvas.getWidth() / 2, this.canvas.getHeight() / 2, 10, 10, 10);
         this.leftPaddle = new Paddle(0, this.canvas.getHeight() / 2 - 50, 10, 100);
         this.rightPaddle = new Paddle(this.canvas.getWidth() - 10, this.canvas.getHeight() / 2 - 50, 10, 100);
+        this.middleLine = new MiddleLine(this.canvas.getWidth(), this.canvas.getHeight());
     }
     draw() {
         this.canvas.clearCanvas();
         this.ball.draw(this.canvas.getContext());
         this.leftPaddle.draw(this.canvas.getContext());
         this.rightPaddle.draw(this.canvas.getContext());
-        // Add more drawing logic for scores, lines, etc.
+        this.middleLine.draw(this.canvas.getContext());
     }
 }
 const game = new PongGame();
 function gameLoop() {
     game.draw();
-    // Add game logic here, updating ball and paddle positions
     requestAnimationFrame(gameLoop);
 }
 gameLoop();
