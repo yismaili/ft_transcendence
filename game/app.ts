@@ -70,17 +70,37 @@ class Paddle {
     }
 }
 
+class MiddleLine{
+    private width: number;
+    private height: number;
+    constructor(width: number, height: number){
+        this.width = width;
+        this.height = height;
+    }
+
+    draw(context: CanvasRenderingContext2D) {
+        context.strokeStyle = '#ffffff';
+        context.beginPath();
+        context.moveTo(this.width / 2, 0);
+        context.lineTo(this.width / 2, this.height);
+        context.stroke();
+        context.closePath();
+    }
+}
+
 class PongGame {
     private canvas: Canvas;
     private ball: Ball;
     private leftPaddle: Paddle;
     private rightPaddle: Paddle;
+    private middleLine: MiddleLine;
 
     constructor() {
         this.canvas = new Canvas();
         this.ball = new Ball(this.canvas.getWidth() / 2, this.canvas.getHeight() / 2, 10, 10, 10);
         this.leftPaddle = new Paddle(0, this.canvas.getHeight() / 2 - 50, 10, 100);
         this.rightPaddle = new Paddle(this.canvas.getWidth() - 10, this.canvas.getHeight() / 2 - 50, 10, 100);
+        this.middleLine = new MiddleLine(this.canvas.getWidth(), this.canvas.getHeight());
     }
     
     draw() {
@@ -88,6 +108,7 @@ class PongGame {
         this.ball.draw(this.canvas.getContext());
         this.leftPaddle.draw(this.canvas.getContext());
         this.rightPaddle.draw(this.canvas.getContext());
+        this.middleLine.draw(this.canvas.getContext());
     }
 }
 
