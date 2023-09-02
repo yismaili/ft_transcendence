@@ -1,4 +1,4 @@
-import $ from 'jquery';
+// import $ from 'jquery';
 
 class Canvas {
     private canvas: HTMLCanvasElement;
@@ -31,16 +31,12 @@ class Canvas {
 class Ball {
     private x: number;
     private y: number;
-    private radius: number;
-    private speedX: number;
-    private speedY: number;
+    private radius: number;;
 
-    constructor(x: number, y: number, radius: number, speedX: number, speedY: number) {
+    constructor(x: number, y: number, radius: number) {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.speedX = speedX;
-        this.speedY = speedY;
     }
 
     draw(context: CanvasRenderingContext2D) {
@@ -50,14 +46,6 @@ class Ball {
         context.fill();
         context.closePath();
     }
-
-    getSpeedX(): number {
-        return this.speedX;
-    }
-
-    getSpeedY(): number {
-        return this.speedY;
-    }
 }
 
 class Paddle {
@@ -65,23 +53,17 @@ class Paddle {
     private y: number;
     private width: number;
     private height: number;
-    private paddleSpeed: number;
 
-    constructor(x: number, y: number, width: number, height: number, paddleSpeed: number) {
+    constructor(x: number, y: number, width: number, height: number) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.paddleSpeed = paddleSpeed;
     }
 
     draw(context: CanvasRenderingContext2D) {
         context.fillStyle = '#ffffff';
         context.fillRect(this.x, this.y, this.width, this.height);
-    }
-
-    getPaddleSpeed(): number {
-        return this.paddleSpeed;
     }
 }
 
@@ -121,28 +103,6 @@ class Score {
     }
 }
 
-class StartBtn {
-    private startBtn: HTMLElement | null;
-    private isRunning: boolean;
-
-    constructor() {
-        this.startBtn = document.getElementById('start-btn');
-        this.isRunning = false;
-
-        if (this.startBtn) {
-            this.startBtn.addEventListener('click', this.start.bind(this));
-        }
-    }
-
-    start() {
-        if (!this.isRunning) {
-            // Implement game start logic here
-
-            this.isRunning = true;
-        }
-    }
-}
-
 class PongGame {
     private canvas: Canvas;
     private ball: Ball;
@@ -172,22 +132,9 @@ class PongGame {
 
     constructor() {
         this.canvas = new Canvas();
-        this.ball = new Ball(this.canvas.getWidth() / 2, this.canvas.getHeight() / 2, 10, 10, 10);
-        this.leftPaddle_ = new Paddle(
-            0,
-            this.canvas.getHeight() / 2 - 50,
-            10,
-            100,
-            10
-        );
-
-        this.rightPaddle_ = new Paddle(
-            this.canvas.getWidth() - 10,
-            this.canvas.getHeight() / 2 - 50,
-            10,
-            100,
-            10
-        );
+        this.ball = new Ball(this.canvas.getWidth() / 2, this.canvas.getHeight() / 2, 10);
+        this.leftPaddle_ = new Paddle(0, this.canvas.getHeight() / 2 - 50, 10, 100);
+        this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.canvas.getHeight() / 2 - 50, 10, 100);
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
 
@@ -246,6 +193,7 @@ class PongGame {
     }
 
     private update() {
+        this.canvas.clearCanvas();
          // move paddles
          if (this.upPressed && this.rightPaddle > 0){
             this.rightPaddle -= this.paddleSpeed;
@@ -260,7 +208,7 @@ class PongGame {
         }
         // move ball
         this.ballX += this.ballSpeedX;
-        this.ballY += this.ballSpeedX;
+        this.ballY += this.ballSpeedY;
         // check if ball collides with top or bottom
         if (this.ballY - this.ballRadius < 0 || this.ballY + this.ballRadius > this.canvas.getHeight()){
             this.ballSpeedY = - this.ballSpeedY;
@@ -305,7 +253,7 @@ class PongGame {
     start() {
         if (!this.isRunning) {
             const gameLoop = () => {
-                this.update();
+                //this.update();
                 this.draw();
                 requestAnimationFrame(gameLoop);
             };

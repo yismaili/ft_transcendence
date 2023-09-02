@@ -1,9 +1,5 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const jquery_1 = __importDefault(require("jquery"));
+// import $ from 'jquery';
 class Canvas {
     constructor() {
         this.canvas = document.getElementById('canvas');
@@ -25,12 +21,11 @@ class Canvas {
     }
 }
 class Ball {
-    constructor(x, y, radius, speedX, speedY) {
+    ;
+    constructor(x, y, radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.speedX = speedX;
-        this.speedY = speedY;
     }
     draw(context) {
         context.fillStyle = '#ffffff';
@@ -39,27 +34,17 @@ class Ball {
         context.fill();
         context.closePath();
     }
-    getSpeedX() {
-        return this.speedX;
-    }
-    getSpeedY() {
-        return this.speedY;
-    }
 }
 class Paddle {
-    constructor(x, y, width, height, paddleSpeed) {
+    constructor(x, y, width, height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.paddleSpeed = paddleSpeed;
     }
     draw(context) {
         context.fillStyle = '#ffffff';
         context.fillRect(this.x, this.y, this.width, this.height);
-    }
-    getPaddleSpeed() {
-        return this.paddleSpeed;
     }
 }
 class MiddleLine {
@@ -88,21 +73,6 @@ class Score {
         context.fillText('SCORE: ' + this.rightPlayerScore, 500, 20);
     }
 }
-class StartBtn {
-    constructor() {
-        this.startBtn = document.getElementById('start-btn');
-        this.isRunning = false;
-        if (this.startBtn) {
-            this.startBtn.addEventListener('click', this.start.bind(this));
-        }
-    }
-    start() {
-        if (!this.isRunning) {
-            // Implement game start logic here
-            this.isRunning = true;
-        }
-    }
-}
 class PongGame {
     constructor() {
         this.leftPlayerScore = 0;
@@ -112,9 +82,9 @@ class PongGame {
         this.wPressed = false;
         this.sPressed = false;
         this.canvas = new Canvas();
-        this.ball = new Ball(this.canvas.getWidth() / 2, this.canvas.getHeight() / 2, 10, 10, 10);
-        this.leftPaddle_ = new Paddle(0, this.canvas.getHeight() / 2 - 50, 10, 100, 10);
-        this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.canvas.getHeight() / 2 - 50, 10, 100, 10);
+        this.ball = new Ball(this.canvas.getWidth() / 2, this.canvas.getHeight() / 2, 10);
+        this.leftPaddle_ = new Paddle(0, this.canvas.getHeight() / 2 - 50, 10, 100);
+        this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.canvas.getHeight() / 2 - 50, 10, 100);
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
         this.ballX = this.canvas.getWidth() / 2;
@@ -174,6 +144,7 @@ class PongGame {
         this.score.draw(this.canvas.getContext());
     }
     update() {
+        this.canvas.clearCanvas();
         // move paddles
         if (this.upPressed && this.rightPaddle > 0) {
             this.rightPaddle -= this.paddleSpeed;
@@ -190,7 +161,7 @@ class PongGame {
         }
         // move ball
         this.ballX += this.ballSpeedX;
-        this.ballY += this.ballSpeedX;
+        this.ballY += this.ballSpeedY;
         // check if ball collides with top or bottom
         if (this.ballY - this.ballRadius < 0 || this.ballY + this.ballRadius > this.canvas.getHeight()) {
             this.ballSpeedY = -this.ballSpeedY;
@@ -224,8 +195,8 @@ class PongGame {
     }
     playerWin() {
         var message = "Congratulations! " + this.player + " win!";
-        (0, jquery_1.default)('#message').text(message); // Set the message text
-        (0, jquery_1.default)('#message-modal').modal('show'); // Display the message modal
+        $('#message').text(message); // Set the message text
+        $('#message-modal').modal('show'); // Display the message modal
         this.reset();
     }
     reset() {
