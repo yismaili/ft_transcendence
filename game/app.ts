@@ -159,6 +159,22 @@ class PongGame {
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
     }
 
+    drawBall(context: CanvasRenderingContext2D) {
+        context.fillStyle = '#ffffff';
+        context.beginPath();
+        context.arc(this.ballX, this.ballY, this.ballRadius, 0, 2 * Math.PI);
+        context.fill();
+        context.closePath();
+    }
+    drawRightPaddle(context: CanvasRenderingContext2D) {
+        context.fillStyle = '#ffffff';
+        context.fillRect(this.canvas.getWidth() - 10, this.rightPaddle, this.paddleWidth, this.paddleHeight);
+    }
+
+    drawleftPaddle(context: CanvasRenderingContext2D) {
+        context.fillStyle = '#ffffff';
+        context.fillRect(0, this.leftPaddle, this.paddleWidth, this.paddleHeight);
+    }
     private keyDownHandler(e: KeyboardEvent) {
         if (e.key === "ArrowUp") {
             this.upPressed = true;
@@ -185,11 +201,14 @@ class PongGame {
 
     private draw() {
         this.canvas.clearCanvas();
-        this.ball.draw(this.canvas.getContext());
-        this.leftPaddle_.draw(this.canvas.getContext());
-        this.rightPaddle_.draw(this.canvas.getContext());
+        // this.ball.draw(this.canvas.getContext());
+        // this.leftPaddle_.draw(this.canvas.getContext());
+        // this.rightPaddle_.draw(this.canvas.getContext());
         this.middleLine.draw(this.canvas.getContext());
         this.score.draw(this.canvas.getContext());
+        this.drawBall(this.canvas.getContext());
+        this.drawRightPaddle(this.canvas.getContext());
+        this.drawleftPaddle(this.canvas.getContext());
     }
 
     private update() {
@@ -253,7 +272,7 @@ class PongGame {
     start() {
         if (!this.isRunning) {
             const gameLoop = () => {
-                //this.update();
+                this.update();
                 this.draw();
                 requestAnimationFrame(gameLoop);
             };
