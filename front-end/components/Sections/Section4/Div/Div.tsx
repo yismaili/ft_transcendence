@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Style from "./Div.module.css";
-import Image from "next/image";
+import { motion, useAnimation, useScroll, useSpring } from "framer-motion";
 
 type props = {
   leftImg: string;
   rightImg: string;
   title: string;
   text: string;
+  y: any;
+  opacity: any;
 };
 
 export default function Div(props: props) {
   return (
-    <div className={Style.container}>
+    <motion.div
+      className={Style.container}
+      style={{ y: props.y, opacity: props.opacity }}
+    >
       <div className={Style.title}>{props.title}</div>
       <div className={Style.leftImage}>
         <div
@@ -27,11 +32,14 @@ export default function Div(props: props) {
       <div className={Style.rightImage}>
         <div
           className={Style.ImageChild}
-          style={{ backgroundImage: `url(${props.rightImg})`, backgroundSize: "clamp(20rem, 35vw, 45rem)" }}
+          style={{
+            backgroundImage: `url(${props.rightImg})`,
+            backgroundSize: "clamp(20rem, 33vw, 42rem)",
+          }}
         >
           .
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
