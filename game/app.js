@@ -170,6 +170,8 @@ class PongGame {
         }
         // check if ball colides with left paddle
         if (this.ballY > this.leftPaddle && this.ballY < this.leftPaddle + this.paddleHeight && this.ballX - this.ballRadius < this.paddleWidth) {
+            console.log(this.leftPaddle);
+            console.log(this.ballY);
             this.ballSpeedX *= (-1);
         }
         // check if ball colides with right paddle
@@ -226,49 +228,4 @@ class PongGame {
     }
 }
 const pongGame = new PongGame();
-// pongGame.start();
-// this.canvas.clearCanvas();
-//  // move paddles
-//  if (this.upPressed && this.rightPaddle > 0){
-//     this.rightPaddle -= this.paddleSpeed;
-// }else if (this.downPressed && this.rightPaddle + this.paddleHeight < this.canvas.getHeight()){
-//     this.rightPaddle += this.paddleSpeed;
-// }
-// // move lift paddle automaticlly based on ball position
-// if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
-//     this.leftPaddle += this.paddleSpeed;
-// }else if (this.ballY < this.leftPaddle + this.paddleHeight / 2){
-//     this.leftPaddle -= this.paddleSpeed;
-// }
-// // move ball
-// this.ballX += this.ballSpeedX;
-// this.ballY += this.ballSpeedY;
-// // check if ball collides with top or bottom
-// if (this.ballY - this.ballRadius < 0 || this.ballY + this.ballRadius > this.canvas.getHeight()){
-//     this.ballSpeedY = - this.ballSpeedY;
-// }
-// // check if ball colides with left paddle
-// if (this.ballX - this.ballRadius < this.paddleWidth && this.ballY > this.leftPaddle && this.ballY < this.leftPaddle + this.paddleHeight){
-//     this.ballSpeedX = -this.ballSpeedX;
-// }
-// // check if ball collides with right paddle
-// if (this.ballX + this.ballRadius > this.canvas.getWidth() - this.paddleWidth && this.ballY > this.rightPaddle && this.ballY < this.rightPaddle + this.paddleHeight) {
-//     this.ballSpeedX = -this.ballSpeedX;
-// }
-// // check if ball goes out of bounds on left or right side
-// if (this.ballX < 0){
-//     this.rightPlayerScore++;
-//     this.reset();
-// }else if (this.ballX > this.canvas.getWidth()){
-//     this.leftPlayerScore++;
-//     this.reset();
-// }
-// // check if player has won
-// if (this.leftPlayerScore === 5){
-//     this.player = 'left player';
-//     this.playerWin();
-// }else if (this.rightPlayerScore == 5){
-//     this.player = 'right player';
-//     this.playerWin();
-// }
-// // update position
+pongGame.draw();

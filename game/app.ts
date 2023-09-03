@@ -190,7 +190,7 @@ class PongGame {
         }
     }
 
-    private draw() {
+    draw() {
         this.canvas.clearCanvas();
         this.ball.draw(this.canvas.getContext());
         this.leftPaddle_.draw(this.canvas.getContext());
@@ -229,6 +229,8 @@ class PongGame {
 
         // check if ball colides with left paddle
         if (this.ballY > this.leftPaddle && this.ballY < this.leftPaddle + this.paddleHeight && this.ballX - this.ballRadius < this.paddleWidth){
+            console.log(this.leftPaddle);
+            console.log(this.ballY);
             this.ballSpeedX *= (-1);
         }
         // check if ball colides with right paddle
@@ -288,6 +290,6 @@ class PongGame {
 }
 
 const pongGame = new PongGame();
-// pongGame.start();
+pongGame.draw();
 
         
