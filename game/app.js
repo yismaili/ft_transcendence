@@ -75,52 +75,38 @@ class Score {
 }
 class PongGame {
     constructor() {
+        this.canvas = new Canvas();
+        this.ballX = this.canvas.getWidth() / 2;
+        this.ballY = this.canvas.getHeight() / 2;
+        this.ballSpeedX = 10;
+        this.ballSpeedY = 10;
+        this.ballRadius = 10;
+        this.player = '';
+        this.paddleHeight = 100;
+        this.paddleWidth = 10;
+        this.paddleSpeed = 10;
         this.leftPlayerScore = 0;
         this.rightPlayerScore = 0;
         this.upPressed = false;
         this.downPressed = false;
         this.wPressed = false;
         this.sPressed = false;
-        this.canvas = new Canvas();
-        this.ball = new Ball(this.canvas.getWidth() / 2, this.canvas.getHeight() / 2, 10);
-        this.leftPaddle_ = new Paddle(0, this.canvas.getHeight() / 2 - 50, 10, 100);
-        this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.canvas.getHeight() / 2 - 50, 10, 100);
-        this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
-        this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
-        this.ballX = this.canvas.getWidth() / 2;
-        this.ballY = this.canvas.getHeight() / 2;
-        this.ballSpeedX = 5;
-        this.ballSpeedY = 5;
-        this.ballRadius = 10;
-        this.player = '';
-        this.paddleHeight = 100;
-        this.paddleWidth = 10;
-        this.paddleSpeed = 10;
+        this.isRunning = false;
+        // init
         this.leftPaddle = this.canvas.getHeight() / 2 - this.paddleHeight / 2;
         this.rightPaddle = this.canvas.getHeight() / 2 - this.paddleHeight / 2;
+        this.ball = new Ball(this.ballX, this.ballY, this.ballRadius);
+        this.leftPaddle_ = new Paddle(0, this.leftPaddle, this.paddleWidth, this.paddleHeight);
+        this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.rightPaddle, this.paddleWidth, this.paddleHeight);
+        this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
+        this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
         this.startBtn = document.getElementById('start-btn');
-        this.isRunning = false;
-        if (this.startBtn) {
-            this.startBtn.addEventListener('click', this.start.bind(this));
-        }
         // Add keyboard event listeners
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
-    }
-    drawBall(context) {
-        context.fillStyle = '#ffffff';
-        context.beginPath();
-        context.arc(this.ballX, this.ballY, this.ballRadius, 0, 2 * Math.PI);
-        context.fill();
-        context.closePath();
-    }
-    drawRightPaddle(context) {
-        context.fillStyle = '#ffffff';
-        context.fillRect(this.canvas.getWidth() - 10, this.rightPaddle, this.paddleWidth, this.paddleHeight);
-    }
-    drawleftPaddle(context) {
-        context.fillStyle = '#ffffff';
-        context.fillRect(0, this.leftPaddle, this.paddleWidth, this.paddleHeight);
+        if (this.startBtn) {
+            this.startBtn.addEventListener('click', this.start.bind(this));
+        }
     }
     keyDownHandler(e) {
         if (e.key === "ArrowUp") {
@@ -152,45 +138,43 @@ class PongGame {
     }
     draw() {
         this.canvas.clearCanvas();
-        // this.ball.draw(this.canvas.getContext());
-        // this.leftPaddle_.draw(this.canvas.getContext());
-        // this.rightPaddle_.draw(this.canvas.getContext());
+        this.ball.draw(this.canvas.getContext());
+        this.leftPaddle_.draw(this.canvas.getContext());
+        this.rightPaddle_.draw(this.canvas.getContext());
         this.middleLine.draw(this.canvas.getContext());
         this.score.draw(this.canvas.getContext());
-        this.drawBall(this.canvas.getContext());
-        this.drawRightPaddle(this.canvas.getContext());
-        this.drawleftPaddle(this.canvas.getContext());
     }
     update() {
+        // clean canvas eria
         this.canvas.clearCanvas();
-        // move paddles
-        if (this.upPressed && this.rightPaddle > 0) {
+        // move right paddle up and down
+        if (this.upPressed === true && this.rightPaddle > 0) {
             this.rightPaddle -= this.paddleSpeed;
         }
-        else if (this.downPressed && this.rightPaddle + this.paddleHeight < this.canvas.getHeight()) {
+        else if (this.downPressed === true && this.rightPaddle < this.canvas.getHeight() - this.paddleHeight) {
             this.rightPaddle += this.paddleSpeed;
         }
-        // move right paddle automaticlly based on ball position
-        if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
-            this.leftPaddle += this.paddleSpeed;
-        }
-        else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
+        // move lift paddle w and s
+        if (this.wPressed === true && this.leftPaddle > 0) {
             this.leftPaddle -= this.paddleSpeed;
         }
-        // move ball
-        this.ballX += this.ballSpeedX;
+        else if (this.sPressed === true && this.leftPaddle < this.canvas.getHeight() - this.paddleHeight) {
+            this.leftPaddle += this.paddleSpeed;
+        }
+        // move ball 
+        this.ballX -= this.ballSpeedX;
         this.ballY += this.ballSpeedY;
         // check if ball collides with top or bottom
         if (this.ballY - this.ballRadius < 0 || this.ballY + this.ballRadius > this.canvas.getHeight()) {
-            this.ballSpeedY = -this.ballSpeedY;
+            this.ballSpeedY *= (-1);
         }
         // check if ball colides with left paddle
-        if (this.ballX - this.ballRadius < this.paddleWidth && this.ballY > this.leftPaddle && this.ballY < this.leftPaddle + this.paddleHeight) {
-            this.ballSpeedX = -this.ballSpeedX;
+        if (this.ballY > this.leftPaddle && this.ballY < this.leftPaddle + this.paddleHeight && this.ballX - this.ballRadius < this.paddleWidth) {
+            this.ballSpeedX *= (-1);
         }
-        // check if ball collides with right paddle
-        if (this.ballX + this.ballRadius > this.canvas.getWidth() - this.paddleWidth && this.ballY > this.rightPaddle && this.ballY < this.rightPaddle + this.paddleHeight) {
-            this.ballSpeedX = -this.ballSpeedX;
+        // check if ball colides with right paddle
+        if (this.ballY > this.rightPaddle && this.ballY < this.rightPaddle + this.paddleHeight && this.ballX + this.ballRadius > this.canvas.getWidth() - this.paddleWidth) {
+            this.ballSpeedX *= (-1);
         }
         // check if ball goes out of bounds on left or right side
         if (this.ballX < 0) {
@@ -203,25 +187,31 @@ class PongGame {
         }
         // check if player has won
         if (this.leftPlayerScore === 5) {
-            this.player = 'left player';
+            this.player = ' left player ';
             this.playerWin();
         }
-        else if (this.rightPlayerScore == 5) {
-            this.player = 'right player';
+        else if (this.rightPlayerScore === 5) {
+            this.player = ' right player ';
             this.playerWin();
         }
+        this.ball = new Ball(this.ballX, this.ballY, this.ballRadius);
+        this.leftPaddle_ = new Paddle(0, this.leftPaddle, this.paddleWidth, this.paddleHeight);
+        this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.rightPaddle, this.paddleWidth, this.paddleHeight);
+        this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
+        this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
     }
     playerWin() {
         var message = "Congratulations! " + this.player + " win!";
         $('#message').text(message); // Set the message text
         $('#message-modal').modal('show'); // Display the message modal
+        $('#message-modal').modal('hide');
         this.reset();
     }
     reset() {
         this.ballX = this.canvas.getWidth() / 2;
         this.ballY = this.canvas.getHeight() / 2;
         this.ballSpeedX = -this.ballSpeedX;
-        this.ballSpeedY = Math.random() * 10 - 5;
+        this.ballSpeedY = Math.random() * 10 - 10;
     }
     start() {
         if (!this.isRunning) {
@@ -236,4 +226,49 @@ class PongGame {
     }
 }
 const pongGame = new PongGame();
-pongGame.start();
+// pongGame.start();
+// this.canvas.clearCanvas();
+//  // move paddles
+//  if (this.upPressed && this.rightPaddle > 0){
+//     this.rightPaddle -= this.paddleSpeed;
+// }else if (this.downPressed && this.rightPaddle + this.paddleHeight < this.canvas.getHeight()){
+//     this.rightPaddle += this.paddleSpeed;
+// }
+// // move lift paddle automaticlly based on ball position
+// if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
+//     this.leftPaddle += this.paddleSpeed;
+// }else if (this.ballY < this.leftPaddle + this.paddleHeight / 2){
+//     this.leftPaddle -= this.paddleSpeed;
+// }
+// // move ball
+// this.ballX += this.ballSpeedX;
+// this.ballY += this.ballSpeedY;
+// // check if ball collides with top or bottom
+// if (this.ballY - this.ballRadius < 0 || this.ballY + this.ballRadius > this.canvas.getHeight()){
+//     this.ballSpeedY = - this.ballSpeedY;
+// }
+// // check if ball colides with left paddle
+// if (this.ballX - this.ballRadius < this.paddleWidth && this.ballY > this.leftPaddle && this.ballY < this.leftPaddle + this.paddleHeight){
+//     this.ballSpeedX = -this.ballSpeedX;
+// }
+// // check if ball collides with right paddle
+// if (this.ballX + this.ballRadius > this.canvas.getWidth() - this.paddleWidth && this.ballY > this.rightPaddle && this.ballY < this.rightPaddle + this.paddleHeight) {
+//     this.ballSpeedX = -this.ballSpeedX;
+// }
+// // check if ball goes out of bounds on left or right side
+// if (this.ballX < 0){
+//     this.rightPlayerScore++;
+//     this.reset();
+// }else if (this.ballX > this.canvas.getWidth()){
+//     this.leftPlayerScore++;
+//     this.reset();
+// }
+// // check if player has won
+// if (this.leftPlayerScore === 5){
+//     this.player = 'left player';
+//     this.playerWin();
+// }else if (this.rightPlayerScore == 5){
+//     this.player = 'right player';
+//     this.playerWin();
+// }
+// // update position
