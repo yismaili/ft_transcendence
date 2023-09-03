@@ -2,9 +2,21 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* flex-direction: column; */
+  flex-direction: column;
+  /* flex-wrap:nowrap; */
   width: 100%;
-  height: 100vh;
+  height: 350dvh;
   background: linear-gradient(156deg, #14143b 11.14%, #37eeb1 100%);
   /* position: relative; */
+  overflow: hidden;
+}
+
+.subContainer {
+  /* margin-top: 10%; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  /* background-color: azure; */
+  height: 80%;
 }
