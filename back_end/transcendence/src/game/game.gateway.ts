@@ -2,6 +2,8 @@ import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websock
 import { GameService } from './game.service';
 import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
+import { BallGameDto } from './dto/ball-game.dto';
+import { PaddleGameDto } from './dto/paddle-game.dto';
 
 @WebSocketGateway()
 export class GameGateway {
@@ -13,23 +15,18 @@ export class GameGateway {
     return this.gameService.createGame(createGameDto);
   }
 
-  @SubscribeMessage('findAllGame')
-  findAll() {
-    return this.gameService.findAll();
+  @SubscribeMessage('ball')
+  drawBall(@MessageBody() ballGameDto: BallGameDto) {
+    return this.gameService.drawBall(ballGameDto);
   }
 
-  @SubscribeMessage('findOneGame')
-  findOne(@MessageBody() id: number) {
-    return this.gameService.findOne(id);
+  @SubscribeMessage('paddle')
+  drawPaddle(@MessageBody() paddleGameDto:PaddleGameDto) {
+    return this.gameService.drawPaddle(paddleGameDto);
   }
 
   @SubscribeMessage('updateGame')
   updateGame(@MessageBody() updateGameDto: UpdateGameDto) {
     return this.gameService.updateGame(updateGameDto);
-  }
-
-  @SubscribeMessage('removeGame')
-  remove(@MessageBody() id: number) {
-    return this.gameService.remove(id);
   }
 }
