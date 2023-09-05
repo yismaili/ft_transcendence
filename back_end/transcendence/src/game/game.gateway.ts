@@ -24,8 +24,8 @@ export class GameGateway {
   }
 
   @SubscribeMessage('updateGame')
-  update(@MessageBody() updateGameDto: UpdateGameDto) {
-    return this.gameService.update(updateGameDto.id, updateGameDto);
+  updateGame(@MessageBody() updateGameDto: UpdateGameDto) {
+    return this.gameService.updateGame(updateGameDto);
   }
 
   @SubscribeMessage('removeGame')
