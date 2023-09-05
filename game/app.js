@@ -1,81 +1,86 @@
-"use strict";
-// import $ from 'jquery';
-class Canvas {
-    constructor() {
+var Canvas = /** @class */ (function () {
+    function Canvas() {
         this.canvas = document.getElementById('canvas');
         this.context = this.canvas.getContext('2d');
         this.canvas.width = 800;
         this.canvas.height = 600;
     }
-    getContext() {
+    Canvas.prototype.getContext = function () {
         return this.context;
-    }
-    clearCanvas() {
+    };
+    Canvas.prototype.clearCanvas = function () {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
-    getWidth() {
+    };
+    Canvas.prototype.getWidth = function () {
         return this.canvas.width;
-    }
-    getHeight() {
+    };
+    Canvas.prototype.getHeight = function () {
         return this.canvas.height;
-    }
-}
-class Ball {
-    ;
-    constructor(x, y, radius) {
+    };
+    return Canvas;
+}());
+var Ball = /** @class */ (function () {
+    function Ball(x, y, radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;
     }
-    draw(context) {
+    ;
+    Ball.prototype.draw = function (context) {
         context.fillStyle = '#ffffff';
         context.beginPath();
         context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
         context.fill();
         context.closePath();
-    }
-}
-class Paddle {
-    constructor(x, y, width, height) {
+    };
+    return Ball;
+}());
+var Paddle = /** @class */ (function () {
+    function Paddle(x, y, width, height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
     }
-    draw(context) {
+    Paddle.prototype.draw = function (context) {
         context.fillStyle = '#ffffff';
         context.fillRect(this.x, this.y, this.width, this.height);
-    }
-}
-class MiddleLine {
-    constructor(firstPoint, endPoint) {
+    };
+    return Paddle;
+}());
+var MiddleLine = /** @class */ (function () {
+    function MiddleLine(firstPoint, endPoint) {
         this.firstPoint = firstPoint;
         this.endPoint = endPoint;
     }
-    draw(context) {
+    MiddleLine.prototype.draw = function (context) {
         context.strokeStyle = '#ffffff';
         context.beginPath();
         context.moveTo(this.firstPoint, 0);
         context.lineTo(this.firstPoint, this.endPoint);
         context.stroke();
         context.closePath();
-    }
-}
-class Score {
-    constructor(leftPlayerScore, rightPlayerScore) {
+    };
+    return MiddleLine;
+}());
+var Score = /** @class */ (function () {
+    function Score(leftPlayerScore, rightPlayerScore) {
         this.leftPlayerScore = leftPlayerScore;
         this.rightPlayerScore = rightPlayerScore;
     }
-    draw(context) {
+    Score.prototype.draw = function (context) {
         context.fillStyle = "#ffffff";
         context.font = "small-caps 18px Arial";
-        context.fillText('SCORE: ' + this.leftPlayerScore, 200, 20);
-        context.fillText('SCORE: ' + this.rightPlayerScore, 500, 20);
-    }
-}
-class PongGame {
-    constructor() {
+        context.fillText('' + this.leftPlayerScore, 300, 20);
+        context.fillText('' + this.rightPlayerScore, 490, 20);
+    };
+    return Score;
+}());
+var PongGame = /** @class */ (function () {
+    function PongGame() {
         this.canvas = new Canvas();
+        // Establish a socket.io connection
+        this.socket = io("http://localhost:3001");
         this.ballX = this.canvas.getWidth() / 2;
         this.ballY = this.canvas.getHeight() / 2;
         this.ballSpeedX = 10;
@@ -92,6 +97,7 @@ class PongGame {
         this.wPressed = false;
         this.sPressed = false;
         this.isRunning = false;
+        this.finished = false;
         // init
         this.leftPaddle = this.canvas.getHeight() / 2 - this.paddleHeight / 2;
         this.rightPaddle = this.canvas.getHeight() / 2 - this.paddleHeight / 2;
@@ -108,7 +114,7 @@ class PongGame {
             this.startBtn.addEventListener('click', this.start.bind(this));
         }
     }
-    keyDownHandler(e) {
+    PongGame.prototype.keyDownHandler = function (e) {
         if (e.key === "ArrowUp") {
             this.upPressed = true;
         }
@@ -121,8 +127,8 @@ class PongGame {
         else if (e.key === "s") {
             this.sPressed = true;
         }
-    }
-    keyUpHandler(e) {
+    };
+    PongGame.prototype.keyUpHandler = function (e) {
         if (e.key === "ArrowUp") {
             this.upPressed = false;
         }
@@ -135,17 +141,17 @@ class PongGame {
         else if (e.key === "s") {
             this.sPressed = false;
         }
-    }
-    draw() {
+    };
+    PongGame.prototype.draw = function () {
         this.canvas.clearCanvas();
         this.ball.draw(this.canvas.getContext());
         this.leftPaddle_.draw(this.canvas.getContext());
         this.rightPaddle_.draw(this.canvas.getContext());
         this.middleLine.draw(this.canvas.getContext());
         this.score.draw(this.canvas.getContext());
-    }
-    update() {
-        // clean canvas eria
+    };
+    PongGame.prototype.update = function () {
+        // clean canvas 
         this.canvas.clearCanvas();
         // move right paddle up and down
         if (this.upPressed === true && this.rightPaddle > 0) {
@@ -161,17 +167,33 @@ class PongGame {
         else if (this.sPressed === true && this.leftPaddle < this.canvas.getHeight() - this.paddleHeight) {
             this.leftPaddle += this.paddleSpeed;
         }
-        // move ball 
-        this.ballX -= this.ballSpeedX;
-        this.ballY += this.ballSpeedY;
+        // move  paddle automaticlly based on ball position
+        if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
+            this.leftPaddle += this.paddleSpeed;
+        }
+        else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
+            this.leftPaddle -= this.paddleSpeed;
+        }
+        if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
+            this.rightPaddle += this.paddleSpeed;
+        }
+        else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
+            this.rightPaddle -= this.paddleSpeed;
+        }
+        // move ball
+        if (!this.finished) {
+            this.ballX += this.ballSpeedX;
+            this.ballY += this.ballSpeedY;
+        }
         // check if ball collides with top or bottom
         if (this.ballY - this.ballRadius < 0 || this.ballY + this.ballRadius > this.canvas.getHeight()) {
             this.ballSpeedY *= (-1);
         }
         // check if ball colides with left paddle
-        if (this.ballY > this.leftPaddle && this.ballY < this.leftPaddle + this.paddleHeight && this.ballX - this.ballRadius < this.paddleWidth) {
-            console.log(this.leftPaddle);
-            console.log(this.ballY);
+        if (this.ballY > this.leftPaddle + 100 && this.ballY < this.leftPaddle + this.paddleHeight && this.ballX - this.ballRadius < this.paddleWidth) {
+            // console.log("---y-->"+this.ballY);
+            // console.log("---lp-->"+this.leftPaddle);
+            console.log(this.leftPaddle + this.paddleHeight);
             this.ballSpeedX *= (-1);
         }
         // check if ball colides with right paddle
@@ -201,31 +223,39 @@ class PongGame {
         this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.rightPaddle, this.paddleWidth, this.paddleHeight);
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
-    }
-    playerWin() {
+    };
+    PongGame.prototype.playerWin = function () {
         var message = "Congratulations! " + this.player + " win!";
         $('#message').text(message); // Set the message text
         $('#message-modal').modal('show'); // Display the message modal
         $('#message-modal').modal('hide');
+        this.finished = true;
         this.reset();
-    }
-    reset() {
+    };
+    PongGame.prototype.reset = function () {
         this.ballX = this.canvas.getWidth() / 2;
         this.ballY = this.canvas.getHeight() / 2;
         this.ballSpeedX = -this.ballSpeedX;
         this.ballSpeedY = Math.random() * 10 - 10;
-    }
-    start() {
+    };
+    PongGame.prototype.start = function () {
+        var _this = this;
+        console.log('hhhhhhhh');
+        this.socket.emit("createGame", this.player);
         if (!this.isRunning) {
-            const gameLoop = () => {
-                this.update();
-                this.draw();
-                requestAnimationFrame(gameLoop);
+            var gameLoop_1 = function () {
+                _this.update();
+                _this.draw();
+                requestAnimationFrame(gameLoop_1);
             };
             this.isRunning = true;
-            gameLoop();
+            gameLoop_1();
         }
-    }
-}
-const pongGame = new PongGame();
+    };
+    PongGame.prototype.sendMsg = function (message) {
+        this.socket.emit("createGame", message);
+    };
+    return PongGame;
+}());
+var pongGame = new PongGame();
 pongGame.draw();
