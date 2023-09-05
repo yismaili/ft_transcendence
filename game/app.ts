@@ -1,4 +1,3 @@
-// import $ from 'jquery';
 
 class Canvas {
     private canvas: HTMLCanvasElement;
@@ -98,8 +97,8 @@ class Score {
     draw(context: CanvasRenderingContext2D) {
         context.fillStyle = "#ffffff";
         context.font = "small-caps 18px Arial";
-        context.fillText('SCORE: ' + this.leftPlayerScore, 200, 20);
-        context.fillText('SCORE: ' + this.rightPlayerScore, 500, 20);
+        context.fillText('' + this.leftPlayerScore, 300, 20);
+        context.fillText('' + this.rightPlayerScore, 490, 20);
     }
 }
 
@@ -129,10 +128,13 @@ class PongGame {
     private player: string;
     private startBtn: HTMLElement | null;
     private isRunning: boolean;
+    private finished: boolean;
+    public socket :any;
 
     constructor() {
         this.canvas = new Canvas();
-        
+        // Establish a socket.io connection
+        this.socket = io("http://localhost:3001");
         this.ballX = this.canvas.getWidth() / 2;
         this.ballY = this.canvas.getHeight() / 2;
         this.ballSpeedX = 10;
@@ -149,6 +151,7 @@ class PongGame {
         this.wPressed = false;
         this.sPressed = false;
         this.isRunning = false;
+        this.finished = false;
         // init
         this.leftPaddle = this.canvas.getHeight() / 2 - this.paddleHeight / 2;
         this.rightPaddle = this.canvas.getHeight() / 2 - this.paddleHeight / 2;
@@ -200,7 +203,7 @@ class PongGame {
     }
 
     private update() {
-        // clean canvas eria
+        // clean canvas 
         this.canvas.clearCanvas();
         // move right paddle up and down
         if (this.upPressed === true && this.rightPaddle > 0){
@@ -218,9 +221,23 @@ class PongGame {
             this.leftPaddle += this.paddleSpeed;
         }
 
-        // move ball 
-        this.ballX -= this.ballSpeedX;
-        this.ballY += this.ballSpeedY;
+        // move  paddle automaticlly based on ball position
+        if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
+            this.leftPaddle += this.paddleSpeed;
+        }else if (this.ballY < this.leftPaddle + this.paddleHeight / 2){
+            this.leftPaddle -= this.paddleSpeed;
+        }
+
+        if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
+            this.rightPaddle += this.paddleSpeed;
+        }else if (this.ballY < this.rightPaddle + this.paddleHeight / 2){
+            this.rightPaddle -= this.paddleSpeed;
+        }
+        // move ball
+        if (!this.finished) {
+            this.ballX += this.ballSpeedX;
+            this.ballY += this.ballSpeedY;
+        }
 
         // check if ball collides with top or bottom
         if (this.ballY - this.ballRadius < 0 || this.ballY + this.ballRadius > this.canvas.getHeight()){
@@ -228,9 +245,10 @@ class PongGame {
         }
 
         // check if ball colides with left paddle
-        if (this.ballY > this.leftPaddle && this.ballY < this.leftPaddle + this.paddleHeight && this.ballX - this.ballRadius < this.paddleWidth){
-            console.log(this.leftPaddle);
-            console.log(this.ballY);
+        if (this.ballY > this.leftPaddle +100  && this.ballY < this.leftPaddle + this.paddleHeight && this.ballX - this.ballRadius < this.paddleWidth){
+            // console.log("---y-->"+this.ballY);
+            // console.log("---lp-->"+this.leftPaddle);
+            console.log(this.leftPaddle + this.paddleHeight);
             this.ballSpeedX *= (-1);
         }
         // check if ball colides with right paddle
@@ -268,6 +286,7 @@ class PongGame {
         $('#message').text(message); // Set the message text
         $('#message-modal').modal('show'); // Display the message modal
         $('#message-modal').modal('hide');
+        this.finished = true;
         this.reset();
     }
     private  reset() {
@@ -277,6 +296,8 @@ class PongGame {
        this.ballSpeedY = Math.random() * 10 - 10;
       }
     start() {
+        console.log('hhhhhhhh');
+        this.socket.emit("createGame", this.player);
         if (!this.isRunning) {
             const gameLoop = () => {
                 this.update();
@@ -287,9 +308,11 @@ class PongGame {
             gameLoop();
         }
     }
+    sendMsg(message: string) {
+        this.socket.emit("createGame", message);
+      }
 }
 
 const pongGame = new PongGame();
 pongGame.draw();
-
         
