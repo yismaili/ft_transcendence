@@ -15,8 +15,9 @@ export class GameGateway {
     return this.gameService.createGame(createGameDto);
   }
 
-  @SubscribeMessage('ball')
+  @SubscribeMessage('drawBall')
   drawBall(@MessageBody() ballGameDto: BallGameDto) {
+    console.log(ballGameDto);
     return this.gameService.drawBall(ballGameDto);
   }
 
@@ -26,7 +27,7 @@ export class GameGateway {
   }
 
   @SubscribeMessage('updateGame')
-  updateGame(@MessageBody() updateGameDto: UpdateGameDto) {
+  updateGame(@MessageBody() updateGameDto: UpdateGameDto) :Promise<any>{
     return this.gameService.updateGame(updateGameDto);
   }
 }

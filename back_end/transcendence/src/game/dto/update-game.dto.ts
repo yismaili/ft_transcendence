@@ -20,5 +20,4 @@ export class UpdateGameDto {
     canvasHeight:number;
     canvasWidth:number;
     finished:boolean;
-    context: CanvasRenderingContext2D
 }
