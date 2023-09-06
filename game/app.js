@@ -155,45 +155,28 @@ var PongGame = /** @class */ (function () {
         // clean canvas 
         this.canvas.clearCanvas();
         this.socket.emit('updateGame', { leftPaddle: this.leftPaddle,
-            rightPaddle: this.rightPaddle,
-            paddleWidth: this.paddleWidth,
-            ballSpeedX: this.ballSpeedX,
-            ballSpeedY: this.ballSpeedY,
-            paddleHeight: this.paddleHeight,
-            ballRadius: this.ballRadius,
-            paddleSpeed: this.paddleSpeed,
-            upPressed: this.upPressed,
-            downPressed: this.downPressed,
-            wPressed: this.wPressed,
-            sPressed: this.sPressed,
-            score: this.score,
-            ballX: this.ballX,
-            ballY: this.ballY,
-            rightPlayerScore: this.rightPlayerScore,
-            leftPlayerScore: this.leftPlayerScore,
-            player: this.player,
-            canvasHeight: this.canvas.getHeight(),
-            canvasWidth: this.canvas.getWidth(),
+            rightPaddle: this.rightPaddle, paddleWidth: this.paddleWidth,
+            ballSpeedX: this.ballSpeedX, ballSpeedY: this.ballSpeedY,
+            paddleHeight: this.paddleHeight, ballRadius: this.ballRadius,
+            paddleSpeed: this.paddleSpeed, upPressed: this.upPressed,
+            downPressed: this.downPressed, wPressed: this.wPressed,
+            sPressed: this.sPressed, score: this.score, ballX: this.ballX,
+            ballY: this.ballY, rightPlayerScore: this.rightPlayerScore,
+            leftPlayerScore: this.leftPlayerScore, player: this.player,
+            canvasHeight: this.canvas.getHeight(), canvasWidth: this.canvas.getWidth(),
             finished: this.finished,
         }, function (response) {
             _this.rightPaddle = response.rightPaddle;
             _this.leftPaddle = response.leftPaddle;
             _this.paddleWidth = response.paddleWidth;
-            _this.ballSpeedX = response.ballSpeedX;
-            _this.ballSpeedY = response.ballSpeedY;
-            _this.paddleHeight = response.paddleHeight;
-            _this.ballRadius = response.ballRadius;
-            _this.paddleSpeed = response.paddleSpeed;
-            _this.upPressed = response.upPressed;
-            _this.downPressed = response.downPressed;
-            _this.wPressed = response.wPressed;
-            _this.sPressed = response.sPressed;
             _this.ballX = response.ballX;
             _this.ballY = response.ballY;
             _this.rightPlayerScore = response.rightPlayerScore;
             _this.leftPlayerScore = response.leftPlayerScore;
             _this.player = response.player;
             _this.finished = response.finished;
+            _this.ballSpeedX = response.ballSpeedX;
+            _this.ballSpeedY = response.ballSpeedY;
         });
         this.ball = new Ball(this.ballX, this.ballY, this.ballRadius);
         this.leftPaddle_ = new Paddle(0, this.leftPaddle, this.paddleWidth, this.paddleHeight);

@@ -1,4 +1,3 @@
-
 class Canvas {
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
@@ -206,71 +205,38 @@ class PongGame {
         // clean canvas 
         this.canvas.clearCanvas();
         this.socket.emit('updateGame', {leftPaddle: this.leftPaddle,
-            rightPaddle: this.rightPaddle,
-            paddleWidth: this.paddleWidth,
-            ballSpeedX: this.ballSpeedX,
-            ballSpeedY: this.ballSpeedY,
-            paddleHeight: this.paddleHeight,
-            ballRadius: this.ballRadius,
-            paddleSpeed: this.paddleSpeed,
-            upPressed: this.upPressed,
-            downPressed: this.downPressed,
-            wPressed: this.wPressed,
-            sPressed: this.sPressed,
-            score: this.score,
-            ballX: this.ballX,
-            ballY: this.ballY,
-            rightPlayerScore:this.rightPlayerScore,
-            leftPlayerScore: this.leftPlayerScore,
-            player: this.player,
-            canvasHeight: this.canvas.getHeight(),
-            canvasWidth: this.canvas.getWidth(),
+            rightPaddle: this.rightPaddle,paddleWidth: this.paddleWidth,
+            ballSpeedX: this.ballSpeedX,ballSpeedY: this.ballSpeedY,
+            paddleHeight: this.paddleHeight,ballRadius: this.ballRadius,
+            paddleSpeed: this.paddleSpeed,upPressed: this.upPressed,
+            downPressed: this.downPressed,wPressed: this.wPressed,
+            sPressed: this.sPressed,score: this.score, ballX: this.ballX,
+            ballY: this.ballY,rightPlayerScore:this.rightPlayerScore,
+            leftPlayerScore: this.leftPlayerScore,player: this.player,
+            canvasHeight: this.canvas.getHeight(),canvasWidth: this.canvas.getWidth(),
             finished: this.finished,
         }, 
         (response: {
-            leftPaddle: number,
-            rightPaddle: number,
-            paddleWidth: number,
-            ballSpeedX: number,
-            ballSpeedY: number,
-            paddleHeight: number,
-            ballRadius: number,
-            paddleSpeed: number,
-            upPressed: boolean,
-            downPressed: boolean,
-            wPressed: boolean,
-            sPressed: boolean,
-            score: number,
-            ballX: number,
-            ballY: number,
-            rightPlayerScore:number,
-            leftPlayerScore: number,
-            player: string,
-            canvasHeight:number,
-            canvasWidth:number,
-            finished:boolean,
-        }) => {
+            leftPaddle: number, rightPaddle: number, paddleWidth: number,
+            ballSpeedX: number, ballSpeedY: number, paddleHeight: number, 
+            ballRadius: number,paddleSpeed: number, upPressed: boolean, 
+            downPressed: boolean, wPressed: boolean, sPressed: boolean,
+            score: number, ballX: number, ballY: number,rightPlayerScore:number,
+            leftPlayerScore: number, player: string,canvasHeight:number,
+            canvasWidth:number, finished:boolean,
+        }) => { 
             this.rightPaddle = response.rightPaddle;
             this.leftPaddle = response.leftPaddle;
             this.paddleWidth = response.paddleWidth;
-            this.ballSpeedX = response.ballSpeedX;
-            this.ballSpeedY = response.ballSpeedY;
-            this.paddleHeight = response.paddleHeight;
-            this.ballRadius = response.ballRadius;
-            this.paddleSpeed = response.paddleSpeed;
-            this.upPressed = response.upPressed;
-            this.downPressed = response.downPressed;
-            this.wPressed = response.wPressed;
-            this.sPressed = response.sPressed;
             this.ballX = response.ballX;
             this.ballY = response.ballY;        
             this.rightPlayerScore = response.rightPlayerScore;
             this.leftPlayerScore = response.leftPlayerScore;
             this.player = response.player;
             this.finished =response.finished;
-            
+            this.ballSpeedX = response.ballSpeedX;
+            this.ballSpeedY = response.ballSpeedY; 
         });
-      
         this.ball = new Ball(this.ballX, this.ballY, this.ballRadius);
         this.leftPaddle_ = new Paddle(0, this.leftPaddle, this.paddleWidth, this.paddleHeight);
         this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.rightPaddle,this.paddleWidth, this.paddleHeight);

@@ -47,16 +47,16 @@ async updateGame(updateGameDto: UpdateGameDto): Promise<any> {
     }
 
     // Calculate automatic paddle movement
-    if (updateGameDto.ballY > updateGameDto.leftPaddle + updateGameDto.paddleHeight / 2) {
-        updateGameDto.leftPaddle += updateGameDto.paddleSpeed;
-    } else if (updateGameDto.ballY < updateGameDto.leftPaddle + updateGameDto.paddleHeight / 2) {
-        updateGameDto.leftPaddle -= updateGameDto.paddleSpeed;
-    }
-    if (updateGameDto.ballY > updateGameDto.rightPaddle + updateGameDto.paddleHeight / 2) {
-        updateGameDto.rightPaddle += updateGameDto.paddleSpeed;
-    } else if (updateGameDto.ballY < updateGameDto.rightPaddle + updateGameDto.paddleHeight / 2) {
-        updateGameDto.rightPaddle -= updateGameDto.paddleSpeed;
-    }
+    // if (updateGameDto.ballY > updateGameDto.leftPaddle + updateGameDto.paddleHeight / 2) {
+    //     updateGameDto.leftPaddle += updateGameDto.paddleSpeed;
+    // } else if (updateGameDto.ballY < updateGameDto.leftPaddle + updateGameDto.paddleHeight / 2) {
+    //     updateGameDto.leftPaddle -= updateGameDto.paddleSpeed;
+    // }
+    // if (updateGameDto.ballY > updateGameDto.rightPaddle + updateGameDto.paddleHeight / 2) {
+    //     updateGameDto.rightPaddle += updateGameDto.paddleSpeed;
+    // } else if (updateGameDto.ballY < updateGameDto.rightPaddle + updateGameDto.paddleHeight / 2) {
+    //     updateGameDto.rightPaddle -= updateGameDto.paddleSpeed;
+    // }
 
     // Update ball position
     updateGameDto.ballX += updateGameDto.ballSpeedX;
@@ -86,10 +86,10 @@ async updateGame(updateGameDto: UpdateGameDto): Promise<any> {
     // Handle scoring and winning conditions
     if (updateGameDto.ballX < 0) {
         updateGameDto.rightPlayerScore++;
-        this.resetGame(updateGameDto);
+       this.resetGame(updateGameDto);
     } else if (updateGameDto.ballX > updateGameDto.canvasWidth) {
         updateGameDto.leftPlayerScore++;
-        this.resetGame(updateGameDto);
+       this.resetGame(updateGameDto);
     }
 
     if (updateGameDto.leftPlayerScore === 5) {
@@ -103,14 +103,9 @@ async updateGame(updateGameDto: UpdateGameDto): Promise<any> {
 }
 
 resetGame(updateGameDto: UpdateGameDto) {
-    // Implement the reset logic here, including resetting ball position, paddle positions, and scores.
+    updateGameDto.ballX = updateGameDto.canvasWidth / 2;
+    updateGameDto.ballY = updateGameDto.canvasHeight / 2;
+    updateGameDto.ballSpeedX = -updateGameDto.ballSpeedX;
+    updateGameDto.ballSpeedY = Math.random() * 10 - 10;
 }
-
-  reset(updateGameDto: UpdateGameDto) {
-  updateGameDto.ballX = updateGameDto.canvasWidth / 2;
-  updateGameDto.ballY = updateGameDto.canvasHeight / 2;
-  updateGameDto.ballSpeedX = -updateGameDto.ballSpeedX;
-  updateGameDto.ballSpeedY = Math.random() * 10 - 10;
-  }
-
 }
