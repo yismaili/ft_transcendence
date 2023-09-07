@@ -9,8 +9,17 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="input">
+    <label>user1:</label>
+    <input  type="text" id="user1" name="user1" value=""/>
+    <label>user2:</label>
+    <input  type="text" id="user2" name="user2" value=""/>
+    <div class="button">
+      <button id="joinGame-btn" class="btn">join Game</button>
+    </div>
+  </div>
   <div class="container">
-    <canvas id="canvas" width="900" height="600"></canvas>
+    <canvas id="canvas" ></canvas>
   </div>
   <div class="button">
     <button id="start-btn" class="btn">Start</button>
@@ -22,7 +31,7 @@
           <h5 id="message"></h5>
         </div>
         <div class="modal-footer">
-          <button type="button" id="message-modal-close" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" id="message-modal-close" class="btn btn-secondary" data-dismiss="modal" >Close</button>
         </div>
       </div>
     </div>

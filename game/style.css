@@ -29,4 +29,13 @@
   canvas {
     background: #000;
     border: 1px solid black;
+    width: 60vw;
+    min-width: 400px;
+    height: 60vh;
+    min-height: 200px;
+  }
+
+  .input{
+    padding: 10px 450px;
+    font-size: 16px;
   }

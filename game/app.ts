@@ -1,3 +1,4 @@
+
 class Canvas {
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
@@ -127,8 +128,11 @@ class PongGame {
     private player: string;
     private startBtn: HTMLElement | null;
     private isRunning: boolean;
-    private finished: boolean;
     public socket :any;
+    private user1:  HTMLInputElement | null;
+    private user2:  HTMLInputElement | null;
+    private JoinBtn: HTMLElement | null;
+    private GameId: number;
 
     constructor() {
         this.canvas = new Canvas();
@@ -150,7 +154,7 @@ class PongGame {
         this.wPressed = false;
         this.sPressed = false;
         this.isRunning = false;
-        this.finished = false;
+        this.GameId = 0;
         // init
         this.leftPaddle = this.canvas.getHeight() / 2 - this.paddleHeight / 2;
         this.rightPaddle = this.canvas.getHeight() / 2 - this.paddleHeight / 2;
@@ -160,11 +164,17 @@ class PongGame {
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
         this.startBtn = document.getElementById('start-btn');
+        this.JoinBtn = document.getElementById('joinGame-btn');
         // Add keyboard event listeners
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
+        this.user1 = document.getElementById("user1")as HTMLInputElement;
+        this.user2 = document.getElementById("user2") as HTMLInputElement;
         if (this.startBtn) {
             this.startBtn.addEventListener('click', this.start.bind(this));
+        }
+        if (this.JoinBtn) {
+            this.JoinBtn.addEventListener('click', this.joinGame.bind(this));
         }
     }
 
@@ -204,7 +214,11 @@ class PongGame {
     private update() {
         // clean canvas 
         this.canvas.clearCanvas();
-        this.socket.emit('updateGame', {leftPaddle: this.leftPaddle,
+        this.socket.emit('updateGame', {
+            GameId: this.GameId,
+            user: this.user1?.value,
+            userCompetitor: this.user2?.value,
+            leftPaddle: this.leftPaddle,
             rightPaddle: this.rightPaddle,paddleWidth: this.paddleWidth,
             ballSpeedX: this.ballSpeedX,ballSpeedY: this.ballSpeedY,
             paddleHeight: this.paddleHeight,ballRadius: this.ballRadius,
@@ -214,7 +228,6 @@ class PongGame {
             ballY: this.ballY,rightPlayerScore:this.rightPlayerScore,
             leftPlayerScore: this.leftPlayerScore,player: this.player,
             canvasHeight: this.canvas.getHeight(),canvasWidth: this.canvas.getWidth(),
-            finished: this.finished,
         }, 
         (response: {
             leftPaddle: number, rightPaddle: number, paddleWidth: number,
@@ -233,32 +246,25 @@ class PongGame {
             this.rightPlayerScore = response.rightPlayerScore;
             this.leftPlayerScore = response.leftPlayerScore;
             this.player = response.player;
-            this.finished =response.finished;
             this.ballSpeedX = response.ballSpeedX;
-            this.ballSpeedY = response.ballSpeedY; 
+            this.ballSpeedY = response.ballSpeedY;
         });
         this.ball = new Ball(this.ballX, this.ballY, this.ballRadius);
         this.leftPaddle_ = new Paddle(0, this.leftPaddle, this.paddleWidth, this.paddleHeight);
         this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.rightPaddle,this.paddleWidth, this.paddleHeight);
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
+        if (this.leftPlayerScore == 5 || this.rightPlayerScore == 5){
+            this.playerWin();
+        }
     }
-
 
     private playerWin() {
         var message = "Congratulations! " + this.player + " win!";
         $('#message').text(message); // Set the message text
         $('#message-modal').modal('show'); // Display the message modal
-        $('#message-modal').modal('hide');
-        this.finished = true;
-        this.reset();
+        // $('#message-modal').modal('hide');
     }
-    private  reset() {
-       this.ballX = this.canvas.getWidth() / 2;
-       this.ballY = this.canvas.getHeight() / 2;
-       this.ballSpeedX = -this.ballSpeedX;
-       this.ballSpeedY = Math.random() * 10 - 10;
-      }
     start() {
         if (!this.isRunning) {
             const gameLoop = () => {
@@ -269,6 +275,11 @@ class PongGame {
             this.isRunning = true;
             gameLoop();
         }
+    }
+    joinGame() {
+        this.socket.emit("createGame", {user: this.user1?.value, userCompetitor: this.user2?.value,}, (response: { id: number}) => {
+            this.GameId = response.id;
+        });
     }
 }
 

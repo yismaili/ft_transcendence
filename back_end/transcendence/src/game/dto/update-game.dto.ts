@@ -1,4 +1,7 @@
 export class UpdateGameDto {
+    GameId: number;
+    user: string;
+    userCompetitor: string;
     leftPaddle: number;
     rightPaddle: number;
     paddleWidth: number;
