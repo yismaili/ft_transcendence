@@ -1,4 +1,4 @@
 export class CreateGameDto {
-    canvas : HTMLCanvasElement;
-    context:CanvasRenderingContext2D;
+    user: string;
+    userCompetitor: string;
 }
