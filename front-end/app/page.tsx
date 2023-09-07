@@ -1,3 +1,4 @@
+
 import Nav from "@/components/nav/Nav";
 import Main from "@/components/main/Main";
 import "/styles/global.css";

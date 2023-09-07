@@ -1,10 +1,36 @@
-"use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AboutUs from "./AboutUs/AboutUs";
 import PopUp from "./AboutUs/PopUp/PopUp";
 import Style from "./Section3.module.css";
 
 export default function Section3() {
+  //////////// handle smoth scroll //////////////////
+  useEffect(() => {
+    const handleScroll = (e: WheelEvent) => {
+      const isDown = e.deltaY > 0;
+
+      if (isDown) {
+        if (window.scrollY > -1) {
+          document.getElementById("link4")?.click();
+        }
+      } else {
+        document.getElementById("link2")?.click();
+      }
+    };
+
+    document
+      .getElementById("section3")
+      ?.addEventListener("wheel", handleScroll);
+
+    return () =>
+      document
+        .getElementById("section3")
+        ?.removeEventListener("wheel", handleScroll);
+  }, []);
+
+  ////////////////////////////////
+
+  ///////// handle Music /////////
   const [isClick, setClick] = useState("");
 
   function openPopUp(name: string) {
@@ -15,8 +41,10 @@ export default function Section3() {
     setClick("");
   }
 
+  ///////////////////////////////
+
   return (
-    <section className={Style.container}>
+    <section className={Style.container} id="section3">
       <AboutUs
         src="/img/section3/amine_black.png"
         name="El Amine El Mountassir"

@@ -1,4 +1,3 @@
-"use client";
 import Style from "./Section4.module.css";
 import Div from "./Div/Div";
 import { useScroll, useTransform } from "framer-motion";
@@ -12,7 +11,7 @@ export default function Section3() {
   });
 
   return (
-    <section className={Style.container}>
+    <section className={Style.container} id="section4">
       <div className={Style.subContainer} ref={ref}>
         <Div
           y={useTransform(scrollYProgress, [0, 1], ["0%", "240%"])}

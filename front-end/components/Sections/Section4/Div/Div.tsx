@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Style from "./Div.module.css";
-import { motion, useAnimation, useScroll, useSpring } from "framer-motion";
+import { motion } from "framer-motion";
 
 type props = {
   leftImg: string;
