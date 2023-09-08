@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap');
+
+.container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(90deg, rgba(20,17,50,1) 0%, rgba(47,42,97,1) 50%, rgba(20,17,50,1) 100%);;
+}
+
+.leftDiv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: blue; */
+    width: 50%;
+    height: 100%;
+}
+
+.imageDiv {
+    /* background-color: black; */
+    height: 60%;
+    width: 100%;
+    background-image: url("/img/login/enemy.png");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.rightDiv {
+    /* display: flex; */
+    /* flex-direction: row; */
+    width: 50%;
+    height: 100%;
+    /* background-color: #ff5900; */
+}
+
+.rightDiv h1 {
+    text-align: center;
+    color: #D9D9D9;
+    font-family: 'Inter';
+    font-size: clamp(1rem, 5vw, 8rem);
+    margin-top: 10vh;
+    margin-bottom: 6vh;
+}
+
+.firstP {
+    color: #D9D9D9;
+    font-family: 'Inter';
+    font-weight: 700;
+    font-size: clamp(1rem, 3vw, 5rem);
+    margin-left: 5.9vw;
+}
+
+.inputs {
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    /* background-color: blueviolet; */
+    width: 70%;
+    height: 60vh;
+    margin-left: 5.9vw;
+    margin-top: 5vh;
+}
+
+.slideBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* text-align: center; */
+    background-color: #191941;
+    width: 90%;
+    height: 7.5vh;
+    border-radius: 36px;
+    position: relative;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #14143B;
+}
+
+.signUp {
+    font-size: clamp(.5rem, 3vw, 2.7rem);
+    font-family: 'probert';
+    /* margin-right: 7%; */
+    color: #D9D9D9;
+    z-index: 1;
+}
+
+.signIn {
+    font-size: clamp(.5rem, 3vw, 2.7rem);
+    font-family: 'probert';
+    /* margin-left: 7%; */
+    /* margin: 0 5vw; */
+    color: #383961;
+    z-index: 1;
+}
+
+.subSlideBtn {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    background-color: #54527D;
+    border-radius: 36px;
+    left: 0;
+}
+
+
