@@ -222,4 +222,4 @@ var PongGame = /** @class */ (function () {
     return PongGame;
 }());
 var pongGame = new PongGame();
-pongGame.update();
+pongGame.start();

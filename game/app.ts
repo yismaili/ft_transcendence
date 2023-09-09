@@ -281,5 +281,5 @@ class PongGame {
 }
 
 const pongGame = new PongGame();
-pongGame.update();
+pongGame.start();
         
