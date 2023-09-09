@@ -1,170 +1,47 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap");
 
 .container {
-    display: flex;
-    width: 100%;
-    height: 100vh;
-    background: linear-gradient(90deg, rgba(20,17,50,1) 0%, rgba(47,42,97,1) 50%, rgba(20,17,50,1) 100%);;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(90deg, #141132 0%, #2f2a61 50%, #141132 100%);
 }
 
 .leftDiv {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* background-color: blue; */
-    width: 50%;
-    height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
 }
 
 .imageDiv {
-    /* background-color: black; */
-    height: 60%;
-    width: 100%;
-    background-image: url("/img/login/enemy.png");
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
+  height: 60%;
+  width: 100%;
+  background-image: url("/img/login/enemy.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 .rightDiv {
-    /* display: flex; */
-    /* flex-direction: row; */
-    width: 50%;
-    height: 100%;
-    /* background-color: #ff5900; */
+  width: 50%;
+  height: 100%;
 }
 
 .rightDiv h1 {
-    text-align: center;
-    color: #D9D9D9;
-    font-family: 'Inter';
-    font-size: clamp(1rem, 5vw, 8rem);
-    margin-top: 10vh;
-    margin-bottom: 6vh;
+  text-align: center;
+  color: #d9d9d9;
+  font-family: "Inter";
+  font-size: clamp(1rem, 5vw, 8rem);
+  margin-top: 10vh;
+  margin-bottom: 6vh;
 }
 
 .firstP {
-    color: #D9D9D9;
-    font-family: 'Inter';
-    font-weight: 700;
-    font-size: clamp(1rem, 3vw, 5rem);
-    margin-left: 5.9vw;
-}
-
-.inputs {
-    display: flex;
-    flex-direction: column;
-    /* background-color: blueviolet; */
-    width: 70%;
-    height: 60vh;
-    margin-left: 5.9vw;
-    margin-top: 5vh;
-}
-
-.slideBtn {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    /* text-align: center; */
-    background-color: #191941;
-    width: 90%;
-    height: clamp(2rem, 7.5vw, 4.5rem);
-    border-radius: 36px;
-    position: relative;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #14143B;
-    cursor: pointer;
-    user-select: none;
-    margin: 0 auto;
-    margin-bottom: 5vw;
-}
-
-.signUpTxt {
-    font-size: clamp(.5rem, 3vw, 2.7rem);
-    font-family: 'probert';
-    color: #D9D9D9;
-    z-index: 1;
-}
-
-.signInTxt {
-    font-size: clamp(.5rem, 3vw, 2.7rem);
-    font-family: 'probert';
-    color: #383961;
-    z-index: 1;
-}
-
-.subSlideBtn {
-    position: absolute;
-    width: 50%;
-    height: 100%;
-    background-color: #54527D;
-    border-radius: 36px;
-    left: 0;
-}
-
-.googleBtn, .intraBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #14143B;
-    border-style: solid;
-    border-width: 1px;
-    border-color: #14143B;
-    height: 8vh;
-    border-radius: 36px;
-    position: relative;
-    width: 100%;
-    user-select: none;
-    cursor: pointer;
-}
-
-.googleImg {
-    background-image: url("/img/login/google_logo.png");
-    width: 2.5vw;
-    height: 2.5vw;
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-    position: absolute;
-    left: 3vw;
-}
-
-.googleBtn p, .intraBtn p {
-    color: #6f6fa5fa;
-    font-family: 'Inter';
-    font-size: clamp(.6rem, 2.2vw, 2.2rem);
-    margin-left: 2vw;
-}
-
-.intraImg {
-    background-image: url("/img/login/intra_logo.png");
-    width: 6.5vw;
-    height: 4vw;
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat;
-    position: absolute;
-    left: 1vw;
-}
-
-.boundary {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* background-color: aquamarine; */
-    width: 100%;
-    height: 6vh;
-}
-
-.boundary p {
-    color: #ffffffbf;
-    font-size: clamp(.4rem, 1.7vw, 1rem);
-    margin: 0 4%;
-}
-
-.leftLine, .rightLine {
-    background-color: #6f6fa5fa;
-    width: 41%;
-    height: 2px;
+  color: #d9d9d9;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: clamp(1rem, 3vw, 5rem);
+  margin-left: 5.9vw;
 }
