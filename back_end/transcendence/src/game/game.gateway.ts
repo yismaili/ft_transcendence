@@ -1,7 +1,7 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';
 import { GameService } from './game.service';
-import { CreateGameDto } from './dto/create-game.dto';
 import { UpdateGameDto } from './dto/update-game.dto';
+import { Socket} from 'socket.io';
 
 @WebSocketGateway()
 export class GameGateway {
@@ -9,7 +9,7 @@ export class GameGateway {
   }
 
   @SubscribeMessage('createGame')
-  create(@MessageBody() createGameDto: CreateGameDto) {
+  create(@MessageBody() createGameDto: UpdateGameDto, @ConnectedSocket() soketId: Socket) {
     return this.gameService.createGame(createGameDto);
   }
 

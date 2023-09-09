@@ -111,8 +111,7 @@ var PongGame = /** @class */ (function () {
         // Add keyboard event listeners
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
-        this.user1 = document.getElementById("user1");
-        this.user2 = document.getElementById("user2");
+        this.username = document.getElementById("username");
         if (this.startBtn) {
             this.startBtn.addEventListener('click', this.start.bind(this));
         }
@@ -158,13 +157,12 @@ var PongGame = /** @class */ (function () {
     };
     PongGame.prototype.update = function () {
         var _this = this;
-        var _a, _b;
+        var _a;
         // clean canvas 
         this.canvas.clearCanvas();
-        this.socket.emit('updateGame', {
+        this.socket.emit('createGame', {
             GameId: this.GameId,
-            user: (_a = this.user1) === null || _a === void 0 ? void 0 : _a.value,
-            userCompetitor: (_b = this.user2) === null || _b === void 0 ? void 0 : _b.value,
+            username: (_a = this.username) === null || _a === void 0 ? void 0 : _a.value,
             leftPaddle: this.leftPaddle,
             rightPaddle: this.rightPaddle, paddleWidth: this.paddleWidth,
             ballSpeedX: this.ballSpeedX, ballSpeedY: this.ballSpeedY,
@@ -216,8 +214,8 @@ var PongGame = /** @class */ (function () {
     };
     PongGame.prototype.joinGame = function () {
         var _this = this;
-        var _a, _b;
-        this.socket.emit("createGame", { user: (_a = this.user1) === null || _a === void 0 ? void 0 : _a.value, userCompetitor: (_b = this.user2) === null || _b === void 0 ? void 0 : _b.value, }, function (response) {
+        var _a;
+        this.socket.emit("createGame", { username: (_a = this.username) === null || _a === void 0 ? void 0 : _a.value }, function (response) {
             _this.GameId = response.id;
         });
     };

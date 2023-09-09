@@ -18,6 +18,7 @@ import { Message } from './typeorm/entities/message-entity';
 import { Chat } from './typeorm/entities/chat-entity';
 import { HashingPasswordService } from './hashing-password/hashing-password.service';
 import { GameModule } from './game/game.module';
+import { GameLogsEntity } from './typeorm/entities/game-logs-entity';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
 // The imports property specifies the modules that this module depends on
@@ -32,7 +33,7 @@ import { GameModule } from './game/game.module';
       username: 'postgres',
       password: 'pass1337',
       database: 'transcendence',
-      entities: [User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUser, Message, Chat],
+      entities: [User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUser, Message, Chat, GameLogsEntity],
       autoLoadEntities: true, // automatically load entity files
       synchronize: true, // automatically synchronize the database schema with the entities. // Set to false in production
     }), 

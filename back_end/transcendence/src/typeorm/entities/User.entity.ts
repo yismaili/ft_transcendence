@@ -6,6 +6,7 @@ import { HistoryEntity } from './History.entity';
 import { ChatRoomUser } from './chat-room-users.entity';
 import { Chat } from './chat-entity';
 import { Message } from './message-entity';
+import { GameLogsEntity } from './game-logs-entity';
 
 @Entity()
 export class User {
@@ -53,4 +54,6 @@ export class User {
 
   @OneToMany(() => Message, message => message.user)
   messages: Message[];
+  @OneToMany(() => GameLogsEntity, gameLog => gameLog.user)
+  gameLogs: GameLogsEntity[];
 }

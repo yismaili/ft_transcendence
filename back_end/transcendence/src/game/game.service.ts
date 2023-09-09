@@ -8,8 +8,10 @@ import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { UpdateResultDto } from './dto/update-result.dto';
+import { GameLogsEntity } from 'src/typeorm/entities/game-logs-entity';
+// import { PongGame } from '../../../../game/app'
 
 @Injectable()
 export class GameService {
@@ -20,42 +22,43 @@ export class GameService {
         @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
         @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
         @InjectRepository(ChatRoom)private chatRepository: Repository<ChatRoom>,
+        @InjectRepository(GameLogsEntity)private gameLogsRepository: Repository<GameLogsEntity>,
         ) {}
-        
-    async createGame(createGameDto: CreateGameDto) {
-      // Find the user and competitor in the database
+        // private pongGame: PongGame;
+    async createGame(createGameDto: UpdateGameDto) {
+
         const user = await this.userRepository.findOne({
-            where: { username: createGameDto.user }
-        });
-        
-        const competitor = await this.userRepository.findOne({
-            where: { username: createGameDto.userCompetitor }
-        });
-        
-        // Check if both the user and competitor exist
-        if (!user || !competitor) {
-            throw new Error('One or both users do not exist');
+           where: { username: createGameDto.username }
+         });
+        if (!user) {
+           throw new Error('One or both users do not exist');
+         }
+        const matching = await this.gameLogsRepository.findOne({
+           where: { status: 'waiting' },
+         });
+        if (!matching) {
+          const createGameLogs = this.gameLogsRepository.create({
+            status: 'waiting',
+            user: user,
+         });
+         return   await this.gameLogsRepository.save(createGameLogs);
         }
-        
-        // Create a game history record
+        const matchingUser = await this.userRepository.findOne({
+            where: { id: matching?.user?.id },
+        });
+        matching.status = 'down';
+        await this.gameLogsRepository.save(matching);
         const createHistory = this.historyRepository.create({
             user: user,
-            userCompetitor: competitor,
+            userCompetitor: matchingUser,
         });
-        const saveHistory =  await this.historyRepository.save(createHistory);
+        const saveHistory = await this.historyRepository.save(createHistory);
+        this.updateGame(createGameDto);
         return saveHistory;
     }
-        
-
+          
     async updateGame(updateGameDto: UpdateGameDto): Promise<any> {
-        // Handle paddle movement based on user input
-        const game = await this.historyRepository.findOne({
-            where: {id: updateGameDto.GameId}
-        });
 
-        if (!game) {
-            throw new Error('not exist');
-        }
         if (updateGameDto.upPressed && updateGameDto.rightPaddle > 0) {
             updateGameDto.rightPaddle -= updateGameDto.paddleSpeed;
         } else if (updateGameDto.downPressed && updateGameDto.rightPaddle < updateGameDto.canvasHeight - updateGameDto.paddleHeight) {
@@ -68,12 +71,12 @@ export class GameService {
             updateGameDto.leftPaddle += updateGameDto.paddleSpeed;
         }
 
-        // Calculate automatic paddle movement
-        if (updateGameDto.ballY > updateGameDto.leftPaddle + updateGameDto.paddleHeight / 2) {
-            updateGameDto.leftPaddle += updateGameDto.paddleSpeed;
-        } else if (updateGameDto.ballY < updateGameDto.leftPaddle + updateGameDto.paddleHeight / 2) {
-            updateGameDto.leftPaddle -= updateGameDto.paddleSpeed;
-        }
+        // // Calculate automatic paddle movement
+        // if (updateGameDto.ballY > updateGameDto.leftPaddle + updateGameDto.paddleHeight / 2) {
+        //     updateGameDto.leftPaddle += updateGameDto.paddleSpeed;
+        // } else if (updateGameDto.ballY < updateGameDto.leftPaddle + updateGameDto.paddleHeight / 2) {
+        //     updateGameDto.leftPaddle -= updateGameDto.paddleSpeed;
+        // }
         // if (updateGameDto.ballY > updateGameDto.rightPaddle + updateGameDto.paddleHeight / 2) {
         //     updateGameDto.rightPaddle += updateGameDto.paddleSpeed;
         // } else if (updateGameDto.ballY < updateGameDto.rightPaddle + updateGameDto.paddleHeight / 2) {

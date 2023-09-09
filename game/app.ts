@@ -129,8 +129,7 @@ class PongGame {
     private startBtn: HTMLElement | null;
     private isRunning: boolean;
     public socket :any;
-    private user1:  HTMLInputElement | null;
-    private user2:  HTMLInputElement | null;
+    private username:  HTMLInputElement | null;
     private JoinBtn: HTMLElement | null;
     private GameId: number;
 
@@ -168,8 +167,7 @@ class PongGame {
         // Add keyboard event listeners
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
-        this.user1 = document.getElementById("user1")as HTMLInputElement;
-        this.user2 = document.getElementById("user2") as HTMLInputElement;
+        this.username = document.getElementById("username")as HTMLInputElement;
         if (this.startBtn) {
             this.startBtn.addEventListener('click', this.start.bind(this));
         }
@@ -216,8 +214,7 @@ class PongGame {
         this.canvas.clearCanvas();
         this.socket.emit('updateGame', {
             GameId: this.GameId,
-            user: this.user1?.value,
-            userCompetitor: this.user2?.value,
+            username: this.username?.value,
             leftPaddle: this.leftPaddle,
             rightPaddle: this.rightPaddle,paddleWidth: this.paddleWidth,
             ballSpeedX: this.ballSpeedX,ballSpeedY: this.ballSpeedY,
@@ -277,7 +274,7 @@ class PongGame {
         }
     }
     joinGame() {
-        this.socket.emit("createGame", {user: this.user1?.value, userCompetitor: this.user2?.value,}, (response: { id: number}) => {
+        this.socket.emit("createGame", {username: this.username?.value}, (response: { id: number}) => {
             this.GameId = response.id;
         });
     }
