@@ -25,13 +25,14 @@ export class GameService {
         @InjectRepository(GameLogsEntity)private gameLogsRepository: Repository<GameLogsEntity>,
         ) {}
         // private pongGame: PongGame;
-    async createGame(createGameDto: UpdateGameDto) {
+    async createGame(createGameDto: UpdateGameDto): Promise<any>{
 
         const user = await this.userRepository.findOne({
            where: { username: createGameDto.username }
          });
+         
         if (!user) {
-           throw new Error('One or both users do not exist');
+           throw new Error('user do not exist');
          }
         const matching = await this.gameLogsRepository.findOne({
            where: { status: 'waiting' },
@@ -39,9 +40,10 @@ export class GameService {
         if (!matching) {
           const createGameLogs = this.gameLogsRepository.create({
             status: 'waiting',
+            gameRoom: user.username,
             user: user,
          });
-         return   await this.gameLogsRepository.save(createGameLogs);
+        return  await this.gameLogsRepository.save(createGameLogs);
         }
         const matchingUser = await this.userRepository.findOne({
             where: { id: matching?.user?.id },
@@ -53,12 +55,16 @@ export class GameService {
             userCompetitor: matchingUser,
         });
         const saveHistory = await this.historyRepository.save(createHistory);
-        this.updateGame(createGameDto);
         return saveHistory;
     }
           
     async updateGame(updateGameDto: UpdateGameDto): Promise<any> {
-
+        const gameRoomid = await this.historyRepository.findOne({
+            where:[ {id: updateGameDto.GameId}],
+        });
+        if (!gameRoomid){
+            return updateGameDto;
+        }
         if (updateGameDto.upPressed && updateGameDto.rightPaddle > 0) {
             updateGameDto.rightPaddle -= updateGameDto.paddleSpeed;
         } else if (updateGameDto.downPressed && updateGameDto.rightPaddle < updateGameDto.canvasHeight - updateGameDto.paddleHeight) {

@@ -209,7 +209,7 @@ class PongGame {
         this.score.draw(this.canvas.getContext());
     }
 
-    private update() {
+    update() {
         // clean canvas 
         this.canvas.clearCanvas();
         this.socket.emit('updateGame', {
@@ -281,5 +281,5 @@ class PongGame {
 }
 
 const pongGame = new PongGame();
-pongGame.draw();
+pongGame.update();
         

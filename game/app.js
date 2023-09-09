@@ -160,7 +160,7 @@ var PongGame = /** @class */ (function () {
         var _a;
         // clean canvas 
         this.canvas.clearCanvas();
-        this.socket.emit('createGame', {
+        this.socket.emit('updateGame', {
             GameId: this.GameId,
             username: (_a = this.username) === null || _a === void 0 ? void 0 : _a.value,
             leftPaddle: this.leftPaddle,
@@ -222,4 +222,4 @@ var PongGame = /** @class */ (function () {
     return PongGame;
 }());
 var pongGame = new PongGame();
-pongGame.draw();
+pongGame.update();
