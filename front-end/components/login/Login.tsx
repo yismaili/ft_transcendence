@@ -1,6 +1,15 @@
+"use client";
+import { useState } from "react";
 import Style from "./Login.module.css";
+import Sign_up_in from "./sign_up_in/Sign_up_in";
 
 export default function Login() {
+  const [sign_up, setSign_up] = useState(true);
+
+  const handleSign_up = (is_sign_up: boolean) => {
+    setSign_up(is_sign_up);
+  };
+
   return (
     <main className={Style.container}>
       <div className={Style.leftDiv}>
@@ -11,26 +20,11 @@ export default function Login() {
           <h1>Happening now</h1>
           <p className={Style.firstP}>Join today.</p>
         </div>
-        <div className={Style.inputs}>
-          <div className={Style.slideBtn}>
-            <p className={Style.signUpTxt}>Sign up</p>
-            <p className={Style.signInTxt}>Sign in</p>
-            <div className={Style.subSlideBtn}></div>
-          </div>
-            <div className={Style.googleBtn}>
-              <div className={Style.googleImg}></div>
-              <p>Sign up with google</p>
-            </div>
-            <div className={Style.boundary}>
-              <div className={Style.leftLine}></div>
-              <p>OR</p>
-              <div className={Style.rightLine}></div>
-            </div>
-            <div className={Style.intraBtn}>
-              <div className={Style.intraImg}></div>
-              <p>Sign up with intra</p>
-            </div>
-        </div>
+        {sign_up ? (
+          <Sign_up_in Sign_in_up="Sign up" onData={handleSign_up} />
+        ) : (
+          <Sign_up_in Sign_in_up="Sign in" onData={handleSign_up} />
+        )}
       </div>
     </main>
   );
