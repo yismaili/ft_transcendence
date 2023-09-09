@@ -53,8 +53,7 @@
 
 .inputs {
     display: flex;
-    /* align-items: center; */
-    justify-content: center;
+    flex-direction: column;
     /* background-color: blueviolet; */
     width: 70%;
     height: 60vh;
@@ -64,32 +63,33 @@
 
 .slideBtn {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     /* text-align: center; */
     background-color: #191941;
     width: 90%;
-    height: 7.5vh;
+    height: clamp(2rem, 7.5vw, 4.5rem);
     border-radius: 36px;
     position: relative;
     border-style: solid;
     border-width: 1px;
     border-color: #14143B;
+    cursor: pointer;
+    user-select: none;
+    margin: 0 auto;
+    margin-bottom: 5vw;
 }
 
-.signUp {
+.signUpTxt {
     font-size: clamp(.5rem, 3vw, 2.7rem);
     font-family: 'probert';
-    /* margin-right: 7%; */
     color: #D9D9D9;
     z-index: 1;
 }
 
-.signIn {
+.signInTxt {
     font-size: clamp(.5rem, 3vw, 2.7rem);
     font-family: 'probert';
-    /* margin-left: 7%; */
-    /* margin: 0 5vw; */
     color: #383961;
     z-index: 1;
 }
@@ -103,4 +103,68 @@
     left: 0;
 }
 
+.googleBtn, .intraBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #14143B;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #14143B;
+    height: 8vh;
+    border-radius: 36px;
+    position: relative;
+    width: 100%;
+    user-select: none;
+    cursor: pointer;
+}
 
+.googleImg {
+    background-image: url("/img/login/google_logo.png");
+    width: 2.5vw;
+    height: 2.5vw;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 3vw;
+}
+
+.googleBtn p, .intraBtn p {
+    color: #6f6fa5fa;
+    font-family: 'Inter';
+    font-size: clamp(.6rem, 2.2vw, 2.2rem);
+    margin-left: 2vw;
+}
+
+.intraImg {
+    background-image: url("/img/login/intra_logo.png");
+    width: 6.5vw;
+    height: 4vw;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 1vw;
+}
+
+.boundary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: aquamarine; */
+    width: 100%;
+    height: 6vh;
+}
+
+.boundary p {
+    color: #ffffffbf;
+    font-size: clamp(.4rem, 1.7vw, 1rem);
+    margin: 0 4%;
+}
+
+.leftLine, .rightLine {
+    background-color: #6f6fa5fa;
+    width: 41%;
+    height: 2px;
+}

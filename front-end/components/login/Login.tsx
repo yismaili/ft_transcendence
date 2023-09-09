@@ -13,10 +13,23 @@ export default function Login() {
         </div>
         <div className={Style.inputs}>
           <div className={Style.slideBtn}>
-            <p className={Style.signUp}>Sign up</p>
-            <p className={Style.signIn}>Sign in</p>
+            <p className={Style.signUpTxt}>Sign up</p>
+            <p className={Style.signInTxt}>Sign in</p>
             <div className={Style.subSlideBtn}></div>
           </div>
+            <div className={Style.googleBtn}>
+              <div className={Style.googleImg}></div>
+              <p>Sign up with google</p>
+            </div>
+            <div className={Style.boundary}>
+              <div className={Style.leftLine}></div>
+              <p>OR</p>
+              <div className={Style.rightLine}></div>
+            </div>
+            <div className={Style.intraBtn}>
+              <div className={Style.intraImg}></div>
+              <p>Sign up with intra</p>
+            </div>
         </div>
       </div>
     </main>
