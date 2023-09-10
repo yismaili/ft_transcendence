@@ -3,7 +3,9 @@ import { Profile } from './Profile.entity';
 import { Relation } from './Relation.entity';
 import { Achievement } from './Achievement.entity';
 import { HistoryEntity } from './History.entity';
-import { Chat } from 'src/typeorm/entities/chat.entity';
+import { ChatRoomUser } from './chat-room-users.entity';
+import { Chat } from './chat-entity';
+import { Message } from './message-entity';
 
 @Entity()
 export class User {
@@ -40,10 +42,15 @@ export class User {
   @OneToMany(() => HistoryEntity, history => history.user)
   histories: HistoryEntity[];
   
+  @OneToMany(() => ChatRoomUser, chatRoomUser => chatRoomUser.user)
+  chatRoomUsers: ChatRoomUser[];
+
   @OneToMany(() => Chat, chat => chat.user)
-  chats: Chat[];
+  userChats: Chat[];
 
-  @OneToMany(() => Chat, chat => chat.messager)
-  messages: Chat[];
+  @OneToMany(() => Chat, chat => chat.secondUser)
+  secondUserChats: Chat[];
 
+  @OneToMany(() => Message, message => message.user)
+  messages: Message[];
 }

@@ -22,14 +22,20 @@ import { RandomService } from 'src/random/random.service';
       private generatenUsename:RandomService,
       ) {}
       
-      async findAll() {
-       const users =  this.userRepository.find({
-          relations: ['profile', 'userRelations', 'friendRelations', 'achievements', 'histories']
-        });
-        return users;
-      }
+async findAll() {
+  const users =  this.userRepository.find({
+   relations: ['profile', 
+    'userRelations', 
+    'friendRelations', 
+    'achievements', 
+    'histories'
+  ]
+  });
+ return users;
+}
 
-async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> {
+async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
+
   let { email, firstName, username, lastName, picture } = userDetails;
 
   const existingUser = await this.userRepository.findOne({
@@ -48,24 +54,20 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> 
     await this.userRepository.save(existingUser);
       
     const token = sign({ ...existingUser }, 'secrete');
-      return { token, user: existingUser };
+      return { token, user: existingUser, success: true};
     } else {
 
-    if (username === undefined) {
-      let newUsername = firstName[0] + lastName;
-      const existingUsername = await this.userRepository.findOne({
-        where: {
-          username: newUsername,
-        },
-      });
-      
-      if (existingUsername) {
-        const randomString = this.generatenUsename.generateRandomString(3);
-        newUsername = lastName + randomString; // Change variable name to 'newUsername'
-      }
-      username = newUsername;
-      // console.log(newUsername);
+    let newUsername = firstName[0] + lastName;
+    const existingUsername = await this.userRepository.findOne({
+       where: {
+        username: newUsername,
+      },
+    });
+    if (existingUsername){
+      const randomString = this.generatenUsename.generateRandomString(2);
+      newUsername = randomString + lastName; // Change variable name to 'newUsername'
     }
+    username = newUsername;
       // user entity 
     const newUser = this.userRepository.create({
         firstName,
@@ -83,35 +85,13 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<IAuthenticate> 
         xp: 0,
         level: 0,
       })
-      
-  // Create a new 'Relation' entity
-    const newRelation = this.relationRepository.create({
-        status: '',
-    });
-      
-  // Create a new 'Achievement' entity
-      const newAchievement = this.achievementRepository.create({
-          type: '',
-          description: '',
-      });
-      
-  // Create a new 'History' entity
-      const newHistory = this.historyRepository.create({
-        userCompetitor: null,
-      });
-      
-  // Assign the related entities to the new user
+   // Assign the related entities to the new user
       if (newProfile) {
         newUser.profile = newProfile;
-      }
-      newUser.userRelations = [newRelation];
-      newUser.friendRelations = [newRelation];
-      newUser.achievements = [newAchievement];
-      newUser.histories = [newHistory];
-      
-      const savedUser = await this.userRepository.save(newUser);
-      const token = sign({ ...savedUser }, 'secrete');
-    return { token, user: savedUser };
+      } 
+    const savedUser = await this.userRepository.save(newUser);
+    const token = sign({ ...savedUser }, 'secrete');
+    return { token, user: savedUser, success: true};
   }
 }
     generateRandomString(arg0: number) {

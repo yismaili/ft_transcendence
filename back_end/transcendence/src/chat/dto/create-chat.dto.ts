@@ -1,4 +1,4 @@
-import { channel } from "diagnostics_channel";
-import { Chat } from "src/typeorm/entities/chat.entity";
+import { ChatRoomUser } from "src/typeorm/entities/chat-room-users.entity";
 
-export class CreateChatDto extends Chat {}
+
+export class CreateChatDto extends ChatRoomUser {}
