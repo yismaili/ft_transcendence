@@ -25,42 +25,138 @@ export class GameService {
         @InjectRepository(GameLogsEntity)private gameLogsRepository: Repository<GameLogsEntity>,
         ) {}
         // private pongGame: PongGame;
-    async createGame(createGameDto: UpdateGameDto): Promise<any>{
 
-        const user = await this.userRepository.findOne({
-           where: { username: createGameDto.username }
-         });
-         
-        if (!user) {
-           throw new Error('user do not exist');
-         }
-        const matching = await this.gameLogsRepository.findOne({
-           where: { status: 'waiting' },
-         });
-        if (!matching) {
-          const createGameLogs = this.gameLogsRepository.create({
-            status: 'waiting',
-            gameRoom: user.username,
-            user: user,
-         });
-        return  await this.gameLogsRepository.save(createGameLogs);
-        }
-        const matchingUser = await this.userRepository.findOne({
-            where: { id: matching?.user?.id },
-        });
-        matching.status = 'down';
-        await this.gameLogsRepository.save(matching);
-        const createHistory = this.historyRepository.create({
+    async createGameRandom(createGameDto: CreateGameDto): Promise<any> {
+        try {
+          const user = await this.userRepository.findOne({
+            where: { username: createGameDto.username }
+          });
+      
+          if (!user) {
+            throw new Error('User does not exist');
+          }
+      
+          const matching = await this.gameLogsRepository.findOne({
+            where: { status: 'waiting' },
+          });
+      
+          if (!matching) {
+            const createGameLogs = this.gameLogsRepository.create({
+              status: 'waiting',
+              gameRoom: user.username,
+              user: user,
+            });
+      
+            const savedGameLogs = await this.gameLogsRepository.save(createGameLogs);
+            return savedGameLogs;
+          }
+      
+          const matchingUser = await this.userRepository.findOne({where: { id: matching?.user?.id }});
+          matching.status = 'down';
+          await this.gameLogsRepository.save(matching);
+      
+          const createHistory = this.historyRepository.create({
             user: user,
             userCompetitor: matchingUser,
-        });
-        const saveHistory = await this.historyRepository.save(createHistory);
-        return saveHistory;
+            resulteOfUser: 0,
+            resulteOfCompetitor: 0,
+            status: 'accepted',
+          });
+      
+          const savedHistory = await this.historyRepository.save(createHistory);
+          return savedHistory;
+        } catch (error) {
+          throw error;
+        }
     }
-          
+         
+    async createGameFriend(createGameDto: CreateGameDto): Promise<any> {
+        try {
+          const user = await this.userRepository.findOne({
+            where: { username: createGameDto.username }
+          });
+          const friend = await this.userRepository.findOne({
+            where: { username: createGameDto.friendUsername }
+          });
+      
+          if (!user || !friend) {
+            throw new Error('User does not exist');
+          }
+      
+          const existingRequest = await this.historyRepository.findOne({
+            where: { user: {id: user.id}, status: 'sendRequest' }
+          });
+      
+          if (existingRequest) {
+            throw new Error('A request has already been sent');
+          }
+      
+          const createHistory = this.historyRepository.create({
+            user: user,
+            userCompetitor: friend,
+            status: 'sendRequest',
+            resulteOfCompetitor: 0,
+            resulteOfUser: 0,
+          });
+      
+          const savedHistory = await this.historyRepository.save(createHistory);
+          return savedHistory;
+        } catch (error) {
+          throw error;
+        }
+      }
+      
+    async getGameRequest(createGameDto: CreateGameDto):Promise<any> {
+        const user = await this.userRepository.findOne({
+            where: { username: createGameDto.username }
+        });
+        if (!user) {
+            throw new Error('user do not exist');
+        }
+        const request = await this.historyRepository.find({
+            where:{user:{id: user.id}, status: 'sendRequest'}
+        });
+        return request;
+    }
+
+    async accepteGameRequest(createGameDto: CreateGameDto) {
+        try {
+          const user = await this.userRepository.findOne({
+            where: { username: createGameDto.username }
+          });
+      
+          const friend = await this.userRepository.findOne({
+            where: { username: createGameDto.friendUsername }
+          });
+      
+          if (!user || !friend) {
+            throw new Error('User does not exist');
+          }
+      
+          const request = await this.historyRepository.findOne({
+            where: {
+              user: { id: user.id },
+              status: 'sendRequest',
+              userCompetitor: { id: friend.id }
+            }
+          });
+      
+          if (!request) {
+            throw new Error('Game request not found');
+          }
+      
+          request.status = 'accepted';
+          const acceptedRequest = await this.historyRepository.save(request);
+          return acceptedRequest;
+        } catch (error) {
+          throw error;
+        }
+      }
+      
+
     async updateGame(updateGameDto: UpdateGameDto): Promise<any> {
         const gameRoomid = await this.historyRepository.findOne({
-            where:[ {id: updateGameDto.GameId}],
+            where:[ {id: updateGameDto.GameId}, {status: 'accepted'}]
         });
         if (!gameRoomid){
             return updateGameDto;
@@ -77,12 +173,12 @@ export class GameService {
             updateGameDto.leftPaddle += updateGameDto.paddleSpeed;
         }
 
-        // // Calculate automatic paddle movement
-        // if (updateGameDto.ballY > updateGameDto.leftPaddle + updateGameDto.paddleHeight / 2) {
-        //     updateGameDto.leftPaddle += updateGameDto.paddleSpeed;
-        // } else if (updateGameDto.ballY < updateGameDto.leftPaddle + updateGameDto.paddleHeight / 2) {
-        //     updateGameDto.leftPaddle -= updateGameDto.paddleSpeed;
-        // }
+        // Calculate automatic paddle movement
+        if (updateGameDto.ballY > updateGameDto.leftPaddle + updateGameDto.paddleHeight / 2) {
+            updateGameDto.leftPaddle += updateGameDto.paddleSpeed;
+        } else if (updateGameDto.ballY < updateGameDto.leftPaddle + updateGameDto.paddleHeight / 2) {
+            updateGameDto.leftPaddle -= updateGameDto.paddleSpeed;
+        }
         // if (updateGameDto.ballY > updateGameDto.rightPaddle + updateGameDto.paddleHeight / 2) {
         //     updateGameDto.rightPaddle += updateGameDto.paddleSpeed;
         // } else if (updateGameDto.ballY < updateGameDto.rightPaddle + updateGameDto.paddleHeight / 2) {

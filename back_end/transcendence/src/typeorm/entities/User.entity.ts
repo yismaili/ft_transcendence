@@ -56,4 +56,5 @@ export class User {
   messages: Message[];
   @OneToMany(() => GameLogsEntity, gameLog => gameLog.user)
   gameLogs: GameLogsEntity[];
+  
 }

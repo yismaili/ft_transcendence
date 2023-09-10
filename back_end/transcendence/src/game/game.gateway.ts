@@ -2,6 +2,8 @@ import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket } from
 import { GameService } from './game.service';
 import { UpdateGameDto } from './dto/update-game.dto';
 import { Socket} from 'socket.io';
+import { CreateChatRoomDto } from 'src/chat/dto/create-chatRoom.dto';
+import { CreateGameDto } from './dto/create-game.dto';
 
 @WebSocketGateway()
 export class GameGateway {
@@ -9,8 +11,14 @@ export class GameGateway {
   }
 
   @SubscribeMessage('createGame')
-  create(@MessageBody() createGameDto: UpdateGameDto, @ConnectedSocket() soketId: Socket) {
-    return this.gameService.createGame(createGameDto);
+  create(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
+    return this.gameService.createGameRandom(createGameDto);
+  }
+
+  @SubscribeMessage('createGameFriend')
+  createGameFriend(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
+    console.log(createGameDto);
+    return this.gameService.createGameFriend(createGameDto);
   }
 
   @SubscribeMessage('updateGame')

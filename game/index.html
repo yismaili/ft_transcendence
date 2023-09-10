@@ -12,6 +12,7 @@
   <div class="input">
     <label>username:</label>
     <input  type="text" id="username" name="username" value=""/>
+    <input  type="text" id="friendUsername" name="friendUsername" value=""/>
     <div class="button">
       <button id="joinGame-btn" class="btn">join Game</button>
     </div>
@@ -19,17 +20,11 @@
   <div class="container">
     <canvas id="canvas" ></canvas>
   </div>
-  <div class="button">
-    <button id="start-btn" class="btn">Start</button>
-  </div>
   <div class="modal" tabindex="-1" role="dialog" id="message-modal">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-body">
           <h5 id="message"></h5>
-        </div>
-        <div class="modal-footer">
-          <button type="button" id="message-modal-close" class="btn btn-secondary" data-dismiss="modal" >Close</button>
         </div>
       </div>
     </div>
