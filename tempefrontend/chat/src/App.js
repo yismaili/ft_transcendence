@@ -5,7 +5,7 @@ import io from 'socket.io-client';
 import './App.css';
 
 const ChatApp = () => {
-  const [socket] = useState(io('http://localhost:3001'));
+  const [socket] = useState(io('0.0.0.0:3001'));
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
   const [messageTextToChatRoom, setMessageTextToChatRoom] = useState('');
