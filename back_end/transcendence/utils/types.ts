@@ -46,6 +46,7 @@ export type AchievementParams = {
 };
 
 export interface IAuthenticate {
+  success: any;
   token: string;
   user: User;
 }
