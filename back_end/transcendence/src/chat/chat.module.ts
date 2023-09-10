@@ -14,7 +14,7 @@ import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import { ChatRoomUser } from 'src/typeorm/entities/chat-room-users.entity';
 import { Message } from 'src/typeorm/entities/message-entity';
 import { Chat } from 'src/typeorm/entities/chat-entity';
-import { HashingPasswordService } from 'src/hashing-password/hashing-password.service';
+
 
 
 @Module({
@@ -23,6 +23,6 @@ import { HashingPasswordService } from 'src/hashing-password/hashing-password.se
     UserModule,
     TypeOrmModule.forFeature([User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUser, Message, Chat]),
   ],
-  providers: [ChatService, UserService, AuthModule, ChatGateway, HashingPasswordService],
+  providers: [ChatService, UserService, AuthModule, ChatGateway],
 })
 export class ChatModule {}

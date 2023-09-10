@@ -1,4 +1,4 @@
-FROM node:16-bullseye-slim
+FROM node:18-bullseye-slim
 
 RUN apt update -y && apt install -y git; \
     npm install -g npm@latest && npm i -g @nestjs/cli;

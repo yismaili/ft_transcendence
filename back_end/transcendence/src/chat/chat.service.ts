@@ -13,7 +13,6 @@ import { Message } from 'src/typeorm/entities/message-entity';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import { ChatRoomUser } from 'src/typeorm/entities/chat-room-users.entity';
 import { CreateChatRoomDto } from './dto/create-chatRoom.dto';
-import { HashingPasswordService } from 'src/hashing-password/hashing-password.service';
 import { JoinUsertoChatRoom } from './dto/join-user-to-chatRoom.dto';
 import { SendMessageToChatRoom } from './dto/send-message-to-chatRomm';
 import { GetChatRoomMessages } from './dto/get-chatRoom-messages';
@@ -40,7 +39,7 @@ export class ChatService {
     @InjectRepository(Chat) private chatRepository: Repository<Chat>,
     @InjectRepository(ChatRoom)private chatRoomRepository: Repository<ChatRoom>,
     @InjectRepository(ChatRoomUser)private chatRoomUserRepository: Repository<ChatRoomUser>,
-    private hashingPasswordSrvice: HashingPasswordService,
+
   ) {}
   clientToUser = {};
   
@@ -89,7 +88,7 @@ export class ChatService {
         if (ischatRoomExist){
           throw new Error('his chat room exist');
         }
-        const passwordHashed = await this.hashingPasswordSrvice.hashPassword(createChatRoomDto.password);
+        const passwordHashed = createChatRoomDto.password;
         const newChatRoom = this.chatRoomRepository.create({
             name: createChatRoomDto.name,
             status: createChatRoomDto.status,
@@ -858,7 +857,7 @@ let chatRoom = await this.chatRoomRepository.findOne({
 });
 
 if (chatRoom) {
-  const dehashpassword = await this.hashingPasswordSrvice.verifyPassword(chatRoom?.password, joinRoom.password);
+  const dehashpassword = chatRoom?.password;
   if (!dehashpassword) {
       throw new NotFoundException('Invalid password');
   }
