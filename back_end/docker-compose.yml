@@ -40,18 +40,18 @@ services:
     networks:
       - app-net
 
-  frontend:
-    build: ./frontend_tools
-    container_name: frontend
-    restart: always
-    depends_on:
-      - trans_app
-    ports:
-      - "5000:5000"
-    volumes:
-      - frontend_app:/app
-    networks:
-      - app-net
+  # frontend:
+  #   build: ./frontend_tools
+  #   container_name: frontend
+  #   restart: always
+  #   depends_on:
+  #     - trans_app
+  #   ports:
+  #     - "5000:5000"
+  #   volumes:
+  #     - frontend_app:/app
+  #   networks:
+  #     - app-net
 
 
 volumes:
@@ -60,21 +60,21 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: /Users/yismaili/Desktop/ft_transcendence/back_end/transcendence
+      device: ${PWD}/back_end/transcendence
 
   app-db:
     driver: local
     driver_opts:
       o: bind
       type: none
-      device: /Users/yismaili/Desktop/ft_transcendence/postgres 
+      device: ${PWD}/postgres 
 
   frontend_app:
     driver: local
     driver_opts:
       o: bind
       type: none
-      device: /Users/yismaili/Desktop/ft_transcendence//tempefrontend/chat
+      device: ${PWD}//tempefrontend/chat
 
 
 networks:
