@@ -133,6 +133,7 @@ class PongGame {
     private JoinBtn: HTMLElement | null;
     private GameId: number;
     private intervalId: NodeJS.Timeout | null;
+    private ntvBtn:  HTMLElement | null;
 
     constructor() {
         this.canvas = new Canvas();
@@ -165,14 +166,18 @@ class PongGame {
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
         this.JoinBtn = document.getElementById('joinGame-btn');
+        this.ntvBtn = document.getElementById('ntv-btn');
         // Add keyboard event listeners
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
         this.username = document.getElementById("username")as HTMLInputElement;
         this.friendUsername = document.getElementById("friendUsername")as HTMLInputElement;
         if (this.JoinBtn) {
-            // this.JoinBtn.addEventListener('click', this.joinGame.bind(this));
-            this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
+             this.JoinBtn.addEventListener('click', this.joinGame.bind(this));
+            // this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
+        }
+        if (this.ntvBtn){
+            this.ntvBtn.addEventListener('click', this.acceptRequest.bind(this));
         }
     }
 
@@ -290,6 +295,11 @@ class PongGame {
     }
     joinGameFriend() {
         this.socket.emit("createGameFriend", {username: this.username?.value, friendUsername: this.friendUsername?.value}, (response: { id: number}) => {
+            this.GameId = response.id;
+        });
+    }
+    acceptRequest() {
+        this.socket.emit("acceptRequest", {username: this.username?.value, friendUsername: this.friendUsername?.value}, (response: { id: number}) => {
             this.GameId = response.id;
         });
     }

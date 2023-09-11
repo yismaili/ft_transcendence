@@ -11,18 +11,23 @@ export class GameGateway {
   }
 
   @SubscribeMessage('createGame')
-  create(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
-    return this.gameService.createGameRandom(createGameDto);
+  create(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() playerId: Socket) {
+    return this.gameService.createGameRandom(createGameDto, playerId);
   }
 
   @SubscribeMessage('createGameFriend')
   createGameFriend(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
-    console.log(createGameDto);
     return this.gameService.createGameFriend(createGameDto);
+  }
+
+  @SubscribeMessage('acceptRequest')
+  acceptRequest(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
+    console.log(createGameDto);
+    return this.gameService.accepteGameRequest(createGameDto);
   }
 
   @SubscribeMessage('updateGame')
   updateGame(@MessageBody() updateGameDto: UpdateGameDto) :Promise<any>{
-    return this.gameService.updateGame(updateGameDto);
+    return this.gameService.startGame(updateGameDto);
   }
 }
