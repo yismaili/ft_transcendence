@@ -1,0 +1,57 @@
+import Style from "./Auth.module.css";
+import Cookies from "cookies-ts";
+import { useRouter } from "next/navigation";
+
+type Props = {
+  Sign_in_up: string;
+};
+
+export default function Auth({ Sign_in_up }: Props) {
+  const router = useRouter();
+
+  const handleAuth = async (url: string) => {
+    let auth_window = window.open(
+      url,
+      "",
+      "width=600,height=600,top=200,left=300"
+    );
+
+    if (auth_window != null) {
+      let interval = setInterval(() => {
+        const cookies = new Cookies();
+        const mycookie = cookies.get("userData");
+
+        if (mycookie) {
+          auth_window?.close();
+          router.push("http://localhost:3000");
+          console.clear();
+          clearInterval(interval);
+        }
+      }, 1000);
+    }
+  };
+
+  return (
+    <>
+      <div
+        className={Style.googleBtn}
+        onClick={() => handleAuth("http://localhost:3001/auth/google/callback")}
+      >
+        <div className={Style.googleImg}></div>
+        <p>{Sign_in_up} with google</p>
+      </div>
+      <div className={Style.boundary}>
+        <div className={Style.leftLine}></div>
+        <p>OR</p>
+        <div className={Style.rightLine}></div>
+      </div>
+      <div
+        className={Style.intraBtn}
+        onClick={() => handleAuth("http://localhost:3001/auth/intra/callback")}
+      >
+        <div className={Style.intraImg}></div>
+        <p>{Sign_in_up} with intra</p>
+      </div>
+    </>
+  );
+}
