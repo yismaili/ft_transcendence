@@ -160,43 +160,20 @@ var PongGame = /** @class */ (function () {
     };
     PongGame.prototype.update = function () {
         var _this = this;
-        var _a;
         // clean canvas 
         this.canvas.clearCanvas();
-        this.socket.emit('updateGame', {
-            GameId: this.GameId,
-            username: (_a = this.username) === null || _a === void 0 ? void 0 : _a.value,
-            leftPaddle: this.leftPaddle,
-            rightPaddle: this.rightPaddle, paddleWidth: this.paddleWidth,
-            ballSpeedX: this.ballSpeedX, ballSpeedY: this.ballSpeedY,
-            paddleHeight: this.paddleHeight, ballRadius: this.ballRadius,
-            paddleSpeed: this.paddleSpeed, upPressed: this.upPressed,
-            downPressed: this.downPressed, wPressed: this.wPressed,
-            sPressed: this.sPressed, score: this.score, ballX: this.ballX,
-            ballY: this.ballY, rightPlayerScore: this.rightPlayerScore,
-            leftPlayerScore: this.leftPlayerScore, player: this.player,
-            canvasHeight: this.canvas.getHeight(), canvasWidth: this.canvas.getWidth(),
-        }, function (response) {
-            _this.rightPaddle = response.rightPaddle;
-            _this.leftPaddle = response.leftPaddle;
-            _this.paddleWidth = response.paddleWidth;
+        this.socket.emit('updateGame', { sPressed: this.sPressed, wPressed: this.wPressed, upPressed: this.upPressed, downPressed: this.downPressed });
+        this.socket.on('updateGame', function (response) {
             _this.ballX = response.ballX;
             _this.ballY = response.ballY;
-            _this.rightPlayerScore = response.rightPlayerScore;
-            _this.leftPlayerScore = response.leftPlayerScore;
-            _this.player = response.player;
-            _this.ballSpeedX = response.ballSpeedX;
-            _this.ballSpeedY = response.ballSpeedY;
+            _this.leftPaddle = response.leftPaddle;
+            _this.rightPaddle = response.rightPaddle;
         });
         this.ball = new Ball(this.ballX, this.ballY, this.ballRadius);
         this.leftPaddle_ = new Paddle(0, this.leftPaddle, this.paddleWidth, this.paddleHeight);
         this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.rightPaddle, this.paddleWidth, this.paddleHeight);
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
-        if (this.leftPlayerScore == 5 || this.rightPlayerScore == 5) {
-            this.playerWin();
-            this.stop();
-        }
     };
     PongGame.prototype.playerWin = function () {
         var message = "Congratulations! " + this.player + " win!";

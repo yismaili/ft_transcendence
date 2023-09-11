@@ -174,7 +174,7 @@ class PongGame {
         this.friendUsername = document.getElementById("friendUsername")as HTMLInputElement;
         if (this.JoinBtn) {
              this.JoinBtn.addEventListener('click', this.joinGame.bind(this));
-            // this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
+           // this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
         }
         if (this.ntvBtn){
             this.ntvBtn.addEventListener('click', this.acceptRequest.bind(this));
@@ -217,49 +217,18 @@ class PongGame {
     update() {
         // clean canvas 
         this.canvas.clearCanvas();
-        this.socket.emit('updateGame', {
-            GameId: this.GameId,
-            username: this.username?.value,
-            leftPaddle: this.leftPaddle,
-            rightPaddle: this.rightPaddle,paddleWidth: this.paddleWidth,
-            ballSpeedX: this.ballSpeedX,ballSpeedY: this.ballSpeedY,
-            paddleHeight: this.paddleHeight,ballRadius: this.ballRadius,
-            paddleSpeed: this.paddleSpeed,upPressed: this.upPressed,
-            downPressed: this.downPressed,wPressed: this.wPressed,
-            sPressed: this.sPressed,score: this.score, ballX: this.ballX,
-            ballY: this.ballY,rightPlayerScore:this.rightPlayerScore,
-            leftPlayerScore: this.leftPlayerScore,player: this.player,
-            canvasHeight: this.canvas.getHeight(),canvasWidth: this.canvas.getWidth(),
-        }, 
-        (response: {
-            leftPaddle: number, rightPaddle: number, paddleWidth: number,
-            ballSpeedX: number, ballSpeedY: number, paddleHeight: number, 
-            ballRadius: number,paddleSpeed: number, upPressed: boolean, 
-            downPressed: boolean, wPressed: boolean, sPressed: boolean,
-            score: number, ballX: number, ballY: number,rightPlayerScore:number,
-            leftPlayerScore: number, player: string,canvasHeight:number,
-            canvasWidth:number, finished:boolean,
-        }) => { 
-            this.rightPaddle = response.rightPaddle;
-            this.leftPaddle = response.leftPaddle;
-            this.paddleWidth = response.paddleWidth;
+        this.socket.emit('updateGame', {sPressed:this.sPressed, wPressed:this.wPressed, upPressed:this.upPressed, downPressed: this.downPressed});         
+        this.socket.on('updateGame',(response: {ballX: number, ballY: number, leftPaddle:number, rightPaddle:number}) => { 
             this.ballX = response.ballX;
-            this.ballY = response.ballY;        
-            this.rightPlayerScore = response.rightPlayerScore;
-            this.leftPlayerScore = response.leftPlayerScore;
-            this.player = response.player;
-            this.ballSpeedX = response.ballSpeedX;
-            this.ballSpeedY = response.ballSpeedY;
+            this.ballY = response.ballY;
+            this.leftPaddle = response.leftPaddle;
+            this.rightPaddle = response.rightPaddle;
         });
         this.ball = new Ball(this.ballX, this.ballY, this.ballRadius);
         this.leftPaddle_ = new Paddle(0, this.leftPaddle, this.paddleWidth, this.paddleHeight);
         this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.rightPaddle,this.paddleWidth, this.paddleHeight);
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
-        if (this.leftPlayerScore == 5 || this.rightPlayerScore == 5){
-            this.playerWin();
-            this.stop();
-        }
     }
 
     private playerWin() {
