@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
-import { UpdateGameDto } from './dto/update-game.dto';
+import { UpdateGameDto, UpdateGameRetDto } from './dto/update-game.dto';
 import { User } from 'src/typeorm/entities/User.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
@@ -12,23 +12,9 @@ import { Not, Repository } from 'typeorm';
 import { UpdateResultDto } from './dto/update-result.dto';
 import { GameLogsEntity } from 'src/typeorm/entities/game-logs-entity';
 import { Socket} from 'socket.io';
-// import { PongGame } from '../../../../game/app'
 
 @Injectable()
 export class GameService {
-
-
-  // map<string, string[]> players;
-
-
-  // 1, 4
-
-  // room_1
-
-  // players.set("room_1", 1);
-
-  // players.set("room_1", 4);
-
     players: Map<string, string[]> = new Map<string, string[]>();
     constructor(
         @InjectRepository(User) private userRepository: Repository<User>,
@@ -40,7 +26,7 @@ export class GameService {
         @InjectRepository(GameLogsEntity)private gameLogsRepository: Repository<GameLogsEntity>,
         ) {}
 
-      async createGameRandom(createGameDto: CreateGameDto, playerId: Socket): Promise<void> {
+    async createGameRandom(createGameDto: CreateGameDto, playerId: Socket): Promise<void> {
           try {
             const user = await this.userRepository.findOne({
               where: { username: createGameDto.username },
@@ -77,11 +63,26 @@ export class GameService {
             if (this.players.get(roomName).length === 2) {
               const pongGame = new PongGame();
               pongGame.start();
+              // Set up an interval to send ball position data to clients
+              const intervalId = setInterval(() => {
+                const ballX = pongGame.getBallX();
+                const ballY = pongGame.getBallY();
+                const leftPaddle = pongGame.getLeftPaddle();
+                const rightPaddle = pongGame.getRightPaddle();
+                playerId.on('updateGame', (data) => {
+                  pongGame.setDownPressed(data.downPressed);
+                  pongGame.setUpPressed(data.upPressed);
+                  pongGame.setWPressed(data.wPressed);
+                  pongGame.setSPressed(data.sPressed);
+                });
+                playerId.emit('updateGame', { ballX, ballY, leftPaddle, rightPaddle });
+              }, 1000 / 100); // 60 frames per second
             }
           } catch (error) {
             throw error;
           }
-      }
+    }
+        
         
     async createGameFriend(createGameDto: CreateGameDto): Promise<any> {
         try {
@@ -117,7 +118,7 @@ export class GameService {
         } catch (error) {
           throw error;
         }
-      }
+    }
       
     async getGameRequest(createGameDto: CreateGameDto):Promise<any> {
         const user = await this.userRepository.findOne({
@@ -211,10 +212,10 @@ class PongGame {
     this.canvasHeight = 600;
     this.paddleWidth = 10;
     this.paddleHeight = 80;
-    this.paddleSpeed = 5;
-    this.ballRadius = 5;
-    this.ballSpeedX = 5;
-    this.ballSpeedY = 2;
+    this.paddleSpeed = 10;
+    this.ballRadius = 10;
+    this.ballSpeedX = 10;
+    this.ballSpeedY = 10;
     this.leftPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
     this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
     this.leftPlayerScore = 0;
@@ -249,11 +250,11 @@ class PongGame {
   } else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
       this.leftPaddle -= this.paddleSpeed;
   }
-  if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
-      this.rightPaddle += this.paddleSpeed;
-  } else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
-      this.rightPaddle -= this.paddleSpeed;
-  }
+  // if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
+  //     this.rightPaddle += this.paddleSpeed;
+  // } else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
+  //     this.rightPaddle -= this.paddleSpeed;
+  // }
 
   // Update ball position
   this.ballX += this.ballSpeedX;
@@ -306,32 +307,54 @@ class PongGame {
    this.ballSpeedY = Math.random() * 10 - 10;
   }
  
-  async getBallX(): Promise<number>{
+  getBallX() :number{
     return this.ballX;
   }
-  async getBallY(): Promise<number>{
+
+  getBallY() :number{
     return this.ballY;
   }
-  print(){
-    console.log('X--->'+ this.ballX);
-    console.log('Y--->'+ this.ballY);
+
+  getLeftPaddle() :number{
+    return this.leftPaddle;
   }
+
+  getRightPaddle() :number{
+    return this.rightPaddle;
+  }
+
+  setUpPressed(up: boolean){
+  this.upPressed = up;
+  }
+
+  setDownPressed(down: boolean){
+    this.downPressed = down;
+  }
+
+  setWPressed (w: boolean){
+    this.wPressed = w;
+  }
+
+  setSPressed (s: boolean){
+    this.sPressed = s;
+  }
+
   start() {
-    if (!this.isRunning) {
-        this.isRunning = true;
-        this.intervalId = setInterval(() => {
-            this.updateGame();
-            this.print();
-        }, 1000 / 60); // 60 frames per second
-    }
-}
-stop() {
-    if (this.isRunning) {
-        clearInterval(this.intervalId);
-        this.isRunning = false;
-        this.leftPlayerScore = 0;
-        this.rightPlayerScore = 0;
-    }
-}
+      if (!this.isRunning) {
+          this.isRunning = true;
+          this.intervalId = setInterval(() => {
+              this.updateGame();
+          }, 1000 / 60); // 60 frames per second
+      }
+  }
+
+  stop() {
+      if (this.isRunning) {
+          clearInterval(this.intervalId);
+          this.isRunning = false;
+          this.leftPlayerScore = 0;
+          this.rightPlayerScore = 0;
+      }
+  }
 }
 
