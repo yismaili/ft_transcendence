@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Style from "./Sign_up_in.module.css";
 import { motion, useAnimation } from "framer-motion";
+import Auth from "./auth/Auth";
 
 type props = {
   onData: Function;
@@ -42,19 +43,7 @@ export default function Sign_up_in(props: props) {
           }}
         ></motion.div>
       </div>
-      <div className={Style.googleBtn}>
-        <div className={Style.googleImg}></div>
-        <p>{props.Sign_in_up} with google</p>
-      </div>
-      <div className={Style.boundary}>
-        <div className={Style.leftLine}></div>
-        <p>OR</p>
-        <div className={Style.rightLine}></div>
-      </div>
-      <div className={Style.intraBtn}>
-        <div className={Style.intraImg}></div>
-        <p>{props.Sign_in_up} with intra</p>
-      </div>
+      <Auth Sign_in_up={props.Sign_in_up}/>
     </div>
   );
 }
