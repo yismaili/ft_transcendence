@@ -108,14 +108,18 @@ var PongGame = /** @class */ (function () {
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
         this.JoinBtn = document.getElementById('joinGame-btn');
+        this.ntvBtn = document.getElementById('ntv-btn');
         // Add keyboard event listeners
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
         this.username = document.getElementById("username");
         this.friendUsername = document.getElementById("friendUsername");
         if (this.JoinBtn) {
-            // this.JoinBtn.addEventListener('click', this.joinGame.bind(this));
-            this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
+            this.JoinBtn.addEventListener('click', this.joinGame.bind(this));
+            // this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
+        }
+        if (this.ntvBtn) {
+            this.ntvBtn.addEventListener('click', this.acceptRequest.bind(this));
         }
     }
     PongGame.prototype.keyDownHandler = function (e) {
@@ -231,6 +235,13 @@ var PongGame = /** @class */ (function () {
         var _this = this;
         var _a, _b;
         this.socket.emit("createGameFriend", { username: (_a = this.username) === null || _a === void 0 ? void 0 : _a.value, friendUsername: (_b = this.friendUsername) === null || _b === void 0 ? void 0 : _b.value }, function (response) {
+            _this.GameId = response.id;
+        });
+    };
+    PongGame.prototype.acceptRequest = function () {
+        var _this = this;
+        var _a, _b;
+        this.socket.emit("acceptRequest", { username: (_a = this.username) === null || _a === void 0 ? void 0 : _a.value, friendUsername: (_b = this.friendUsername) === null || _b === void 0 ? void 0 : _b.value }, function (response) {
             _this.GameId = response.id;
         });
     };
