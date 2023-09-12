@@ -11,77 +11,89 @@ import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import { Not, Repository } from 'typeorm';
 import { UpdateResultDto } from './dto/update-result.dto';
 import { GameLogsEntity } from 'src/typeorm/entities/game-logs-entity';
-import { Socket} from 'socket.io';
+import { Socket, Server} from 'socket.io';
 
 @Injectable()
 export class GameService {
-    players: Map<string, string[]> = new Map<string, string[]>();
-    constructor(
-        @InjectRepository(User) private userRepository: Repository<User>,
-        @InjectRepository(Profile)private profileRepository: Repository<Profile>,
-        @InjectRepository(Relation)private relationRepository: Repository<Relation>,
-        @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
-        @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
-        @InjectRepository(ChatRoom)private chatRepository: Repository<ChatRoom>,
-        @InjectRepository(GameLogsEntity)private gameLogsRepository: Repository<GameLogsEntity>,
-        ) {}
-
-    async createGameRandom(createGameDto: CreateGameDto, playerId: Socket): Promise<void> {
-          try {
-            const user = await this.userRepository.findOne({
-              where: { username: createGameDto.username },
-            });
-        
-            if (!user) {
-              throw new Error('User does not exist');
+  players: Map<string, string[]> = new Map<string, string[]>();
+  constructor(
+    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Profile)private profileRepository: Repository<Profile>,
+    @InjectRepository(Relation)private relationRepository: Repository<Relation>,
+    @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
+    @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
+    @InjectRepository(ChatRoom)private chatRepository: Repository<ChatRoom>,
+    @InjectRepository(GameLogsEntity)private gameLogsRepository: Repository<GameLogsEntity>,
+    ) {}
+    async createGameRandom(createGameDto: CreateGameDto, playerId: Socket, server: Server): Promise<void> {
+      try {
+        const user = await this.userRepository.findOne({
+          where: { username: createGameDto.username },
+        });
+    
+        if (!user) {
+          throw new Error('User does not exist');
+        }
+    
+        let roomName = '';
+        if (this.players.size === 0) {
+          roomName = 'room_' + user.username;
+        } else {
+          const maxPlayersPerRoom = 2;
+          for (const [name, players] of this.players) {
+            if (players.length < maxPlayersPerRoom) {
+              roomName = name;
+              break;
             }
-        
-            let roomName = '';
-            if (this.players.size === 0) {
-              roomName = 'room_' + user.username;
-            } else {
-              const maxPlayersPerRoom = 2;
-              for (const [name, players] of this.players) {
-                if (players.length < maxPlayersPerRoom) {
-                  roomName = name;
-                  break;
-                }
-              }
-              if (!roomName) {
-                roomName = 'room_' + user.username + this.players.size;
-              }
-            }
-            
-            playerId.join(roomName);
-            
-            if (!this.players.has(roomName)) {
-              this.players.set(roomName, []);
-            }
-            
-            this.players.get(roomName).push(user.username);
-            
-            if (this.players.get(roomName).length === 2) {
-              const pongGame = new PongGame();
-              pongGame.start();
-              // Set up an interval to send ball position data to clients
-              const intervalId = setInterval(() => {
-                const ballX = pongGame.getBallX();
-                const ballY = pongGame.getBallY();
-                const leftPaddle = pongGame.getLeftPaddle();
-                const rightPaddle = pongGame.getRightPaddle();
-                playerId.on('updateGame', (data) => {
-                  pongGame.setDownPressed(data.downPressed);
-                  pongGame.setUpPressed(data.upPressed);
-                  pongGame.setWPressed(data.wPressed);
-                  pongGame.setSPressed(data.sPressed);
-                });
-                playerId.emit('updateGame', { ballX, ballY, leftPaddle, rightPaddle });
-              }, 1000 / 100); // 60 frames per second
-            }
-          } catch (error) {
-            throw error;
           }
+          if (!roomName) {
+            roomName = 'room_' + user.username + this.players.size;
+          }
+        }
+    
+        playerId.join(roomName);
+    
+        if (!this.players.has(roomName)) {
+          this.players.set(roomName, []);
+        }
+    
+        this.players.get(roomName).push(user.username);
+        if (this.players.get(roomName).length === 2) {
+          const pongGame = new PongGame();
+          pongGame.start();
+    
+          // Set up an event listener for 'updateGame' outside the interval
+        playerId.on('updateGame', (data) => {
+            pongGame.setDownPressed(data.downPressed);
+            pongGame.setUpPressed(data.upPressed);
+            pongGame.setWPressed(data.wPressed);
+            pongGame.setSPressed(data.sPressed);
+          });
+    
+          // Set up an interval to send ball position data to clients
+          const intervalId = setInterval(() => {
+            let ballX = pongGame.getBallX();
+            let ballY = pongGame.getBallY();
+            let leftPaddle = pongGame.getLeftPaddle();
+            let rightPaddle = pongGame.getRightPaddle();
+            let leftPlayerScore = pongGame.getlLeftPlayerScore();
+            let rightPlayerScore = pongGame.getrRightPlayerScore();
+    
+          server.to(roomName).emit('updateGame', {
+              ballX,
+              ballY,
+              leftPaddle,
+              rightPaddle,
+              leftPlayerScore,
+              rightPlayerScore,
+          });
+          }, 1000 / 60); // 60 frames per second
+        }
+      } catch (error) {
+        throw error;
+      }
     }
+    
         
         
     async createGameFriend(createGameDto: CreateGameDto): Promise<any> {
@@ -292,11 +304,11 @@ class PongGame {
   if (this.leftPlayerScore === 5) {
       this.player = 'left player';
       this.resetGame();
-     this.stop();
+     this.isGameOver();
   } else if (this.rightPlayerScore === 5) {
       this.player = 'right player';
       this.resetGame();
-     this.stop();
+     this.isGameOver();
   }
   }
 
@@ -338,6 +350,12 @@ class PongGame {
   setSPressed (s: boolean){
     this.sPressed = s;
   }
+  getlLeftPlayerScore(): number{
+    return this.leftPlayerScore;
+  }
+  getrRightPlayerScore(): number{
+    return this.rightPlayerScore;
+  }
 
   start() {
       if (!this.isRunning) {
@@ -348,13 +366,16 @@ class PongGame {
       }
   }
 
-  stop() {
-      if (this.isRunning) {
-          clearInterval(this.intervalId);
-          this.isRunning = false;
-          this.leftPlayerScore = 0;
-          this.rightPlayerScore = 0;
-      }
+  isGameOver(): boolean {
+    if (this.isRunning) {
+      clearInterval(this.intervalId);
+      this.isRunning = false;
+      this.leftPlayerScore = 0;
+      this.rightPlayerScore = 0;
+      return true;
+    }
+    return false; 
   }
+  
 }
 

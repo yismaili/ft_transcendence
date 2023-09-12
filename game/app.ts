@@ -218,17 +218,28 @@ class PongGame {
         // clean canvas 
         this.canvas.clearCanvas();
         this.socket.emit('updateGame', {sPressed:this.sPressed, wPressed:this.wPressed, upPressed:this.upPressed, downPressed: this.downPressed});         
-        this.socket.on('updateGame',(response: {ballX: number, ballY: number, leftPaddle:number, rightPaddle:number}) => { 
+        this.socket.on('updateGame',(response: {ballX: number, ballY: number, leftPaddle:number, 
+            rightPaddle:number, leftPlayerScore:number, rightPlayerScore: number}) => { 
             this.ballX = response.ballX;
             this.ballY = response.ballY;
             this.leftPaddle = response.leftPaddle;
             this.rightPaddle = response.rightPaddle;
+            this.leftPlayerScore = response.leftPlayerScore;
+            this.rightPlayerScore = response.rightPlayerScore;
         });
         this.ball = new Ball(this.ballX, this.ballY, this.ballRadius);
         this.leftPaddle_ = new Paddle(0, this.leftPaddle, this.paddleWidth, this.paddleHeight);
         this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.rightPaddle,this.paddleWidth, this.paddleHeight);
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
+        // if (this.leftPlayerScore == 5){
+        //     this.player = 'left Player';
+        //     this.playerWin();
+        // }
+        // if (this.rightPlayerScore == 5){
+        //     this.player = 'right Player';
+        //     this.playerWin();
+        // }
     }
 
     private playerWin() {
@@ -239,6 +250,7 @@ class PongGame {
             $('#message-modal').modal('hide'); // Hide the message modal
         }, 3000);
     }
+
         start() {
             if (!this.isRunning) {
                 this.isRunning = true;
@@ -277,3 +289,5 @@ class PongGame {
 const pongGame = new PongGame();
 pongGame.start();
         
+
+
