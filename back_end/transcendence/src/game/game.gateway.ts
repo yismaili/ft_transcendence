@@ -1,18 +1,19 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
 import { GameService } from './game.service';
 import { UpdateGameDto } from './dto/update-game.dto';
-import { Socket} from 'socket.io';
+import { Socket, Server} from 'socket.io';
 import { CreateChatRoomDto } from 'src/chat/dto/create-chatRoom.dto';
 import { CreateGameDto } from './dto/create-game.dto';
 
 @WebSocketGateway()
 export class GameGateway {
+  @WebSocketServer()
+  server: Server;
   constructor(private readonly gameService: GameService) {
   }
-
   @SubscribeMessage('createGame')
   create(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() playerId: Socket) {
-    return this.gameService.createGameRandom(createGameDto, playerId);
+    return this.gameService.createGameRandom(createGameDto, playerId, this.server);
   }
 
   @SubscribeMessage('createGameFriend')
