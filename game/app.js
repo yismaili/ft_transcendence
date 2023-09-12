@@ -176,14 +176,14 @@ var PongGame = /** @class */ (function () {
         this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.rightPaddle, this.paddleWidth, this.paddleHeight);
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
-        if (this.leftPlayerScore == 5) {
-            this.player = 'left Player';
-            this.playerWin();
-        }
-        if (this.rightPlayerScore == 5) {
-            this.player = 'right Player';
-            this.playerWin();
-        }
+        // if (this.leftPlayerScore == 5){
+        //     this.player = 'left Player';
+        //     this.playerWin();
+        // }
+        // if (this.rightPlayerScore == 5){
+        //     this.player = 'right Player';
+        //     this.playerWin();
+        // }
     };
     PongGame.prototype.playerWin = function () {
         var message = "Congratulations! " + this.player + " win!";
@@ -200,7 +200,7 @@ var PongGame = /** @class */ (function () {
             this.intervalId = setInterval(function () {
                 _this.update();
                 _this.draw();
-            }, 1000 / 60); // 60 frames per second
+            }, 1000 / 100); // 100 frames per second
         }
     };
     PongGame.prototype.stop = function () {
