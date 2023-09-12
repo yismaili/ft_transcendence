@@ -12,6 +12,7 @@ import { Not, Repository } from 'typeorm';
 import { UpdateResultDto } from './dto/update-result.dto';
 import { GameLogsEntity } from 'src/typeorm/entities/game-logs-entity';
 import { Socket, Server} from 'socket.io';
+import { SetHistoryDto } from './dto/set-history.dto';
 
 @Injectable()
 export class GameService {
@@ -51,7 +52,7 @@ export class GameService {
           }
         }
     
-        playerId.join(roomName);
+        await playerId.join(roomName);
     
         if (!this.players.has(roomName)) {
           this.players.set(roomName, []);
@@ -63,7 +64,7 @@ export class GameService {
           pongGame.start();
     
           // Set up an event listener for 'updateGame' outside the interval
-        playerId.on('updateGame', (data) => {
+          playerId.on('updateGame', (data) => {
             pongGame.setDownPressed(data.downPressed);
             pongGame.setUpPressed(data.upPressed);
             pongGame.setWPressed(data.wPressed);
@@ -76,26 +77,64 @@ export class GameService {
             let ballY = pongGame.getBallY();
             let leftPaddle = pongGame.getLeftPaddle();
             let rightPaddle = pongGame.getRightPaddle();
-            let leftPlayerScore = pongGame.getlLeftPlayerScore();
             let rightPlayerScore = pongGame.getrRightPlayerScore();
+            let leftPlayerScore = pongGame.getlLeftPlayerScore();
     
-          server.to(roomName).emit('updateGame', {
+            server.to(roomName).emit('updateGame', {
               ballX,
               ballY,
               leftPaddle,
               rightPaddle,
               leftPlayerScore,
               rightPlayerScore,
-          });
-          }, 1000 / 60); // 60 frames per second
+            });
+    
+            if (!pongGame.getStatus()) {
+              
+              const rootUser = this.players.get(roomName)[0];
+              const friendUser = this.players.get(roomName)[1];
+              const history: SetHistoryDto = {
+                  resulteOfCompetitor: leftPlayerScore,
+                  resulteOfUser: rightPlayerScore,
+                  username: rootUser,
+                  userCompetitor: friendUser,
+                };
+                this.addHistory(history);
+                this.players.delete(roomName);
+                clearInterval(intervalId);
+              }
+          }, 1000 / 100); // 100 frames per second
         }
       } catch (error) {
         throw error;
       }
     }
     
-        
-        
+    async addHistory(addhistory: SetHistoryDto): Promise<any> {
+      try {
+        const user = await this.userRepository.findOne({
+          where: {username: addhistory.username}
+        });
+        const competitor = await this.userRepository.findOne({
+          where: {username: addhistory.userCompetitor}
+        });
+    
+        if (!user || !competitor) {
+          throw new Error('User not found');
+        }
+    
+        const newHistory = this.historyRepository.create({
+         user: user,
+         userCompetitor:competitor,
+         resulteOfUser: addhistory.resulteOfUser,
+         resulteOfCompetitor: addhistory.resulteOfCompetitor,
+        });
+        return await this.historyRepository.save(newHistory); // Use await to make sure the save is complete
+      } catch (error) {
+        throw new Error('Failed to add history: ' + error.message);
+      }
+    }
+    
     async createGameFriend(createGameDto: CreateGameDto): Promise<any> {
         try {
           const user = await this.userRepository.findOne({
@@ -226,8 +265,8 @@ class PongGame {
     this.paddleHeight = 80;
     this.paddleSpeed = 10;
     this.ballRadius = 10;
-    this.ballSpeedX = 10;
-    this.ballSpeedY = 10;
+    this.ballSpeedX = 5;
+    this.ballSpeedY = 5;
     this.leftPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
     this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
     this.leftPlayerScore = 0;
@@ -295,20 +334,20 @@ class PongGame {
   // Handle scoring and winning conditions
   if (this.ballX < 0) {
       this.rightPlayerScore++;
-  this.resetGame();
+      this.resetGame();
   } else if (this.ballX > this.canvasWidth) {
       this.leftPlayerScore++;
-  this.resetGame();
+      this.resetGame();
   }
 
   if (this.leftPlayerScore === 5) {
       this.player = 'left player';
       this.resetGame();
-     this.isGameOver();
+      this.isGameOver();
   } else if (this.rightPlayerScore === 5) {
       this.player = 'right player';
       this.resetGame();
-     this.isGameOver();
+      this.isGameOver();
   }
   }
 
@@ -356,13 +395,16 @@ class PongGame {
   getrRightPlayerScore(): number{
     return this.rightPlayerScore;
   }
+  getStatus(): boolean {
+    return this.isRunning;
+  }
 
   start() {
       if (!this.isRunning) {
           this.isRunning = true;
           this.intervalId = setInterval(() => {
               this.updateGame();
-          }, 1000 / 60); // 60 frames per second
+          }, 1000 / 100);
       }
   }
 
@@ -370,8 +412,8 @@ class PongGame {
     if (this.isRunning) {
       clearInterval(this.intervalId);
       this.isRunning = false;
-      this.leftPlayerScore = 0;
-      this.rightPlayerScore = 0;
+      // this.leftPlayerScore = 0;
+      // this.rightPlayerScore = 0;
       return true;
     }
     return false; 
