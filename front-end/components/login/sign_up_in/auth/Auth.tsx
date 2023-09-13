@@ -23,7 +23,7 @@ export default function Auth({ Sign_in_up }: Props) {
 
         if (mycookie) {
           auth_window?.close();
-          router.push("http://localhost:3000");
+          router.push("http://localhost:3000/home");
           console.clear();
           clearInterval(interval);
         }
