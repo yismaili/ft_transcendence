@@ -13,9 +13,6 @@ export class HistoryEntity {
   resulteOfUser: number;
   
   @Column({ nullable: true })
-  status: string;
-  
-  @Column({ nullable: true })
   resulteOfCompetitor: number;
   
   @ManyToOne(() => User, user => user.histories)
