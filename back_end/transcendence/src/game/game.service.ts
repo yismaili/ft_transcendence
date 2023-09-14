@@ -13,6 +13,8 @@ import { UpdateResultDto } from './dto/update-result.dto';
 import { GameLogsEntity } from 'src/typeorm/entities/game-logs-entity';
 import { Socket, Server} from 'socket.io';
 import { SetHistoryDto } from './dto/set-history.dto';
+import { OutcomeDto } from 'src/auth/dtos/outcome.dto';
+import { ResultOfGame } from './dto/result-of-game.dto';
 
 @Injectable()
 export class GameService {
@@ -26,16 +28,15 @@ export class GameService {
     @InjectRepository(ChatRoom)private chatRepository: Repository<ChatRoom>,
     @InjectRepository(GameLogsEntity)private gameLogsRepository: Repository<GameLogsEntity>,
     ) {}
+
     async createGameRandom(createGameDto: CreateGameDto, playerId: Socket, server: Server): Promise<void> {
       try {
         const user = await this.userRepository.findOne({
           where: { username: createGameDto.username },
         });
-    
         if (!user) {
           throw new Error('User does not exist');
         }
-    
         let roomName = '';
         if (this.players.size === 0) {
           roomName = 'room_' + user.username;
@@ -51,7 +52,6 @@ export class GameService {
             roomName = 'room_' + user.username + this.players.size;
           }
         }
-    
         await playerId.join(roomName);
     
         if (!this.players.has(roomName)) {
@@ -60,53 +60,101 @@ export class GameService {
     
         this.players.get(roomName).push(user.username);
         if (this.players.get(roomName).length === 2) {
-          const pongGame = new PongGame();
-          pongGame.start();
-    
-          // Set up an event listener for 'updateGame' outside the interval
-          playerId.on('updateGame', (data) => {
-            pongGame.setDownPressed(data.downPressed);
-            pongGame.setUpPressed(data.upPressed);
-            pongGame.setWPressed(data.wPressed);
-            pongGame.setSPressed(data.sPressed);
-          });
-    
-          // Set up an interval to send ball position data to clients
-          const intervalId = setInterval(() => {
-            let ballX = pongGame.getBallX();
-            let ballY = pongGame.getBallY();
-            let leftPaddle = pongGame.getLeftPaddle();
-            let rightPaddle = pongGame.getRightPaddle();
-            let rightPlayerScore = pongGame.getrRightPlayerScore();
-            let leftPlayerScore = pongGame.getlLeftPlayerScore();
-    
-            server.to(roomName).emit('updateGame', {
-              ballX,
-              ballY,
-              leftPaddle,
-              rightPaddle,
-              leftPlayerScore,
-              rightPlayerScore,
-            });
-    
-            if (!pongGame.getStatus()) {
-              
-              const rootUser = this.players.get(roomName)[0];
-              const friendUser = this.players.get(roomName)[1];
-              const history: SetHistoryDto = {
-                  resulteOfCompetitor: leftPlayerScore,
-                  resulteOfUser: rightPlayerScore,
-                  username: rootUser,
-                  userCompetitor: friendUser,
-                };
-                this.addHistory(history);
-                this.players.delete(roomName);
-                clearInterval(intervalId);
-              }
-          }, 1000 / 100); // 100 frames per second
+         await this.startGame(roomName, playerId, server);
         }
       } catch (error) {
         throw error;
+      }
+    }
+
+    async startGame(roomName: string, playerId: Socket, server: Server): Promise<void>{
+      const pongGame = new PongGame();
+      pongGame.start();
+
+      // Set up an event listener for 'updateGame' outside the interval
+      playerId.on('updateGame', (data) => {
+        pongGame.setDownPressed(data.downPressed);
+        pongGame.setUpPressed(data.upPressed);
+        pongGame.setWPressed(data.wPressed);
+        pongGame.setSPressed(data.sPressed);
+      });
+
+      // Set up an interval to send ball position data to clients
+      const intervalId = setInterval(() => {
+        let ballX = pongGame.getBallX();
+        let ballY = pongGame.getBallY();
+        let leftPaddle = pongGame.getLeftPaddle();
+        let rightPaddle = pongGame.getRightPaddle();
+        let rightPlayerScore = pongGame.getrRightPlayerScore();
+        let leftPlayerScore = pongGame.getlLeftPlayerScore();
+
+        server.to(roomName).emit('updateGame', {
+          ballX,
+          ballY,
+          leftPaddle,
+          rightPaddle,
+          leftPlayerScore,
+          rightPlayerScore,
+        });
+
+        if (!pongGame.getStatus()) {
+          const rootUser = this.players.get(roomName)[0];
+          const friendUser = this.players.get(roomName)[1];
+          const info: ResultOfGame = {
+            username:rootUser,
+            competitor: friendUser,
+          }
+          const history: SetHistoryDto = {
+              resulteOfCompetitor: leftPlayerScore,
+              resulteOfUser: rightPlayerScore,
+              username: rootUser,
+              userCompetitor: friendUser,
+            };
+            this.addHistory(history);
+            this.players.delete(roomName);
+            clearInterval(intervalId);
+          }
+      }, 1000 / 100); // 100 frames per second
+    }
+
+    async matchingFriends(createGameDto: CreateGameDto, playerId: Socket, server: Server): Promise<void>{
+      try {
+          const user = await this.userRepository.findOne({
+            where: {username: createGameDto.username}
+          });
+          const competitor = await this.userRepository.findOne({
+            where: {username: createGameDto.friendUsername}
+          });
+
+          if (!user || !competitor) {
+            throw new Error('User not found');
+          }
+          let roomName = '';
+          if (this.players.size === 0) {
+            roomName = 'room_' + user.username;
+          } else {
+            const maxPlayersPerRoom = 2;
+            for (const [name, players] of this.players) {
+              if (players.length < maxPlayersPerRoom) {
+                roomName = name;
+                break;
+              }
+            }
+            if (!roomName) {
+              roomName = 'room_' + user.username + this.players.size;
+            }
+          }
+          await playerId.join(roomName);
+          if (!this.players.has(roomName)) {
+            this.players.set(roomName, []);
+          }
+          this.players.get(roomName).push(user.username);
+          if (this.players.get(roomName).length === 2) {
+          await this.startGame(roomName, playerId, server);
+          }
+               
+      } catch (error) {
+          throw new Error(error.message);
       }
     }
     
@@ -122,16 +170,163 @@ export class GameService {
         if (!user || !competitor) {
           throw new Error('User not found');
         }
-    
         const newHistory = this.historyRepository.create({
          user: user,
          userCompetitor:competitor,
          resulteOfUser: addhistory.resulteOfUser,
          resulteOfCompetitor: addhistory.resulteOfCompetitor,
         });
-        return await this.historyRepository.save(newHistory); // Use await to make sure the save is complete
+         await this.historyRepository.save(newHistory);
+        if (addhistory.resulteOfUser > addhistory.resulteOfCompetitor){
+          this.updateWin(user.username);
+          this.updateLos(competitor.username);
+          this.updateXp(user.username);
+          this.updateLevel(user.username);
+          this.updateScore(user.username);
+        }
+        else{
+          this.updateWin(competitor.username);
+          this.updateLos(user.username);
+          this.updateXp(competitor.username);
+          this.updateLevel(competitor.username);
+          this.updateScore(competitor.username);
+        }
       } catch (error) {
         throw new Error('Failed to add history: ' + error.message);
+      }
+    }
+
+    async updateWin(username: string): Promise<any>{
+      try{
+        const user = await this.userRepository.findOne({
+          where: {username: username}
+        });
+        if (!user) {
+          throw new Error('User does not exist');
+        }
+  
+        const profile = await this.profileRepository.findOne({
+          where:{user:{id: user.id}}
+        });
+        if (!profile) {
+          throw new Error('profile does not exist');
+        }
+        let countWin = profile.win;
+        countWin++;
+        console.log(countWin);
+        profile.win = countWin;
+        return await this.profileRepository.save(profile);
+      } catch(error){
+        throw new Error('Failed to update profile: '+ error.message);
+      }
+    }
+
+    async updateLos(username: string): Promise<any>{
+      try{
+        const user = await this.userRepository.findOne({
+          where: {username: username}
+        });
+        if (!user) {
+          throw new Error('User does not exist');
+        }
+  
+        const profile = await this.profileRepository.findOne({
+          where:{user:{id: user.id}}
+        });
+        if (!profile) {
+          throw new Error('profile does not exist');
+        }
+        let countLos = profile.los;
+        countLos++;
+        profile.los = countLos;
+        return await this.profileRepository.save(profile);
+      } catch(error){
+        throw new Error('Failed to update profile: '+ error.message);
+      }
+    }
+
+    async updateXp(username: string): Promise<any>{
+      try{
+        const user = await this.userRepository.findOne({
+          where: {username: username}
+        });
+        if (!user) {
+          throw new Error('User does not exist');
+        }
+  
+        const profile = await this.profileRepository.findOne({
+          where:{user:{id: user.id}}
+        });
+        if (!profile) {
+          throw new Error('profile does not exist');
+        }
+        let xp = profile.xp;
+        const win = profile.win;
+        if (win % 2 == 0){
+          xp += 2;
+        }
+        profile.xp = xp;
+        return await this.profileRepository.save(profile);
+      } catch(error){
+        throw new Error('Failed to update profile: '+ error.message);
+      }
+    }
+
+    async updateScore(username: string): Promise<any>{
+      try{
+        const user = await this.userRepository.findOne({
+          where: {username: username}
+        });
+        if (!user) {
+          throw new Error('User does not exist');
+        }
+  
+        const profile = await this.profileRepository.findOne({
+          where:{user:{id: user.id}}
+        });
+        if (!profile) {
+          throw new Error('profile does not exist');
+        }
+        let score = profile.score;
+        const win = profile.win;
+        if (score != 0 && win % 2 == 0){
+          score *= 3;
+        }else{
+          score += 1;
+        }
+        profile.score = score;
+        return await this.profileRepository.save(profile);
+      } catch(error){
+        throw new Error('Failed to update profile: '+ error.message);
+      }
+    }
+
+    async updateLevel(username: string): Promise<any>{
+      try{
+        const user = await this.userRepository.findOne({
+          where: {username: username}
+        });
+        if (!user) {
+          throw new Error('User does not exist');
+        }
+  
+        const profile = await this.profileRepository.findOne({
+          where:{user:{id: user.id}}
+        });
+        if (!profile) {
+          throw new Error('profile does not exist');
+        }
+        let level = profile.level;
+        const win = profile.win;
+        if ( level != 0 && win % 2 == 0){
+          level *= 2;
+        }else {
+          level += 1;
+        }
+        profile.level = level;
+        return await this.profileRepository.save(profile);
+      } catch(error){
+        throw new Error('Failed to update profile: '+ error.message);
       }
     }
     
@@ -218,9 +413,6 @@ export class GameService {
         }
       }
       
-  async startGame(updateGameDto: UpdateGameDto){
-
-  }
 async UpdateResult(updateResultDto: UpdateResultDto): Promise<HistoryEntity>{
     const gameHistory = await this.historyRepository.findOne({
         where: {id: updateResultDto.id}
