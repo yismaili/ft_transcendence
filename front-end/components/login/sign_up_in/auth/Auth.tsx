@@ -22,6 +22,7 @@ export default function Auth({ Sign_in_up }: Props) {
         const mycookie = cookies.get("userData");
 
         if (mycookie) {
+          cookies.set("userData", mycookie.slice(2));
           auth_window?.close();
           router.push("http://localhost:3000/home");
           console.clear();

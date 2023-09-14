@@ -50,12 +50,12 @@
 }
 
 .main p {
-    font-family: "probert";
-    font-weight: 700;
-    /* font-size: ; */
-    /* background-color: tomato; */
-    color: #F2F3F5;
-    letter-spacing: 0.15rem;
+  font-family: "probert";
+  font-weight: 700;
+  /* font-size: ; */
+  /* background-color: tomato; */
+  color: #f2f3f5;
+  letter-spacing: 0.15rem;
 }
 
 .image {

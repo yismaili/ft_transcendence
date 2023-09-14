@@ -1,10 +1,12 @@
 "use server";
 import Style from "./Dashboard.module.css";
-import { cookies } from "next/headers";
+import getUserData from "../../action/userData";
+import Win_loss from "./Win_loss/Win_loss";
+import Achievement_history from "./Achievement_history/Achievement_history";
 
 export default async function Dashboard() {
-  const mycookie = cookies().get("userData");
-  console.log(mycookie);
+  const userData: Promise<User> = getUserData();
+  const data = await userData;
 
   return (
     <div className={Style.container}>
@@ -18,17 +20,13 @@ export default async function Dashboard() {
       </header>
       <main className={Style.main}>
         <div className={Style.image}>
-          <p>15</p>
+          <p>{data.profile.level}</p>
         </div>
-        <p>alouane04</p>
+        <p>{data.username}</p>
         <div className={Style.setting}></div>
       </main>
-      {/* <main className={Style.footer}>
-
-      </main>
-      <footer className={Style.footer}>
-
-      </footer> */}
+      <Win_loss Data={data} />
+      <Achievement_history Data={data} />
     </div>
   );
 }
