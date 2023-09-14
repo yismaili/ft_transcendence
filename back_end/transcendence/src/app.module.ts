@@ -16,7 +16,7 @@ import { ChatRoom } from './typeorm/entities/chat-room.entity';
 import { ChatRoomUser } from './typeorm/entities/chat-room-users.entity';
 import { Message } from './typeorm/entities/message-entity';
 import { Chat } from './typeorm/entities/chat-entity';
-import { HashingPasswordService } from './hashing-password/hashing-password.service';
+import { GameModule } from './game/game.module';
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
 // The imports property specifies the modules that this module depends on
@@ -38,10 +38,10 @@ import { HashingPasswordService } from './hashing-password/hashing-password.serv
     AuthModule, // responsible for handling authentication logic
     PassportModule, 
     UserModule, 
-    ChatModule,
+    ChatModule, GameModule,
   ],
   controllers: [AppController], // Controllers  handle incoming requests and define the routes and endpoints for the application
-  providers: [AppService, RandomService, HashingPasswordService], // Providers are responsible for providing business logic and functionality to the application.
+  providers: [AppService, RandomService], // Providers are responsible for providing business logic and functionality to the application.
 })
 export class AppModule { // class that represents the main module of application
 
