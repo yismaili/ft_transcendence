@@ -13,12 +13,10 @@ import { Message } from 'src/typeorm/entities/message-entity';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import { ChatRoomUser } from 'src/typeorm/entities/chat-room-users.entity';
 import { CreateChatRoomDto } from './dto/create-chatRoom.dto';
-import { HashingPasswordService } from 'src/hashing-password/hashing-password.service';
 import { JoinUsertoChatRoom } from './dto/join-user-to-chatRoom.dto';
 import { SendMessageToChatRoom } from './dto/send-message-to-chatRomm';
 import { GetChatRoomMessages } from './dto/get-chatRoom-messages';
 import { JoinChatRoom } from './dto/join-chat-room';
-import { use } from 'passport';
 import { BanUserDto } from './dto/ban-user.dto';
 import { KickUserDto } from './dto/kick-user.dto';
 import { MuteUserDto } from './dto/mut-user.dto';
@@ -27,6 +25,7 @@ import { LeaveChatRoomDto } from './dto/leave-ChatRoom.dto';
 import { JoinRoom } from './dto/join-room.dto';
 import { UnmuteUserDto } from './dto/unmute-user.dto';
 import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class ChatService {
@@ -40,7 +39,7 @@ export class ChatService {
     @InjectRepository(Chat) private chatRepository: Repository<Chat>,
     @InjectRepository(ChatRoom)private chatRoomRepository: Repository<ChatRoom>,
     @InjectRepository(ChatRoomUser)private chatRoomUserRepository: Repository<ChatRoomUser>,
-    private hashingPasswordSrvice: HashingPasswordService,
+    //private hashingPasswordSrvice: HashingPasswordService,
   ) {}
   clientToUser = {};
   
@@ -89,11 +88,13 @@ export class ChatService {
         if (ischatRoomExist){
           throw new Error('his chat room exist');
         }
-        const passwordHashed = await this.hashingPasswordSrvice.hashPassword(createChatRoomDto.password);
+        const saltOrRounds = 10
+        const hash = await bcrypt.hash(createChatRoomDto.password, saltOrRounds);
+        console.log(hash);
         const newChatRoom = this.chatRoomRepository.create({
             name: createChatRoomDto.name,
             status: createChatRoomDto.status,
-            password: passwordHashed,
+            password: hash,
         });
 
         const savedNewChatRoom = await this.chatRoomRepository.save(newChatRoom);
@@ -858,8 +859,8 @@ let chatRoom = await this.chatRoomRepository.findOne({
 });
 
 if (chatRoom) {
-  const dehashpassword = await this.hashingPasswordSrvice.verifyPassword(chatRoom?.password, joinRoom.password);
-  if (!dehashpassword) {
+  const isMatch = await bcrypt.compare(joinRoom.password, chatRoom?.password);
+  if (!isMatch ) {
       throw new NotFoundException('Invalid password');
   }
 }
