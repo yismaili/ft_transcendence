@@ -10,7 +10,6 @@ import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import { Not, Repository } from 'typeorm';
 import { UpdateResultDto } from './dto/update-result.dto';
-import { GameLogsEntity } from 'src/typeorm/entities/game-logs-entity';
 import { Socket, Server} from 'socket.io';
 import { SetHistoryDto } from './dto/set-history.dto';
 import { OutcomeDto } from 'src/auth/dtos/outcome.dto';
@@ -26,7 +25,6 @@ export class GameService {
     @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
     @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
     @InjectRepository(ChatRoom)private chatRepository: Repository<ChatRoom>,
-    @InjectRepository(GameLogsEntity)private gameLogsRepository: Repository<GameLogsEntity>,
     ) {}
 
     async createGameRandom(createGameDto: CreateGameDto, playerId: Socket, server: Server): Promise<void> {
@@ -344,7 +342,7 @@ export class GameService {
           }
       
           const existingRequest = await this.historyRepository.findOne({
-            where: { user: {id: user.id}, status: 'sendRequest' }
+            where: { user: {id: user.id} }
           });
       
           if (existingRequest) {
@@ -354,7 +352,6 @@ export class GameService {
           const createHistory = this.historyRepository.create({
             user: user,
             userCompetitor: friend,
-            status: 'sendRequest',
             resulteOfCompetitor: 0,
             resulteOfUser: 0,
           });
@@ -374,7 +371,7 @@ export class GameService {
             throw new Error('user do not exist');
         }
         const request = await this.historyRepository.find({
-            where:{user:{id: user.id}, status: 'sendRequest'}
+            where:{user:{id: user.id}}
         });
         return request;
     }
@@ -396,7 +393,6 @@ export class GameService {
           const request = await this.historyRepository.findOne({
             where: {
               user: { id: user.id },
-              status: 'sendRequest',
               userCompetitor: { id: friend.id }
             }
           });
@@ -405,7 +401,6 @@ export class GameService {
             throw new Error('Game request not found');
           }
       
-          request.status = 'accepted';
           const acceptedRequest = await this.historyRepository.save(request);
           return acceptedRequest;
         } catch (error) {

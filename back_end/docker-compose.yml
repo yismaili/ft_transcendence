@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: "pass1337"
       POSTGRES_DB: "transcendence"
     volumes:
-      - app-db:/var/lib/postgresql/data
+      - backend-src:/var/lib/postgresql/data
     networks:
       - app-net
 
@@ -27,7 +27,7 @@ services:
     networks:
       - app-net
 
-  trans_app:
+  backend:
     build: ./app_tools
     container_name: back_end
     env_file:
@@ -36,7 +36,7 @@ services:
     ports:
       - "3001:3001"
     volumes:
-      - app-src:/app
+      - postgres-src:/app
     networks:
       - app-net
 
@@ -45,31 +45,31 @@ services:
     container_name: frontend
     restart: always
     depends_on:
-      - trans_app
+      - backend
     ports:
       - "5000:5000"
     volumes:
-      - frontend_app:/app
+      - frontend-src:/app
     networks:
       - app-net
 
 
 volumes:
-  app-src:
+  postgres-src:
     driver: local
     driver_opts:
       o: bind
       type: none
       device: /Users/yismaili/Desktop/ft_transcendence/back_end/transcendence
 
-  app-db:
+  backend-src:
     driver: local
     driver_opts:
       o: bind
       type: none
       device: /Users/yismaili/Desktop/ft_transcendence/postgres 
 
-  frontend_app:
+  frontend-src:
     driver: local
     driver_opts:
       o: bind
@@ -80,3 +80,84 @@ volumes:
 networks:
   app-net:
     driver: bridge
+
+
+# version: "3"
+# services:
+#   postgres_db:
+#     image: postgres:latest
+#     container_name: postgres
+#     restart: always
+#     ports:
+#       - "5432:5432"
+#     environment:
+#       POSTGRES_PASSWORD: "pass1337"
+#       POSTGRES_DB: "transcendence"
+#     volumes:
+#       - postgres-src:/var/lib/postgresql/data
+#     networks:
+#       - app-net
+
+
+#   adminer:
+#     image: adminer
+#     container_name: adminer
+#     restart: always
+#     ports:
+#      - '8080:8080'
+#     depends_on:
+#       - postgres_db
+#     networks:
+#       - app-net
+
+#   backend:
+#     build: ./app_tools
+#     container_name: backend
+#     env_file:
+#       - .env
+#     restart: always
+#     ports:
+#       - "3001:3001"
+#     volumes:
+#       - backend-src:/app
+#     networks:
+#       - app-net
+
+#   frontend:
+#     build: ./frontend_tools
+#     container_name: frontend
+#     restart: always
+#     depends_on:
+#       - backend
+#     ports:
+#       - "5000:5000"
+#     volumes:
+#       - frontend-src:/app
+#     networks:
+#       - app-net
+
+# volumes:
+#   postgres-src:
+#     driver: local
+#     driver_opts:
+#       o: bind
+#       type: none
+#       device: /Users/yismaili/Desktop/ft_transcendence/back_end/transcendence
+
+#   backend-src:
+#     driver: local
+#     driver_opts:
+#       o: bind
+#       type: none
+#       device: /Users/yismaili/Desktop/ft_transcendence/postgres 
+
+#   frontend-src:
+#     driver: local
+#     driver_opts:
+#       o: bind
+#       type: none
+#       device: /Users/yismaili/Desktop/ft_transcendence//tempefrontend/chat
+
+# networks:
+#   app-net:
+#     driver: bridge

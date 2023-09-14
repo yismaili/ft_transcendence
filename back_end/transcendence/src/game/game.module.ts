@@ -14,14 +14,13 @@ import { Message } from 'src/typeorm/entities/message-entity';
 import { UserModule } from 'src/user/user.module';
 import { ChatModule } from 'src/chat/chat.module';
 import { Chat } from 'src/typeorm/entities/chat-entity';
-import { GameLogsEntity } from 'src/typeorm/entities/game-logs-entity';
 
 @Module({
   imports: [
     AuthModule,
     UserModule,
     ChatModule,
-    AuthModule, TypeOrmModule.forFeature([User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUser, Message, Chat, GameLogsEntity])
+    AuthModule, TypeOrmModule.forFeature([User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUser, Message, Chat])
   ],
   providers: [GameGateway, GameService],
 })
