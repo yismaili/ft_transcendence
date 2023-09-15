@@ -2,6 +2,7 @@
 import Style from "./Dashboard.module.css";
 import getUserData from "../../action/userData";
 import Win_loss from "./Win_loss/Win_loss";
+import Link from "next/link";
 import Achievement_history from "./Achievement_history/Achievement_history";
 
 export default async function Dashboard() {
@@ -11,9 +12,9 @@ export default async function Dashboard() {
   return (
     <div className={Style.container}>
       <header className={Style.header}>
-        <div className={Style.chatRoomBtn}>
+          <Link href="/chat" className={Style.chatRoomBtn}>
           <p>chat room</p>
-        </div>
+          </Link>
         <div className={Style.profileBtn}>
           <p>profile</p>
         </div>
