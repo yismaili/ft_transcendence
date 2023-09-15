@@ -1,0 +1,157 @@
+.chat__toggle__switch{
+    flex: 0.1;
+}
+
+.toggle__switch{
+    position: relative;
+    cursor: pointer;
+    display: inline-block;
+    width: 360px;
+    height: 60px;
+    background-color: #14143B;
+    border-radius: 20px;
+    margin: 2rem;
+}
+
+.toggle__switch__checkbox{
+    position: absolute;
+    appearance: none;
+    width: 360px;
+    height: 60px;
+    border-radius: 20px;
+    outline: none;
+    cursor: pointer;
+}
+
+.toggle__switch__checkbox::before,
+.toggle__switch__checkbox::after{
+    z-index: 2;
+    position: absolute;
+    top:50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+}
+
+.toggle__switch__checkbox::before{
+    content: "groups";
+    color: var(--test);
+    left: 40px;
+}
+
+.toggle__switch__checkbox::after{
+    content: "direct";
+    color: #fffadea8;
+    right: 48px;   
+}
+
+.toggle__switch__slider::before{
+    position: absolute;
+    content: "";
+    height: 60px;
+    width: 180px;
+    background-color: #54527D;
+    border-radius: 20px;
+    transition: .6s;
+}
+
+.toggle__switch__checkbox:checked + .toggle__switch__slider::before{
+    transform: translateX(180px);
+}
+
+.toggle__switch__checkbox:checked:before{
+    color: #fffadea8;
+}
+
+.toggle__switch__checkbox:checked::after{
+    color: #FFFADE;
+}
+
+/* 2xl */
+@media (max-width: 1536px) {
+
+}
+  
+  /* xl */
+  @media (max-width: 1280px) {
+    .toggle__switch{
+        width: 280px;
+        height: 50px;
+    }
+    .toggle__switch__checkbox{
+        width: 280px;
+        height: 50px;
+    }
+    .toggle__switch__checkbox::before,
+    .toggle__switch__checkbox::after{
+        font-size: 1.8rem;
+    }
+
+    .toggle__switch__checkbox::before{
+        left: 28px;
+    }
+    .toggle__switch__checkbox::after{
+        right: 38px;   
+    }
+
+    .toggle__switch__slider::before{
+        height: 50px;
+        width: 140px;
+        border-radius: 20px;
+    }
+
+    .toggle__switch__checkbox:checked + .toggle__switch__slider::before{
+        transform: translateX(140px);
+    }
+  }
+  
+  /* lg */
+  @media (max-width: 1024px) {
+    .toggle__switch{
+        width: 240px;
+        height: 50px;
+    }
+    .toggle__switch__checkbox{
+        width: 240px;
+        height: 50px;
+    }
+    .toggle__switch__checkbox::before,
+    .toggle__switch__checkbox::after{
+        font-size: 1.5rem;
+    }
+
+    .toggle__switch__checkbox::before{
+        left: 24px;
+    }
+    .toggle__switch__checkbox::after{
+        right: 32px;   
+    }
+
+    .toggle__switch__slider::before{
+        height: 50px;
+        width: 120px;
+        border-radius: 20px;
+    }
+
+    .toggle__switch__checkbox:checked + .toggle__switch__slider::before{
+        transform: translateX(120px);
+    }
+  }
+  
+  /* md */
+  @media (max-width: 768px) {
+    .chat__toggle__switch{
+        display: none;
+    }
+  }
+  
+  /* sm */
+  @media (max-width: 640px) {
+
+  }
+  
+  /* xs */
+  @media (max-width: 475px) {
+
+  }
+
+

@@ -14,10 +14,10 @@ import { AchievementParams, HistoryParams, IAuthenticate, ProfileParams, Relatio
 export class UserController {
     constructor(private userService: UserService){}
     
-    @Get(':username')
-    async getDetailsUser(@Param('username') username: string): Promise<UserParams>{
-       return this.userService.findProfileByUsername(username);
-    }
+    // @Get(':username')
+    // async getDetailsUser(@Param('username') username: string): Promise<UserParams>{
+    //    return this.userService.findProfileByUsername(username);
+    // }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username')
