@@ -1,0 +1,37 @@
+.analytics{
+    display: flex;
+    margin: 1rem auto;
+    background-color: #292944;
+    width: 90%;
+    text-align: center;
+    border-radius: 16px;
+}
+
+.data{
+    flex: 0.3;
+    justify-content: center;
+    margin: 0.3rem 0;
+}
+
+.xp__bar{
+    width: 50%;
+    height: 2rem;
+    background-color: #1BCAA1;
+    margin: auto;
+    border-radius: 16px;
+    font-size: 1.2rem;
+}
+
+.data__border{
+    border-left-style: solid;
+    border-right-style: solid;
+    border-color: #7B7B9B;
+}
+
+.data__title{
+    color: #C1B8ED;
+}
+
+.data__value{
+    color: #FFFADE;
+}

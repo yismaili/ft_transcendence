@@ -1,0 +1,14 @@
+.achievements{
+    text-align: center;
+    margin: 1rem 0 ;
+    height: 95%;
+    width: 40%;
+    background-color: #292944;
+    border-radius: 16px;
+}
+
+.achievements__title{
+    color: #C1B8ED;
+    font-size: 2rem;
+    padding: 1rem 0;
+}

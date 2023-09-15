@@ -1,3 +1,33 @@
 {
-  "pages": {}
+  "pages": {
+    "/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/layout.js"
+    ],
+    "/Auth/2FA/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Auth/2FA/page.css",
+      "static/chunks/app/Auth/2FA/page.js"
+    ],
+    "/Auth/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Auth/page.css",
+      "static/chunks/app/Auth/page.js"
+    ],
+    "/UserProfile/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/UserProfile/page.css",
+      "static/chunks/app/UserProfile/page.js"
+    ],
+    "/Chat/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/Chat/page.css",
+      "static/chunks/app/Chat/page.js"
+    ]
+  }
 }

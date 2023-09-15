@@ -1,1 +1,6 @@
-{}
+{
+  "/Auth/page": "app/Auth/page.js",
+  "/UserProfile/page": "app/UserProfile/page.js",
+  "/Chat/page": "app/Chat/page.js",
+  "/Auth/2FA/page": "app/Auth/2FA/page.js"
+}
