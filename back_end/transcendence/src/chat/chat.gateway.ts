@@ -19,11 +19,16 @@ import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
 export class ChatGateway {
-  @WebSocketServer()
-  server: Server;
-
+  @WebSocketServer() server: Server;
+  userStatus = new Map<string, boolean>();
   constructor(private readonly chatService: ChatService) {}
 
+  handleConnection(socket: Socket): void {
+    console.log(socket.handshake.headers);
+    this.chatService.handleConnection(socket);
+  }
+  
+  // @UseGuards(JwtAuthGuard, JwtStrategy)
   @SubscribeMessage('createChat')
   createChat(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket) {
     const message = this.chatService.createChatMessage(createChatDto, client.id);
@@ -52,7 +57,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('findAllChatRoomConversation')
-  findAllChatRoomConversation(@MessageBody() getChatRoomMessages: GetChatRoomMessages) {
+  findAllChatRoomConversation(@MessageBody() getChatRoomMessages: GetChatRoomMessages, client: Socket) {
     return this.chatService.findAllChatRoomConversation(getChatRoomMessages);
   }
 

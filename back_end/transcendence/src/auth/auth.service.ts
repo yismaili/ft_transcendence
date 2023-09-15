@@ -8,8 +8,8 @@ import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { UserDto } from './dtos/user.dto';
-import { IAuthenticate, UserParams } from 'utils/types';
 import { RandomService } from 'src/random/random.service';
+import { UserParams } from 'utils/types';
 
   @Injectable()
   export class AuthService {

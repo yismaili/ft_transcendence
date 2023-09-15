@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { ConfigService } from '@nestjs/config';
@@ -25,6 +25,7 @@ import { Chat } from 'src/typeorm/entities/chat-entity';
 @Module({
   // forFeature() method is used to specify which entities 
   imports: [
+    JwtModule,
     TypeOrmModule.forFeature([User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUser, Message, Chat]), 
     PassportModule.register({ defaultStrategy: '42' }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
