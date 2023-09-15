@@ -26,9 +26,12 @@ import { JoinRoom } from './dto/join-room.dto';
 import { UnmuteUserDto } from './dto/unmute-user.dto';
 import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
 import * as bcrypt from 'bcrypt';
+import { Socket } from 'socket.io';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class ChatService {
+  private readonly connectedClients: Map<string, Socket> = new Map();
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Profile)private profileRepository: Repository<Profile>,
@@ -39,7 +42,7 @@ export class ChatService {
     @InjectRepository(Chat) private chatRepository: Repository<Chat>,
     @InjectRepository(ChatRoom)private chatRoomRepository: Repository<ChatRoom>,
     @InjectRepository(ChatRoomUser)private chatRoomUserRepository: Repository<ChatRoomUser>,
-    //private hashingPasswordSrvice: HashingPasswordService,
+    private readonly authService: AuthService,
   ) {}
   clientToUser = {};
   
@@ -90,7 +93,6 @@ export class ChatService {
         }
         const saltOrRounds = 10
         const hash = await bcrypt.hash(createChatRoomDto.password, saltOrRounds);
-        console.log(hash);
         const newChatRoom = this.chatRoomRepository.create({
             name: createChatRoomDto.name,
             status: createChatRoomDto.status,
@@ -384,7 +386,6 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom): Promise<any> {
         id: updateChatDto.id,
       }
      });
-      console.log(updateChatDto);
     if (!chat) {
       throw new NotFoundException(`Chat message with ID ${ updateChatDto.id} not found`);
     }
@@ -647,7 +648,7 @@ async unbannedUser (unbannedUserDtoo: BanUserDto) {
 
   const chatRoom = await this.chatRoomRepository.findOne({
     where: {
-          name : unbannedUserDtoo.chatRoomName,
+          name: unbannedUserDtoo.chatRoomName,
     }
   });
   const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
@@ -948,8 +949,24 @@ async getAllUserOfChatRoom(usersOfChatRoom: UsersOfChatRoom) : Promise<any>{
       chatRoomUsers:{chatRooms:{id :charRoom.id}},
     }
   });
-  console.log(users);
+  // console.log(users);
   return (chatRoomUser);
 }
 
+// handleng connection
+handleConnection(socket: Socket): void{
+  try{
+    const clientId = socket.id;
+    this.connectedClients.set(clientId, socket);
+
+    // const token = socket.handshake.query.token as string;
+    // const user = this.authService.verifyToken(token);
+
+    socket.on('disconnect', () => {;
+      this.connectedClients.delete(clientId);
+    });
+  }catch (error) {
+      socket.disconnect(true);
+  }
+}
 }

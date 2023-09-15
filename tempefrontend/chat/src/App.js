@@ -1,11 +1,13 @@
-
-
-  import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import './App.css';
 
 const ChatApp = () => {
-  const [socket] = useState(io('0.0.0.0:3001'));
+  const [socket] = useState(io('0.0.0.0:3001', {
+    extraHeaders: {
+      token: // how to get cookis
+    }
+  }));
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
   const [messageTextToChatRoom, setMessageTextToChatRoom] = useState('');

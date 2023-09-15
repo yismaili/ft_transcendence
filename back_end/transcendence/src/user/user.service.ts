@@ -15,7 +15,6 @@ import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import {Not, Repository } from 'typeorm';
 import { AchievementParams,
    HistoryParams, 
-   IAuthenticate, 
    ProfileParams, 
    RelationParams, 
    UserParams } from 'utils/types';
