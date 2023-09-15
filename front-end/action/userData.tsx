@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 
 export default async function getUserData() {
   const mycookie = cookies().get("userData");
-  if (!mycookie) throw new Error("User data cookie not found.");
+  if (!mycookie) throw new Error("User data cookie not found. ----> Plese login <----");
 
   const data = JSON.parse(mycookie!.value);
 
