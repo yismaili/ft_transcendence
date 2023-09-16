@@ -131,26 +131,35 @@ export class GameService {
           let roomName = '';
           if (this.players.size === 0) {
             roomName = 'room_' + user.username;
-          } else {
-            const maxPlayersPerRoom = 2;
-            for (const [name, players] of this.players) {
-              if (players.length < maxPlayersPerRoom) {
-                roomName = name;
-                break;
-              }
-            }
-            if (!roomName) {
-              roomName = 'room_' + user.username + this.players.size;
-            }
-          }
+          } 
+          // else {
+          //   const maxPlayersPerRoom = 2;
+          //   for (const [name, players] of this.players) {
+          //     if (players.length < maxPlayersPerRoom) {
+          //       roomName = name;
+          //       break;
+          //     }
+          //   }
+          //   if (!roomName) {
+          //     roomName = 'room_' + user.username + this.players.size;
+          //   }
+          // }
           await playerId.join(roomName);
-          if (!this.players.has(roomName)) {
-            this.players.set(roomName, []);
+          let competitorSocket;
+          for (const [room, playerId] of this.isconnected) {
+                if (competitor.username === room) {
+                  competitorSocket = playerId.id;
+                  break;
+            }
           }
-          this.players.get(roomName).push(user.username);
-          if (this.players.get(roomName).length === 2) {
-          await this.startGame(roomName, playerId, server);
-          }
+          console.log(competitorSocket);
+          // if (!this.players.has(roomName)) {
+          //   this.players.set(roomName, []);
+          // }
+          // this.players.get(roomName).push(user.username);
+          // if (this.players.get(roomName).length === 2) {
+          // await this.startGame(roomName, playerId, server);
+          // }
                
       } catch (error) {
           throw new Error(error.message);
