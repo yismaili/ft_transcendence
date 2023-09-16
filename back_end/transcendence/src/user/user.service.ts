@@ -18,6 +18,7 @@ import { AchievementParams,
    ProfileParams, 
    RelationParams, 
    UserParams } from 'utils/types';
+import { StatusUserDto } from './dto/status-user.dto';
 
 
 @Injectable()
@@ -470,6 +471,36 @@ async cancelRequist(username: string, relationId: number): Promise<RelationParam
     return (await this.findProfileByUsername(username));
   } catch (error) {
     return (await this.findProfileByUsername(username));
+  }
+}
+
+// get friend online
+async getStatusOfUsers(username: string) {
+  try {
+    const friends = await this.relationRepository.find({
+      where: [
+        { 
+          friend: { username: username },
+          user: { status: 'online'}
+        },
+        { 
+          user: { username: username },
+          friend: { status: 'online'}
+        }
+      ],
+      relations: ['user'],
+    });
+      // Map the results to create an array of RelationDto objects
+    const relationDtos: RelationDto[] = friends.map((relation) => ({
+      id: relation.id,
+      status: relation.status,
+      friend: relation.friend,
+      user: relation.user,
+    }));
+
+    return relationDtos;
+  } catch (error) {
+    throw new Error(`Error fetching friends: ${error.message}`);
   }
 }
 

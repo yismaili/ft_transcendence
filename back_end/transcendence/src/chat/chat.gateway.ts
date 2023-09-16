@@ -15,6 +15,9 @@ import { ChatRoomOfUserDto } from './dto/chatRoom-of-user.dto';
 import { LeaveChatRoomDto } from './dto/leave-ChatRoom.dto';
 import { JoinRoom } from './dto/join-room.dto';
 import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
@@ -24,7 +27,6 @@ export class ChatGateway {
   constructor(private readonly chatService: ChatService) {}
 
   handleConnection(socket: Socket): void {
-    console.log(socket.handshake.headers);
     this.chatService.handleConnection(socket);
   }
   
@@ -56,6 +58,7 @@ export class ChatGateway {
     return message;
   }
 
+  @UseGuards(JwtAuthGuard, JwtStrategy)
   @SubscribeMessage('findAllChatRoomConversation')
   findAllChatRoomConversation(@MessageBody() getChatRoomMessages: GetChatRoomMessages, client: Socket) {
     return this.chatService.findAllChatRoomConversation(getChatRoomMessages);
