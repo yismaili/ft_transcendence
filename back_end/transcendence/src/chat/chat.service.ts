@@ -28,10 +28,11 @@ import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
 import * as bcrypt from 'bcrypt';
 import { Socket } from 'socket.io';
 import { AuthService } from 'src/auth/auth.service';
+import { verify } from 'jsonwebtoken';
 
 @Injectable()
 export class ChatService {
-  private readonly connectedClients: Map<string, Socket> = new Map();
+  // private readonly connectedClients: Map<string, Socket> = new Map();
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Profile)private profileRepository: Repository<Profile>,
@@ -954,19 +955,41 @@ async getAllUserOfChatRoom(usersOfChatRoom: UsersOfChatRoom) : Promise<any>{
 }
 
 // handleng connection
-handleConnection(socket: Socket): void{
-  try{
-    const clientId = socket.id;
-    this.connectedClients.set(clientId, socket);
+ async handleConnection(socket: Socket) {
+    try {
 
-    // const token = socket.handshake.query.token as string;
-    // const user = this.authService.verifyToken(token);
+      const jwtSecret = 'secrete';
+      const token = socket.handshake.headers.authorization;
 
-    socket.on('disconnect', () => {;
-      this.connectedClients.delete(clientId);
-    });
-  }catch (error) {
+      if (!token) {
+        socket.emit('error', 'Authorization token missing');
+        socket.disconnect(true);
+        return;
+      }
+
+      let decodedToken = verify(token, jwtSecret);
+      const clientId = socket.id;
+      const username = decodedToken['username'];
+
+      const user = await this.userRepository.findOne({
+        where: {username: username}
+      });
+      user.status = 'online';
+      this.connectedClients.set(clientId, { socket, username });
+      await this.userRepository.save(user);
+
+      socket.on('disconnect', async () => {
+        user.status = 'offline';
+        await this.userRepository.save(user);
+        this.connectedClients.delete(clientId);
+      });
+
+    } catch (error) {
+      socket.emit('error', 'Authentication failed');
       socket.disconnect(true);
+    }
   }
+
+  private connectedClients = new Map<string, { socket: Socket; username: string }>();
 }
-}
+

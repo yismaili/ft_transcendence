@@ -17,7 +17,7 @@ export class Profile {
 
   @Column({ nullable: true })
   xp: number;
-
+  
   @Column({ nullable: true })
   level: number;
   

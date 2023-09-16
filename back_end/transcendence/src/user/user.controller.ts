@@ -224,6 +224,17 @@ export class UserController {
         }
     }
 
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/status')
+    async getSatatusOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.getStatusOfUsers(username); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
     // @UseGuards(JwtAuthGuard, JwtStrategy)
     // @Get('profile/:username/suggest')
     // async suggestOfUser(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationDto[]>{
