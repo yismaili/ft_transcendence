@@ -975,6 +975,7 @@ async getAllUserOfChatRoom(usersOfChatRoom: UsersOfChatRoom) : Promise<any>{
         where: {username: username}
       });
       user.status = 'online';
+
       this.connectedClients.set(clientId, { socket, username });
       await this.userRepository.save(user);
 
@@ -983,13 +984,12 @@ async getAllUserOfChatRoom(usersOfChatRoom: UsersOfChatRoom) : Promise<any>{
         await this.userRepository.save(user);
         this.connectedClients.delete(clientId);
       });
-
     } catch (error) {
       socket.emit('error', 'Authentication failed');
       socket.disconnect(true);
     }
   }
 
-  private connectedClients = new Map<string, { socket: Socket; username: string }>();
+  connectedClients = new Map<string, { socket: Socket; username: string }>();
 }
 

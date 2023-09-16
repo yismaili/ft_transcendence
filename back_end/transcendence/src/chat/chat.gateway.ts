@@ -58,7 +58,7 @@ export class ChatGateway {
     return message;
   }
 
-  @UseGuards(JwtAuthGuard, JwtStrategy)
+  // @UseGuards(JwtAuthGuard, JwtStrategy)
   @SubscribeMessage('findAllChatRoomConversation')
   findAllChatRoomConversation(@MessageBody() getChatRoomMessages: GetChatRoomMessages, client: Socket) {
     return this.chatService.findAllChatRoomConversation(getChatRoomMessages);
