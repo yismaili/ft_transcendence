@@ -20,12 +20,13 @@ export class GameGateway {
 
   @SubscribeMessage('createGameFriend')
   createGameFriend(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
-    return this.gameService.createGameFriend(createGameDto);
+    console.log('wwwwwwwwwww');
+    return this.gameService.matchingFriends(createGameDto, soketId, this.server);
   }
 
-  @SubscribeMessage('acceptRequest')
-  acceptRequest(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
-    console.log(createGameDto);
-    return this.gameService.accepteGameRequest(createGameDto);
-  }
+  // @SubscribeMessage('acceptRequest')
+  // acceptRequest(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
+  //   console.log(createGameDto);
+  //   return this.gameService.accepteGameRequest(createGameDto);
+  // }
 }
