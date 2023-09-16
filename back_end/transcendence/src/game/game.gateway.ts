@@ -9,6 +9,10 @@ export class GameGateway {
   server: Server;
   constructor(private readonly gameService: GameService) {
   }
+  handleConnection(socket: Socket): void {
+    this.gameService.addUserWithSocketId(socket);
+  }
+
   @SubscribeMessage('createGame')
   create(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() playerId: Socket) {
     return this.gameService.createGameRandom(createGameDto, playerId, this.server);

@@ -14,6 +14,7 @@ import { Socket, Server} from 'socket.io';
 import { SetHistoryDto } from './dto/set-history.dto';
 import { OutcomeDto } from 'src/auth/dtos/outcome.dto';
 import { ResultOfGame } from './dto/result-of-game.dto';
+import { verify } from 'jsonwebtoken';
 
 @Injectable()
 export class GameService {
@@ -419,7 +420,60 @@ async UpdateResult(updateResultDto: UpdateResultDto): Promise<HistoryEntity>{
     gameHistory.resulteOfCompetitor = updateResultDto.competitorResult;
     const saveUpdate = await this.historyRepository.save(gameHistory);
     return saveUpdate;
-}    
+} 
+
+async addUserWithSocketId(playerId: Socket) {
+  try {
+    const jwtSecret = 'secrete';
+    // Extract the JWT token
+    const token = playerId.handshake.headers.authorization;
+
+    if (!token) {
+      playerId.emit('error', 'Authorization token missing');
+      playerId.disconnect(true);
+      return;
+    }
+    // Verify the JWT token using the secret
+    let decodedToken;
+    try {
+      decodedToken = verify(token, jwtSecret);
+    } catch (error) {
+      playerId.emit('error', 'Invalid authorization token');
+      playerId.disconnect(true);
+      return;
+    }
+
+    const username = decodedToken['username'];
+    const user = await this.userRepository.findOne({
+      where: { username: username }
+    });
+
+    if (!user) {
+      playerId.emit('error', 'User does not exist');
+      playerId.disconnect(true);
+      return;
+    }
+    // Join the user to a room based on their username
+    await playerId.join(username);
+    if (!this.isconnected.has(username)) {
+      this.isconnected.set(username, playerId);
+    }
+    // for (const [username, socketid] of this.isconnected){
+    //   console.log(username);
+    //   console.log(socketid.id);
+    // }
+
+    // Handle user disconnection and remove them from the map
+    playerId.on('disconnect', () => {
+      if (this.isconnected.has(username)) {
+        this.isconnected.delete(username);
+      }
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+isconnected: Map<string, Socket> = new Map<string, Socket>();
 }
 
 class PongGame {
