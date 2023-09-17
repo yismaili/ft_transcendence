@@ -5,34 +5,57 @@
 }
 
 .header {
-    display: flex;
-    width: 100%;
-    height: 8vh;
-    background-color: yellow;
-    user-select: none;
-    cursor: pointer;
-  }
-  
-  .chatRoomBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50%;
-    height: 100%;
-    background-color: #14143b;
-  }
-  
-  .profileBtn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50%;
-    height: 100%;
-    background-color: #262643;
-  }
-  
-  .header p {
-    font-family: "probert";
-    color: #c1b8ed;
-    font-size: clamp(1rem, 3vw, 3.5rem);
-  }
+  display: flex;
+  width: 100%;
+  height: 8vh;
+  background-color: yellow;
+  user-select: none;
+  cursor: pointer;
+}
+
+.chatRoomBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+  background-color: #14143b;
+}
+
+.profileBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+  background-color: #262643;
+}
+
+.header p {
+  font-family: "probert";
+  color: #c1b8ed;
+  font-size: clamp(1rem, 3vw, 3.5rem);
+}
+
+/* /////////////      left      ////////////// */
+
+.subContainer {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background-color: aqua;
+}
+
+.left {
+  width: 35%;
+  height: 100%;
+  background-color: violet;
+}
+
+/* /////////////      right      ////////////// */
+
+.right {
+  width: 65%;
+  height: 100%;
+  background-color: yellowgreen;
+}
