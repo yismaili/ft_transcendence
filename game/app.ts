@@ -181,7 +181,7 @@ class PongGame {
             this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
         }
         if (this.ntvBtn){
-            this.ntvBtn.addEventListener('click', this. joinGameFriend.bind(this));
+            this.ntvBtn.addEventListener('click', this. acceptRequest.bind(this));
         }
     }
 
@@ -236,62 +236,32 @@ class PongGame {
         this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.rightPaddle,this.paddleWidth, this.paddleHeight);
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
-        // if (this.leftPlayerScore == 5){
-        //     this.player = 'left Player';
-        //     this.playerWin();
-        // }
-        // if (this.rightPlayerScore == 5){
-        //     this.player = 'right Player';
-        //     this.playerWin();
-        // }
     }
-
-    private playerWin() {
-        var message = "Congratulations! " + this.player + " win!";
-        $('#message').text(message); // Set the message text
-        $('#message-modal').modal('show'); // Display the message modal
-        setTimeout(function() {
-            $('#message-modal').modal('hide'); // Hide the message modal
-        }, 3000);
-    }
-
-        start() {
-            if (!this.isRunning) {
-                this.isRunning = true;
-                this.intervalId = setInterval(() => {
-                    this.update();
-                    this.draw();
-                }, 1000 / 100); // 100 frames per second
-            }
-        }
-        stop() {
-            if (this.isRunning) {
-                clearInterval(this.intervalId);
-                this.isRunning = false;
-                this.leftPlayerScore = 0;
-                this.rightPlayerScore = 0;
-            }
-        }
-        
+    
     joinGame() {
         this.socket.emit("createGame", {username: this.username?.value}, (response: { id: number}) => {
             this.GameId = response.id;
         });
     }
+    
     joinGameFriend() {
-        this.socket.emit("createGameFriend", {username: this.username?.value, friendUsername: this.friendUsername?.value}, (response: { id: number}) => {
-            this.GameId = response.id;
-        });
-    }
+        this.socket.emit("createGameFriend", { username: this.username?.value, friendUsername: this.friendUsername?.value });
+
+      }
+      
     acceptRequest() {
-        this.socket.emit("acceptRequest", {username: this.username?.value, friendUsername: this.friendUsername?.value}, (response: { id: number}) => {
-            this.GameId = response.id;
-        });
+        const res = true;
+        this.socket.emit("responseFromFriend", res);
     }
+      
 }
 
 const pongGame = new PongGame();
-pongGame.start();
+pongGame.draw();
+
+pongGame.socket.on('inviteFriend', (response: {usernam: string, roomName: string }) => {
+    console.log(response);
+  });
         
 
 

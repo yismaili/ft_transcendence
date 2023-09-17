@@ -9,6 +9,7 @@ export class GameGateway {
   server: Server;
   constructor(private readonly gameService: GameService) {
   }
+
   handleConnection(socket: Socket): void {
     this.gameService.addUserWithSocketId(socket);
   }
@@ -23,6 +24,15 @@ export class GameGateway {
     console.log('wwwwwwwwwww');
     return this.gameService.matchingFriends(createGameDto, soketId, this.server);
   }
+
+  // @SubscribeMessage('invite')
+  // test(socketid) {
+  //   console.log("hi")
+
+  //   socketid.join("yismaili")
+
+  //   this.server.to("yismaili").emit('invite1');
+  // }
 
   // @SubscribeMessage('acceptRequest')
   // acceptRequest(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
