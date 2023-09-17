@@ -181,6 +181,24 @@ var PongGame = /** @class */ (function () {
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
     };
+    PongGame.prototype.start = function () {
+        var _this = this;
+        if (!this.isRunning) {
+            this.isRunning = true;
+            this.intervalId = setInterval(function () {
+                _this.update();
+                _this.draw();
+            }, 1000 / 100); // 100 frames per second
+        }
+    };
+    PongGame.prototype.stop = function () {
+        if (this.isRunning) {
+            clearInterval(this.intervalId);
+            this.isRunning = false;
+            this.leftPlayerScore = 0;
+            this.rightPlayerScore = 0;
+        }
+    };
     PongGame.prototype.joinGame = function () {
         var _this = this;
         var _a;
@@ -199,7 +217,7 @@ var PongGame = /** @class */ (function () {
     return PongGame;
 }());
 var pongGame = new PongGame();
-pongGame.draw();
+pongGame.start();
 pongGame.socket.on('inviteFriend', function (response) {
     console.log(response);
 });
