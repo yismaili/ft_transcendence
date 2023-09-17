@@ -1,7 +1,7 @@
 import Style from "./Achievement_history.module.css";
 
 type props = {
-  Data: User;
+  Data: User | null;
 };
 
 export default function Achievement_history(prop: props) {
@@ -10,11 +10,11 @@ export default function Achievement_history(prop: props) {
       <footer className={Style.footer}>
         <div className={Style.achievement}>
           <h2>achievement</h2>
-          <p>{prop.Data.achievements}</p>
+          <p>{prop.Data?.achievements}</p>
         </div>
         <div className={Style.history}>
           <h2>history</h2>
-          <p>{prop.Data.histories}</p>
+          <p>{prop.Data?.histories}</p>
         </div>
       </footer>
       <button className={Style.playBtn}>PLAY</button>
