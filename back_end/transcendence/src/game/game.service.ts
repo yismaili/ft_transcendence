@@ -12,13 +12,13 @@ import { Not, Repository } from 'typeorm';
 import { UpdateResultDto } from './dto/update-result.dto';
 import { Socket, Server} from 'socket.io';
 import { SetHistoryDto } from './dto/set-history.dto';
-import { OutcomeDto } from 'src/auth/dtos/outcome.dto';
 import { ResultOfGame } from './dto/result-of-game.dto';
 import { verify } from 'jsonwebtoken';
 
 @Injectable()
 export class GameService {
   players: Map<string, string[]> = new Map<string, string[]>();
+  playWithFriend: Map<string, string[]> = new Map<string, string[]>();
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Profile)private profileRepository: Repository<Profile>,
@@ -115,56 +115,94 @@ export class GameService {
           }
       }, 1000 / 100); // 100 frames per second
     }
-
-    async matchingFriends(createGameDto: CreateGameDto, playerId: Socket, server: Server): Promise<void>{
+  
+    async matchingFriends(createGameDto: CreateGameDto, playerId: Socket, server: Server): Promise<void> {
       try {
-          const user = await this.userRepository.findOne({
-            where: {username: createGameDto.username}
-          });
-          const competitor = await this.userRepository.findOne({
-            where: {username: createGameDto.friendUsername}
-          });
-
-          if (!user || !competitor) {
-            throw new Error('User not found');
+        const user = await this.userRepository.findOne({
+          where: { username: createGameDto.username }
+        });
+    
+        const competitor = await this.userRepository.findOne({
+          where: { username: createGameDto.friendUsername }
+        });
+    
+        if (!user || !competitor) {
+          throw new Error('User not found');
+        }
+    
+        let roomName;
+        
+        // Check if there's an existing room, otherwise create a new one
+        for (const [name, playWithFriend] of this.playWithFriend) {
+          if (playWithFriend.length < 2) {
+            roomName = name;
+            break;
           }
-          let roomName = '';
-          if (this.players.size === 0) {
-            roomName = 'room_' + user.username;
-          } 
-          // else {
-          //   const maxPlayersPerRoom = 2;
-          //   for (const [name, players] of this.players) {
-          //     if (players.length < maxPlayersPerRoom) {
-          //       roomName = name;
-          //       break;
-          //     }
-          //   }
-          //   if (!roomName) {
-          //     roomName = 'room_' + user.username + this.players.size;
-          //   }
-          // }
-          await playerId.join(roomName);
-          let competitorSocket;
-          for (const [room, playerId] of this.isconnected) {
-                if (competitor.username === room) {
-                  competitorSocket = playerId.id;
-                  break;
-            }
+        }
+    
+        if (!roomName) {
+          roomName = `room_${user.username}_${competitor.username}`;
+        }
+    
+        // User joins the room
+        playerId.join(roomName);
+    
+        // Competitor joins the room
+        const competitorRoom = this.findCompetitorRoom(competitor.username);
+        if (!competitorRoom) {
+          throw new Error('Competitor socket room not found');
+        }
+        playerId.join(competitorRoom);
+        if (!this.playWithFriend.has(roomName)) {
+          this.playWithFriend.set(roomName, []);
+        }
+        this.playWithFriend.get(roomName).push(user.username);
+        // Emit an invitation to the competitor
+        server.to(competitorRoom).emit('inviteFriend', { sender: user.username, roomName });
+    
+        // Listen for the response from the friend
+        const responseListener = (response: { responseFromFriend: boolean }) => {
+          console.log("accept req...");
+          this.playWithFriend.get(roomName).push(competitor.username);
+    
+          // Check if there are now 2 players in the room
+          if (this.playWithFriend.get(roomName).length === 2) {
+            console.log("The game is now playing...");
+            // Remove the response listener and start the game
+            playerId.removeListener('responseFromFriend', responseListener);
+            this.startGame(roomName, playerId, server);
           }
-          console.log(competitorSocket);
-          // if (!this.players.has(roomName)) {
-          //   this.players.set(roomName, []);
-          // }
-          // this.players.get(roomName).push(user.username);
-          // if (this.players.get(roomName).length === 2) {
-          // await this.startGame(roomName, playerId, server);
-          // }
-               
+        };
+    
+        playerId.on('responseFromFriend', responseListener);
+    
       } catch (error) {
-          throw new Error(error.message);
+        console.error('Error in matchingFriends:', error);
+        // Handle errors or send an error response to the client
       }
     }
+    
+    // Helper function to find the socket associated with a competitor
+    private findCompetitorRoom(username: string): string | undefined {
+      for (const [room, sockets] of this.isconnected) {
+        if (room === username) {
+          return room;
+        }
+      }
+      return undefined;
+    }
+    
+    
+    private generateUniqueRoomName(user: User, competitor: User): string {
+      let roomName = `room_${user.username}_${competitor.username}`;
+      let count = 1;
+      while (this.playWithFriend.has(roomName)) {
+        roomName = `room_${user.username}_${competitor.username}_${count}`;
+        count++;
+      }
+      return roomName;
+    }
+    
     
     async addHistory(addhistory: SetHistoryDto): Promise<any> {
       try {
@@ -463,15 +501,18 @@ async addUserWithSocketId(playerId: Socket) {
       return;
     }
     // Join the user to a room based on their username
-    await playerId.join(username);
     if (!this.isconnected.has(username)) {
-      this.isconnected.set(username, playerId);
+      this.isconnected.set(username,[]);
     }
-    // for (const [username, socketid] of this.isconnected){
-    //   console.log(username);
-    //   console.log(socketid.id);
-    // }
+    this.isconnected.get(username).push(playerId);
 
+    for (const [key, value] of this.isconnected) {
+      console.log(username);
+      for (const socket of value) {
+        console.log(socket.id);
+      }
+    }
+    
     // Handle user disconnection and remove them from the map
     playerId.on('disconnect', () => {
       if (this.isconnected.has(username)) {
@@ -482,7 +523,7 @@ async addUserWithSocketId(playerId: Socket) {
     throw error;
   }
 }
-isconnected: Map<string, Socket> = new Map<string, Socket>();
+isconnected: Map<string, Socket[]> = new Map<string, Socket[]>();
 }
 
 class PongGame {
