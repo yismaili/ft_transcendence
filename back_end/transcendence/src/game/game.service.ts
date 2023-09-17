@@ -133,7 +133,7 @@ export class GameService {
         let roomName;
         
         // Check if there's an existing room, otherwise create a new one
-        for (const [name, playWithFriend] of this.playWithFriend) {
+        for (const [name, playWithFriend] of this.players) {
           if (playWithFriend.length < 2) {
             roomName = name;
             break;
@@ -153,20 +153,20 @@ export class GameService {
           throw new Error('Competitor socket room not found');
         }
         playerId.join(competitorRoom);
-        if (!this.playWithFriend.has(roomName)) {
-          this.playWithFriend.set(roomName, []);
+        if (!this.players.has(roomName)) {
+          this.players.set(roomName, []);
         }
-        this.playWithFriend.get(roomName).push(user.username);
+        this.players.get(roomName).push(user.username);
         // Emit an invitation to the competitor
         server.to(competitorRoom).emit('inviteFriend', { sender: user.username, roomName });
     
         // Listen for the response from the friend
         const responseListener = (response: { responseFromFriend: boolean }) => {
           console.log("accept req...");
-          this.playWithFriend.get(roomName).push(competitor.username);
+          this.players.get(roomName).push(competitor.username);
     
           // Check if there are now 2 players in the room
-          if (this.playWithFriend.get(roomName).length === 2) {
+          if (this.players.get(roomName).length === 2) {
             console.log("The game is now playing...");
             // Remove the response listener and start the game
             playerId.removeListener('responseFromFriend', responseListener);
@@ -196,7 +196,7 @@ export class GameService {
     private generateUniqueRoomName(user: User, competitor: User): string {
       let roomName = `room_${user.username}_${competitor.username}`;
       let count = 1;
-      while (this.playWithFriend.has(roomName)) {
+      while (this.players.has(roomName)) {
         roomName = `room_${user.username}_${competitor.username}_${count}`;
         count++;
       }

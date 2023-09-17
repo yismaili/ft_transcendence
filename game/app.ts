@@ -238,6 +238,24 @@ class PongGame {
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
     }
     
+    start() {
+        if (!this.isRunning) {
+            this.isRunning = true;
+            this.intervalId = setInterval(() => {
+                this.update();
+                this.draw();
+            }, 1000 / 100); // 100 frames per second
+        }
+    }
+    stop() {
+        if (this.isRunning) {
+            clearInterval(this.intervalId);
+            this.isRunning = false;
+            this.leftPlayerScore = 0;
+            this.rightPlayerScore = 0;
+        }
+    }
+
     joinGame() {
         this.socket.emit("createGame", {username: this.username?.value}, (response: { id: number}) => {
             this.GameId = response.id;
@@ -257,7 +275,7 @@ class PongGame {
 }
 
 const pongGame = new PongGame();
-pongGame.draw();
+pongGame.start();
 
 pongGame.socket.on('inviteFriend', (response: {usernam: string, roomName: string }) => {
     console.log(response);
