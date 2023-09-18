@@ -1,0 +1,35 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2rem auto;
+    width: 90%;
+    height: 5rem;
+    background-color: #3E3E56;
+}
+
+.avatar {
+    /* background-image: url('/img/home/avatar.png'); */
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    background-color: blue;
+    width: 10%;
+    height: 50%;
+}
+
+.onlineStatus {
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background-color: green;
+}
+
+.name {
+    color: #F2F3F5;
+    font-size: clamp(.5rem, 2vw, 1.5rem);
+}
+
+/* .icon {
+    
+} */
