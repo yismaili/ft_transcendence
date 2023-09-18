@@ -97,7 +97,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetching = async () => {
-      const res = await fetch("http://localhost:3000/api/home", {});
+      const res = await fetch("http://localhost:3000/api/home");
       const user = await res.json();
       setUser(user);
     };

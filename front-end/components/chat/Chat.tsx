@@ -1,10 +1,31 @@
-'use client'
+"use client";
 import Style from "./Chat.module.css";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import SlideButton from "./SlideButton/SlideButton";
+import Direct from "./Direct/Direct";
+import Group from "./Group/Group";
 
 export default function Chat() {
-  let gg = ''
+  const [isGroup, setGroup] = useState(false);
+  let [user, setUser] = useState<User>();
+
+  useEffect(() => {
+    const fetching = async () => {
+      const res = await fetch("http://localhost:3000/api/chat");
+      const user = await res.json();
+      setUser(user);
+      console.log(user);
+    };
+      fetching();
+  }, []);
+
+  
+
+  const turnSwitch = () => {
+    setGroup(!isGroup);
+  };
+
   return (
     <div className={Style.container}>
       <header className={Style.header}>
@@ -17,13 +38,8 @@ export default function Chat() {
       </header>
       <div className={Style.subContainer}>
         <div className={Style.left}>
-          <div className={Style.slideBtn}>
-            <p className={Style.directTxt}>Direct</p>
-            <p className={Style.groupTxt}>Group</p>
-            <motion.div>
-
-            </motion.div>
-          </div>
+          <SlideButton func={turnSwitch}/>
+          {isGroup ? <Group /> : <Direct />}
         </div>
         <div className={Style.right}></div>
       </div>
