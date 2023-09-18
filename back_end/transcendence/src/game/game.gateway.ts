@@ -21,7 +21,6 @@ export class GameGateway {
 
   @SubscribeMessage('createGameFriend')
   createGameFriend(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
-    console.log('wwwwwwwwwww');
     return this.gameService.matchingFriends(createGameDto, soketId, this.server);
   }
 

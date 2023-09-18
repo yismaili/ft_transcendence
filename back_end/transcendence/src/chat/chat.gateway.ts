@@ -23,19 +23,18 @@ import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
 export class ChatGateway {
   @WebSocketServer() server: Server;
-  userStatus = new Map<string, boolean>();
   constructor(private readonly chatService: ChatService) {}
 
   handleConnection(socket: Socket): void {
     this.chatService.handleConnection(socket);
+    this.chatService.addUserWithSocketId(socket);
   }
   
   // @UseGuards(JwtAuthGuard, JwtStrategy)
   @SubscribeMessage('createChat')
-  createChat(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket) {
-    const message = this.chatService.createChatMessage(createChatDto, client.id);
-    this.server.emit('message', message);
-    return message;
+  createChat(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket): Promise<void> {
+    this.chatService.createChatDirect(createChatDto, client, this.server);
+    return
   }
 
   @SubscribeMessage('createChatRoom')

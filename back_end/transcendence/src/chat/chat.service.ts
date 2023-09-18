@@ -26,13 +26,12 @@ import { JoinRoom } from './dto/join-room.dto';
 import { UnmuteUserDto } from './dto/unmute-user.dto';
 import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
 import * as bcrypt from 'bcrypt';
-import { Socket } from 'socket.io';
 import { AuthService } from 'src/auth/auth.service';
 import { verify } from 'jsonwebtoken';
+import { Socket, Server } from 'socket.io';
 
 @Injectable()
 export class ChatService {
-  // private readonly connectedClients: Map<string, Socket> = new Map();
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Profile)private profileRepository: Repository<Profile>,
@@ -46,8 +45,9 @@ export class ChatService {
     private readonly authService: AuthService,
   ) {}
   clientToUser = {};
-  
-  async createChatMessage(createChatDto: MessageChatDto, sender: string): Promise<any> {
+  Users: Map<string, string[]> = new Map<string, string[]>();
+
+  async createChatDirect(createChatDto: MessageChatDto, clientId: Socket, server: Server): Promise<any> {
     
     const user = await this.userRepository.findOne({
       where: {
@@ -55,21 +55,46 @@ export class ChatService {
       }
     });
 
-    this.clientToUser[sender] = createChatDto.user;
     const secondUser = await this.userRepository.findOne({
       where: {
         username: createChatDto.secondUser,
       }
     });
-
+    const  roomName =  this.generateUniqueRoomName(user, secondUser);
+    clientId.join(roomName);
+    const FrindRoom = this.findFrindRoom(secondUser.username);
+    // console.log("hi")
     const newChatMessage = this.chatRepository.create({
       message: createChatDto.message,
       user: user,
       secondUser: secondUser,
     });
-    
     this.chatRepository.save(newChatMessage);
+    if (FrindRoom){
+      console.log("hi i am in frind room")
+      server.emit('findAllChat', { sender: newChatMessage });
+    }
     return newChatMessage;
+  }
+
+  private generateUniqueRoomName(user: User, friend: User): string {
+    let roomName = `Room_${user.username}_${friend.username}`;
+    let count = 1;
+    while (this.Users.has(roomName)) {
+      roomName = `Room_${user.username}_${friend.username}_${count}`;
+      count++;
+    }
+    return roomName;
+  }
+
+  // Helper function to find the socket associated with a Frind
+  private findFrindRoom(username: string): string | undefined {
+    for (const [room, sockets] of this.isconnected) {
+      if (room === username) {
+        return room;
+      }
+    }
+    return undefined;
   }
 
   async createChatRoom(createChatRoomDto: CreateChatRoomDto): Promise<any> {
@@ -978,7 +1003,6 @@ async getAllUserOfChatRoom(usersOfChatRoom: UsersOfChatRoom) : Promise<any>{
 
       this.connectedClients.set(clientId, { socket, username });
       await this.userRepository.save(user);
-
       socket.on('disconnect', async () => {
         user.status = 'offline';
         await this.userRepository.save(user);
@@ -989,7 +1013,61 @@ async getAllUserOfChatRoom(usersOfChatRoom: UsersOfChatRoom) : Promise<any>{
       socket.disconnect(true);
     }
   }
-
+  async addUserWithSocketId(playerId: Socket) {
+    try {
+      const jwtSecret = 'secrete';
+      // Extract the JWT token
+      const token = playerId.handshake.headers.authorization;
+  
+      if (!token) {
+        playerId.emit('error', 'Authorization token missing');
+        playerId.disconnect(true);
+        return;
+      }
+      // Verify the JWT token using the secret
+      let decodedToken;
+      try {
+        decodedToken = verify(token, jwtSecret);
+      } catch (error) {
+        playerId.emit('error', 'Invalid authorization token');
+        playerId.disconnect(true);
+        return;
+      }
+  
+      const username = decodedToken['username'];
+      const user = await this.userRepository.findOne({
+        where: { username: username }
+      });
+  
+      if (!user) {
+        playerId.emit('error', 'User does not exist');
+        playerId.disconnect(true);
+        return;
+      }
+      // Join the user to a room based on their username
+      if (!this.isconnected.has(username)) {
+        this.isconnected.set(username,[]);
+      }
+      this.isconnected.get(username).push(playerId);
+  
+      // for (const [key, value] of this.isconnected) {
+      //     console.log(username);
+      //   for (const socket of value) {
+      //      console.log(socket.id);
+      //   }
+      // }
+      
+      // Handle user disconnection and remove them from the map
+      playerId.on('disconnect', () => {
+        if (this.isconnected.has(username)) {
+          this.isconnected.delete(username);
+        }
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+  isconnected: Map<string, Socket[]> = new Map<string, Socket[]>();
   connectedClients = new Map<string, { socket: Socket; username: string }>();
 }
 

@@ -9,10 +9,17 @@ import { RelationDto } from 'src/auth/dtos/relation.dto';
 import { OutcomeDto} from 'src/auth/dtos/outcome.dto';
 import { updateProfileDto } from 'src/auth/dtos/updateProfile.dto';
 import { AchievementParams, HistoryParams, IAuthenticate, ProfileParams, RelationParams, UserParams } from 'utils/types';
+import { WebSocketServer } from '@nestjs/websockets';
+import { Socket, Server } from 'socket.io';
+import { ChatService } from 'src/chat/chat.service';
 
 @Controller('users')
 export class UserController {
-    constructor(private userService: UserService){}
+    // @WebSocketServer() server: Server;
+    // handleConnection(socket: Socket): void {
+    //     this.chatService.handleConnection(socket);
+    // }
+    constructor(private userService: UserService, private chatService: ChatService){}
     
     @Get(':username')
     async getDetailsUser(@Param('username') username: string): Promise<UserParams>{
