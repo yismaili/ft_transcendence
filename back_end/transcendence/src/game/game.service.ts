@@ -162,13 +162,14 @@ export class GameService {
     
         // Listen for the response from the friend
         const responseListener = (response: { responseFromFriend: boolean }) => {
-          console.log("accept req...");
-          this.players.get(roomName).push(competitor.username);
-    
+            // if (response.responseFromFriend == true){
+              this.players.get(roomName).push(competitor.username);
+            // }
+            // else{
+            //   playerId.removeListener('responseFromFriend', responseListener);
+            // }
           // Check if there are now 2 players in the room
           if (this.players.get(roomName).length === 2) {
-            console.log("The game is now playing...");
-            // Remove the response listener and start the game
             playerId.removeListener('responseFromFriend', responseListener);
             this.startGame(roomName, playerId, server);
           }
@@ -259,7 +260,7 @@ export class GameService {
         }
         let countWin = profile.win;
         countWin++;
-        console.log(countWin);
+        // console.log(countWin);
         profile.win = countWin;
         return await this.profileRepository.save(profile);
       } catch(error){
@@ -507,9 +508,9 @@ async addUserWithSocketId(playerId: Socket) {
     this.isconnected.get(username).push(playerId);
 
     for (const [key, value] of this.isconnected) {
-      console.log(username);
+      // console.log(username);
       for (const socket of value) {
-        console.log(socket.id);
+        // console.log(socket.id);
       }
     }
     
