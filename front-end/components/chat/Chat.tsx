@@ -5,6 +5,7 @@ import Style from "./Chat.module.css";
 import Direct from "./Direct/Direct";
 import Group from "./Group/Group";
 import Link from "next/link";
+import Msg from "./Msg/Msg";
 
 export default function Chat() {
   const [isGroup, setGroup] = useState(false);
@@ -20,10 +21,10 @@ export default function Chat() {
   }, []);
   // if (users)
   // console.log(users);
-  
-    // users.data.map((user) => {
-    //   console.log( user);
-    // });
+
+  // users.data.map((user) => {
+  //   console.log( user);
+  // });
 
   const turnSwitch = () => {
     setGroup(!isGroup);
@@ -77,7 +78,9 @@ export default function Chat() {
             )}
           </ul>
         </div>
-        <div className={Style.right}></div>
+        <div className={Style.right}>
+          <Msg />
+        </div>
       </div>
     </div>
   );
