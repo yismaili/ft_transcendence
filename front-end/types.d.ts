@@ -23,15 +23,15 @@ type User = {
 type UserArray = {
   data: Array<{
     id: number;
-  status: string;
-  user: {
-    email: string;
-    firstName: string;
-    id: number;
-    lastName: string;
-    picture: string;
-    username: string;
-  };
+    status: string;
+    user: {
+      email: string;
+      firstName: string;
+      id: number;
+      lastName: string;
+      picture: string;
+      username: string;
+    };
   }>;
 };
 
