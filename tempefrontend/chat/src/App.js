@@ -30,19 +30,20 @@ const ChatApp = () => {
   const [userstatus, setUserstatus] = useState('');
   const [time, setTime] = useState('');
 
-  // useEffect(() => {
-  //   socket.on('message', (message) => {
-  //     setMessages((prevMessages) => [...prevMessages, message]);
-  //   });
-
-  //   socket.on('typing', ({ name, isTyping }) => {
-  //     if (isTyping) {
-  //       setTypingDisplay(`${name} is typing...`);
-  //     } else {
-  //       setTypingDisplay('');
-  //     }
-  //   });
-  // }, [socket]);
+  useEffect(() => {
+    socket.on('message', (message) => {
+      setMessages(message);
+      console.log(message);
+    });
+    
+    // socket.on('typing', ({ name, isTyping }) => {
+    //   if (isTyping) {
+    //     setTypingDisplay(`${name} is typing...`);
+    //   } else {
+    //     setTypingDisplay('');
+    //   }
+    // });
+  }, socket);
 
   const join = () => {
     socket.emit('join', { user, secondUser }, () => {

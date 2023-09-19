@@ -47,36 +47,67 @@ export class ChatService {
   clientToUser = {};
   Users: Map<string, string[]> = new Map<string, string[]>();
 
-  async createChatDirect(createChatDto: MessageChatDto, clientId: Socket, server: Server): Promise<any> {
-    
-    const user = await this.userRepository.findOne({
-      where: {
-        username: createChatDto.user,
+  async createChatDirect(createChatDto, clientId, server) {
+    try {
+      // Find the first user by username
+      const user = await this.userRepository.findOne({
+        where: {
+          username: createChatDto.user,
+        },
+      });
+  
+      // Find the second user by username
+      const secondUser = await this.userRepository.findOne({
+        where: {
+          username: createChatDto.secondUser,
+        },
+      });
+  
+      // Generate a unique room name for the chat
+      const roomName = this.generateUniqueRoomName(user, secondUser);
+  
+      // Make the client (socket) join the chat room
+      clientId.join(roomName);
+  
+      // Create a new chat message
+      const newChatMessage = this.chatRepository.create({
+        message: createChatDto.message,
+        user: user,
+        secondUser: secondUser,
+      });
+  
+      // Save the chat message to the database
+      const savedMsg = await this.chatRepository.save(newChatMessage);
+  
+      // Iterate through connected sockets and make them join the room
+      for (const [room, sockets] of this.isconnected) {
+        if (room === secondUser.username) {
+          for (const socket of sockets) {
+            socket.join(socket.id);
+          }
+        }
       }
-    });
-
-    const secondUser = await this.userRepository.findOne({
-      where: {
-        username: createChatDto.secondUser,
-      }
-    });
-    const  roomName =  this.generateUniqueRoomName(user, secondUser);
-    clientId.join(roomName);
-    const FrindRoom = this.findFrindRoom(secondUser.username);
-    // console.log("hi")
-    const newChatMessage = this.chatRepository.create({
-      message: createChatDto.message,
-      user: user,
-      secondUser: secondUser,
-    });
-    this.chatRepository.save(newChatMessage);
-    if (FrindRoom){
-      console.log("hi i am in frind room")
-      server.emit('findAllChat', { sender: newChatMessage });
+  
+      // Fetch all chat messages between the two users
+      const chats = await this.chatRepository.find({
+        where: [
+          { user: { id: user.id }, secondUser: { id: secondUser.id } },
+          { user: { id: secondUser.id }, secondUser: { id: user.id } },
+        ],
+      });
+  
+      // Emit the 'message' event to the server with the chat data
+      server.emit('message', chats);
+  
+      // Return the saved chat message or any other relevant data
+      return savedMsg;
+    } catch (error) {
+      // Handle errors gracefully
+      console.error('Error in createChatDirect:', error);
+      throw error;
     }
-    return newChatMessage;
   }
-
+  
   private generateUniqueRoomName(user: User, friend: User): string {
     let roomName = `Room_${user.username}_${friend.username}`;
     let count = 1;
@@ -85,16 +116,6 @@ export class ChatService {
       count++;
     }
     return roomName;
-  }
-
-  // Helper function to find the socket associated with a Frind
-  private findFrindRoom(username: string): string | undefined {
-    for (const [room, sockets] of this.isconnected) {
-      if (room === username) {
-        return room;
-      }
-    }
-    return undefined;
   }
 
   async createChatRoom(createChatRoomDto: CreateChatRoomDto): Promise<any> {
@@ -1013,7 +1034,8 @@ async getAllUserOfChatRoom(usersOfChatRoom: UsersOfChatRoom) : Promise<any>{
       socket.disconnect(true);
     }
   }
-  async addUserWithSocketId(playerId: Socket) {
+
+async addUserWithSocketId(playerId: Socket) {
     try {
       const jwtSecret = 'secrete';
       // Extract the JWT token
