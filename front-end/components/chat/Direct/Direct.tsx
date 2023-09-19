@@ -1,13 +1,19 @@
 import Style from "./Direct.module.css";
 
-export default function Direct() {
+type props = {
+  data: UserFriend
+}
+
+export default function Direct({ data }: props) {
   return (
     <div className={Style.container}>
-        <div className={Style.avatar}>
-          <div className={Style.onlineStatus}></div>
-        </div>
-        <p className={Style.name}>alouane04</p>
-        <div className={Style.icon}></div>
+      <div className={Style.imgContainer}>
+      <div className={Style.avatar} style={{ backgroundImage: `url("${data.user.picture}")` }}>
+      </div>
+        <div className={Style.onlineStatus}></div>
+      </div>
+      <p className={Style.name}>{data.user.username}</p>
+      <div className={Style.icon}></div>
     </div>
   );
 }

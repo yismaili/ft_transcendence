@@ -19,3 +19,31 @@ type User = {
     histories: Array;
   };
 };
+
+type UserArray = {
+  data: Array<{
+    id: number;
+  status: string;
+  user: {
+    email: string;
+    firstName: string;
+    id: number;
+    lastName: string;
+    picture: string;
+    username: string;
+  };
+  }>;
+};
+
+type UserFriend = {
+  id: number;
+  status: string;
+  user: {
+    email: string;
+    firstName: string;
+    id: number;
+    lastName: string;
+    picture: string;
+    username: string;
+  };
+};
