@@ -29,6 +29,7 @@ import * as bcrypt from 'bcrypt';
 import { AuthService } from 'src/auth/auth.service';
 import { verify } from 'jsonwebtoken';
 import { Socket, Server } from 'socket.io';
+import { log } from 'console';
 
 @Injectable()
 export class ChatService {
@@ -45,74 +46,66 @@ export class ChatService {
     private readonly authService: AuthService,
   ) {}
   clientToUser = {};
-  Users: Map<string, string[]> = new Map<string, string[]>();
+  rooms: Map<string, Socket[]> = new Map<string, Socket[]>();
 
   async createChatDirect(createChatDto, clientId, server) {
+
     try {
-      // Find the first user by username
       const user = await this.userRepository.findOne({
         where: {
           username: createChatDto.user,
         },
       });
-  
-      // Find the second user by username
       const secondUser = await this.userRepository.findOne({
         where: {
           username: createChatDto.secondUser,
         },
       });
-  
-      // Generate a unique room name for the chat
-      const roomName = this.generateUniqueRoomName(user, secondUser);
-  
-      // Make the client (socket) join the chat room
+
+      if (!user || !secondUser){
+        throw new Error('user not found');
+      }
+
+      let roomName = `Room_${user.username}_${secondUser.username}`;
       clientId.join(roomName);
-  
-      // Create a new chat message
+
       const newChatMessage = this.chatRepository.create({
         message: createChatDto.message,
         user: user,
         secondUser: secondUser,
       });
   
-      // Save the chat message to the database
-      const savedMsg = await this.chatRepository.save(newChatMessage);
-  
+      await this.chatRepository.save(newChatMessage);
+      
       // Iterate through connected sockets and make them join the room
       for (const [room, sockets] of this.isconnected) {
         if (room === secondUser.username) {
           for (const socket of sockets) {
-            socket.join(socket.id);
+            await socket.join(roomName);
           }
         }
       }
-  
-      // Fetch all chat messages between the two users
+
       const chats = await this.chatRepository.find({
         where: [
           { user: { id: user.id }, secondUser: { id: secondUser.id } },
           { user: { id: secondUser.id }, secondUser: { id: user.id } },
         ],
+        // relations: ['user']
       });
-  
-      // Emit the 'message' event to the server with the chat data
-      server.emit('message', chats);
-  
-      // Return the saved chat message or any other relevant data
-      return savedMsg;
+      server.to(roomName).emit('message', chats);
+      return;
     } catch (error) {
-      // Handle errors gracefully
       console.error('Error in createChatDirect:', error);
       throw error;
     }
   }
   
-  private generateUniqueRoomName(user: User, friend: User): string {
-    let roomName = `Room_${user.username}_${friend.username}`;
+  private generateUniqueRoomName(user: User, chatRoomName: string ): string {
+    let roomName = `Room_${user.username}+${chatRoomName}`;
     let count = 1;
-    while (this.Users.has(roomName)) {
-      roomName = `Room_${user.username}_${friend.username}_${count}`;
+    while (this.rooms.has(roomName)) {
+      roomName = `Room_${user.username}+${chatRoomName}_${count}`;
       count++;
     }
     return roomName;
@@ -138,8 +131,10 @@ export class ChatService {
         if (ischatRoomExist){
           throw new Error('his chat room exist');
         }
+
         const saltOrRounds = 10
         const hash = await bcrypt.hash(createChatRoomDto.password, saltOrRounds);
+
         const newChatRoom = this.chatRoomRepository.create({
             name: createChatRoomDto.name,
             status: createChatRoomDto.status,
@@ -147,28 +142,26 @@ export class ChatService {
         });
 
         const savedNewChatRoom = await this.chatRoomRepository.save(newChatRoom);
-
         const chatRoom = await this.chatRoomRepository.findOne({
             where: {
                 id: savedNewChatRoom.id,
             },
         });
-
+      
         const newChatRoomUser = this.chatRoomUserRepository.create({
             statusPermissions: createChatRoomDto.statusPermissions,
             statusUser: 'member',
             user: user,
             chatRooms: chatRoom,
         });
-
-        const savedNewChatRoomUser = await this.chatRoomUserRepository.save(newChatRoomUser);
-
+        await this.chatRoomUserRepository.save(newChatRoomUser);
         return savedNewChatRoom; 
     } catch (error) {
         console.error(error);
         throw new Error('Error creating chat room');
     }
 }
+
 
 
 async joinUserToChatRoom(joinUserToChatRoom: JoinUsertoChatRoom): Promise<any> {
@@ -249,61 +242,88 @@ async joinUserToChatRoom(joinUserToChatRoom: JoinUsertoChatRoom): Promise<any> {
 }
 
 
-async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom): Promise<any> {
+async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket, server: Server): Promise<void> {
+  try {
+    const user = await this.userRepository.findOne({
+      where: { username: sendMessageToChatRoom.username },
+    });
 
-  const user = await this.userRepository.findOne({
-    where: { username: sendMessageToChatRoom.username }
-  });
+    const chatRoom = await this.chatRoomRepository.findOne({
+      where: { name: sendMessageToChatRoom.chatRoomName },
+    });
 
-  const chatRoom = await this.chatRoomRepository.findOne({
-    where: {
-      name: sendMessageToChatRoom.chatRoomName,
-    },
-  });
-  
-  if (!chatRoom) {
-    throw new Error('Chat room not found.');
-  }
+    if (!chatRoom) {
+      throw new Error('Chat room not found.');
+    }
 
-  let ismember = await this.chatRoomUserRepository.findOne({
-    where: {
-      user:{id: user.id},
-      statusUser: 'member',
-      chatRooms: {id: chatRoom.id},
-    },
-  });
-  
-  if (!ismember) {
-     ismember = await this.chatRoomUserRepository.findOne({
+    // Check if the user is a member or muted
+    const isMemberOrMuted = await this.chatRoomUserRepository.findOne({
       where: {
-        user:{id: user.id},
-        statusUser: 'muted',
-        chatRooms: {id: chatRoom.id},
+        user: { id: user.id },
+        chatRooms: { id: chatRoom.id },
+        statusUser: 'member',
       },
     });
-    if (!ismember){
+
+    if (!isMemberOrMuted) {
       throw new Error('You are not allowed here; you are muted or not a member.');
     }
-  }
-  const date = new Date();
-  if ( date < ismember.time) {
-    throw new Error('You are not allowed here; you are muted or not a member.');
-  }else if (date > ismember.time){
-    const tmp: UnmuteUserDto = {
-      username: sendMessageToChatRoom.username,
-      chatRoomName: sendMessageToChatRoom.chatRoomName,
-    };
-    this.unmuteUser(tmp);
-  }
-  
-  const newMessage = this.messageRepository.create({
-    user: user,
-    message: sendMessageToChatRoom.message,
-    chatRoom: chatRoom,
-  });
 
-  return this.messageRepository.save(newMessage);
+    const currentDate = new Date();
+
+    if (currentDate < isMemberOrMuted.time) {
+      throw new Error('You are not allowed here; you are muted or not a member.');
+    } else if (currentDate > isMemberOrMuted.time) {
+      // Unmute the user if the mute time has passed
+      const unmuteUserDto: UnmuteUserDto = {
+        username: sendMessageToChatRoom.username,
+        chatRoomName: sendMessageToChatRoom.chatRoomName,
+      };
+      await this.unmuteUser(unmuteUserDto);
+    }
+
+    // Save the message
+    const newMessage = this.messageRepository.create({
+      user,
+      message: sendMessageToChatRoom.message,
+      chatRoom,
+    });
+    await this.messageRepository.save(newMessage);
+
+    // Join the chat room
+    const roomName = this.generateUniqueRoomName(user, sendMessageToChatRoom.chatRoomName);
+    // clientId.join(roomName);
+
+    // if (!this.rooms.has(roomName)) {
+    //   this.rooms.set(roomName, []);
+    // }
+
+    // this.rooms.get(roomName).push(clientId);
+
+    // Iterate through connected sockets and make them join the room
+    for (const [room, sockets] of this.isconnected) {
+      if (room === user.username) {
+        for (const socket of sockets) {
+          await socket.join(roomName);
+        }
+      }
+    }
+    
+    // Emit the message to the chat room
+    const chatRoomConversation = await this.messageRepository.find({
+      where: {
+        chatRoom: { id: chatRoom.id },
+      },
+    });
+
+    server.to(roomName).emit('message', chatRoomConversation);
+
+  } catch (error) {
+    console.error(error.message);
+    throw new Error('Error sending message');
+  }
 }
+
 
 
   async findAllChatRoomConversation(getChatRoomMessages: GetChatRoomMessages) : Promise<any>{
@@ -423,9 +443,23 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom): Promise<any> {
     }
   }
 
-  async getClientName(clientId: string) {
-    return this.clientToUser[clientId];
+  async getClientName(username: string): Promise<string | null> {
+    try {
+      const client = await this.userRepository.findOne({
+        where: { username: username },
+      });
+  
+      if (client) {
+        return client.username;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      throw error;
+    }
   }
+  
 
    async remove(updateChatDto: UpdateChatDto): Promise<any> {
      const chat = await this.chatRepository.findOne({

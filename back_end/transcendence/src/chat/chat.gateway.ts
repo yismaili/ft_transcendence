@@ -32,29 +32,25 @@ export class ChatGateway {
   
   // @UseGuards(JwtAuthGuard, JwtStrategy)
   @SubscribeMessage('createChat')
-  createChat(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket): Promise<void> {
+  createChat(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket){
     this.chatService.createChatDirect(createChatDto, client, this.server);
-    return
+    return;
   }
 
   @SubscribeMessage('createChatRoom')
   createChatRoom(@MessageBody() createChatRoomDto: CreateChatRoomDto, @ConnectedSocket() client: Socket) {
-    const message = this.chatService.createChatRoom(createChatRoomDto);
-    return message;
+    const ret = this.chatService.createChatRoom(createChatRoomDto);
+    return ret;
   }
 
   @SubscribeMessage('JoinUsertoRoom')
   joinUsarToChatRoom(@MessageBody() joinUsertoChatRoom: JoinUsertoChatRoom, @ConnectedSocket() client: Socket) {
-    const message = this.chatService.joinUserToChatRoom(joinUsertoChatRoom);
-    this.server.emit('message', message);
-    return message;
+    this.chatService.joinUserToChatRoom(joinUsertoChatRoom);
   }
 
   @SubscribeMessage('sendMessageToChatRoom')
   sendMessage(@MessageBody() sendMessageToChatRoom: SendMessageToChatRoom, @ConnectedSocket() client: Socket) {
-    const message = this.chatService.sendMessage(sendMessageToChatRoom);
-    this.server.emit('message', message);
-    return message;
+    this.chatService.sendMessage(sendMessageToChatRoom, client, this.server);
   }
 
   // @UseGuards(JwtAuthGuard, JwtStrategy)
@@ -138,10 +134,9 @@ export class ChatGateway {
     return this.chatService.deleteChatRoom(deleteChatRoomDto);
   }
 
-  @SubscribeMessage('isTyping')
+  @SubscribeMessage('istyping')
   async typing(@MessageBody('isTyping') isTyping: boolean, @ConnectedSocket() client: Socket) {
-    const name = await this.chatService.getClientName(client.id);
-    client.broadcast.emit('typing', { name, isTyping });
+    client.emit('istyping', {isTyping});
   }
 
   @SubscribeMessage('AllchatRoom')
