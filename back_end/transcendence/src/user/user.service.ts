@@ -18,7 +18,6 @@ import { AchievementParams,
    ProfileParams, 
    RelationParams, 
    UserParams } from 'utils/types';
-import { StatusUserDto } from './dto/status-user.dto';
 
 
 @Injectable()
@@ -549,10 +548,6 @@ async turnOffTwoFactorAuthentication(username: string){
   } catch (error) {
     throw new Error(`Error two factor auth ${error}`);
   }
-}
-
-isTwoFactorAuthenticationCodeValid(){
-  
 }
 
 }

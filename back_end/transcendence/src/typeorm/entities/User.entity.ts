@@ -36,6 +36,8 @@ export class User {
   @Column({ default: false })
   isTwoFactorAuthEnabled: boolean;
 
+  @Column({ nullable: true })
+  accessToken: string;
   @OneToOne(() => Profile, profile => profile.user, { cascade: true })
   profile: Profile;
 

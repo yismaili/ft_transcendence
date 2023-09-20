@@ -41,7 +41,7 @@ async findAll() {
 
 async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
 
-  let { email, firstName, username, lastName, picture } = userDetails;
+  let { email, firstName, username, lastName, picture, accessToken } = userDetails;
 
   const existingUser = await this.userRepository.findOne({
     where: {
@@ -55,6 +55,7 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
     existingUser.lastName = lastName || existingUser.lastName;
     existingUser.username = username || existingUser.username;
     existingUser.picture = picture|| existingUser.picture;
+    existingUser.accessToken = accessToken || existingUser.accessToken;
       
     await this.userRepository.save(existingUser);
       
@@ -80,6 +81,7 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
         username,
         email,
         picture,
+        accessToken
     });
       
   // Create a new 'Profile' entity if profile data is provided
@@ -131,6 +133,24 @@ async findUserById(user: Partial<User>): Promise<Partial<UserParams>> {
 
   async generateQrCodeDataURL(otpAuthUrl: string) {
     return toDataURL(otpAuthUrl);
+  }
+
+  async isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, username: string) : Promise<any>{
+    try {
+
+      const user = await this.userRepository.findOne({ where: { username: username }});
+      if (user) {
+        return authenticator.verify({
+          token: twoFactorAuthenticationCode,
+          secret: user.twoFactorAuthSecret
+        });
+      } 
+      else {
+        throw new Error('User not found.');
+      }
+    } catch (error) {
+      throw new Error(`Error two factor auth ${error}`);
+    }
   }
 
 }
