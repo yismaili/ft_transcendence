@@ -1,11 +1,13 @@
-
-
-  import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import './App.css';
 
 const ChatApp = () => {
-  const [socket] = useState(io('0.0.0.0:3001'));
+  const [socket] = useState(io('0.0.0.0:3001', {
+    extraHeaders: {
+      Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ5aXNtYWlsaSIsImZpcnN0TmFtZSI6InlvdW5lcyIsImxhc3ROYW1lIjoiaXNtYWlsaSIsImVtYWlsIjoieWlzbWFpbGkxMzM3QGdtYWlsLmNvbSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NKeW9QLUJuZjcxVTVKcDBwWE5faUxSMHB0WDJWWXhnTEdlc09CTklKaVY5Zz1zOTYtYyIsInByb2ZpbGUiOnsiaWQiOjEsInNjb3JlIjowLCJsb3MiOjAsIndpbiI6MCwieHAiOjAsImxldmVsIjowfSwidXNlclJlbGF0aW9ucyI6W10sImZyaWVuZFJlbGF0aW9ucyI6W10sImFjaGlldmVtZW50cyI6W10sImhpc3RvcmllcyI6W10sImlhdCI6MTY5NDg2OTE1M30._BgOmYPL6IU0NV0VPf7W0G31DfT6wEvE-GuyMIRUsIk'
+    }
+  }));
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
   const [messageTextToChatRoom, setMessageTextToChatRoom] = useState('');
@@ -30,17 +32,17 @@ const ChatApp = () => {
 
   useEffect(() => {
     socket.on('message', (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+      setMessages(message);
     });
-
-    socket.on('typing', ({ name, isTyping }) => {
-      if (isTyping) {
-        setTypingDisplay(`${name} is typing...`);
-      } else {
+    
+    socket.on('istyping', (isTyping) => {
+      if (!isTyping) {
         setTypingDisplay('');
+      } else {
+        setTypingDisplay(`is typing...`);
       }
     });
-  }, [socket]);
+  }, socket);
 
   const join = () => {
     socket.emit('join', { user, secondUser }, () => {
@@ -49,8 +51,8 @@ const ChatApp = () => {
   };
 
   const sendMessage = () => {
-    socket.emit('createChat', { message: messageText, user, secondUser }, () => {
-      setMessageText('');
+    socket.emit('createChat', { message: messageText, user, secondUser }, (response) => {
+      setMessages(response);
     });
   };
 
@@ -94,19 +96,19 @@ const ChatApp = () => {
 
   const emitTyping = () => {
     clearTimeout(typingTimeout);
-    socket.emit('typing', { user, isTyping: true });
+    socket.emit('istyping', {isTyping: true });
     typingTimeout = setTimeout(() => {
-      socket.emit('typing', { user, isTyping: false });
+      socket.emit('istyping', {isTyping: false });
     }, 2000);
   };
 
 
 const createChatRoom = () => {
     setstatusPermissions('admin');
-    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, (response) => {
+    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, () => {
       setMessageText('');
       setJoined(true);
-      setchatRoomName(response.name);
+      setchatRoomName(name);
     });
   };
   
@@ -244,7 +246,7 @@ const getAllUserOfChatRoom = () => {
 //               onSubmit={(e) => {
 //                 e.preventDefault();
 //                 sendMessage();
-//                 getMessage();
+//                 //getMessage();
 //               }}
 //             >
 //               <input
@@ -293,7 +295,7 @@ return (
             <label>password:</label>
                 <input value={password} onChange={(l) => setPassword(l.target.value)} />
             <button type="submit">
-              Join
+              create Chat Room
             </button>
           </form>
             {/* {allchatroomOfuser && <div>{allchatroomOfuser}</div>}
@@ -349,7 +351,7 @@ return (
               onSubmit={(e) => {
                 e.preventDefault();
                 sendMessageToChatRoom();
-                getMessageFromchatRoom();
+                //getMessageFromchatRoom();
               }}
             >
               <input value={messageTextToChatRoom}
