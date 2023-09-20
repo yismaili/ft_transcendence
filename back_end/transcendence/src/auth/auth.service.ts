@@ -10,6 +10,10 @@ import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { UserDto } from './dtos/user.dto';
 import { RandomService } from 'src/random/random.service';
 import { UserParams } from 'utils/types';
+import { authenticator } from 'otplib';
+import { UserService } from 'src/user/user.service';
+import { toDataURL } from 'qrcode';
+
 
   @Injectable()
   export class AuthService {
@@ -20,6 +24,7 @@ import { UserParams } from 'utils/types';
       @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
       @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
       private generatenUsename:RandomService,
+      private userService: UserService
       ) {}
       
 async findAll() {
@@ -116,15 +121,18 @@ async findUserById(user: Partial<User>): Promise<Partial<UserParams>> {
       return null;
     }
   }
+
+  async generateTwoFactorAuthSecret(user: User){
+    const secret = authenticator.generateSecret();
+    const otpauthUrl = authenticator.keyuri(user.email, 'transcendence', secret);
+    await this.userService.setTwoFactorAuthenticationSecret(secret, user.username);
+    return({secret, otpauthUrl});
+  }
+
+  async generateQrCodeDataURL(otpAuthUrl: string) {
+    return toDataURL(otpAuthUrl);
+  }
+
 }
 
-
-// This JWT contains three parts separated by dots:
-
-// Header: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-// Payload: eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE2MjkwNTI3NjMsImV4cCI6MTYyOTA1NjM2M30
-// Signature: m5GWJk6h5vbz9opE2cZS9u8lQHlM3eUV1R-FYCw0Ugk
-
-// The header contains the token type and the signing algorithm, the payload contains the user data (ID, username, email, etc.),
-//  and the signature is used to verify the authenticity of the token.
 
