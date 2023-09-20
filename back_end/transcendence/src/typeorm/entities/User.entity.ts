@@ -27,6 +27,9 @@ export class User {
   @Column({ nullable: true })
   picture: string;
 
+  @Column({ nullable: true })
+  status: string;
+
   @OneToOne(() => Profile, profile => profile.user, { cascade: true })
   profile: Profile;
 

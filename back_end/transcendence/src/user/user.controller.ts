@@ -9,10 +9,17 @@ import { RelationDto } from 'src/auth/dtos/relation.dto';
 import { OutcomeDto} from 'src/auth/dtos/outcome.dto';
 import { updateProfileDto } from 'src/auth/dtos/updateProfile.dto';
 import { AchievementParams, HistoryParams, IAuthenticate, ProfileParams, RelationParams, UserParams } from 'utils/types';
+import { WebSocketServer } from '@nestjs/websockets';
+import { Socket, Server } from 'socket.io';
+import { ChatService } from 'src/chat/chat.service';
 
 @Controller('users')
 export class UserController {
-    constructor(private userService: UserService){}
+    // @WebSocketServer() server: Server;
+    // handleConnection(socket: Socket): void {
+    //     this.chatService.handleConnection(socket);
+    // }
+    constructor(private userService: UserService, private chatService: ChatService){}
     
     @Get(':username')
     async getDetailsUser(@Param('username') username: string): Promise<UserParams>{
@@ -224,6 +231,17 @@ export class UserController {
         }
     }
 
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/status')
+    async getSatatusOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.getStatusOfUsers(username); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
     // @UseGuards(JwtAuthGuard, JwtStrategy)
     // @Get('profile/:username/suggest')
     // async suggestOfUser(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationDto[]>{

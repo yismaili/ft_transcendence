@@ -39,18 +39,18 @@ services:
     networks:
       - app-net
 
-  # frontend:
-  #   build: ./frontend_tools
-  #   container_name: frontend
-  #   restart: always
-  #   depends_on:
-  #     - backend
-  #   ports:
-  #     - "5000:5000"
-  #   volumes:
-  #     - frontend-src:/app
-  #   networks:
-  #     - app-net
+  frontend:
+    build: ./frontend_tools
+    container_name: frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - frontend-src:/app
+    networks:
+      - app-net
 
 volumes:
   backend-src:
