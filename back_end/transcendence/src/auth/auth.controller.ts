@@ -1,8 +1,10 @@
-import {Controller,
+import {Body, Controller,
     Get,
     HttpStatus, 
+    Post, 
     Req, 
     Res, 
+    UnauthorizedException, 
     UseGuards
    } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -12,11 +14,13 @@ import { IntraGuard } from './guard/intra.guard';
 import { JwtAuthGuard } from './guard/jwt.guard';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { User } from 'src/typeorm/entities/User.entity';
+import { UserService } from 'src/user/user.service';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {} //we used this constructor for 'Dependency Injection'
+    constructor(private readonly authService: AuthService,  private userService: UserService) {} //we used this constructor for 'Dependency Injection'
 
+  
   @Get('all') // decorator is define an HTTP GET endpoint
   async findAll(): Promise<User[]> {
     const users = this.authService.findAll()
@@ -39,6 +43,7 @@ export class AuthController {
         firstName: req.user.firstName,
         lastName: req.user.lastName,
         picture: req.user.picture,
+        accessToken: req.user.accessToken
       };
 
     const response = await this.authService.googleAuthenticate(user);
@@ -78,4 +83,25 @@ export class AuthController {
   profile(@Req() req, @Res() res){
       return(res.status(HttpStatus.OK).json(req.user));
   }
+ 
+  @Post('2fa/generate')
+  @UseGuards(JwtAuthGuard, JwtStrategy)
+  async register(@Req() @Req() req: any) {
+      const { otpauthUrl } = await this.authService.generateTwoFactorAuthSecret(req.user.username);
+      return this.authService.generateQrCodeDataURL(otpauthUrl);
+  }
+
+//   @Post('2fa/turn-on')
+//  // @UseGuards(JwtAuthGuard, JwtStrategy)
+//     async turnOnTwoFactorAuthentication(@Req() request, @Body() body) {
+//         const isCodeValid =
+//           this.authService.isTwoFactorAuthenticationCodeValid(
+//             body.twoFactorAuthenticationCode,
+//             request.user,
+//         );
+//         if (!isCodeValid) {
+//           throw new UnauthorizedException('Wrong authentication code');
+//       }
+//       await this.userService.turnOnTwoFactorAuthentication(request.user.username);
+//   }
 }
