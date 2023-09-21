@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UsingJoinColumnIsNotAllowedError } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 import { User } from 'src/typeorm/entities/User.entity';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
@@ -13,6 +13,7 @@ import { UserParams } from 'utils/types';
 import { authenticator } from 'otplib';
 import { UserService } from 'src/user/user.service';
 import { toDataURL } from 'qrcode';
+import { TwoFactorAuthenticationCodeDto } from './dtos/TwoFactorAuthenticationCode.dto';
 
 
   @Injectable()
@@ -135,13 +136,12 @@ async findUserById(user: Partial<User>): Promise<Partial<UserParams>> {
     return toDataURL(otpAuthUrl);
   }
 
-  async isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, username: string) : Promise<any>{
+  async isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto, username: string) : Promise<any>{
     try {
-
       const user = await this.userRepository.findOne({ where: { username: username }});
       if (user) {
-        return authenticator.verify({
-          token: twoFactorAuthenticationCode,
+        return await authenticator.verify({
+          token: twoFactorAuthenticationCode.code,
           secret: user.twoFactorAuthSecret
         });
       } 
@@ -149,7 +149,8 @@ async findUserById(user: Partial<User>): Promise<Partial<UserParams>> {
         throw new Error('User not found.');
       }
     } catch (error) {
-      throw new Error(`Error two factor auth ${error}`);
+      console.error("Error occurred:", error); 
+      throw new Error(`Error two factor auth`);
     }
   }
 
