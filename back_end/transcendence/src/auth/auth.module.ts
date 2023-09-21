@@ -20,7 +20,6 @@ import { ChatRoomUser } from 'src/typeorm/entities/chat-room-users.entity';
 import { Message } from 'src/typeorm/entities/message-entity';
 import { Chat } from 'src/typeorm/entities/chat-entity';
 import { UserService } from 'src/user/user.service';
-import { UserModule } from 'src/user/user.module';
 import { ChatService } from 'src/chat/chat.service';
 
 

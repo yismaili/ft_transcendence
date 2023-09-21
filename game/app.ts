@@ -247,14 +247,14 @@ class PongGame {
             }, 1000 / 100); // 100 frames per second
         }
     }
-    stop() {
-        if (this.isRunning) {
-            clearInterval(this.intervalId);
-            this.isRunning = false;
-            this.leftPlayerScore = 0;
-            this.rightPlayerScore = 0;
-        }
-    }
+    // stop() {
+    //     if (this.isRunning) {
+    //         clearInterval(this.intervalId);
+    //         this.isRunning = false;
+    //         this.leftPlayerScore = 0;
+    //         this.rightPlayerScore = 0;
+    //     }
+    // }
 
     joinGame() {
         this.socket.emit("createGame", {username: this.username?.value}, (response: { id: number}) => {
