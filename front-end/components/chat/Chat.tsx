@@ -10,10 +10,12 @@ import Msg from "./Msg/Msg";
 export default function Chat() {
   const [isGroup, setGroup] = useState(false);
   let [users, setUsers] = useState<UserArray>();
+  const [userConversation, setUserConversation] = useState<UserFriend>();
 
   useEffect(() => {
     const fetching = async () => {
       const res = await fetch("http://localhost:3000/api/chat");
+      // I need to fetch the api/home to pass it to Msg ot socket.io event
       const users = await res.json();
       setUsers(users);
     };
@@ -43,7 +45,7 @@ export default function Chat() {
         </header>
         <div className={Style.subContainer}>
           <div className={Style.left}>
-            <SlideButton func={turnSwitch} />
+            <SlideButton func={turnSwitch} resetChat={setUserConversation} />
             {/* {isGroup ? <Group /> : <Direct />} */}
           </div>
           <div className={Style.right}></div>
@@ -63,7 +65,7 @@ export default function Chat() {
       </header>
       <div className={Style.subContainer}>
         <div className={Style.left}>
-          <SlideButton func={turnSwitch} />
+          <SlideButton func={turnSwitch} resetChat={setUserConversation} />
           <ul>
             {isGroup ? (
               <Group />
@@ -71,7 +73,7 @@ export default function Chat() {
               users.data.map((user) => {
                 return (
                   <li key={user.id}>
-                    <Direct data={user} />
+                    <Direct data={user} choseChat={setUserConversation} />
                   </li>
                 );
               })
@@ -79,7 +81,7 @@ export default function Chat() {
           </ul>
         </div>
         <div className={Style.right}>
-          <Msg />
+          <Msg datatoShow={userConversation} />
         </div>
       </div>
     </div>

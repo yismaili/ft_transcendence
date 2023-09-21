@@ -20,6 +20,7 @@
     "react-dom": "^18.2.0",
     "react-player": "^2.12.0",
     "react-scroll": "^1.8.9",
+    "socket.io": "^4.7.2",
     "typescript": "5.1.6",
     "webaudio": "^1.0.1"
   },
