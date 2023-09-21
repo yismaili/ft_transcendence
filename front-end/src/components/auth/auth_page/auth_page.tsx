@@ -39,4 +39,4 @@ function AuthSection(){
         </main>
     </>);
 }
-export default AuthSection;
+export default AuthSection; 

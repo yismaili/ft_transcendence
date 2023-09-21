@@ -127,7 +127,10 @@ body{
     height: 100dvh;
     max-width: 1536px;
     margin: 0 auto;
+    background-image: linear-gradient(270deg, rgba(38,37,69,1) 0%, rgba(47,42,96,1) 50%, rgba(20,16,49,1) 100%);
+    position: relative;
 }
+
 
 
 @media (max-width: 1536px) {

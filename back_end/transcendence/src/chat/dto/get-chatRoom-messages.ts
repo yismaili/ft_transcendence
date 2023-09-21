@@ -1,4 +1,4 @@
 export  class GetChatRoomMessages{
-    chatRoomId: number
+    chatRoomName: string;
     username: string;
 }

@@ -8,4 +8,3 @@ export interface HistoryDto {
     user: User;
     userCompetitor: User;
   }
-  

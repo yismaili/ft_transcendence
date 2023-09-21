@@ -1,6 +1,6 @@
 {
-  "/Auth/page": "app/Auth/page.js",
   "/UserProfile/page": "app/UserProfile/page.js",
+  "/UserProfile/Parameters/page": "app/UserProfile/Parameters/page.js",
   "/Chat/page": "app/Chat/page.js",
-  "/Auth/2FA/page": "app/Auth/2FA/page.js"
+  "/Auth/page": "app/Auth/page.js"
 }

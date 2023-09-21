@@ -34,7 +34,7 @@
 
 .toggle__switch__checkbox::before{
     content: "groups";
-    color: var(--test);
+    color: #FFFADE;
     left: 40px;
 }
 

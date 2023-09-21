@@ -8,9 +8,9 @@ export class ChatRoomUser {
   id: number;
 
   @Column({ nullable: true })
-  time: string;
+  time: Date;
 
-  @Column({ nullable: true })
+  @Column()
   statusPermissions: string;
 
   @Column({ nullable: true })
