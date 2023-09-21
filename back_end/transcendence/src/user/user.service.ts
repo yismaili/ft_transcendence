@@ -18,7 +18,6 @@ import { AchievementParams,
    ProfileParams, 
    RelationParams, 
    UserParams } from 'utils/types';
-import { StatusUserDto } from './dto/status-user.dto';
 
 
 @Injectable()
@@ -501,6 +500,52 @@ async getStatusOfUsers(username: string) {
     return relationDtos;
   } catch (error) {
     throw new Error(`Error fetching friends: ${error.message}`);
+  }
+}
+
+async setTwoFactorAuthenticationSecret(secret: string, username: string) {
+  try {
+    const user = await this.userRepository.findOne({ where: { username: username } });
+
+    if (user) {
+      user.twoFactorAuthSecret = secret;
+      await this.userRepository.save(user);
+      console.log('Two-factor authentication secret set successfully.');
+    } else {
+      console.log('User not found.');
+    }
+  } catch (error) {
+    throw new Error('Error setting two-factor authentication secret');
+  }
+}
+
+
+async turnOnTwoFactorAuthentication(username: string){
+  try {
+    const user = await this.userRepository.findOne({ where: { username: username } });
+    if (user) {
+      user.isTwoFactorAuthEnabled = true;
+      await this.userRepository.save(user);
+    } else {
+      throw new Error('User not found.');
+    }
+  } catch (error) {
+    throw new Error(`Error two factor auth ${error}`);
+  }
+}
+
+async turnOffTwoFactorAuthentication(username: string){
+  try {
+    const user = await this.userRepository.findOne({ where: { username: username } });
+
+    if (user) {
+      user.isTwoFactorAuthEnabled = false;
+      await this.userRepository.save(user);
+    } else {
+      throw new Error('User not found.');
+    }
+  } catch (error) {
+    throw new Error(`Error two factor auth ${error}`);
   }
 }
 

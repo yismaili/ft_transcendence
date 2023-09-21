@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UsingJoinColumnIsNotAllowedError } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 import { User } from 'src/typeorm/entities/User.entity';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
@@ -10,6 +10,11 @@ import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { UserDto } from './dtos/user.dto';
 import { RandomService } from 'src/random/random.service';
 import { UserParams } from 'utils/types';
+import { authenticator } from 'otplib';
+import { UserService } from 'src/user/user.service';
+import { toDataURL } from 'qrcode';
+import { TwoFactorAuthenticationCodeDto } from './dtos/TwoFactorAuthenticationCode.dto';
+
 
   @Injectable()
   export class AuthService {
@@ -20,6 +25,7 @@ import { UserParams } from 'utils/types';
       @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
       @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
       private generatenUsename:RandomService,
+      private userService: UserService
       ) {}
       
 async findAll() {
@@ -36,7 +42,7 @@ async findAll() {
 
 async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
 
-  let { email, firstName, username, lastName, picture } = userDetails;
+  let { email, firstName, username, lastName, picture, accessToken } = userDetails;
 
   const existingUser = await this.userRepository.findOne({
     where: {
@@ -50,6 +56,7 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
     existingUser.lastName = lastName || existingUser.lastName;
     existingUser.username = username || existingUser.username;
     existingUser.picture = picture|| existingUser.picture;
+    existingUser.accessToken = accessToken || existingUser.accessToken;
       
     await this.userRepository.save(existingUser);
       
@@ -75,6 +82,7 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
         username,
         email,
         picture,
+        accessToken
     });
       
   // Create a new 'Profile' entity if profile data is provided
@@ -116,15 +124,36 @@ async findUserById(user: Partial<User>): Promise<Partial<UserParams>> {
       return null;
     }
   }
+
+  async generateTwoFactorAuthSecret(user: User){
+    const secret = authenticator.generateSecret();
+    const otpauthUrl = authenticator.keyuri(user.email, 'transcendence', secret);
+    await this.userService.setTwoFactorAuthenticationSecret(secret, user.username);
+    return({secret, otpauthUrl});
+  }
+
+  async generateQrCodeDataURL(otpAuthUrl: string) {
+    return toDataURL(otpAuthUrl);
+  }
+
+  async isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto, username: string) : Promise<any>{
+    try {
+      const user = await this.userRepository.findOne({ where: { username: username }});
+      if (user) {
+        return await authenticator.verify({
+          token: twoFactorAuthenticationCode.code,
+          secret: user.twoFactorAuthSecret
+        });
+      } 
+      else {
+        throw new Error('User not found.');
+      }
+    } catch (error) {
+      console.error("Error occurred:", error); 
+      throw new Error(`Error two factor auth`);
+    }
+  }
+
 }
 
-
-// This JWT contains three parts separated by dots:
-
-// Header: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
-// Payload: eyJpZCI6MSwidXNlcm5hbWUiOiJhZG1pbiIsImVtYWlsIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJpYXQiOjE2MjkwNTI3NjMsImV4cCI6MTYyOTA1NjM2M30
-// Signature: m5GWJk6h5vbz9opE2cZS9u8lQHlM3eUV1R-FYCw0Ugk
-
-// The header contains the token type and the signing algorithm, the payload contains the user data (ID, username, email, etc.),
-//  and the signature is used to verify the authenticity of the token.
 
