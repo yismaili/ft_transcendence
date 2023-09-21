@@ -1,19 +1,8 @@
-// export default async function getUserData() {
-//   const mycookie = cookies().get("userData");
-//   if (!mycookie)
-//     throw new Error("User data cookie not found. ----> Plese login <----");
+const create = async (formData: FormData) =>{
 
-//   const data = JSON.parse(mycookie!.value);
+    console.log('test');
+    // return("tacos");
+    
+  }
 
-//   const token = data?.response?.token;
-//   if (!token) throw new Error("Token not found in the user data.");
-
-//   const res = await fetch(
-//     `http://localhost:3001/users/profile/${data.response.user.username}`,
-//     {
-//       headers: { authorization: `Bearer ${token}` },
-//     }
-//   );
-
-//   return res.json();
-// }
+  export default create;

@@ -91,7 +91,7 @@ export class ChatService {
           { user: { id: user.id }, secondUser: { id: secondUser.id } },
           { user: { id: secondUser.id }, secondUser: { id: user.id } },
         ],
-        // relations: ['user']
+        relations: ['user']
       });
       server.to(roomName).emit('message', chats);
       return;
