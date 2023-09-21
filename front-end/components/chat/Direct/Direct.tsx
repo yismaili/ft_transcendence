@@ -1,12 +1,14 @@
 import Style from "./Direct.module.css";
 
 type props = {
-  data: UserFriend
+  data: UserFriend,
+  choseChat: Function
 }
 
-export default function Direct({ data }: props) {
+export default function Direct({ data, choseChat }: props) {
+  const choseConversation = () => choseChat(data);
   return (
-    <div className={Style.container}>
+    <div className={Style.container} onClick={choseConversation}>
       <div className={Style.imgContainer}>
       <div className={Style.avatar} style={{ backgroundImage: `url("${data.user.picture}")` }}>
       </div>

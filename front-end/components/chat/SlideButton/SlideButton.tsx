@@ -1,20 +1,22 @@
-import { useState } from 'react';
-import Style from './SlideButton.module.css'
+import { useState } from "react";
+import Style from "./SlideButton.module.css";
 import { motion, useAnimation } from "framer-motion";
 
 type props = {
-    func: Function
-}
+  func: Function;
+  resetChat: Function;
+};
 
-export default function SlideButton({ func }: props) {
-    const [isGroup, setGroup] = useState(false);
-    const controls = useAnimation();
+export default function SlideButton({ func, resetChat }: props) {
+  const [isGroup, setGroup] = useState(false);
+  const controls = useAnimation();
 
-    const turnSwitch = () => {
-        func();
-        setGroup(!isGroup);
-        controls.start(isGroup ? "false" : "true");
-    };
+  const turnSwitch = () => {
+    resetChat();
+    func();
+    setGroup(!isGroup);
+    controls.start(isGroup ? "false" : "true");
+  };
 
   return (
     <div className={Style.slideBtn}>
