@@ -42,7 +42,7 @@ async findAll() {
 
 async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
 
-  let { email, firstName, username, lastName, picture, accessToken } = userDetails;
+  let { email, firstName, username, lastName, picture} = userDetails;
 
   const existingUser = await this.userRepository.findOne({
     where: {
@@ -56,7 +56,6 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
     existingUser.lastName = lastName || existingUser.lastName;
     existingUser.username = username || existingUser.username;
     existingUser.picture = picture|| existingUser.picture;
-    existingUser.accessToken = accessToken || existingUser.accessToken;
       
     await this.userRepository.save(existingUser);
       
@@ -82,7 +81,6 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
         username,
         email,
         picture,
-        accessToken
     });
       
   // Create a new 'Profile' entity if profile data is provided
