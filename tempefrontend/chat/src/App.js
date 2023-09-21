@@ -52,7 +52,7 @@ const ChatApp = () => {
 
   const sendMessage = () => {
     socket.emit('createChat', { message: messageText, user, secondUser }, (response) => {
-      setMessages(response);
+      // setMessages(response);
     });
   };
 
