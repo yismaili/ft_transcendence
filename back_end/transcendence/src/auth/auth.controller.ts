@@ -51,7 +51,6 @@ export class AuthController {
         firstName: req.user.firstName,
         lastName: req.user.lastName,
         picture: req.user.picture,
-        accessToken: req.user.accessToken
       };
 
     const response = await this.authService.googleAuthenticate(user);
@@ -69,7 +68,6 @@ export class AuthController {
 
     const user: Partial<User> = {
       email: req.user.email,
-      // username: req.user.username,
       firstName: req.user.firstName,
       lastName: req.user.lastName,
       picture: req.user.picture,
@@ -119,8 +117,7 @@ export class AuthController {
       email: request.user.email,
       firstName: request.user.firstName,
       lastName: request.user.lastName,
-      picture: request.user.picture,
-      accessToken: request.user.accessToken
+      picture: request.user.picture
     };
 
   const response = await this.authService.googleAuthenticate(user);
