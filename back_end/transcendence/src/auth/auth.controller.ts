@@ -1,5 +1,6 @@
 import {Body, Controller,
     Get,
+    HttpCode,
     HttpStatus, 
     Post, 
     Req, 
@@ -15,12 +16,19 @@ import { JwtAuthGuard } from './guard/jwt.guard';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { User } from 'src/typeorm/entities/User.entity';
 import { UserService } from 'src/user/user.service';
+import { TwoFactorAuthenticationCodeDto } from './dtos/TwoFactorAuthenticationCode.dto';
+import { WebSocketServer } from '@nestjs/websockets';
+import { Socket, Server } from 'socket.io';
+import { ChatService } from 'src/chat/chat.service';
 
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService,  private userService: UserService) {} //we used this constructor for 'Dependency Injection'
+  @WebSocketServer() server: Server;
+    constructor(private readonly authService: AuthService,  private userService: UserService, private chatService: ChatService) {} //we used this constructor for 'Dependency Injection'
 
-  
+    handleConnection(socket: Socket): void {
+        this.chatService.handleConnection(socket);
+    }
   @Get('all') // decorator is define an HTTP GET endpoint
   async findAll(): Promise<User[]> {
     const users = this.authService.findAll()
@@ -48,10 +56,8 @@ export class AuthController {
 
     const response = await this.authService.googleAuthenticate(user);
     if (response.success){
-      res.cookie('userData', {response},{
-        // httpOnly: 
-      })
-      return res.redirect('/auth/home'); // Redirect to home page
+      res.cookie('userData', { response });
+      return res.redirect('/auth/home');
     }
     return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
   
@@ -91,17 +97,38 @@ export class AuthController {
       return this.authService.generateQrCodeDataURL(otpauthUrl);
   }
 
-//   @Post('2fa/turn-on')
-//  // @UseGuards(JwtAuthGuard, JwtStrategy)
-//     async turnOnTwoFactorAuthentication(@Req() request, @Body() body) {
-//         const isCodeValid =
-//           this.authService.isTwoFactorAuthenticationCodeValid(
-//             body.twoFactorAuthenticationCode,
-//             request.user,
-//         );
-//         if (!isCodeValid) {
-//           throw new UnauthorizedException('Wrong authentication code');
-//       }
-//       await this.userService.turnOnTwoFactorAuthentication(request.user.username);
-//   }
+  @Post('2fa/turn-on')
+  @UseGuards(JwtAuthGuard)
+  async turnOnTwoFactorAuthentication(@Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
+    const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
+    if (!isCodeValid) {
+      throw new UnauthorizedException('Wrong authentication code');
+    }
+    await this.userService.turnOnTwoFactorAuthentication(request.user.username);
+  }
+
+  @Post('2fa/authenticate')
+  @HttpCode(200)
+  @UseGuards(JwtAuthGuard)
+  async authenticate( @Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto, @Res() res: Response) {
+    const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
+    console.log(isCodeValid);
+    if (!isCodeValid) {
+      throw new UnauthorizedException('Wrong authentication code');
+    }
+    const user: Partial<User> = {
+      email: request.user.email,
+      firstName: request.user.firstName,
+      lastName: request.user.lastName,
+      picture: request.user.picture,
+      accessToken: request.user.accessToken
+    };
+
+  const response = await this.authService.googleAuthenticate(user);
+  if (response.success){
+    res.cookie('userData', { response });
+    return res.redirect('/auth/home');
+  }
+    return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
+  }
 }

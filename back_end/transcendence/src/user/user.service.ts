@@ -523,7 +523,6 @@ async setTwoFactorAuthenticationSecret(secret: string, username: string) {
 async turnOnTwoFactorAuthentication(username: string){
   try {
     const user = await this.userRepository.findOne({ where: { username: username } });
-
     if (user) {
       user.isTwoFactorAuthEnabled = true;
       await this.userRepository.save(user);
