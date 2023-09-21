@@ -191,14 +191,14 @@ var PongGame = /** @class */ (function () {
             }, 1000 / 100); // 100 frames per second
         }
     };
-    PongGame.prototype.stop = function () {
-        if (this.isRunning) {
-            clearInterval(this.intervalId);
-            this.isRunning = false;
-            this.leftPlayerScore = 0;
-            this.rightPlayerScore = 0;
-        }
-    };
+    // stop() {
+    //     if (this.isRunning) {
+    //         clearInterval(this.intervalId);
+    //         this.isRunning = false;
+    //         this.leftPlayerScore = 0;
+    //         this.rightPlayerScore = 0;
+    //     }
+    // }
     PongGame.prototype.joinGame = function () {
         var _this = this;
         var _a;
