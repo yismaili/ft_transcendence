@@ -5,5 +5,4 @@ export class UserDto {
     username: string;
     email: string;
     picture: string;
-    accessToken: string;
 }
