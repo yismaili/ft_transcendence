@@ -22,7 +22,10 @@ body{
     height: 100dvh;
     max-width: 1536px;
     margin: 0 auto;
+    background-image: linear-gradient(270deg, rgba(38,37,69,1) 0%, rgba(47,42,96,1) 50%, rgba(20,16,49,1) 100%);
+    position: relative;
 }
+
 
 
 @media (max-width: 1536px) {
@@ -258,7 +261,7 @@ body{
 
 .toggle__switch__checkbox::before{
     content: "groups";
-    color: var(--test);
+    color: #FFFADE;
     left: 40px;
 }
 
@@ -387,17 +390,22 @@ body{
     flex: 0.8;
     width: 90%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    overflow: auto;
 }
 
+
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./src/components/chat/chat_friends/chat_friend/chat_friend.css ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************/
 .chat__friend{
-    width: 100%;
+    width: 95%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     background-color: #fdfdfd23;
-    max-height: 80px;
     border-radius: 16px;
+    margin-bottom: 1rem;
 }
 
 .chat__friend__identity{
@@ -413,10 +421,6 @@ body{
     margin: 0 2rem;
 }
 
-.avatar{
-    width: 5rem;
-    height: 5rem;
-}
 /*!*******************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./src/components/chat/chat_addbar/chat-addbar.css ***!
   \*******************************************************************************************************************************************************************************************************************************************************************************************/

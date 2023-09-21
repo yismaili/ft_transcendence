@@ -8,6 +8,13 @@ import { JoinUsertoChatRoom } from './dto/join-user-to-chatRoom.dto';
 import { SendMessageToChatRoom } from './dto/send-message-to-chatRomm';
 import { GetChatRoomMessages } from './dto/get-chatRoom-messages';
 import { JoinChatRoom } from './dto/join-chat-room';
+import { BanUserDto } from './dto/ban-user.dto';
+import { KickUserDto } from './dto/kick-user.dto';
+import { MuteUserDto } from './dto/mut-user.dto';
+import { ChatRoomOfUserDto } from './dto/chatRoom-of-user.dto';
+import { LeaveChatRoomDto } from './dto/leave-ChatRoom.dto';
+import { JoinRoom } from './dto/join-room.dto';
+import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
 
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
@@ -27,13 +34,12 @@ export class ChatGateway {
   @SubscribeMessage('createChatRoom')
   createChatRoom(@MessageBody() createChatRoomDto: CreateChatRoomDto, @ConnectedSocket() client: Socket) {
     const message = this.chatService.createChatRoom(createChatRoomDto);
-    this.server.emit('message', message);
     return message;
   }
 
   @SubscribeMessage('JoinUsertoRoom')
   joinUsarToChatRoom(@MessageBody() joinUsertoChatRoom: JoinUsertoChatRoom, @ConnectedSocket() client: Socket) {
-    const message = this.chatService.joinUsarToChatRoom(joinUsertoChatRoom);
+    const message = this.chatService.joinUserToChatRoom(joinUsertoChatRoom);
     this.server.emit('message', message);
     return message;
   }
@@ -50,9 +56,9 @@ export class ChatGateway {
     return this.chatService.findAllChatRoomConversation(getChatRoomMessages);
   }
 
-  @SubscribeMessage('joinChatRoom')
-  joinChatRoom(@MessageBody() joinChatRoom:JoinChatRoom) {
-    return this.chatService.joinChatRoom(joinChatRoom);
+  @SubscribeMessage('joinChatRoomWithAdmin')
+  joinChatRoomWithAdmin(@MessageBody() joinChatRoom:JoinChatRoom) {
+    return this.chatService.joinChatRoomWithAdmin(joinChatRoom);
   }
 
   @SubscribeMessage('findAllChat')
@@ -79,15 +85,72 @@ export class ChatGateway {
   remove(@MessageBody() updateChatDto: UpdateChatDto) {
     return this.chatService.remove(updateChatDto);
   }
+
   @SubscribeMessage('deleteConversation')
   removeConversation(@MessageBody() updateChatDto: UpdateChatDto) {
     return this.chatService.removeConversation(updateChatDto);
   }
 
-  @SubscribeMessage('typing')
+  @SubscribeMessage('banUser')
+  async banUser(@MessageBody() banUserDto: BanUserDto) {
+   return this.chatService.banUser(banUserDto);
+  }
+
+  @SubscribeMessage('kickUser')
+  async kickUser(@MessageBody() kickUserDto: KickUserDto) {
+   return this.chatService.kickUser(kickUserDto);
+  }
+
+  @SubscribeMessage('muteUser')
+  async muteUser(@MessageBody() muteUserDto: MuteUserDto) {
+   return this.chatService.muteUser(muteUserDto);
+  }
+
+  @SubscribeMessage('chatRoomOfUser')
+  async getAllChatRoomOfUser(@MessageBody() chatRoomOfUserDto: ChatRoomOfUserDto) {
+    return this.chatService.getAllChatRoomOfUser(chatRoomOfUserDto);
+  }
+
+  @SubscribeMessage('unbannedUser')
+  async unbannedUser(@MessageBody() unbannedUserDtoo: BanUserDto) {
+    return this.chatService.unbannedUser(unbannedUserDtoo);
+  }
+
+  @SubscribeMessage('changePermission')
+  async changePermissionToUser(@MessageBody() changePermissionToUserDto: BanUserDto) {
+    return this.chatService.changePermissionToUser(changePermissionToUserDto);
+  }
+
+  @SubscribeMessage('leaveChatRoom')
+  async leaveChatRoom(@MessageBody() leaveChatRoomDto: LeaveChatRoomDto) {
+    return this.chatService.leaveChatRoom(leaveChatRoomDto);
+  }
+
+  @SubscribeMessage('deleteChatRoom')
+  async deleteChatRoom(@MessageBody() deleteChatRoomDto: LeaveChatRoomDto) {
+    return this.chatService.deleteChatRoom(deleteChatRoomDto);
+  }
+
+  @SubscribeMessage('isTyping')
   async typing(@MessageBody('isTyping') isTyping: boolean, @ConnectedSocket() client: Socket) {
     const name = await this.chatService.getClientName(client.id);
     client.broadcast.emit('typing', { name, isTyping });
-}
+  }
+
+  @SubscribeMessage('AllchatRoom')
+  async getAllChatRoom(@MessageBody() chatRoomOfUserDto: ChatRoomOfUserDto) {
+    return this.chatService.getAllChatRoom(chatRoomOfUserDto);
+  }
+
+  @SubscribeMessage('joinChatRoom')
+  joinChatRoom(@MessageBody() joinRoom:JoinRoom ) {
+    return this.chatService.joinChatRoom(joinRoom);
+  }
+
+  @SubscribeMessage('getAllUserOfChatRoom')
+  getAllUserOfChatRoom(@MessageBody() usersOfChatRoom:UsersOfChatRoom ) {
+    return this.chatService.getAllUserOfChatRoom(usersOfChatRoom);
+  }
+
 }
 

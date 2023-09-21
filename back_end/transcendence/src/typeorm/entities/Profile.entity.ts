@@ -7,16 +7,16 @@ export class Profile {
   id: number;
 
   @Column({ nullable: true })
-  score: number = 90;
+  score: number;
 
   @Column({ nullable: true })
-  los: number = 95;
+  los: number;
 
   @Column({ nullable: true })
-  win: number = 40;
+  win: number;
 
   @Column({ nullable: true })
-  xp: number = 50;
+  xp: number;
 
   @Column({ nullable: true })
   level: number;

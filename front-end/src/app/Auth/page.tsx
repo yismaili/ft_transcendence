@@ -4,7 +4,7 @@ import "@/global_css/utilityClasses.css";
 import AuthSection from '@/components/auth/auth_page/auth_page';
 function App() {
   return (<>
-  <AuthSection />
+    <AuthSection />
   </>);
 }
 

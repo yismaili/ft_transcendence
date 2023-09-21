@@ -8,7 +8,7 @@ async function bootstrap() { // asynchronous function, the entry point of the ap
   const app = await NestFactory.create(AppModule); // class is responsible for creating the application instance.
   // keyword can use await to wait for promises to resolve
   app.enableCors({
-    origin: '*',
+    origin: 'http://localhost:3000/',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,

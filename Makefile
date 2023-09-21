@@ -1,6 +1,6 @@
 build:
 	docker-compose -f ./back_end/docker-compose.yml build
-	mkdir -p /Users/eel-moun/Desktop/ft_transcendence/postgres
+	mkdir -p ${PWD}/postgres
 
 up:
 	docker-compose -f ./back_end/docker-compose.yml up #-d
@@ -19,9 +19,10 @@ logs:
 
 clean:
 	docker stop $$(docker ps -qa);\
+	docker system prune -a;\
 	docker rm $$(docker ps -qa);\
 	docker rmi -f $$(docker images -qa);\
 	docker volume rm $$(docker volume ls -q);\
 	docker network rm $$(docker network ls -q);\
-	rm -rf /Users/eel-moun/Desktop/ft_transcendence/postgres/\
+	rm -rf ${PWD}/postgres/\
 .PHONY: build up down restart clean	

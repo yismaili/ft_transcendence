@@ -1,5 +1,5 @@
 export class OutcomeDto{
-    id: number;
+    username: string;
     score: number;
     win: number;
     los: number;

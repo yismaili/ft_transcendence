@@ -1,0 +1,27 @@
+.Params__pic{
+    margin-top: 1rem;
+}
+
+.Params__profile__pic{
+    position: relative;
+    display: inline-block;
+    width: 160px;
+    height: 160px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    border-radius: 1000px;
+}
+
+.pic__edit__btn{
+    display: inline-block;
+    width: 32px;
+    height: 30px;
+    background-image: url("/img/pic_editer.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    position: absolute;
+    top: 15px;
+    right: 3px;
+}
