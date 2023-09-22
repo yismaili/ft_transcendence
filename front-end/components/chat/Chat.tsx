@@ -9,30 +9,32 @@ import Msg from "./Msg/Msg";
 
 export default function Chat() {
   const [isGroup, setGroup] = useState(false);
-  let [users, setUsers] = useState<UserArray>();
-  const [userConversation, setUserConversation] = useState<UserFriend>();
+  let [firends, setFriends] = useState<UserArray>();
+  let [user, setUser] = useState<User>();
+  const [userFriend, setUserFriend] = useState<UserFriend>();
 
   useEffect(() => {
     const fetching = async () => {
-      const res = await fetch("http://localhost:3000/api/chat");
-      // I need to fetch the api/home to pass it to Msg ot socket.io event
-      const users = await res.json();
-      setUsers(users);
+      const resFriend = await fetch("http://localhost:3000/api/chat");
+      const firends = await resFriend.json();
+      setFriends(firends);
+
+      const resUser = await fetch("http://localhost:3000/api/home");
+      const user = await resUser.json();
+      setUser(user);
     };
     fetching();
   }, []);
-  // if (users)
-  // console.log(users);
 
-  // users.data.map((user) => {
-  //   console.log( user);
-  // });
 
   const turnSwitch = () => {
     setGroup(!isGroup);
   };
 
-  if (users == undefined)
+  // console.log(user.length == 0);
+  
+
+  if (firends == undefined || user == undefined || JSON.stringify(user).length <= 2)
     return (
       <div className={Style.container}>
         <header className={Style.header}>
@@ -45,7 +47,7 @@ export default function Chat() {
         </header>
         <div className={Style.subContainer}>
           <div className={Style.left}>
-            <SlideButton func={turnSwitch} resetChat={setUserConversation} />
+            <SlideButton func={turnSwitch} resetChat={setUserFriend} />
             {/* {isGroup ? <Group /> : <Direct />} */}
           </div>
           <div className={Style.right}></div>
@@ -65,15 +67,15 @@ export default function Chat() {
       </header>
       <div className={Style.subContainer}>
         <div className={Style.left}>
-          <SlideButton func={turnSwitch} resetChat={setUserConversation} />
+          <SlideButton func={turnSwitch} resetChat={setUserFriend} />
           <ul>
             {isGroup ? (
               <Group />
             ) : (
-              users.data.map((user) => {
+              firends.data.map((firend) => {
                 return (
-                  <li key={user.id}>
-                    <Direct data={user} choseChat={setUserConversation} />
+                  <li key={firend.id}>
+                    <Direct data={firend} choseChat={setUserFriend} />
                   </li>
                 );
               })
@@ -81,7 +83,7 @@ export default function Chat() {
           </ul>
         </div>
         <div className={Style.right}>
-          <Msg datatoShow={userConversation} />
+          {userFriend ? <Msg friendData={userFriend} myData={user} /> : <></>}
         </div>
       </div>
     </div>

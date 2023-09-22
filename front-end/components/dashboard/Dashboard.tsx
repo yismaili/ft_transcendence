@@ -104,41 +104,46 @@ export default function Dashboard() {
     fetching();
   }, []);
 
-  return (
-    <div className={Style.container}>
-      <header className={Style.header}>
-        <Link href="/chat" className={Style.chatRoomBtn}>
-          <p>chat room</p>
-        </Link>
-        <div className={Style.profileBtn}>
-          <p>profile</p>
+  if (user) {
+    if (JSON.stringify(user).length > 2) {
+      return (
+        <div className={Style.container}>
+          <header className={Style.header}>
+            <Link href="/chat" className={Style.chatRoomBtn}>
+              <p>chat room</p>
+            </Link>
+            <div className={Style.profileBtn}>
+              <p>profile</p>
+            </div>
+          </header>
+
+          {user != undefined ? (
+            <>
+              <main className={Style.main}>
+                <div className={Style.image}>
+                  <p>{user.data.profile.level}</p>
+                </div>
+                <p>{user.data.username}</p>
+                <div className={Style.setting}></div>
+              </main>
+              <Win_loss user={user} />
+              <Achievement_history user={user} />
+            </>
+          ) : (
+            <>
+              <main className={Style.main}>
+                <div className={Style.image}>
+                  <p>0</p>
+                </div>
+                <p>username</p>
+                <div className={Style.setting}></div>
+              </main>
+              <Win_loss user={user} />
+              <Achievement_history user={user} />
+            </>
+          )}
         </div>
-      </header>
-      {user != undefined ? (
-        <>
-          <main className={Style.main}>
-            <div className={Style.image}>
-              <p>{user.data.profile.level}</p>
-            </div>
-            <p>{user.data.username}</p>
-            <div className={Style.setting}></div>
-          </main>
-          <Win_loss user={user} />
-          <Achievement_history user={user} />
-        </>
-      ) : (
-        <>
-          <main className={Style.main}>
-            <div className={Style.image}>
-              <p>0</p>
-            </div>
-            <p>username</p>
-            <div className={Style.setting}></div>
-          </main>
-          <Win_loss user={user} />
-          <Achievement_history user={user} />
-        </>
-      )}
-    </div>
-  );
+      );
+    } else return <div>Please log in</div>;
+  }
 }

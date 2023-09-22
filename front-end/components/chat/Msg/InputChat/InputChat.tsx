@@ -1,12 +1,15 @@
 import { revalidatePath } from "next/cache";
 import Style from "./InputChat.module.css";
-// import create from "../../../../action/userData";
 
-export default function InputChat() {
+type props = {
+  socket: any;
+  setMessage: Function;
+};
+
+export default function InputChat({ socket, setMessage }: props) {
   const create = async (formData: FormData) => {
-    // formData.get("content");
-    console.log(formData.get("message"));
-    revalidatePath('/chat');
+    setMessage(formData.get("message"));
+    // revalidatePath("/chat");
   };
 
   return (
