@@ -72,6 +72,7 @@ export class GameService {
 
       // Set up an event listener for 'updateGame' outside the interval
       playerId.on('updateGame', (data) => {
+  console.log(data);
         pongGame.setDownPressed(data.downPressed);
         pongGame.setUpPressed(data.upPressed);
         pongGame.setWPressed(data.wPressed);
@@ -588,11 +589,11 @@ class PongGame {
   }
 
   // Calculate automatic paddle movement
-  if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
-      this.leftPaddle += this.paddleSpeed;
-  } else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
-      this.leftPaddle -= this.paddleSpeed;
-  }
+  // if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
+  //     this.leftPaddle += this.paddleSpeed;
+  // } else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
+  //     this.leftPaddle -= this.paddleSpeed;
+  // }
   // if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
   //     this.rightPaddle += this.paddleSpeed;
   // } else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
@@ -602,6 +603,7 @@ class PongGame {
   // Update ball position
   this.ballX += this.ballSpeedX;
   this.ballY += this.ballSpeedY;
+  
   // Handle ball collisions
   if (this.ballY - this.ballRadius < 0 || this.ballY + this.ballRadius > this.canvasHeight) {
       this.ballSpeedY *= -1;
