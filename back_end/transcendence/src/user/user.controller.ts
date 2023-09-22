@@ -111,11 +111,11 @@ export class UserController {
     }
    
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Post('profile/:username/sendRequist/:id')
-    async sendRequist(@Req() req, @Param('username') username: string, @Param('id') idOfuser: number): Promise<RelationParams>{
+    @Post('profile/:username/sendRequest/:secondUsername')
+    async sendRequest(@Req() req, @Param('username') username: string, @Param('secondUsername') secondUsername: string): Promise<RelationParams>{
         const authorization = req.user;
         if(authorization.username == username){
-            return this.userService.sendRequist(username, idOfuser);
+            return this.userService.sendRequest(username, secondUsername);
         }
         else{
             throw new ForbiddenException();
@@ -148,8 +148,8 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Get('profile/:username/requists')
-    async getAllRequistsOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
+    @Get('profile/:username/requests')
+    async getAllRequestsOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.getAllRequistsOfUser(username); 
