@@ -222,35 +222,40 @@ async findAllAchievementOfUser(username: string): Promise<AchievementDto[]> {
 // }
 
 
-async sendRequist(userName: string, id: number): Promise<RelationParams> {
+async sendRequest(userName: string, secondUsername: string): Promise<RelationParams> {
   try {
     const existingUser = await this.userRepository.findOne({
       where: {
         username: userName,
       },
     });
-    
-    if (!existingUser) {
+    console.log(existingUser);
+    const existingSecondUser = await this.userRepository.findOne({
+      where: {
+        username: secondUsername,
+      },
+    });
+    console.log(secondUsername);
+    if (!existingUser || !existingSecondUser) {
       throw new Error('User not found');
     }
-    
-    const rel = {
-      status: "sendRequist",
-      friend: { id: id },  // Wrap friend's ID in an object
-      user: { id: existingUser.id },  // Wrap user's ID in an object
-    };
-    
-    const newRelation = this.relationRepository.create(rel);  // Use the rel object directly
-    
+
+    const newRelation = this.relationRepository.create({
+      status: "sendRequest",
+      friend: { id: existingSecondUser.id }, // Associate with the second user
+      user: { id: existingUser.id }, // Associate with the first user
+    });
+
     await this.relationRepository.save(newRelation);
-    
+
     const updatedUser = await this.findProfileByUsername(userName);
-    
+
     return updatedUser;
   } catch (error) {
-    throw new Error('Failed to add friend: ' + error.message);
+    throw new Error('Failed to add friend');
   }
 }
+
 
 
 async findAllFriendsOfUser(username: string): Promise<RelationDto[]> {
