@@ -1,10 +1,14 @@
 import Style from "./RightChat.module.css";
 
-export default function RightChat() {
+type props = {
+  message: allMessages
+}
+
+export default function RightChat({ message }: props) {
   return (
     <div className={Style.container}>
-      <p className={Style.msg}>blsa</p>
-      <p className={Style.time}>today 14:55</p>
+      <p className={Style.msg}>{message.message}</p>
+      <p className={Style.time}>{message.dateToSend}</p>
     </div>
   );
 }
