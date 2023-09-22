@@ -9,6 +9,9 @@ export class Relation {
   @Column()
   status: string;
 
+  @Column()
+   FromUser: string;
+
   @ManyToOne(() => User, user => user.friendRelations)
   friend: User;
 
