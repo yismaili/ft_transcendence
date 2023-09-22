@@ -393,6 +393,7 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
         { user: { id: user1.id }, secondUser: { id: user2.id } },
         { user: { id: user2.id }, secondUser: { id: user1.id } },
       ],
+      relations: ['user']
     });
   
     return chats;
