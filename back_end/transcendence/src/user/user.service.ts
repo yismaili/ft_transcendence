@@ -13,12 +13,8 @@ import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { User } from 'src/typeorm/entities/User.entity';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import {Not, Repository } from 'typeorm';
-import { AchievementParams,
-   HistoryParams, 
-   ProfileParams, 
-   RelationParams, 
-   UserParams } from 'utils/types';
-
+import { Socket} from 'socket.io';
+import { verify } from 'jsonwebtoken'
 
 @Injectable()
 export class UserService {
@@ -234,7 +230,7 @@ async findAllAchievementOfUser(username: string): Promise<AchievementDto[]> {
 // }
 
 
-async sendRequest(userName: string, secondUsername: string): Promise<RelationParams> {
+async sendRequest(userName: string, secondUsername: string): Promise<any> {
   try {
 
     const existingUser = await this.userRepository.findOne({
@@ -397,7 +393,7 @@ async getAllRequistsSendFromUser(username: string): Promise<RelationDto[]> {
   }
 }
 
-async blockUser(username: string, secondUser: string): Promise<RelationParams> {
+async blockUser(username: string, secondUser: string): Promise<any> {
   try {
     const existingRelation = await this.relationRepository.findOne({
       where: [
@@ -419,27 +415,6 @@ async blockUser(username: string, secondUser: string): Promise<RelationParams> {
     throw new Error(`Error blocking friend`);
   }
 }
-
-
-// async sendRequisteToUser(username: string, relationId: number): Promise<RelationParams> {
-//   const existingRelation = await this.relationRepository.findOne({
-//       where: {
-//         id: relationId,
-//       },
-//       relations: ['friend'],
-//   });
-//   if (!existingRelation) {
-//     return (await this.findProfileByUsername(username));
-//   }
-//   existingRelation.status = 'sendRequist';
-
-//   try{
-//     await this.relationRepository.save(existingRelation);
-//     return (await this.findProfileByUsername(username));
-//   }catch(error){
-//     return (await this.findProfileByUsername(username));
-//   }
-// }
 
 async unblockUser(username: string, secondUser: string): Promise<any> {
   try {
@@ -638,6 +613,22 @@ async turnOffTwoFactorAuthentication(username: string){
     throw new Error(`Error two factor auth ${error}`);
   }
 }
+// handleng connection
+async setUserstatus(username:string, status:string) {
+  try {
+    const user = await this.userRepository.findOne({
+      where: {username: username}
+    });
 
+    if (!user){
+      throw new Error('User not exist');
+    }
+
+    user.status = status;
+    await this.userRepository.save(user);
+  } catch (error) {
+    throw new Error('failed');
+  }
+}
 }
 

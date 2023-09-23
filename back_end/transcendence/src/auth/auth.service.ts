@@ -9,7 +9,6 @@ import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { UserDto } from './dtos/user.dto';
 import { RandomService } from 'src/random/random.service';
-import { UserParams } from 'utils/types';
 import { authenticator } from 'otplib';
 import { UserService } from 'src/user/user.service';
 import { toDataURL } from 'qrcode';
@@ -108,7 +107,7 @@ async updateProfile(userDetails: UserDto){
   
 }
       
-async findUserById(user: Partial<User>): Promise<Partial<UserParams>> {
+async findUserById(user: Partial<User>): Promise<Partial<any>> {
   try {
     const existingUser = await this.userRepository.findOne({
       where: {
