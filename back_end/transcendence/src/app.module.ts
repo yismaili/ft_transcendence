@@ -17,6 +17,7 @@ import { ChatRoomUser } from './typeorm/entities/chat-room-users.entity';
 import { Message } from './typeorm/entities/message-entity';
 import { Chat } from './typeorm/entities/chat-entity';
 import { GameModule } from './game/game.module';
+import { UserStatusModule } from './user-status/user-status.module';
 
 
 // The @Module() decorator marks the AppModule class as a module in NestJS
@@ -39,7 +40,7 @@ import { GameModule } from './game/game.module';
     AuthModule, // responsible for handling authentication logic
     PassportModule, 
     UserModule, 
-    ChatModule, GameModule,
+    ChatModule, GameModule, UserStatusModule,
   ],
   controllers: [AppController], // Controllers  handle incoming requests and define the routes and endpoints for the application
   providers: [AppService, RandomService], // Providers are responsible for providing business logic and functionality to the application.
