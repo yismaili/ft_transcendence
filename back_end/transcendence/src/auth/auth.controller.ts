@@ -105,6 +105,12 @@ export class AuthController {
     await this.userService.turnOnTwoFactorAuthentication(request.user.username);
   }
 
+  @Post('2fa/turn-off')
+  @UseGuards(JwtAuthGuard)
+  async turnOffTwoFactorAuthentication(@Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
+    await this.userService.turnOffTwoFactorAuthentication(request.user.username);
+  }
+
   @Post('2fa/authenticate')
   @HttpCode(200)
   @UseGuards(JwtAuthGuard)
