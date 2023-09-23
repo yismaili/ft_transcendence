@@ -26,15 +26,17 @@ export default function Chat() {
     fetching();
   }, []);
 
-
   const turnSwitch = () => {
     setGroup(!isGroup);
   };
 
   // console.log(user.length == 0);
-  
 
-  if (firends == undefined || user == undefined || JSON.stringify(user).length <= 2)
+  if (
+    firends == undefined ||
+    user == undefined ||
+    JSON.stringify(user).length <= 2
+  )
     return (
       <div className={Style.container}>
         <header className={Style.header}>
