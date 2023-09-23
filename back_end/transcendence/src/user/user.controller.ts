@@ -159,24 +159,24 @@ export class UserController {
         }
     }
 
-    // @UseGuards(JwtAuthGuard, JwtStrategy)
-    // @Get('profile/:username/requistsSend')
-    // async getAllRequistsSendFromUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
-    //     const authorization = req.user;
-    //     if (authorization.username == username){
-    //         return this.userService.getAllRequistsSendFromUser(username); 
-    //     }
-    //     else{
-    //         throw new ForbiddenException();
-    //     }
-    // }
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/requistsSend')
+    async getAllRequistsSendFromUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.getAllRequistsSendFromUser(username); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/block/:secondUser')
     async UpdateStatusOfUser(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<any>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.blockUserFromFriend(username, secondUser); 
+            return this.userService.blockUser(username, secondUser); 
         }
         else{
             throw new ForbiddenException();
@@ -232,7 +232,19 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Get('profile/:username/status')
+    @Delete('profile/:username/cancelRelation/:secondUser')
+    async cancelRelation(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<RelationParams>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.cancelRelation(username, secondUser); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/online')
     async getSatatusOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
         const authorization = req.user;
         if (authorization.username == username){

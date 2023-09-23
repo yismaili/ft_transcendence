@@ -236,6 +236,7 @@ async findAllAchievementOfUser(username: string): Promise<AchievementDto[]> {
 
 async sendRequest(userName: string, secondUsername: string): Promise<RelationParams> {
   try {
+
     const existingUser = await this.userRepository.findOne({
       where: {
         username: userName,
@@ -252,38 +253,57 @@ async sendRequest(userName: string, secondUsername: string): Promise<RelationPar
       throw new Error('User not found');
     }
 
-    const newRelation = this.relationRepository.create({
-      status: "sendRequest",
-      FromUser: existingUser.username,
-      friend: { id: existingSecondUser.id }, 
-      user: { id: existingUser.id },
+    // Check if a relationship already exists
+    const existingRelation = await this.relationRepository.findOne({
+      where: [
+        { friend: { id: existingUser.id }, user: { id: existingSecondUser.id } },
+        { friend: { id: existingSecondUser.id }, user: { id: existingUser.id } }
+      ]
     });
 
+    if (existingRelation || userName === secondUsername) {
+      throw new Error('Relationship already exists');
+    }
+
+    // Create a new relationship record
+    const newRelation = this.relationRepository.create({
+      status: 'sendRequest',
+      FromUser: existingUser.username,
+      friend: { id: existingSecondUser.id },
+      user: { id: existingUser.id }
+    });
+
+    // Save the new relationship to the database
     await this.relationRepository.save(newRelation);
 
-    const updatedUser = await this.findProfileByUsername(userName);
-
-    return updatedUser;
+    // Return the updated user profile
+    return await this.findProfileByUsername(userName);
   } catch (error) {
-    throw new Error('Failed to add friend');
+    // Handle errors with specific error messages
+    if (error.message === 'User not found') {
+      throw new Error('One or both users do not exist');
+    } else if (error.message === 'Relationship already exists') {
+      throw new Error('A relationship between these users already exists');
+    } else {
+      throw new Error('Failed to add friend');
+    }
   }
 }
-
 
 async findAllFriendsOfUser(username: string): Promise<RelationDto[]> {
   try {
     const friends = await this.relationRepository.find({
       where: [
-        { friend: { username }, status: 'friends' },
-        { user: { username }, status: 'friends' }
+        { user: { username: username }, status: 'friends' },
+        { friend: { username: username }, status: 'friends' }
       ],
-      relations: ['friend'],
+      relations: ['friend', 'user'], // Load the 'friend' and  'user' entities
     });
 
-    if (!friends) {
-      throw new Error('relations not found');
+    if (!friends || friends.length === 0) {
+      return [];
     }
-    // Map the friend relationships to RelationDto objects
+
     const relationDtos: RelationDto[] = friends.map((relation) => ({
       id: relation.id,
       status: relation.status,
@@ -293,16 +313,17 @@ async findAllFriendsOfUser(username: string): Promise<RelationDto[]> {
 
     return relationDtos;
   } catch (error) {
-    throw new Error(`Error fetching friend relationships`);
+    throw new Error(`Error fetching friend relationships: ${error.message}`);
   }
 }
+
 
 async findAllBlockedOfUser(username: string): Promise<RelationDto[]> {
 
   try {
     const userBlocked = await this.relationRepository.find({
-      where: [{ user: { username }, status: 'blocked' }],
-      relations: ['user']
+      where: [{ user: { username }, status: 'blocked' , FromUser: username}],
+      relations: ['friend']
     });
 
     if (!userBlocked) {
@@ -326,10 +347,11 @@ async findAllBlockedOfUser(username: string): Promise<RelationDto[]> {
 async getAllRequestsOfUser(username: string): Promise<RelationDto[]> {
   try {
     const friendRequests = await this.relationRepository.find({
-      where: [ {user: { username }, status: 'sendRequest' }],
-      relations: ['friend']
+      where: [
+       { friend: { username }, status: 'sendRequest'}
+    ],
+      relations: ['user']
     });
-
     if (!friendRequests) {
       throw new Error('friendRequests not found');
     }
@@ -350,58 +372,41 @@ async getAllRequestsOfUser(username: string): Promise<RelationDto[]> {
 
 
 
-// async getAllRequistsSendFromUser(username: string): Promise<RelationDto[]> {
+async getAllRequistsSendFromUser(username: string): Promise<RelationDto[]> {
+  try {
+    const friendRequests = await this.relationRepository.find({
+      where: [
+       { user: { username }, status: 'sendRequest'}
+    ],
+      relations: ['friend']
+    });
+    if (!friendRequests) {
+      throw new Error('friendRequests not found');
+    }
 
-//   const friends = await this.relationRepository.find({
-//     where: { user: { username }, status: 'sendRequist' },
-//     relations: ['user'],
-//   });
+    const relationDtos: RelationDto[] = friendRequests.map((relation) => ({
+      id: relation.id,
+      status: relation.status,
+      friend: relation.friend,
+      user: relation.user,
+    }));
 
-//   const relationDtos: RelationDto[] = friends.map((relation) => ({
-//     id: relation.id,
-//         status: relation.status,
-//         friend: relation.friend,
-//         user: relation.user,
-//       }));
-//     return relationDtos;
-// }
+    return relationDtos;
+  } catch (error) {
+    throw new Error(`Error fetching friend requests`);
+  }
+}
 
-// The method is not yet finished!!! not working. It's still a student, ahahahah!
-
-// async findAllSuggestOfUser(username: string): Promise<RelationDto[]> {
-//     const user = await this.userRepository.find();
-//     const potentialFriends = await this.userRepository.find({
-//       where: {
-//         username: Not(username),
-//         friendRelations: Not(username),
-//       },
-//     });
-
-//     const potentia = await this.relationRepository.find({
-//       where: {
-//         friend: Not(username),
-//       },
-//     });
-//     const relationDtos: RelationDto[] = potentialFriends.map((friend) => ({
-//       id: friend.id,
-//       status: 'suggest',
-//       friend: friend,
-//       user: user,
-//     }));
-// console.log(potentialFriends);
-//     return [];
-//   }
-
-async blockUserFromFriend(username: string, secondUser: string): Promise<RelationParams> {
+async blockUser(username: string, secondUser: string): Promise<RelationParams> {
   try {
     const existingRelation = await this.relationRepository.findOne({
       where: [
-        { user: { username }, friend: { username: secondUser } }
-      ],
-      relations: ['friend']
+        { user: { username }, friend: { username: secondUser }, status: Not('blocked')},
+        { friend: { username }, user: { username: secondUser }, status: Not('blocked')}
+      ]
     });
 
-    if (!existingRelation) {
+    if (!existingRelation || username === secondUser) {
       throw new Error("Relation not found");
     }
 
@@ -409,7 +414,7 @@ async blockUserFromFriend(username: string, secondUser: string): Promise<Relatio
     existingRelation.FromUser = username;
     const updatedRelation = await this.relationRepository.save(existingRelation);
   
-    return updatedRelation;
+    return this.findProfileByUsername(secondUser);;
   } catch (error) {
     throw new Error(`Error blocking friend`);
   }
@@ -440,12 +445,16 @@ async unblockUser(username: string, secondUser: string): Promise<any> {
   try {
     const existingRelation = await this.relationRepository.findOne({
       where: [
-        { user: { username }, friend: { username: secondUser }, status: 'blocked' }
+        { user: { username }, friend: { username: secondUser }, status: 'blocked' },
+        { user: { username: secondUser }, friend: { username }, status: 'blocked' }
       ]
     });
 
     if (!existingRelation) {
       throw new Error("Blocked relation not found");
+    }
+    if (existingRelation.FromUser != username) {
+      throw new Error("You cannot");
     }
     await this.relationRepository.remove(existingRelation);
     return this.findProfileByUsername(secondUser);
@@ -456,14 +465,20 @@ async unblockUser(username: string, secondUser: string): Promise<any> {
 
 async acceptRequest(username: string, secondUser: string): Promise<any> {
   try {
+    // Find the friend request in either direction
     const existingRelation = await this.relationRepository.findOne({
       where: [
-        { user: { username }, friend: { username: secondUser }, status: 'sendRequest' }
+        { user: { username }, friend: { username: secondUser }, status: 'sendRequest' },
+        { user: { username: secondUser }, friend: { username }, status: 'sendRequest' }
       ]
     });
-      console.log(existingRelation);
+
     if (!existingRelation) {
       throw new Error("Friend request not found");
+    }
+
+    if (existingRelation.FromUser === username) {
+      throw new Error("You cannot accept your own friend request");
     }
 
     existingRelation.status = 'friends';
@@ -477,17 +492,21 @@ async acceptRequest(username: string, secondUser: string): Promise<any> {
   }
 }
 
-
 async rejectRequest(username: string, secondUser: string): Promise<any> {
   try {
     const existingRelation = await this.relationRepository.findOne({
       where: [
-        { user: { username }, friend: { username: secondUser }, status: 'sendRequest' }
+        { user: { username }, friend: { username: secondUser }, status: 'sendRequest' },
+        { user: { username: secondUser }, friend: { username }, status: 'sendRequest' }
       ]
     });
 
     if (!existingRelation) {
       throw new Error("Friend request not found");
+    }
+
+    if (existingRelation.FromUser === username) {
+      throw new Error("You cannot reject your own friend request");
     }
 
     await this.relationRepository.remove(existingRelation);
@@ -502,13 +521,39 @@ async cancelRequist(username: string,  secondUser: string): Promise<any> {
   try {
     const existingRelation = await this.relationRepository.findOne({
       where: [
-        { user: { username }, friend: { username: secondUser }, status: 'sendRequest' }
+        { user: { username }, friend: { username: secondUser }, status: 'sendRequest' },
+        { user: { username: secondUser }, friend: { username }, status: 'sendRequest' }
       ]
     });
 
     if (!existingRelation) {
       throw new Error("Friend request not found");
     }
+    if (existingRelation.FromUser != username) {
+      throw new Error("You cannot accept your own friend request");
+    }
+
+    await this.relationRepository.remove(existingRelation);
+    const userProfile = await this.findProfileByUsername(secondUser);
+    return userProfile;
+  } catch (error) {
+    throw new Error(`Error rejecting friend request: ${error.message}`);
+  }
+}
+
+async cancelRelation(username: string,  secondUser: string): Promise<any> {
+  try {
+    const existingRelation = await this.relationRepository.findOne({
+      where: [
+        { user: { username }, friend: { username: secondUser }, status: 'friends' },
+        { user: { username: secondUser }, friend: { username }, status: 'friends' }
+      ]
+    });
+
+    if (!existingRelation) {
+      throw new Error("Friend request not found");
+    }
+
 
     await this.relationRepository.remove(existingRelation);
     const userProfile = await this.findProfileByUsername(secondUser);
