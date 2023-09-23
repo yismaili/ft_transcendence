@@ -1,3 +1,57 @@
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./src/components/chat/chat_addbar/chat-addbar.css ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************/
+.chatroom__sidebar__addbar{
+   display: flex;
+   justify-self: flex-end;
+   align-items: center;
+   flex: 0.1;
+   width: 90%;
+   height: 40px;
+}
+
+.chatroom__sidebar__addbar__form{
+   width: 100%;
+}
+
+.add__btn{
+   display: inline-block;
+   position: absolute;
+   height: 40px;
+   width: 40px;
+   align-items: center;
+   order: 0;
+   z-index: 2;
+}
+
+
+.add__bar{
+   order: 1;
+   background-color: transparent;
+   text-align: center;
+   initial-value: "";
+   border: none;
+   height: 45px;
+   width: 0px;
+   transition: width 0.7s,background-color 1s;
+   content: none;
+   border-radius: 15px;
+}
+
+.add__bar:focus{
+   width: 90%;
+   background-color: #3E3E56;
+   margin-right: 5px;
+}
+
+.add__icon{
+   transition: transform 0.7s;
+}
+
+.add__bar:focus + .add__btn .add__icon{
+   transform: rotateZ(360deg);
+}
+
 /*!*********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./src/global_css/resets.css ***!
   \*********************************************************************************************************************************************************************************************************************************************************************/
@@ -421,55 +475,15 @@ body{
     margin: 0 2rem;
 }
 
-/*!*******************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./src/components/chat/chat_addbar/chat-addbar.css ***!
-  \*******************************************************************************************************************************************************************************************************************************************************************************************/
-.chatroom__sidebar__addbar{
-   display: flex;
-   justify-self: flex-end;
-   align-items: center;
-   flex: 0.1;
-   width: 90%;
-   height: 40px;
-}
-
-.add__btn{
-   display: inline-block;
-   position: absolute;
-   height: 40px;
-   width: 40px;
-   align-items: center;
-   order: 0;
-   z-index: 2;
-}
-
-
-.add__bar{
-   order: 1;
-   position: relative;
-   background-color: transparent;
-   text-align: center;
-   initial-value: "";
-   border: none;
-   height: 45px;
-   width: 0px;
-   z-index: 1;
-   transition: width 0.7s,background-color 1s;
-   content: none;
-   border-radius: 15px;
-}
-
-.add__bar:focus{
-   width: 95%;
-   background-color: #3E3E56;
-}
-
-.add__icon{
-   transition: transform 0.7s;
-}
-
-.add__bar:focus + .add__btn .add__icon{
-   transform: rotateZ(360deg);
+.friend__pic{
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 1000px;
+    margin: 0.5rem;
 }
 
 /*!**************************************************************************************************************************************************************************************************************************************************************************************************!*\

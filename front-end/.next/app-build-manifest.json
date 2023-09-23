@@ -1,33 +1,15 @@
 {
   "pages": {
-    "/Auth/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/Auth/page.css",
-      "static/chunks/app/Auth/page.js"
-    ],
-    "/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/layout.js"
-    ],
-    "/UserProfile/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/UserProfile/page.css",
-      "static/chunks/app/UserProfile/page.js"
-    ],
     "/Chat/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/Chat/page.css",
       "static/chunks/app/Chat/page.js"
     ],
-    "/UserProfile/Parameters/page": [
+    "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/UserProfile/Parameters/page.css",
-      "static/chunks/app/UserProfile/Parameters/page.js"
+      "static/chunks/app/layout.js"
     ]
   }
 }

@@ -20,3 +20,14 @@
 .chat__friend__options{
     margin: 0 2rem;
 }
+
+.friend__pic{
+    display: inline-block;
+    width: 60px;
+    height: 60px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 1000px;
+    margin: 0.5rem;
+}

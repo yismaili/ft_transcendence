@@ -1,1 +1,1 @@
-self.__RSC_SERVER_MANIFEST="{\n  \"node\": {},\n  \"edge\": {}\n}"
+self.__RSC_SERVER_MANIFEST="{\n  \"node\": {\n    \"74a1f5f1c1bada4f3820cf7d37de61b8b466f6b4\": {\n      \"workers\": {\n        \"app/Chat/page\": \"(rsc)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22%2Fapp%2Fsrc%2Fcomponents%2Fchat%2Fchat_addbar%2Fchat_addbar.tsx%22%2C%5B%22%24%24ACTION_1%22%5D%5D%5D&__client_imported__=!\"\n      },\n      \"layer\": {\n        \"app/Chat/page\": \"rsc\"\n      }\n    }\n  },\n  \"edge\": {}\n}"
