@@ -86,11 +86,16 @@ export class ChatService {
         }
       }
 
+      // const chats = await this.chatRepository.find({
+      //   where: [
+      //     { user: { id: user.id }, secondUser: { id: secondUser.id } },
+      //     { user: { id: secondUser.id }, secondUser: { id: user.id } },
+      //   ],
+      //   relations: ['user']
+      // });
+
       const chats = await this.chatRepository.find({
-        where: [
-          { user: { id: user.id }, secondUser: { id: secondUser.id } },
-          { user: { id: secondUser.id }, secondUser: { id: user.id } },
-        ],
+        where: {id: newChatMessage.id},
         relations: ['user']
       });
       server.to(roomName).emit('message', chats);
