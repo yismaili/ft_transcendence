@@ -370,5 +370,5 @@ const getAllUserOfChatRoom = () => {
 //     </div>
 //   )
 // }
-export default ChatApp;
+ export default ChatApp;
 

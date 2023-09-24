@@ -25,10 +25,6 @@ import { ChatService } from 'src/chat/chat.service';
 export class AuthController {
   @WebSocketServer() server: Server;
     constructor(private readonly authService: AuthService,  private userService: UserService, private chatService: ChatService) {} //we used this constructor for 'Dependency Injection'
-
-    handleConnection(socket: Socket): void {
-        this.chatService.handleConnection(socket);
-    }
   @Get('all') // decorator is define an HTTP GET endpoint
   async findAll(): Promise<User[]> {
     const users = this.authService.findAll()
@@ -103,6 +99,12 @@ export class AuthController {
       throw new UnauthorizedException('Wrong authentication code');
     }
     await this.userService.turnOnTwoFactorAuthentication(request.user.username);
+  }
+
+  @Post('2fa/turn-off')
+  @UseGuards(JwtAuthGuard)
+  async turnOffTwoFactorAuthentication(@Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
+    await this.userService.turnOffTwoFactorAuthentication(request.user.username);
   }
 
   @Post('2fa/authenticate')
