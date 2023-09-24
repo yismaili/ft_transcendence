@@ -15,6 +15,8 @@ export default function Msg({ friendData, myData }: props) {
   const [allMessages, setAllMessages] = useState<allMessages[]>();
   const [newMessage, setNewMessage] = useState<allMessages[]>([]);
 
+  // console.log(friendData);
+
   const sendMessage: allMessages = {
     dateToSend: "",
     id: 0,
@@ -44,6 +46,8 @@ export default function Msg({ friendData, myData }: props) {
     socket.on("message", (message: allMessages[]) => {
       setNewMessage((prevMessages) => [...prevMessages, message[0]]);
     });
+    console.log("sender", myData.data.username);
+    console.log("receiver", friendData.user.username);
 
     socket.emit(
       "findAllChat",
@@ -52,10 +56,12 @@ export default function Msg({ friendData, myData }: props) {
         secondUser: friendData.user.username,
       },
       (response: allMessages[]) => {
+        console.log('from here is :', response);
+        
         setAllMessages(response);
       }
     );
-  }, [socket]);
+  }, []);
 
   const setMessage = (MessagetoSend: string) => {
     sendMessage.message = MessagetoSend;

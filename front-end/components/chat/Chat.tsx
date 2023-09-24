@@ -84,7 +84,7 @@ export default function Chat() {
             )}
           </ul>
         </div>
-        <div className={Style.right}>
+        <div className={Style.right} key={userFriend?.id}>
           {userFriend ? <Msg friendData={userFriend} myData={user} /> : <></>}
         </div>
       </div>

@@ -12,7 +12,7 @@ export default function SlideButton({ func, resetChat }: props) {
   const controls = useAnimation();
 
   const turnSwitch = () => {
-    resetChat();
+    resetChat(undefined);
     func();
     setGroup(!isGroup);
     controls.start(isGroup ? "false" : "true");
