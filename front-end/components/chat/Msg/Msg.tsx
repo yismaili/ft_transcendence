@@ -11,19 +11,9 @@ type props = {
   myData: User;
 };
 
-const cookies = new Cookies();
-const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-const socket = io("0.0.0.0:3001", {
-  extraHeaders: {
-    Authorization: Data.response.token,
-  },
-});
-
 export default function Msg({ friendData, myData }: props) {
   const [allMessages, setAllMessages] = useState<allMessages[]>();
   const [newMessage, setNewMessage] = useState<allMessages[]>([]);
-  const [id, setId] = useState(123);
 
   const sendMessage: allMessages = {
     dateToSend: "",
@@ -39,31 +29,21 @@ export default function Msg({ friendData, myData }: props) {
     },
   };
 
-  // const cookies = new Cookies();
-  // const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
+  const cookies = new Cookies();
+  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
 
-  // const socket = io("0.0.0.0:3001", {
-  //   extraHeaders: {
-  //     Authorization: Data.response.token,
-  //   },
-  // });
+  const [socket] = useState(
+    io("0.0.0.0:3001", {
+      extraHeaders: {
+        Authorization: Data.response.token,
+      },
+    })
+  );
 
-  // useEffect(() => {
-  //   socket.emit(
-  //     "findAllChat",
-  //     {
-  //       user: myData.data.username,
-  //       secondUser: friendData.user.username,
-  //     },
-  //     (response: allMessages[]) => {
-  //       setAllMessages(response);
-  //       // console.log('first test1', response);
-  //     }
-  //   );
-  // }, []);
-
-  const getAllMessages = (): allMessages[] =>  {
-    let res: allMessages[] = {} as allMessages[];
+  useEffect(() => {
+    socket.on("message", (message: allMessages[]) => {
+      setNewMessage((prevMessages) => [...prevMessages, message[0]]);
+    });
 
     socket.emit(
       "findAllChat",
@@ -72,32 +52,14 @@ export default function Msg({ friendData, myData }: props) {
         secondUser: friendData.user.username,
       },
       (response: allMessages[]) => {
-        res = response;
-        console.log("first test1", response);
+        setAllMessages(response);
       }
-      );
-      console.log("outside", res);
-      
-      return res;
-    }
-    
-    // const tmp = getAllMessages();
-    // console.log('tmp is: ', tmp);
-    
-    setAllMessages(tmp);
-
-
-  socket.on("message", (message: allMessages[]) => {
-    setNewMessage((prevMessages) => [...prevMessages, ...message]);
-  });
+    );
+  }, [socket]);
 
   const setMessage = (MessagetoSend: string) => {
     sendMessage.message = MessagetoSend;
     sendMessage.user.username = myData.data.username;
-    sendMessage.id = id;
-    setId(id + 1);
-    setNewMessage((prevMessages) => [...prevMessages, sendMessage]);
-
     socket.emit("createChat", {
       message: MessagetoSend,
       user: myData.data.username,
@@ -105,16 +67,10 @@ export default function Msg({ friendData, myData }: props) {
     });
   };
 
-  if (allMessages)
-    console.log(
-      "inside :",
-      allMessages
-    );
-
   return (
     <div className={Style.container}>
       <ul>
-        {/* {allMessages &&
+        {allMessages &&
           allMessages.map((message) => {
             return (
               <li key={message.id}>
@@ -129,7 +85,7 @@ export default function Msg({ friendData, myData }: props) {
                 )}
               </li>
             );
-          })} */}
+          })}
         {newMessage &&
           newMessage.map((message) => {
             return (
@@ -147,16 +103,6 @@ export default function Msg({ friendData, myData }: props) {
             );
           })}
       </ul>
-      {/* {newMessage && (
-        <RightChat newMessage={newMessage} oldMessage={undefined} />
-      )}
-      {recMessage && (
-        <LeftChat
-          oldMessage={undefined}
-          newMessage={recMessage}
-          friendData={friendData}
-        />
-      )} */}
       <InputChat socket={socket} setMessage={setMessage} />
     </div>
   );
