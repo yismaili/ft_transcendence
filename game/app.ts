@@ -177,8 +177,8 @@ class PongGame {
         this.username = document.getElementById("username")as HTMLInputElement;
         this.friendUsername = document.getElementById("friendUsername")as HTMLInputElement;
         if (this.JoinBtn) {
-            //this.JoinBtn.addEventListener('click', this.joinGame.bind(this));
-            this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
+            this.JoinBtn.addEventListener('click', this.joinGame.bind(this));
+            // this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
         }
         if (this.ntvBtn){
             this.ntvBtn.addEventListener('click', this. acceptRequest.bind(this));
@@ -257,8 +257,8 @@ class PongGame {
     // }
 
     joinGame() {
-        this.socket.emit("createGame", {username: this.username?.value}, (response: { id: number}) => {
-            this.GameId = response.id;
+        this.socket.emit("createGame", {username: this.username?.value}, () => {
+            //this.GameId = response.id;
         });
     }
     
