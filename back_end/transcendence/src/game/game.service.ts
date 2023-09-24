@@ -72,7 +72,7 @@ export class GameService {
 
       // Set up an event listener for 'updateGame' outside the interval
       playerId.on('updateGame', (data) => {
-  // console.log(data);
+  //  console.log(playerId.id);
         pongGame.setDownPressed(data.downPressed);
         pongGame.setUpPressed(data.upPressed);
         pongGame.setWPressed(data.wPressed);

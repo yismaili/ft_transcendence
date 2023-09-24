@@ -347,7 +347,10 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
     const chatRoomConversation =  await this.messageRepository.find({
       where: {
           chatRoom:{id: chatRoom.id},
-      }
+      },
+      order: {
+        id: 'ASC',
+      },
     });
     return chatRoomConversation;
   }
@@ -389,9 +392,8 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
     });
     return conversation;
   }
-
+  
   async findConversationBetweenUsers(createChatDto: MessageChatDto): Promise<Chat[]> {
-
     const user1 = await this.userRepository.findOne({ where: { username: createChatDto.user } });
     const user2 = await this.userRepository.findOne({ where: { username: createChatDto.secondUser } });
   
@@ -404,12 +406,14 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
         { user: { id: user1.id }, secondUser: { id: user2.id } },
         { user: { id: user2.id }, secondUser: { id: user1.id } },
       ],
+      relations: ['user'],
+      order: {
+        id: 'ASC',
+      },
     });
-  
     return chats;
   }
   
-
   async findMessageById(id: number): Promise<Chat> {
     return this.chatRepository.findOne({
       where: {

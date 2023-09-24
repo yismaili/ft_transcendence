@@ -119,8 +119,8 @@ var PongGame = /** @class */ (function () {
         this.username = document.getElementById("username");
         this.friendUsername = document.getElementById("friendUsername");
         if (this.JoinBtn) {
-            //this.JoinBtn.addEventListener('click', this.joinGame.bind(this));
-            this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
+            this.JoinBtn.addEventListener('click', this.joinGame.bind(this));
+            // this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
         }
         if (this.ntvBtn) {
             this.ntvBtn.addEventListener('click', this.acceptRequest.bind(this));
@@ -200,10 +200,9 @@ var PongGame = /** @class */ (function () {
     //     }
     // }
     PongGame.prototype.joinGame = function () {
-        var _this = this;
         var _a;
-        this.socket.emit("createGame", { username: (_a = this.username) === null || _a === void 0 ? void 0 : _a.value }, function (response) {
-            _this.GameId = response.id;
+        this.socket.emit("createGame", { username: (_a = this.username) === null || _a === void 0 ? void 0 : _a.value }, function () {
+            //this.GameId = response.id;
         });
     };
     PongGame.prototype.joinGameFriend = function () {
