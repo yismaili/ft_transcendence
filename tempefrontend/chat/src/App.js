@@ -107,7 +107,7 @@ const createChatRoom = () => {
     setstatusPermissions('admin');
     socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, () => {
       setMessageText('');
-      setJoined(true);
+      // setJoined(true);
       setchatRoomName(name);
     });
   };

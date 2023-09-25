@@ -9,15 +9,15 @@ import Msg from "./Msg/Msg";
 
 export default function Chat() {
   const [isGroup, setGroup] = useState(false);
-  let [firends, setFriends] = useState<UserArray>();
+  let [friends, setFriends] = useState<UserArrayData>();
   let [user, setUser] = useState<User>();
-  const [userFriend, setUserFriend] = useState<UserFriend>();
+  const [userFriend, setUserFriend] = useState<User_Friend>();
 
   useEffect(() => {
     const fetching = async () => {
       const resFriend = await fetch("http://localhost:3000/api/chat");
-      const firends = await resFriend.json();
-      setFriends(firends);
+      const friend = await resFriend.json();
+      setFriends(friend);
 
       const resUser = await fetch("http://localhost:3000/api/home");
       const user = await resUser.json();
@@ -33,7 +33,7 @@ export default function Chat() {
   // console.log(user.length == 0);
 
   if (
-    firends == undefined ||
+    friends == undefined ||
     user == undefined ||
     JSON.stringify(user).length <= 2
   )
@@ -74,10 +74,14 @@ export default function Chat() {
             {isGroup ? (
               <Group />
             ) : (
-              firends.data.map((firend) => {
+              friends.data.map((friend) => {
                 return (
-                  <li key={firend.id}>
-                    <Direct data={firend} choseChat={setUserFriend} />
+                  <li key={friend.id}>
+                    {user?.data.username == friend.user.username ? (
+                      <Direct data={friend.friend} choseChat={setUserFriend} />
+                    ) : (
+                      <Direct data={friend.user} choseChat={setUserFriend} />
+                    )}
                   </li>
                 );
               })

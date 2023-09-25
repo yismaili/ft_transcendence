@@ -3,4 +3,4 @@ WORKDIR /app
 
 RUN npm install
 
-CMD ["npm", "start:dev"]
+CMD ["npm", "start"]

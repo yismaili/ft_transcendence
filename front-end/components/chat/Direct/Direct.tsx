@@ -1,7 +1,7 @@
 import Style from "./Direct.module.css";
 
 type props = {
-  data: UserFriend;
+  data: User_Friend;
   choseChat: Function;
 };
 
@@ -17,11 +17,11 @@ export default function Direct({ data, choseChat }: props) {
       <div className={Style.imgContainer}>
         <div
           className={Style.avatar}
-          style={{ backgroundImage: `url("${data.user.picture}")` }}
+          style={{ backgroundImage: `url("${data.picture}")` }}
         ></div>
         <div className={Style.onlineStatus}></div>
       </div>
-      <p className={Style.name}>{data.user.username}</p>
+      <p className={Style.name}>{data.username}</p>
       <div className={Style.icon}></div>
     </div>
   );

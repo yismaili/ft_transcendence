@@ -7,7 +7,7 @@ import Cookies from "cookies-ts";
 import { useEffect, useState } from "react";
 
 type props = {
-  friendData: UserFriend;
+  friendData: User_Friend;
   myData: User;
 };
 
@@ -47,17 +47,15 @@ export default function Msg({ friendData, myData }: props) {
       setNewMessage((prevMessages) => [...prevMessages, message[0]]);
     });
     console.log("sender", myData.data.username);
-    console.log("receiver", friendData.user.username);
+    console.log("receiver", friendData.username);
 
     socket.emit(
       "findAllChat",
       {
         user: myData.data.username,
-        secondUser: friendData.user.username,
+        secondUser: friendData.username,
       },
       (response: allMessages[]) => {
-        console.log('from here is :', response);
-        
         setAllMessages(response);
       }
     );
@@ -69,10 +67,12 @@ export default function Msg({ friendData, myData }: props) {
     socket.emit("createChat", {
       message: MessagetoSend,
       user: myData.data.username,
-      secondUser: friendData.user.username,
+      secondUser: friendData.username,
     });
   };
 
+  console.log('message: ', newMessage);
+  
   return (
     <div className={Style.container}>
       <ul>
