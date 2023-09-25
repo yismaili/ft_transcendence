@@ -20,32 +20,27 @@ type User = {
   };
 };
 
+type UserArrayData = {
+  data: UserArray[];
+}
+
 type UserArray = {
-  data: Array<{
     id: number;
     status: string;
-    user: {
-      email: string;
-      firstName: string;
-      id: number;
-      lastName: string;
-      picture: string;
-      username: string;
-    };
-  }>;
+    friend: User_Friend;
+    user: User_Friend;
 };
 
-type UserFriend = {
+type User_Friend = {
+  email: string;
+  firstName: string;
   id: number;
+  isTwoFactorAuthEnabled: boolean;
+  lastName: string;
+  picture: string;
   status: string;
-  user: {
-    email: string;
-    firstName: string;
-    id: number;
-    lastName: string;
-    picture: string;
-    username: string;
-  };
+  twoFactorAuthSecret: string;
+  username: string;
 };
 
 type allMessages = {

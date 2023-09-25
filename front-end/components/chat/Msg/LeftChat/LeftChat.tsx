@@ -3,7 +3,7 @@ import Style from "./LeftChat.module.css";
 type props = {
   oldMessage: allMessages | undefined;
   newMessage: allMessages | undefined;
-  friendData: UserFriend;
+  friendData: User_Friend;
 };
 
 export default function LeftChat({
@@ -19,9 +19,9 @@ export default function LeftChat({
       <div className={Style.container}>
         <div
           className={Style.img}
-          style={{ backgroundImage: `url(${friendData.user.picture})` }}
+          style={{ backgroundImage: `url(${friendData.picture})` }}
         ></div>
-        <p className={Style.name}>{friendData.user.username}</p>
+        <p className={Style.name}>{friendData.username}</p>
         <p className={Style.msg}>{oldMessage.message}</p>
         <p className={Style.time}>{oldMessage.dateToSend}</p>
       </div>
@@ -31,9 +31,9 @@ export default function LeftChat({
       <div className={Style.container}>
         <div
           className={Style.img}
-          style={{ backgroundImage: `url(${friendData.user.picture})` }}
+          style={{ backgroundImage: `url(${friendData.picture})` }}
         ></div>
-        <p className={Style.name}>{friendData.user.username}</p>
+        <p className={Style.name}>{friendData.username}</p>
         <p className={Style.msg}>{newMessage.message}</p>
         <p className={Style.time}>{newMessage.dateToSend}</p>
       </div>
