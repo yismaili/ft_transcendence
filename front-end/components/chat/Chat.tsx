@@ -1,4 +1,5 @@
 "use client";
+import FriendRequest from "./FriendRequest/FriendRequest";
 import SlideButton from "./SlideButton/SlideButton";
 import { useEffect, useState } from "react";
 import Style from "./Chat.module.css";
@@ -87,6 +88,7 @@ export default function Chat() {
               })
             )}
           </ul>
+          <FriendRequest />
         </div>
         <div className={Style.right} key={userFriend?.id}>
           {userFriend ? <Msg friendData={userFriend} myData={user} /> : <></>}

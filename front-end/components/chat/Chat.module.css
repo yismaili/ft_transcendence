@@ -53,8 +53,9 @@
 }
 
 .left ul {
-  overflow: hidden;
-  height: auto;
+  overflow: auto;
+  /* height: auto; */
+  height: 77%;
 }
 
 /* /////////////      right      ////////////// */
