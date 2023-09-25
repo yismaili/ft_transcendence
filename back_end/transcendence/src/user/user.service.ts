@@ -13,8 +13,7 @@ import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { User } from 'src/typeorm/entities/User.entity';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import {Not, Repository } from 'typeorm';
-import { Socket} from 'socket.io';
-import { verify } from 'jsonwebtoken'
+import axios from 'axios';
 
 @Injectable()
 export class UserService {
@@ -44,69 +43,45 @@ async findProfileByUsername(userName: string): Promise<any> {
   }
 }
 
-// async updateProfileOutcomeByUsername(userName: string, updateUserDetails: OutcomeDto): Promise<ProfileParams> {
-//   try {
-//     const existingUser = await this.findProfileByUsername(userName);
+async uploadImage(imageData: string): Promise<any> {
+  try {
+    const response = await axios.post('https://api.imgbb.com/1/upload', {
+      key: '3abb50958940a0dfbde0d032e1fb5573',
+      image: imageData,
+    });
+    console.log(imageData);
+    return response.data;
+  } catch (error) {
+    console.log(error.message);
+    throw error.response ? error.response.data : error.message;
+  }
+}
 
-//     if (!existingUser.profile) {
-//       throw new Error('User profile not found');
-//     }
-
-//     const profileId = existingUser.profile.id;
-//     await this.profileRepository.update(profileId,  updateUserDetails);
-
-//     const updatedUser = await this.findProfileByUsername(userName);
-
-//     return updatedUser;
-//   } catch (error) {
-//     throw new Error('Failed to update profile outcome: ' + error.message);
-//   }
-// }
-
-
-async updateProfileByUsername(userName: string, updateUserDetails: updateProfileDto): Promise<any> {
+async updateProfileByUsername(userName: string, firstName, lastName, file): Promise<any> {
   try {
     const existingUser = await this.findProfileByUsername(userName);
     if (!existingUser) {
       throw new Error('User not found');
     }
     
-    existingUser.firstName = updateUserDetails.firstName;
-    existingUser.lastName = updateUserDetails.lastName;
-    existingUser.picture = updateUserDetails.picture;
+    const response = await this.uploadImage(file);
+    
+    // Access the image URL from the API response
+    const imageUrl = response.data.url;
+
+    existingUser.firstName = firstName;
+    existingUser.lastName = lastName;
+    existingUser.picture = imageUrl;
     
     const updatedUser = await this.userRepository.save(existingUser);
     const token = sign({ ...updatedUser }, 'secrete');
     
     return { token, user: updatedUser };
   } catch (error) {
-    throw new Error('Failed to update profile: ' + error.message); // Handle and rethrow errors
+    console.log(error.message);
+    throw new Error('Failed to update profile: '); 
   }
 }
-
-
-// async addHistoryByUsername(userName: string, addhistoryDto: HistoryDto): Promise<HistoryParams> {
-//   try {
-//     const existingUser = await this.findProfileByUsername(userName);
-
-//     if (!existingUser) {
-//       throw new Error('User not found');
-//     }
-
-//     const newHistory = this.historyRepository.create({
-//       ...addhistoryDto,
-//       user: existingUser, // Assuming HistoryDto has a reference to the user
-//     });
-
-//     await this.historyRepository.save(newHistory); // Use await to make sure the save is complete
-
-//     const updatedUser = await this.findProfileByUsername(userName);
-
-//     return updatedUser;
-//   } catch (error) {
-//     throw new Error('Failed to add history: ' + error.message);
-//   }
-// }
 
 async findAllHistoryOfUser(username: string): Promise<HistoryDto[]> {
   try {
@@ -142,29 +117,61 @@ async findAllHistoryOfUser(username: string): Promise<HistoryDto[]> {
   }
 }
 
-// async addAchievementOfUser(userName: string, addAchievementOfUser: AchievementDto) : Promise<AchievementParams> {
+async searchByUsername(username: string, secondUsername: string){
+  try {
+    const user = await this.userRepository.findOne({
+      where: {username: username}
+    });
+    
+    const secondUser = await this.userRepository.findOne({
+      where: {username: secondUsername},
+      select: ['id', 'username', 'firstName', 'lastName', 'email'],
+      relations: ['profile']
+    });
 
-//   try {
-//     const existingUser = await this.findProfileByUsername(userName);
+    if (!user || !secondUser){
+      throw new Error("User not found");
+    }
 
-//     if (!existingUser) {
-//       throw new Error('User not found');
-//     }
+    const relation = await this.relationRepository.findOne({
+        where: [
+          { friend: { id: user.id }, user: { id: secondUser.id }, status: 'friends'},
+          { friend: { id: secondUser.id }, user: { id: user.id }, status: 'friends'}
+        ]
+    });
 
-//     const newHistory = this.achievementRepository.create({
-//       ...addAchievementOfUser,
-//       user: existingUser, 
-//     });
+    if (!relation){
+      throw new Error("you don't have access to user");
+    }
+    return secondUser;
+  } catch (error) {
+    throw new Error(`Error fetching history`);
+  }
+}
 
-//     await this.achievementRepository.save(newHistory);
+async addAchievementOfUser(userName: string, addAchievementOfUser: AchievementDto) : Promise<any> {
 
-//     const updatedUser = await this.findProfileByUsername(userName);
+  try {
+    const existingUser = await this.findProfileByUsername(userName);
 
-//     return updatedUser;
-//   } catch (error) {
-//     throw new Error('Failed to add history: ' + error.message);
-//   }
-// }
+    if (!existingUser) {
+      throw new Error('User not found');
+    }
+
+    const newHistory = this.achievementRepository.create({
+      ...addAchievementOfUser,
+      user: existingUser, 
+    });
+
+    await this.achievementRepository.save(newHistory);
+
+    const updatedUser = await this.findProfileByUsername(userName);
+
+    return updatedUser;
+  } catch (error) {
+    throw new Error('Failed to add history: ' + error.message);
+  }
+}
 
 async findAllAchievementOfUser(username: string): Promise<AchievementDto[]> {
 
@@ -198,37 +205,6 @@ async findAllAchievementOfUser(username: string): Promise<AchievementDto[]> {
     throw new Error(`Error fetching history`);
   }
 }
-
-// async addFriendOfUser(userName: string, addFriend: RelationDto): Promise<RelationParams> {
-//      try {
-//       const existingUser = await this.userRepository.findOne({
-//         where :{
-//           username: userName,
-//         }
-//       });
-//       if (!existingUser) {
-//         throw new Error('User not found');
-//       }
-//       Relation rel = {
-//         status : "frinds",
-//         friend : id,
-//         user  : idFriend,
-//       }
-//       const newHistory = this.relationRepository.create({
-//         ...addFriend,
-//         user: existingUser,
-//       });
-  
-//       await this.relationRepository.save(newHistory);
-  
-//       const updatedUser = await this.findProfileByUsername(userName);
-  
-//       return updatedUser;
-//     } catch (error) {
-//       throw new Error('Failed to add history: ' + error.message);
-//     }
-// }
-
 
 async sendRequest(userName: string, secondUsername: string): Promise<any> {
   try {

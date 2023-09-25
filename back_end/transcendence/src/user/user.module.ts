@@ -9,7 +9,6 @@ import { Profile } from 'src/typeorm/entities/Profile.entity';
 import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
-import { RandomService } from 'src/random/random.service';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import { ChatRoomUser} from 'src/typeorm/entities/chat-room-users.entity';
 import { Message } from 'src/typeorm/entities/message-entity';
@@ -22,7 +21,7 @@ import { Chat } from 'src/typeorm/entities/chat-entity';
     TypeOrmModule.forFeature([User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUser, Message, Chat])
   ],
   controllers: [UserController],
-  providers: [UserService, AuthService, RandomService, ChatService],
+  providers: [UserService, AuthService, ChatService],
 })
 export class UserModule {}
 
