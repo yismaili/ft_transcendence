@@ -25,11 +25,11 @@ import { ChatService } from 'src/chat/chat.service';
 export class AuthController {
   @WebSocketServer() server: Server;
     constructor(private readonly authService: AuthService,  private userService: UserService, private chatService: ChatService) {} //we used this constructor for 'Dependency Injection'
-  @Get('all') // decorator is define an HTTP GET endpoint
-  async findAll(): Promise<User[]> {
-    const users = this.authService.findAll()
-    return users;
-  }
+  // @Get('all') // decorator is define an HTTP GET endpoint
+  // async findAll(): Promise<User[]> {
+  //   const users = this.authService.findAll()
+  //   return users;
+  // }
 
   response: any;
   @Get('home')

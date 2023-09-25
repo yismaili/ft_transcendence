@@ -9,7 +9,6 @@ import { Profile } from 'src/typeorm/entities/Profile.entity';
 import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
-import { RandomService } from 'src/random/random.service';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import { ChatRoomUser} from 'src/typeorm/entities/chat-room-users.entity';
 import { Message } from 'src/typeorm/entities/message-entity';
@@ -24,6 +23,6 @@ import { AuthService } from 'src/auth/auth.service';
     AuthModule,
     TypeOrmModule.forFeature([User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUser, Message, Chat])
   ],
-  providers: [UserStatusGateway, ChatService, UserService, AuthService, RandomService]
+  providers: [UserStatusGateway, ChatService, UserService, AuthService]
 })
 export class UserStatusModule {}
