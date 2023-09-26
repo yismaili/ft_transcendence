@@ -14,11 +14,14 @@ import { ChatRoomUser} from 'src/typeorm/entities/chat-room-users.entity';
 import { Message } from 'src/typeorm/entities/message-entity';
 import { ChatService } from 'src/chat/chat.service';
 import { Chat } from 'src/typeorm/entities/chat-entity';
+import { MulterModule } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
 
 @Module({
   imports: [
     AuthModule,
-    TypeOrmModule.forFeature([User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUser, Message, Chat])
+    TypeOrmModule.forFeature([User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUser, Message, Chat]),
+    MulterModule.register({ storage: memoryStorage() })
   ],
   controllers: [UserController],
   providers: [UserService, AuthService, ChatService],

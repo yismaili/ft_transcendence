@@ -14,6 +14,9 @@ import { User } from 'src/typeorm/entities/User.entity';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import {Not, Repository } from 'typeorm';
 import axios from 'axios';
+import path from 'path';
+
+import * as fs from 'fs'
 
 @Injectable()
 export class UserService {
@@ -43,43 +46,61 @@ async findProfileByUsername(userName: string): Promise<any> {
   }
 }
 
-async uploadImage(imageData: string): Promise<any> {
+async uploadImage(imageData: Buffer) {
   try {
-    const response = await axios.post('https://api.imgbb.com/1/upload', {
-      key: '3abb50958940a0dfbde0d032e1fb5573',
-      image: imageData,
-    });
-    console.log(imageData);
-    return response.data;
+    // const apiKey = '3abb50958940a0dfbde0d032e1fb5573'; 
+    // const formData = new FormData();
+    // formData.append('key', apiKey);
+    // formData.append('image', imageData); // This is incorrect
+    // console.log(formData);
+
+
+    const response = await axios.post('https://api.imgbb.com/1/upload?key=3abb50958940a0dfbde0d032e1fb5573', {
+
+      image: imageData.toString('base64'),
+    },
+   { headers:{
+     'Content-Type': 'multipart/form-data',
+      
+    }});
+
+    console.log(response.data)
+    const imageUrl = response.data.data.url;
+
+    return imageUrl;
   } catch (error) {
-    console.log(error.message);
-    throw error.response ? error.response.data : error.message;
+
+    console.log('ee ', error)
+    throw error.message;
   }
 }
 
-async updateProfileByUsername(userName: string, firstName, lastName, file): Promise<any> {
+async updateProfileByUsername(userName: string, firstName, lastName, fileData): Promise<any> {
   try {
     const existingUser = await this.findProfileByUsername(userName);
     if (!existingUser) {
       throw new Error('User not found');
     }
-    
-    const response = await this.uploadImage(file);
-    
-    // Access the image URL from the API response
-    const imageUrl = response.data.url;
+
+
+    const f = fs.readFileSync(fileData.path)
+    console.log(f.buffer)
+
+    // return;
+
+    const response = await this.uploadImage(f); 
+    const imageUrl = response;
 
     existingUser.firstName = firstName;
     existingUser.lastName = lastName;
     existingUser.picture = imageUrl;
-    
+
     const updatedUser = await this.userRepository.save(existingUser);
     const token = sign({ ...updatedUser }, 'secrete');
-    
+
     return { token, user: updatedUser };
   } catch (error) {
-    console.log(error.message);
-    throw new Error('Failed to update profile: '); 
+    throw new Error('Failed to update profile: ' + error);
   }
 }
 
