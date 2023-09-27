@@ -48,13 +48,6 @@ async findProfileByUsername(userName: string): Promise<any> {
 
 async uploadImage(imageData: Buffer) {
   try {
-    // const apiKey = '3abb50958940a0dfbde0d032e1fb5573'; 
-    // const formData = new FormData();
-    // formData.append('key', apiKey);
-    // formData.append('image', imageData); // This is incorrect
-    // console.log(formData);
-
-
     const response = await axios.post('https://api.imgbb.com/1/upload?key=3abb50958940a0dfbde0d032e1fb5573', {
 
       image: imageData.toString('base64'),
@@ -63,36 +56,25 @@ async uploadImage(imageData: Buffer) {
      'Content-Type': 'multipart/form-data',
       
     }});
-
-    console.log(response.data)
     const imageUrl = response.data.data.url;
-
     return imageUrl;
   } catch (error) {
-
-    console.log('ee ', error)
     throw error.message;
   }
 }
 
-async updateProfileByUsername(userName: string, firstName, lastName, fileData): Promise<any> {
+async updateProfileByUsername(userName: string, userData, imageData): Promise<any> {
   try {
     const existingUser = await this.findProfileByUsername(userName);
     if (!existingUser) {
       throw new Error('User not found');
     }
 
-
-    const f = fs.readFileSync(fileData.path)
-    console.log(f.buffer)
-
-    // return;
-
-    const response = await this.uploadImage(f); 
+    const response = await this.uploadImage(fs.readFileSync(imageData.path)); 
     const imageUrl = response;
 
-    existingUser.firstName = firstName;
-    existingUser.lastName = lastName;
+    existingUser.firstName = userData.firstName;
+    existingUser.lastName = userData.lastName;
     existingUser.picture = imageUrl;
 
     const updatedUser = await this.userRepository.save(existingUser);

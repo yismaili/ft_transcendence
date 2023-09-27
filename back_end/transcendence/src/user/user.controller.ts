@@ -30,13 +30,13 @@ export class UserController {
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/updateProfile')
     @UseInterceptors(FileInterceptor('image', multerOptions))
-    async updateProfileDetails(@Req() req, @Param('username') username: string, @Body() @Param('firstName') firstName:string, @Param('lastName') lastName:string, @UploadedFile() file) : Promise<IAuthenticate>{
+    async updateProfileDetails(@Req() req, @Param('username') username: string, @Body()userData, @UploadedFile() imageData) : Promise<IAuthenticate>{
         const authorization = req.user;
         if (authorization.username == username){
-            if (!file) {
+            if (!imageData) {
                 throw new Error('No image file provided.');
             }
-            return this.userService.updateProfileByUsername(username, firstName, lastName, file); 
+            return this.userService.updateProfileByUsername(username,userData, imageData); 
         }
         else{
             throw new ForbiddenException();
