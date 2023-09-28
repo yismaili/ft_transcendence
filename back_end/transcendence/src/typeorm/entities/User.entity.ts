@@ -27,6 +27,15 @@ export class User {
   @Column({ nullable: true })
   picture: string;
 
+  @Column({ nullable: true })
+  status: string;
+
+  @Column({ nullable: true })
+  twoFactorAuthSecret: string;
+
+  @Column({ default: false })
+  isTwoFactorAuthEnabled: boolean;
+
   @OneToOne(() => Profile, profile => profile.user, { cascade: true })
   profile: Profile;
 

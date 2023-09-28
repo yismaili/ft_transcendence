@@ -1,16 +1,11 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import "./chat-addbar.css";
 import Image from "next/image";
 
 function ChatAddBar() {
   const ref = useRef<HTMLFormElement>(null);
-  //   const addUser = async (formData: FormData) => {
-  //     "use server";
-  //     const content = formData.get("friendName");
-  //     console.log(content);
-  //   };
-
+  const [sent, setSent] = useState(0);
   return (
     <div className="chatroom__sidebar__addbar">
       <form
@@ -19,6 +14,19 @@ function ChatAddBar() {
           ref.current?.reset();
           const content = formData.get("friendName");
           console.log(content);
+          const sending = await fetch("http://localhost:3000/api/friends", {
+            method: "POST",
+            body: JSON.stringify(content),
+          })
+            .then(async (res) => await res.json())
+            .then((e) => {
+              if (e === "doesn't exist") setSent(2);
+              else setSent(1);
+            })
+            .catch(() => setSent(2));
+          setTimeout(() => {
+            setSent(0);
+          }, 5000);
         }}
         className="chatroom__sidebar__addbar__form"
       >
@@ -42,6 +50,16 @@ function ChatAddBar() {
           />
         </label>
       </form>
+      {sent == 1 && (
+        <>
+          <p>kayn</p>
+        </>
+      )}
+      {sent == 2 && (
+        <>
+          <p>makaynch</p>
+        </>
+      )}
     </div>
   );
 }

@@ -15,44 +15,47 @@ import { ChatRoomOfUserDto } from './dto/chatRoom-of-user.dto';
 import { LeaveChatRoomDto } from './dto/leave-ChatRoom.dto';
 import { JoinRoom } from './dto/join-room.dto';
 import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
 export class ChatGateway {
-  @WebSocketServer()
-  server: Server;
-
+  @WebSocketServer() server: Server;
   constructor(private readonly chatService: ChatService) {}
 
+  handleConnection(socket: Socket): void {
+    this.chatService.handleConnection(socket);
+    this.chatService.addUserWithSocketId(socket);
+  }
+  
+  // @UseGuards(JwtAuthGuard, JwtStrategy)
   @SubscribeMessage('createChat')
-  createChat(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket) {
-    const message = this.chatService.createChatMessage(createChatDto, client.id);
-    this.server.emit('message', message);
-    return message;
+  createChat(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket){
+    this.chatService.createChatDirect(createChatDto, client, this.server);
+    return;
   }
 
   @SubscribeMessage('createChatRoom')
   createChatRoom(@MessageBody() createChatRoomDto: CreateChatRoomDto, @ConnectedSocket() client: Socket) {
-    const message = this.chatService.createChatRoom(createChatRoomDto);
-    return message;
+    const ret = this.chatService.createChatRoom(createChatRoomDto);
+    return ret;
   }
 
   @SubscribeMessage('JoinUsertoRoom')
   joinUsarToChatRoom(@MessageBody() joinUsertoChatRoom: JoinUsertoChatRoom, @ConnectedSocket() client: Socket) {
-    const message = this.chatService.joinUserToChatRoom(joinUsertoChatRoom);
-    this.server.emit('message', message);
-    return message;
+    this.chatService.joinUserToChatRoom(joinUsertoChatRoom);
   }
 
   @SubscribeMessage('sendMessageToChatRoom')
   sendMessage(@MessageBody() sendMessageToChatRoom: SendMessageToChatRoom, @ConnectedSocket() client: Socket) {
-    const message = this.chatService.sendMessage(sendMessageToChatRoom);
-    this.server.emit('message', message);
-    return message;
+    this.chatService.sendMessage(sendMessageToChatRoom, client, this.server);
   }
 
+  // @UseGuards(JwtAuthGuard, JwtStrategy)
   @SubscribeMessage('findAllChatRoomConversation')
-  findAllChatRoomConversation(@MessageBody() getChatRoomMessages: GetChatRoomMessages) {
+  findAllChatRoomConversation(@MessageBody() getChatRoomMessages: GetChatRoomMessages, client: Socket) {
     return this.chatService.findAllChatRoomConversation(getChatRoomMessages);
   }
 
@@ -131,10 +134,9 @@ export class ChatGateway {
     return this.chatService.deleteChatRoom(deleteChatRoomDto);
   }
 
-  @SubscribeMessage('isTyping')
+  @SubscribeMessage('istyping')
   async typing(@MessageBody('isTyping') isTyping: boolean, @ConnectedSocket() client: Socket) {
-    const name = await this.chatService.getClientName(client.id);
-    client.broadcast.emit('typing', { name, isTyping });
+    client.emit('istyping', {isTyping});
   }
 
   @SubscribeMessage('AllchatRoom')

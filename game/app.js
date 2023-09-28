@@ -80,7 +80,11 @@ var PongGame = /** @class */ (function () {
     function PongGame() {
         this.canvas = new Canvas();
         // Establish a socket.io connection
-        this.socket = io("http://localhost:3001");
+        this.socket = io("http://localhost:3001", {
+            extraHeaders: {
+                Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJhbW91bnRhc3NpcmUiLCJmaXJzdE5hbWUiOiJhbWluZSIsImxhc3ROYW1lIjoibW91bnRhc3NpcmUiLCJlbWFpbCI6ImFtaW5lLm1vdW50YXNzaXIyMDAyQGdtYWlsLmNvbSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLQnhNdkdFUVQzbzN1S01XVkFsODhwbjJ0eVRHN0NtWG1wWl9ZbHp2Ums9czk2LWMiLCJzdGF0dXMiOm51bGwsInR3b0ZhY3RvckF1dGhTZWNyZXQiOm51bGwsImlzVHdvRmFjdG9yQXV0aEVuYWJsZWQiOmZhbHNlLCJwcm9maWxlIjp7ImlkIjoxLCJzY29yZSI6MCwibG9zIjowLCJ3aW4iOjAsInhwIjowLCJsZXZlbCI6MH0sInVzZXJSZWxhdGlvbnMiOlt7ImlkIjoxLCJzdGF0dXMiOiJmcmllbmRzIiwiRnJvbVVzZXIiOiIxIn1dLCJmcmllbmRSZWxhdGlvbnMiOltdLCJhY2hpZXZlbWVudHMiOltdLCJoaXN0b3JpZXMiOltdLCJpYXQiOjE2OTU4MDY3MzN9.76vWTWMrF1-lEBFcJu4mrGCnzQ3sg_i07gMGTKMTf6w'
+            }
+        });
         this.ballX = this.canvas.getWidth() / 2;
         this.ballY = this.canvas.getHeight() / 2;
         this.ballSpeedX = 10;
@@ -115,8 +119,8 @@ var PongGame = /** @class */ (function () {
         this.username = document.getElementById("username");
         this.friendUsername = document.getElementById("friendUsername");
         if (this.JoinBtn) {
-            this.JoinBtn.addEventListener('click', this.joinGame.bind(this));
-            // this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
+            //this.JoinBtn.addEventListener('click', this.joinGame.bind(this));
+            this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
         }
         if (this.ntvBtn) {
             this.ntvBtn.addEventListener('click', this.acceptRequest.bind(this));
@@ -176,22 +180,6 @@ var PongGame = /** @class */ (function () {
         this.rightPaddle_ = new Paddle(this.canvas.getWidth() - 10, this.rightPaddle, this.paddleWidth, this.paddleHeight);
         this.middleLine = new MiddleLine(this.canvas.getWidth() / 2, this.canvas.getHeight());
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
-        // if (this.leftPlayerScore == 5){
-        //     this.player = 'left Player';
-        //     this.playerWin();
-        // }
-        // if (this.rightPlayerScore == 5){
-        //     this.player = 'right Player';
-        //     this.playerWin();
-        // }
-    };
-    PongGame.prototype.playerWin = function () {
-        var message = "Congratulations! " + this.player + " win!";
-        $('#message').text(message); // Set the message text
-        $('#message-modal').modal('show'); // Display the message modal
-        setTimeout(function () {
-            $('#message-modal').modal('hide'); // Hide the message modal
-        }, 3000);
     };
     PongGame.prototype.start = function () {
         var _this = this;
@@ -203,14 +191,14 @@ var PongGame = /** @class */ (function () {
             }, 1000 / 100); // 100 frames per second
         }
     };
-    PongGame.prototype.stop = function () {
-        if (this.isRunning) {
-            clearInterval(this.intervalId);
-            this.isRunning = false;
-            this.leftPlayerScore = 0;
-            this.rightPlayerScore = 0;
-        }
-    };
+    // stop() {
+    //     if (this.isRunning) {
+    //         clearInterval(this.intervalId);
+    //         this.isRunning = false;
+    //         this.leftPlayerScore = 0;
+    //         this.rightPlayerScore = 0;
+    //     }
+    // }
     PongGame.prototype.joinGame = function () {
         var _this = this;
         var _a;
@@ -219,20 +207,17 @@ var PongGame = /** @class */ (function () {
         });
     };
     PongGame.prototype.joinGameFriend = function () {
-        var _this = this;
         var _a, _b;
-        this.socket.emit("createGameFriend", { username: (_a = this.username) === null || _a === void 0 ? void 0 : _a.value, friendUsername: (_b = this.friendUsername) === null || _b === void 0 ? void 0 : _b.value }, function (response) {
-            _this.GameId = response.id;
-        });
+        this.socket.emit("createGameFriend", { username: (_a = this.username) === null || _a === void 0 ? void 0 : _a.value, friendUsername: (_b = this.friendUsername) === null || _b === void 0 ? void 0 : _b.value });
     };
     PongGame.prototype.acceptRequest = function () {
-        var _this = this;
-        var _a, _b;
-        this.socket.emit("acceptRequest", { username: (_a = this.username) === null || _a === void 0 ? void 0 : _a.value, friendUsername: (_b = this.friendUsername) === null || _b === void 0 ? void 0 : _b.value }, function (response) {
-            _this.GameId = response.id;
-        });
+        var res = true;
+        this.socket.emit("responseFromFriend", res);
     };
     return PongGame;
 }());
 var pongGame = new PongGame();
 pongGame.start();
+pongGame.socket.on('inviteFriend', function (response) {
+    console.log(response);
+});
