@@ -9,6 +9,11 @@ export class GameGateway {
   server: Server;
   constructor(private readonly gameService: GameService) {
   }
+
+  handleConnection(socket: Socket): void {
+    this.gameService.addUserWithSocketId(socket);
+  }
+
   @SubscribeMessage('createGame')
   create(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() playerId: Socket) {
     return this.gameService.createGameRandom(createGameDto, playerId, this.server);
@@ -16,12 +21,21 @@ export class GameGateway {
 
   @SubscribeMessage('createGameFriend')
   createGameFriend(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
-    return this.gameService.createGameFriend(createGameDto);
+    return this.gameService.matchingFriends(createGameDto, soketId, this.server);
   }
 
-  @SubscribeMessage('acceptRequest')
-  acceptRequest(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
-    console.log(createGameDto);
-    return this.gameService.accepteGameRequest(createGameDto);
-  }
+  // @SubscribeMessage('invite')
+  // test(socketid) {
+  //   console.log("hi")
+
+  //   socketid.join("yismaili")
+
+  //   this.server.to("yismaili").emit('invite1');
+  // }
+
+  // @SubscribeMessage('acceptRequest')
+  // acceptRequest(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
+  //   console.log(createGameDto);
+  //   return this.gameService.accepteGameRequest(createGameDto);
+  // }
 }

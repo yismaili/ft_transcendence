@@ -9,19 +9,26 @@ import { RelationDto } from 'src/auth/dtos/relation.dto';
 import { OutcomeDto} from 'src/auth/dtos/outcome.dto';
 import { updateProfileDto } from 'src/auth/dtos/updateProfile.dto';
 import { AchievementParams, HistoryParams, IAuthenticate, ProfileParams, RelationParams, UserParams } from 'utils/types';
+import { WebSocketServer } from '@nestjs/websockets';
+import { Socket, Server } from 'socket.io';
+import { ChatService } from 'src/chat/chat.service';
 
 @Controller('users')
 export class UserController {
-    constructor(private userService: UserService){}
+    // @WebSocketServer() server: Server;
+    // handleConnection(socket: Socket): void {
+    //     this.chatService.handleConnection(socket);
+    // }
+    constructor(private userService: UserService, private chatService: ChatService){}
     
-    @Get(':username')
-    async getDetailsUser(@Param('username') username: string): Promise<UserParams>{
-       return this.userService.findProfileByUsername(username);
-    }
+    // @Get(':username')
+    // async getDetailsUser(@Param('username') username: string):Promise<any>{
+    //    return this.userService.findProfileByUsername(username);
+    // }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username')
-    async getDetailsProfile(@Req() req, @Param('username') username: string): Promise<UserParams> {
+    async getDetailsProfile(@Req() req, @Param('username') username: string): Promise<any> {
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.findProfileByUsername(username);
@@ -31,17 +38,17 @@ export class UserController {
         }
     }
 
-    @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Put('profile/:username/updateOutcome')
-    async updateProfileOutcome(@Req() req, @Param('username') username: string, @Body() updateProfileDto:OutcomeDto) : Promise<ProfileParams>{
-        const authorization = req.user;
-        if (authorization.username == username){
-            return this.userService.updateProfileOutcomeByUsername(username, updateProfileDto); 
-        }
-        else{
-            throw new ForbiddenException();
-        }
-    }
+    // @UseGuards(JwtAuthGuard, JwtStrategy)
+    // @Put('profile/:username/updateOutcome')
+    // async updateProfileOutcome(@Req() req, @Param('username') username: string, @Body() updateProfileDto:OutcomeDto) : Promise<ProfileParams>{
+    //     const authorization = req.user;
+    //     if (authorization.username == username){
+    //         return this.userService.updateProfileOutcomeByUsername(username, updateProfileDto); 
+    //     }
+    //     else{
+    //         throw new ForbiddenException();
+    //     }
+    // }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/updateProfile')
@@ -55,17 +62,17 @@ export class UserController {
         }
     }
 
-    @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Post('profile/:username/history')
-    async addHistory(@Req() req, @Param('username') username: string, @Body() historyDto:HistoryDto): Promise<HistoryParams>{
-        const authorization = req.user;
-        if (authorization.username == username){
-            return this.userService.addHistoryByUsername(username, historyDto); 
-        }
-        else{
-            throw new ForbiddenException();
-        }
-    }
+    // @UseGuards(JwtAuthGuard, JwtStrategy)
+    // @Post('profile/:username/history')
+    // async addHistory(@Req() req, @Param('username') username: string, @Body() historyDto:HistoryDto): Promise<HistoryParams>{
+    //     const authorization = req.user;
+    //     if (authorization.username == username){
+    //         return this.userService.addHistoryByUsername(username, historyDto); 
+    //     }
+    //     else{
+    //         throw new ForbiddenException();
+    //     }
+    // }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username/history')
@@ -79,17 +86,17 @@ export class UserController {
         }
     }
     
-    @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Post('profile/:username/achievements')
-    async addAchievementOfUser(@Req() req, @Param('username') username: string, @Body() achievementDto:AchievementDto): Promise<AchievementParams>{
-        const authorization = req.user;
-        if(authorization.username == username){
-            return this.userService.addAchievementOfUser(username, achievementDto);
-        }
-        else{
-            throw new ForbiddenException();
-        }
-    }
+    // @UseGuards(JwtAuthGuard, JwtStrategy)
+    // @Post('profile/:username/achievements')
+    // async addAchievementOfUser(@Req() req, @Param('username') username: string, @Body() achievementDto:AchievementDto): Promise<AchievementParams>{
+    //     const authorization = req.user;
+    //     if(authorization.username == username){
+    //         return this.userService.addAchievementOfUser(username, achievementDto);
+    //     }
+    //     else{
+    //         throw new ForbiddenException();
+    //     }
+    // }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username/achievements')
@@ -104,11 +111,11 @@ export class UserController {
     }
    
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Post('profile/:username/sendRequist/:id')
-    async sendRequist(@Req() req, @Param('username') username: string, @Param('id') idOfuser: number): Promise<RelationParams>{
+    @Post('profile/:username/sendRequest/:secondUsername')
+    async sendRequest(@Req() req, @Param('username') username: string, @Param('secondUsername') secondUsername: string): Promise<RelationParams>{
         const authorization = req.user;
         if(authorization.username == username){
-            return this.userService.sendRequist(username, idOfuser);
+            return this.userService.sendRequest(username, secondUsername);
         }
         else{
             throw new ForbiddenException();
@@ -141,11 +148,11 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Get('profile/:username/requists')
-    async getAllRequistsOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
+    @Get('profile/:username/requests')
+    async getAllRequestsOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.getAllRequistsOfUser(username); 
+            return this.userService.getAllRequestsOfUser(username); 
         }
         else{
             throw new ForbiddenException();
@@ -165,11 +172,11 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Put('profile/:username/block/:relationId')
-    async UpdateStatusOfUser(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationParams>{
+    @Put('profile/:username/block/:secondUser')
+    async UpdateStatusOfUser(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<any>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.blockUserFromFriend(username, relationId); 
+            return this.userService.blockUser(username, secondUser); 
         }
         else{
             throw new ForbiddenException();
@@ -177,11 +184,11 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Put('profile/:username/unblock/:relationId')
-    async unblockUser(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationParams>{
+    @Put('profile/:username/unblock/:secondUser')
+    async unblockUser(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<any>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.unblockUser(username, relationId); 
+            return this.userService.unblockUser(username, secondUser); 
         }
         else{
             throw new ForbiddenException();
@@ -189,11 +196,11 @@ export class UserController {
     }
     
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Put('profile/:username/acceptRequist/:relationId')
-    async acceptRequist(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationParams>{
+    @Put('profile/:username/acceptRequest/:secondUser')
+    async acceptRequist(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<RelationParams>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.acceptRequest(username, relationId); 
+            return this.userService.acceptRequest(username, secondUser); 
         }
         else{
             throw new ForbiddenException();
@@ -201,11 +208,11 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Delete('profile/:username/rejectRequist/:relationId')
-    async rejectRequist(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationParams>{
+    @Delete('profile/:username/rejectRequest/:secondUser')
+    async rejectRequist(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<RelationParams>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.rejectRequest(username, relationId); 
+            return this.userService.rejectRequest(username, secondUser); 
         }
         else{
             throw new ForbiddenException();
@@ -213,17 +220,40 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Delete('profile/:username/cancelRequist/:relationId')
-    async cancelRequist(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationParams>{
+    @Delete('profile/:username/cancelRequest/:secondUser')
+    async cancelRequist(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<RelationParams>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.cancelRequist(username, relationId); 
+            return this.userService.cancelRequist(username, secondUser); 
         }
         else{
             throw new ForbiddenException();
         }
     }
 
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Delete('profile/:username/cancelRelation/:secondUser')
+    async cancelRelation(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<RelationParams>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.cancelRelation(username, secondUser); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/online')
+    async getSatatusOfUser(@Req() req, @Param('username') username: string): Promise<RelationDto[]>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.getStatusOfUsers(username); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
     // @UseGuards(JwtAuthGuard, JwtStrategy)
     // @Get('profile/:username/suggest')
     // async suggestOfUser(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationDto[]>{
