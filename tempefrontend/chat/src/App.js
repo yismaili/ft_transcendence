@@ -5,9 +5,9 @@ import './App.css';
 const ChatApp = () => {
   const [socket] = useState(io('0.0.0.0:3001', {
     extraHeaders: {
-      Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ5aXNtYWlsaSIsImZpcnN0TmFtZSI6InlvdW5lcyIsImxhc3ROYW1lIjoiaXNtYWlsaSIsImVtYWlsIjoieWlzbWFpbGkxMzM3QGdtYWlsLmNvbSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NKeW9QLUJuZjcxVTVKcDBwWE5faUxSMHB0WDJWWXhnTEdlc09CTklKaVY5Zz1zOTYtYyIsInByb2ZpbGUiOnsiaWQiOjEsInNjb3JlIjowLCJsb3MiOjAsIndpbiI6MCwieHAiOjAsImxldmVsIjowfSwidXNlclJlbGF0aW9ucyI6W10sImZyaWVuZFJlbGF0aW9ucyI6W10sImFjaGlldmVtZW50cyI6W10sImhpc3RvcmllcyI6W10sImlhdCI6MTY5NDg2OTE1M30._BgOmYPL6IU0NV0VPf7W0G31DfT6wEvE-GuyMIRUsIk'
+      Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ5aXNtYWlsaSIsImZpcnN0TmFtZSI6InlvdW5lcyIsImxhc3ROYW1lIjoiaXNtYWlsaSIsImVtYWlsIjoieWlzbWFpbGkxMzM3QGdtYWlsLmNvbSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NKeW9QLUJuZjcxVTVKcDBwWE5faUxSMHB0WDJWWXhnTEdlc09CTklKaVY5Zz1zOTYtYyIsInN0YXR1cyI6Im9ubGluZSIsInR3b0ZhY3RvckF1dGhTZWNyZXQiOm51bGwsImlzVHdvRmFjdG9yQXV0aEVuYWJsZWQiOmZhbHNlLCJwcm9maWxlIjp7ImlkIjoxLCJzY29yZSI6MSwibG9zIjoxLCJ3aW4iOjEsInhwIjowLCJsZXZlbCI6MX0sInVzZXJSZWxhdGlvbnMiOltdLCJmcmllbmRSZWxhdGlvbnMiOltdLCJhY2hpZXZlbWVudHMiOltdLCJoaXN0b3JpZXMiOlt7ImlkIjoxLCJkYXRlIjoiMjAyMy0wOS0yOFQxNDo1ODoyMy41MDZaIiwicmVzdWx0ZU9mVXNlciI6MywicmVzdWx0ZU9mQ29tcGV0aXRvciI6NX1dLCJpYXQiOjE2OTU5MzMyNTZ9.W_C7VKBe587TKB0Y7nOvewz7VVPdTX8WmnYsj93woME'
     }
-  }));
+    }));
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
   const [messageTextToChatRoom, setMessageTextToChatRoom] = useState('');
@@ -105,10 +105,10 @@ const ChatApp = () => {
 
 const createChatRoom = () => {
     setstatusPermissions('admin');
-    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, () => {
+    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, (response) => {
       setMessageText('');
       setJoined(true);
-      setchatRoomName(name);
+      setchatRoomName(response.RoomId);
     });
   };
   

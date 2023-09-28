@@ -191,19 +191,9 @@ var PongGame = /** @class */ (function () {
             }, 1000 / 100); // 100 frames per second
         }
     };
-    // stop() {
-    //     if (this.isRunning) {
-    //         clearInterval(this.intervalId);
-    //         this.isRunning = false;
-    //         this.leftPlayerScore = 0;
-    //         this.rightPlayerScore = 0;
-    //     }
-    // }
     PongGame.prototype.joinGame = function () {
         var _a;
-        this.socket.emit("createGame", { username: (_a = this.username) === null || _a === void 0 ? void 0 : _a.value }, function () {
-            //this.GameId = response.id;
-        });
+        this.socket.emit("createGame", { username: (_a = this.username) === null || _a === void 0 ? void 0 : _a.value });
     };
     PongGame.prototype.joinGameFriend = function () {
         var _a, _b;
@@ -216,7 +206,8 @@ var PongGame = /** @class */ (function () {
     return PongGame;
 }());
 var pongGame = new PongGame();
-pongGame.start();
+pongGame.draw();
+pongGame.update();
 pongGame.socket.on('inviteFriend', function (response) {
     console.log(response);
 });
