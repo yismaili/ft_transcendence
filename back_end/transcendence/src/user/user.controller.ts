@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import {Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AchievementDto } from 'src/auth/dtos/achievement.dto';
 import { HistoryDto } from 'src/auth/dtos/history.dto';
@@ -7,6 +7,8 @@ import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 import { RelationDto } from 'src/auth/dtos/relation.dto';
 import { updateProfileDto } from 'src/auth/dtos/updateProfile.dto';
 import { IAuthenticate } from './utils/types';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from './multer.config';
 
 @Controller('users')
 export class UserController {
@@ -25,41 +27,33 @@ export class UserController {
         }
     }
 
-    // @UseGuards(JwtAuthGuard, JwtStrategy)
-    // @Put('profile/:username/updateOutcome')
-    // async updateProfileOutcome(@Req() req, @Param('username') username: string, @Body() updateProfileDto:OutcomeDto) : Promise<ProfileParams>{
-    //     const authorization = req.user;
-    //     if (authorization.username == username){
-    //         return this.userService.updateProfileOutcomeByUsername(username, updateProfileDto); 
-    //     }
-    //     else{
-    //         throw new ForbiddenException();
-    //     }
-    // }
-
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/updateProfile')
-    async updateProfileDetails(@Req() req, @Param('username') username: string, @Body() updateProfileDto: updateProfileDto) : Promise<IAuthenticate>{
+    @UseInterceptors(FileInterceptor('image', multerOptions))
+    async updateProfileDetails(@Req() req, @Param('username') username: string, @Body()userData, @UploadedFile() imageData) : Promise<IAuthenticate>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.updateProfileByUsername(username, updateProfileDto); 
+            if (!imageData) {
+                throw new Error('No image file provided.');
+            }
+            return this.userService.updateProfileByUsername(username,userData, imageData); 
         }
         else{
             throw new ForbiddenException();
         }
     }
 
-    // @UseGuards(JwtAuthGuard, JwtStrategy)
-    // @Post('profile/:username/history')
-    // async addHistory(@Req() req, @Param('username') username: string, @Body() historyDto:HistoryDto): Promise<HistoryParams>{
-    //     const authorization = req.user;
-    //     if (authorization.username == username){
-    //         return this.userService.addHistoryByUsername(username, historyDto); 
-    //     }
-    //     else{
-    //         throw new ForbiddenException();
-    //     }
-    // }
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/search/:secondUsername')
+    async addHistory(@Req() req, @Param('username') username: string, @Param('secondUsername') secondUsername: string): Promise<any>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.searchByUsername(username, secondUsername); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username/history')
@@ -73,17 +67,17 @@ export class UserController {
         }
     }
     
-    // @UseGuards(JwtAuthGuard, JwtStrategy)
-    // @Post('profile/:username/achievements')
-    // async addAchievementOfUser(@Req() req, @Param('username') username: string, @Body() achievementDto:AchievementDto): Promise<AchievementParams>{
-    //     const authorization = req.user;
-    //     if(authorization.username == username){
-    //         return this.userService.addAchievementOfUser(username, achievementDto);
-    //     }
-    //     else{
-    //         throw new ForbiddenException();
-    //     }
-    // }
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Post('profile/:username/achievements')
+    async addAchievementOfUser(@Req() req, @Param('username') username: string, @Body() achievementDto:AchievementDto): Promise<any>{
+        const authorization = req.user;
+        if(authorization.username == username){
+            return this.userService.addAchievementOfUser(username, achievementDto);
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username/achievements')
@@ -241,15 +235,4 @@ export class UserController {
             throw new ForbiddenException();
         }
     }
-    // @UseGuards(JwtAuthGuard, JwtStrategy)
-    // @Get('profile/:username/suggest')
-    // async suggestOfUser(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationDto[]>{
-    //     const authorization = req.user;
-    //     if (authorization.username == username){
-    //         return this.userService.findAllSuggestOfUser(username); 
-    //     }
-    //     else{
-    //         throw new ForbiddenException();
-    //     }
-    // }
 }

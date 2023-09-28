@@ -2,6 +2,7 @@ import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, WebSo
 import { GameService } from './game.service';
 import { Socket, Server} from 'socket.io';
 import { CreateGameDto } from './dto/create-game.dto';
+import { verify } from 'jsonwebtoken';
 
 @WebSocketGateway()
 export class GameGateway {
