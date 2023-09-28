@@ -277,22 +277,29 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
       throw new Error('Chat room not found.');
     }
     // Check if the user is a member or muted
-    const isMemberOrMuted = await this.chatRoomUserRepository.findOne({
+    const isMember = await this.chatRoomUserRepository.findOne({
       where: {
         user: { id: user.id },
         chatRooms: { id: chatRoom.id },
         // statusUser: 'member'
       },
     });
-    if (!isMemberOrMuted) {
+    if (!isMember) {
       throw new Error('You are not allowed here; you are muted or not a member.');
     }
+    // const isMuted = await this.chatRoomUserRepository.findOne({
+    //   where: {
+    //     user: { id: user.id },
+    //     chatRooms: { id: chatRoom.id },
+    //     statusUser: 'muted'
+    //   },
+    // });
+
     const currentDate = new Date();
-    if (isMemberOrMuted.statusUser === 'muted'){
-      return
-      if (currentDate < isMemberOrMuted.time) {
-        throw new Error('You are not allowed here; you are muted or not a member.');
-      } else if (currentDate > isMemberOrMuted.time) {
+    if (isMember.statusUser === 'muted'){
+      if (currentDate < isMember.time) {
+        throw new Error('You are not allowed here; you are muted');
+      } else if (currentDate > isMember.time) {
         // Unmute the user if the mute time has passed
         const unmuteUserDto: UnmuteUserDto = {
           username: sendMessageToChatRoom.username,
