@@ -386,10 +386,10 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
       where: {
         user:{id: user.id},
         chatRooms: {id: chatRoom.id},
-       // statusUser: Not('member')
-      },
+        statusUser: 'banned'
+      }
     });
-    if (!ismember) {
+    if (ismember) {
       throw new Error('You are not allowed here');
     }
 
