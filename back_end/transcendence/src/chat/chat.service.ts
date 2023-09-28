@@ -310,9 +310,9 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
     }
     // Save the message
     const newMessage = this.messageRepository.create({
-      user,
+      user: user,
       message: sendMessageToChatRoom.message,
-      chatRoom,
+      chatRoom: chatRoom,
     });
     await this.messageRepository.save(newMessage);
     
@@ -331,7 +331,6 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
         username: user.username,
         chatRoomName: sendMessageToChatRoom.chatRoomName,
       };
-      
       const chatRoomUsers = await this.getAllUserOfChatRoom(roomInfo);
       
       for (const chatRoomUser of chatRoomUsers) {
@@ -343,11 +342,11 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
       
       // Emit the message to the chat room
       const chatRoomConversation = await this.messageRepository.find({
-      where: {
-         //id:newMessage.id
-        chatRoom: { id: chatRoom.id }
-      },
-    });
+        where: {
+          //id:newMessage.id
+          chatRoom: { id: chatRoom.id }
+        },
+      });
 
     server.to(roomName).emit('message', chatRoomConversation);
 
@@ -766,6 +765,7 @@ async getAllChatRoomOfUser(chatRoomOfUserDto: ChatRoomOfUserDto): Promise<any>{
         statusUser: Not('banned'),
       }
     });
+    // console.log(allChatRooms);
     return allChatRooms;
 }
 
@@ -934,11 +934,11 @@ async deleteChatRoom (deleteChatRoomDto: LeaveChatRoomDto) : Promise<any>{
     const messages = await this.messageRepository.find({
       where: {chatRoom: {id: chatRoom.id}}
     });
-    console.log(messages);
+    // console.log(messages);
     const usersOfChatRoom =  await this.chatRoomUserRepository.find({
       where: {chatRooms: {id: chatRoom.id}}
     });
-    console.log(usersOfChatRoom);
+    // console.log(usersOfChatRoom);
     //  return;
     await this.messageRepository.remove(messages);
     await this.chatRoomUserRepository.remove(usersOfChatRoom);
@@ -962,7 +962,7 @@ async getAllChatRoom(chatRoomOfUserDto: ChatRoomOfUserDto) : Promise<any>{
   const chatRoom = await this.chatRoomRepository.find(
     {
       where: {
-        status: Not('private'),
+        status: Not('private')
       }
     }
   );
