@@ -254,7 +254,7 @@ async joinUserToChatRoom(joinUserToChatRoom: JoinUsertoChatRoom): Promise<any> {
 
   const createChatRoomUser = this.chatRoomUserRepository.create({
       statusPermissions: joinUserToChatRoom.statusPermissions,
-      user,
+      user: user,
       statusUser: 'member',
       chatRooms: chatRoom,
   });
@@ -631,6 +631,7 @@ async kickUser(kickUserDto: KickUserDto) {
     where: {
       user: { id: user.id },
       statusPermissions: 'admin',
+      chatRooms: {id: chatRoom.id}
     },
   });
 
@@ -643,6 +644,7 @@ async kickUser(kickUserDto: KickUserDto) {
     where: {
       user: { id: user.id },
       statusUser: 'banned',
+      chatRooms: {id: chatRoom.id}
     },
   });
 
@@ -654,6 +656,7 @@ async kickUser(kickUserDto: KickUserDto) {
   const chatRoomUser = await this.chatRoomUserRepository.findOne({
     where: {
       user: { id: user.id },
+      chatRooms: {id: chatRoom.id}
     },
   });
 
@@ -800,6 +803,7 @@ async unbannedUser (unbannedUserDtoo: BanUserDto) {
   const chatRoomUser = await this.chatRoomUserRepository.findOne({
     where: {
       user: { id: user.id },
+      chatRooms: {id: chatRoom.id}
     },
   });
 
@@ -821,7 +825,7 @@ async changePermissionToUser (changePermissionToUserDto: BanUserDto): Promise<an
   
     const chatRoom = await this.chatRoomRepository.findOne({
       where: {
-            name : changePermissionToUserDto.chatRoomName,
+            RoomId: changePermissionToUserDto.chatRoomName,
       }
     });
     const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
@@ -845,6 +849,7 @@ async changePermissionToUser (changePermissionToUserDto: BanUserDto): Promise<an
     const chatRoomUser = await this.chatRoomUserRepository.findOne({
       where: {
         user: { id: user.id },
+        chatRooms: {id: chatRoom.id}
       },
     });
   
@@ -866,7 +871,7 @@ async leaveChatRoom (leaveChatRoomDto: LeaveChatRoomDto) : Promise<any>{
 
   const chatRoom = await this.chatRoomRepository.findOne({
     where: {
-          name : leaveChatRoomDto.chatRoomName,
+          RoomId : leaveChatRoomDto.chatRoomName,
     }
   });
   const adminUserChatRoom = await this.chatRoomUserRepository.findOne({

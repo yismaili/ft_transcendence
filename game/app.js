@@ -206,7 +206,8 @@ var PongGame = /** @class */ (function () {
     return PongGame;
 }());
 var pongGame = new PongGame();
-pongGame.start();
+pongGame.draw();
+pongGame.update();
 pongGame.socket.on('inviteFriend', function (response) {
     console.log(response);
 });
