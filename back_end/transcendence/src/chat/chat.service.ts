@@ -874,17 +874,17 @@ async leaveChatRoom (leaveChatRoomDto: LeaveChatRoomDto) : Promise<any>{
           RoomId : leaveChatRoomDto.chatRoomName,
     }
   });
-  const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
-    where: {
-      user: { id: isAdmin.id },
-      statusPermissions: 'admin',
-      chatRooms: {id: chatRoom.id},
-    },
-  });
+  // const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
+  //   where: {
+  //     user: { id: isAdmin.id },
+  //     statusPermissions: 'admin',
+  //     chatRooms: {id: chatRoom.id},
+  //   },
+  // });
 
-  if (adminUserChatRoom) {
-    throw new Error('you have not leave this chat room!');
-  }
+  // if (adminUserChatRoom) {
+  //   throw new Error('you have not leave this chat room!');
+  // }
 
   const chatRoomUser = await this.chatRoomUserRepository.findOne({
     where: {
@@ -931,8 +931,19 @@ async deleteChatRoom (deleteChatRoomDto: LeaveChatRoomDto) : Promise<any>{
   });
 
   if (chatRoomUser) {
-    await this.chatRoomRepository.delete(chatRoomUser.id);
-    return { message: 'User kicked successfully' };
+    const messages = await this.messageRepository.find({
+      where: {chatRoom: {id: chatRoom.id}}
+    });
+    console.log(messages);
+    const usersOfChatRoom =  await this.chatRoomUserRepository.find({
+      where: {chatRooms: {id: chatRoom.id}}
+    });
+    console.log(usersOfChatRoom);
+    //  return;
+    await this.messageRepository.remove(messages);
+    await this.chatRoomUserRepository.remove(usersOfChatRoom);
+    await this.chatRoomRepository.remove(chatRoomUser);
+    return { message: 'chat room deleted successfully' };
   } else {
     return { message: 'User not found in the chat room' };
   }
