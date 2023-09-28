@@ -5,9 +5,9 @@ import './App.css';
 const ChatApp = () => {
   const [socket] = useState(io('0.0.0.0:3001', {
     extraHeaders: {
-      Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ5aXNtYWlsaSIsImZpcnN0TmFtZSI6InlvdW5lcyIsImxhc3ROYW1lIjoiaXNtYWlsaSIsImVtYWlsIjoieWlzbWFpbGkxMzM3QGdtYWlsLmNvbSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NKeW9QLUJuZjcxVTVKcDBwWE5faUxSMHB0WDJWWXhnTEdlc09CTklKaVY5Zz1zOTYtYyIsInByb2ZpbGUiOnsiaWQiOjEsInNjb3JlIjowLCJsb3MiOjAsIndpbiI6MCwieHAiOjAsImxldmVsIjowfSwidXNlclJlbGF0aW9ucyI6W10sImZyaWVuZFJlbGF0aW9ucyI6W10sImFjaGlldmVtZW50cyI6W10sImhpc3RvcmllcyI6W10sImlhdCI6MTY5NDg2OTE1M30._BgOmYPL6IU0NV0VPf7W0G31DfT6wEvE-GuyMIRUsIk'
+      Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ5aXNtYWlsaSIsImZpcnN0TmFtZSI6InlvdW5lcyIsImxhc3ROYW1lIjoiaXNtYWlsaSIsImVtYWlsIjoieWlzbWFpbGkxMzM3QGdtYWlsLmNvbSIsInBpY3R1cmUiOiJodHRwczovL2kuaWJiLmNvL0JMQ3dmOTUvYmU3NWQ4YmY1NzJlLnBuZyIsInN0YXR1cyI6Im9mZmxpbmUiLCJ0d29GYWN0b3JBdXRoU2VjcmV0IjpudWxsLCJpc1R3b0ZhY3RvckF1dGhFbmFibGVkIjpmYWxzZSwicHJvZmlsZSI6eyJpZCI6MSwic2NvcmUiOjAsImxvcyI6MCwid2luIjowLCJ4cCI6MCwibGV2ZWwiOjB9LCJpYXQiOjE2OTU4MTM2MTR9.Y0DWLsBtmv_F6BK4haLfLumXDSouyerTrwOPr6y7ZRU'
     }
-  }));
+    }));
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
   const [messageTextToChatRoom, setMessageTextToChatRoom] = useState('');
@@ -105,10 +105,10 @@ const ChatApp = () => {
 
 const createChatRoom = () => {
     setstatusPermissions('admin');
-    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, () => {
+    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, (response) => {
       setMessageText('');
       setJoined(true);
-      setchatRoomName(name);
+      setchatRoomName(response.RoomId);
     });
   };
   

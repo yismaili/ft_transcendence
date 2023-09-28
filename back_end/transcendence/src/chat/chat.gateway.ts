@@ -35,8 +35,8 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('createChatRoom')
-  createChatRoom(@MessageBody() createChatRoomDto: CreateChatRoomDto, @ConnectedSocket() client: Socket) {
-    const ret = this.chatService.createChatRoom(createChatRoomDto);
+  async createChatRoom(@MessageBody() createChatRoomDto: CreateChatRoomDto, @ConnectedSocket() client: Socket):Promise<any> {
+    const ret = await this.chatService.createChatRoom(createChatRoomDto);
     return ret;
   }
 
@@ -150,6 +150,12 @@ export class ChatGateway {
   getAllUserOfChatRoom(@MessageBody() usersOfChatRoom:UsersOfChatRoom ) {
     return this.chatService.getAllUserOfChatRoom(usersOfChatRoom);
   }
+
+  @SubscribeMessage('updateChatRoom')
+  updateChatRoom(@MessageBody() usersOfChatRoom:UsersOfChatRoom ) {
+    return this.chatService.getAllUserOfChatRoom(usersOfChatRoom);
+  }
+
 
 }
 

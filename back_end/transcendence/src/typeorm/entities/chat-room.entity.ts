@@ -7,6 +7,9 @@ export class ChatRoom {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ unique: true })
+  RoomId: string;
+ 
   @Column()
   name: string;
  
