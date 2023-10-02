@@ -1,7 +1,27 @@
-import React from 'react'
+import Style from './Group.module.css'
 
-export default function Group() {
+type props = {
+  data: User_Friend;
+  choseChat: Function;
+};
+
+export default function Group({ data, choseChat }: props) {
+
+  const choseGroup = () => {
+    choseChat(data);
+  };
+
   return (
-    <div>Group</div>
-  )
+    <div className={Style.container} onClick={choseGroup}>
+      <div className={Style.imgContainer}>
+        <div
+          className={Style.avatar}
+          style={{ backgroundImage: `url("${data.picture}")` }}
+        ></div>
+        <div className={Style.onlineStatus}></div>
+      </div>
+      <p className={Style.name}>{data.username}</p>
+      <div className={Style.icon}></div>
+    </div>
+  );
 }

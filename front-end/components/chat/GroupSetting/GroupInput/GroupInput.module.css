@@ -1,0 +1,9 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    width: 92%;
+    height: 80%;
+    background-color: violet;
+    margin: 0 auto;
+}

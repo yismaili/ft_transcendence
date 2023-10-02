@@ -1,5 +1,6 @@
 "use client";
 import FriendRequest from "./FriendRequest/FriendRequest";
+import GroupSetting from "./GroupSetting/GroupSetting";
 import SlideButton from "./SlideButton/SlideButton";
 import { useEffect, useState } from "react";
 import Style from "./Chat.module.css";
@@ -73,7 +74,7 @@ export default function Chat() {
           <SlideButton func={turnSwitch} resetChat={setUserFriend} />
           <ul>
             {isGroup ? (
-              <Group />
+              <Group data={{}as User_Friend}  choseChat={setUserFriend}  />
             ) : (
               friends.data.map((friend) => {
                 return (
@@ -88,7 +89,7 @@ export default function Chat() {
               })
             )}
           </ul>
-          <FriendRequest />
+          {isGroup ? <GroupSetting /> : <FriendRequest />}
         </div>
         <div className={Style.right} key={userFriend?.id}>
           {userFriend ? <Msg friendData={userFriend} myData={user} /> : <></>}
