@@ -35,6 +35,7 @@ export default function FriendRequest() {
         className="chatroom__sidebar__addbar__form"
       >
         <input
+          autoComplete="off"
           type="text"
           className="add__bar"
           id="addbar"

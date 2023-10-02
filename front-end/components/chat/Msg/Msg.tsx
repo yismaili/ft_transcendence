@@ -4,7 +4,8 @@ import RightChat from "./RightChat/RightChat";
 import InputChat from "./InputChat/InputChat";
 import io from "socket.io-client";
 import Cookies from "cookies-ts";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useAnimation, motion } from "framer-motion";
 
 type props = {
   friendData: User_Friend;
@@ -14,7 +15,7 @@ type props = {
 export default function Msg({ friendData, myData }: props) {
   const [allMessages, setAllMessages] = useState<allMessages[]>();
   const [newMessage, setNewMessage] = useState<allMessages[]>([]);
-
+  const ref = useRef<HTMLDivElement | null>(null);
   // console.log(friendData);
 
   const sendMessage: allMessages = {
@@ -46,8 +47,6 @@ export default function Msg({ friendData, myData }: props) {
     socket.on("message", (message: allMessages[]) => {
       setNewMessage((prevMessages) => [...prevMessages, message[0]]);
     });
-    console.log("sender", myData.data.username);
-    console.log("receiver", friendData.username);
 
     socket.emit(
       "findAllChat",
@@ -61,6 +60,15 @@ export default function Msg({ friendData, myData }: props) {
     );
   }, []);
 
+  useEffect(() => {
+    if (ref.current) ref.current.scrollIntoView({ block: "end" });
+  }, [allMessages]);
+
+  useEffect(() => {
+    if (ref.current)
+      ref.current.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [newMessage]);
+
   const setMessage = (MessagetoSend: string) => {
     sendMessage.message = MessagetoSend;
     sendMessage.user.username = myData.data.username;
@@ -71,13 +79,12 @@ export default function Msg({ friendData, myData }: props) {
     });
   };
 
-  console.log('message: ', newMessage);
-  
   return (
     <div className={Style.container}>
-      <ul>
+      <motion.ul initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         {allMessages &&
-          allMessages.map((message) => {
+          allMessages.map((message, index) => {
+            const isLastMessage = index === allMessages.length - 1;
             return (
               <li key={message.id}>
                 {message.user.username == myData.data.username ? (
@@ -89,11 +96,13 @@ export default function Msg({ friendData, myData }: props) {
                     friendData={friendData}
                   />
                 )}
+                {isLastMessage && <div ref={ref} />}
               </li>
             );
           })}
         {newMessage &&
-          newMessage.map((message) => {
+          newMessage.map((message, index) => {
+            const isLastMessage = index === newMessage.length - 1;
             return (
               <li key={message.id}>
                 {message.user.username == myData.data.username ? (
@@ -105,10 +114,11 @@ export default function Msg({ friendData, myData }: props) {
                     friendData={friendData}
                   />
                 )}
+                {isLastMessage && <div ref={ref} />}
               </li>
             );
           })}
-      </ul>
+      </motion.ul>
       <InputChat socket={socket} setMessage={setMessage} />
     </div>
   );
