@@ -29,6 +29,7 @@ import * as bcrypt from 'bcrypt';
 import { AuthService } from 'src/auth/auth.service';
 import { Socket, Server } from 'socket.io';
 import { verify } from 'jsonwebtoken';
+import { updateChatRoom } from './dto/update-chat-room.dto';
 
 @Injectable()
 export class ChatService {
@@ -1099,6 +1100,39 @@ async getAllUserOfChatRoom(usersOfChatRoom: UsersOfChatRoom) : Promise<any>{
   });
   // console.log(users);
   return (chatRoomUser);
+}
+
+async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
+  try{
+    const user = await this.userRepository.findOne({
+      where: {username: updateChatRoomInf.username}
+    });
+
+    if (!user){
+      throw new Error("User NOt found!!");
+    }
+
+    const chatRoomInfo = await this.chatRoomRepository.findOne({
+      where:{RoomId: updateChatRoomInf.roomId}
+    });
+    
+    const userInfo = await this.chatRoomUserRepository.findOne({
+      where:{user: {id: user.id}, statusPermissions: 'admin', chatRooms: {id: chatRoomInfo.id}}
+    });
+
+    if (!userInfo){
+      throw new Error("User not admin update this chat room");
+    }
+    chatRoomInfo.name = updateChatRoomInf.chatRoomName,
+    chatRoomInfo.status = updateChatRoomInf.status,
+    chatRoomInfo.password = updateChatRoomInf.password
+    
+    const saveChatRoomUP = await this.chatRoomRepository.save(chatRoomInfo);
+    return saveChatRoomUP;
+
+  }catch(error) {
+    throw new Error ('Error to update chat room');
+  }
 }
 
 // handleng connection
