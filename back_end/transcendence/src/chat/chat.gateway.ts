@@ -161,5 +161,10 @@ export class ChatGateway {
   updateChatRoomInf(@MessageBody() usersOfChatRoom:updateChatRoom ) {
     return this.chatService.updateChatRoomInfo(usersOfChatRoom);
   }
+
+  @SubscribeMessage('gitAllUsers')
+  gitAllUsers() {
+    return this.chatService.gitAllUsers();
+  }
 }
 
