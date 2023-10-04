@@ -1,9 +1,64 @@
 .container {
-    display: flex;
-    align-items: center;
-    justify-self: center;
-    width: 92%;
-    height: 80%;
-    background-color: violet;
-    margin: 0 auto;
+  /* display: flex;
+  align-items: center;
+  justify-self: center; */
+  width: 92%;
+  height: 80%;
+  /* background-color: violet; */
+  margin: 0 auto;
+}
+
+.container label {
+  display: block;
+  color: #b6bac0;
+  /* font-family: "Inter"; */
+  font-weight: 900;
+  font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+}
+
+.subContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* background-color: aqua; */
+  padding: 1.3rem 0;
+}
+
+.container input {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: default;
+  /* background-color: black; */
+  width: 20em;
+  height: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.container input::placeholder {
+  color: #f2f3f5;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+}
+
+.container button {
+  background-color: #2b2d31;
+  border: none;
+  border-radius: 7px;
+  color: #fff;
+  padding: 0.5em 1.5em;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#create_group {
+  position: absolute;
+  left: 50%;
+  /* bottom: vw; */
+  transform: translate(-50%);
+  background-color: #ED1B1B;
+  border-radius: 20px;
+  padding: 0.3em 2em;
+	font-size: clamp(1rem, 2vw, 1.4rem);
 }

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Style from "./GroupSetting.module.css";
 import GroupInput from "./GroupInput/GroupInput";
+import UserManagement from './UserManagement/UserManagement'
 
 export default function GroupSetting() {
   const [isOpen, setOpen] = useState(false);
@@ -22,13 +23,13 @@ export default function GroupSetting() {
             <div className={Style.main}>
               <div className={Style.header}>
                 <div
-                  className={`${Style.groupBtn} ${!isgroupSetting && Style.On}`}
+                  className={`${Style.groupBtn} ${!isgroupSetting && Style.OnLeft}`}
                   onClick={() => setgroupSetting(true)}
                 >
                   <p>Group Setting</p>
                 </div>
                 <div
-                  className={`${Style.usersBtn} ${isgroupSetting && Style.On}`}
+                  className={`${Style.usersBtn} ${isgroupSetting && Style.OnRight}`}
                   onClick={() => setgroupSetting(false)}
                 >
                   <p>Users Management</p>
@@ -39,7 +40,7 @@ export default function GroupSetting() {
                   <GroupInput />
                 </>
               ) : (
-                <></>
+                <><UserManagement /></>
               )}
             </div>
           </div>
