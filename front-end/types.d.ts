@@ -56,3 +56,9 @@ type allMessages = {
     username: string;
   };
 };
+
+type GroupInput = {
+  name: string;
+  status: string;
+  password?: string;
+};
