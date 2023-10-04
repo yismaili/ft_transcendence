@@ -86,18 +86,18 @@ export class ChatService {
         }
       }
 
-      const chats = await this.chatRepository.find({
-        where: [
-          { user: { id: user.id }, secondUser: { id: secondUser.id } },
-          { user: { id: secondUser.id }, secondUser: { id: user.id } },
-        ],
-        // relations: ['user']
-      });
       // const chats = await this.chatRepository.find({
-      //   where:
-      //     {id: newChatMessage.id},
-      //   relations: ['user']
+      //   where: [
+      //     { user: { id: user.id }, secondUser: { id: secondUser.id } },
+      //     { user: { id: secondUser.id }, secondUser: { id: user.id } },
+      //   ],
+      //   // relations: ['user']
       // });
+      const chats = await this.chatRepository.find({
+        where:
+          {id: newChatMessage.id},
+        relations: ['user']
+      });
       server.to(roomName).emit('message', chats);
       return;
     } catch (error) {
@@ -344,9 +344,10 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
       // Emit the message to the chat room
       const chatRoomConversation = await this.messageRepository.find({
         where: {
-          //id:newMessage.id
-          chatRoom: { id: chatRoom.id }
+          id:newMessage.id
+          // chatRoom: { id: chatRoom.id }
         },
+        relations: ['user']
       });
 
     server.to(roomName).emit('message', chatRoomConversation);
