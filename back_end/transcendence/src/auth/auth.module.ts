@@ -14,7 +14,6 @@ import { Profile } from 'src/typeorm/entities/Profile.entity';
 import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
-import { RandomService } from 'src/random/random.service';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import { ChatRoomUser } from 'src/typeorm/entities/chat-room-users.entity';
 import { Message } from 'src/typeorm/entities/message-entity';
@@ -35,6 +34,6 @@ import { ChatService } from 'src/chat/chat.service';
     JwtModule.register({ secret: 'secrete', signOptions: { expiresIn: '1h' } }),
   ], // makes the User entity available for use within the AuthModule
   controllers: [AuthController],// The controllers property
-  providers: [AuthService, GoogleStrategy, ConfigService, IntraStrategy, JwtAuthGuard, Repository, RandomService, UserService, ChatService]
+  providers: [AuthService, GoogleStrategy, ConfigService, IntraStrategy, JwtAuthGuard, Repository, UserService, ChatService]
 }) // decorator is define a module 
 export class AuthModule {}

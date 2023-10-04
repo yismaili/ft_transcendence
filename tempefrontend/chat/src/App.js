@@ -5,9 +5,9 @@ import './App.css';
 const ChatApp = () => {
   const [socket] = useState(io('0.0.0.0:3001', {
     extraHeaders: {
-      Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ5aXNtYWlsaSIsImZpcnN0TmFtZSI6InlvdW5lcyIsImxhc3ROYW1lIjoiaXNtYWlsaSIsImVtYWlsIjoieWlzbWFpbGkxMzM3QGdtYWlsLmNvbSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NKeW9QLUJuZjcxVTVKcDBwWE5faUxSMHB0WDJWWXhnTEdlc09CTklKaVY5Zz1zOTYtYyIsInByb2ZpbGUiOnsiaWQiOjEsInNjb3JlIjowLCJsb3MiOjAsIndpbiI6MCwieHAiOjAsImxldmVsIjowfSwidXNlclJlbGF0aW9ucyI6W10sImZyaWVuZFJlbGF0aW9ucyI6W10sImFjaGlldmVtZW50cyI6W10sImhpc3RvcmllcyI6W10sImlhdCI6MTY5NDg2OTE1M30._BgOmYPL6IU0NV0VPf7W0G31DfT6wEvE-GuyMIRUsIk'
+      Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inlpc21haWxpIiwiZmlyc3ROYW1lIjoieW91bmVzIiwibGFzdE5hbWUiOiJpc21haWxpIiwiZW1haWwiOiJ5aXNtYWlsaTEzMzdAZ21haWwuY29tIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0p5b1AtQm5mNzFVNUpwMHBYTl9pTFIwcHRYMlZZeGdMR2VzT0JOSUppVjlnPXM5Ni1jIiwicHJvZmlsZSI6eyJzY29yZSI6MCwibG9zIjowLCJ3aW4iOjAsInhwIjowLCJsZXZlbCI6MCwiaWQiOjN9LCJzdGF0dXMiOm51bGwsInR3b0ZhY3RvckF1dGhTZWNyZXQiOm51bGwsImlkIjozLCJpc1R3b0ZhY3RvckF1dGhFbmFibGVkIjpmYWxzZSwiaWF0IjoxNjk2MDkwNTY2fQ.C6zgTQ6etizjTF9b1n4yDofPyPjNhzvdMyBYPwep9-M'
     }
-  }));
+    }));
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
   const [messageTextToChatRoom, setMessageTextToChatRoom] = useState('');
@@ -52,7 +52,7 @@ const ChatApp = () => {
 
   const sendMessage = () => {
     socket.emit('createChat', { message: messageText, user, secondUser }, (response) => {
-      // setMessages(response);
+      setMessages(response);
     });
   };
 
@@ -105,10 +105,10 @@ const ChatApp = () => {
 
 const createChatRoom = () => {
     setstatusPermissions('admin');
-    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, () => {
+    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, (response) => {
       setMessageText('');
-      // setJoined(true);
-      setchatRoomName(name);
+      setJoined(true);
+      setchatRoomName(response.RoomId);
     });
   };
   
@@ -203,6 +203,7 @@ const getAllUserOfChatRoom = () => {
 //           >
 //             <label>Your user:</label>
 //             <input value={user} onChange={(e) => setName(e.target.value)} />
+//             <img src='data:image/png;base64,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'></img>
 //             <label>User of second user:</label>
 //             <input
 //               value={secondUser}
@@ -369,5 +370,5 @@ return (
     </div>
   )
 }
-export default ChatApp;
+ export default ChatApp;
 
