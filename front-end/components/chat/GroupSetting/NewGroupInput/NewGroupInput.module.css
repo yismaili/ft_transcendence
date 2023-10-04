@@ -1,0 +1,155 @@
+.container {
+  /* display: flex;
+  align-items: center;
+  justify-self: center; */
+  width: 92%;
+  height: 80%;
+  /* background-color: violet; */
+  margin: 0 auto;
+}
+
+.container label {
+  display: block;
+  color: #b6bac0;
+  font-family: "probert";
+  font-weight: 900;
+  letter-spacing: 0.1rem;
+  font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+}
+
+.subContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  /* background-color: aqua; */
+  padding: 1.3rem 0;
+}
+
+.container input {
+  text-align: center;
+  background: none;
+  border: 2px solid #262639db;
+  border-radius: 6px;
+  outline: none;
+  cursor: default;
+  /* background-color: black; */
+  /* width: 30%; */
+  height: 1.5rem;
+  margin-top: 0.5rem;
+  cursor: text;
+  color: #f5f5f5e2;
+  font-family: "Inter";
+  font-weight: 500;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  padding: 0.2rem 0;
+}
+
+.container input::placeholder {
+  color: #f2f3f580;
+  font-family: "Inter";
+  font-weight: 500;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+}
+
+.container button {
+  background-color: #2b2d31;
+  border: none;
+  border-radius: 7px;
+  color: #fff;
+  padding: 0.5em 1.5em;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.subContainer select {
+  background-color: #000000;
+  background: none;
+  text-align: center;
+  color: #f2f3f580;
+  border: none;
+  font-size: clamp(0.7rem, 1.7vw, 1.2rem);
+  width: clamp(170px, 30%, 236px);
+  outline: none;
+  cursor: pointer;
+}
+
+.forBorder {
+  display: flex;
+  justify-content: space-around;
+  margin-right: 0rem;
+  width: clamp(10.6rem, 30%, 14.5rem);
+  height: 1.5rem;
+  border-radius: 6px;
+  border: 2px solid #262639db;
+  padding: .5rem 0;
+}
+
+#create_group {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(7rem, 7vw, 6rem);
+  transform: translate(-50%);
+  background-color: #36ab4b;
+  border-radius: 20px;
+  padding: 0.3em 2em;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+}
+
+/* 
+.container {
+  width: 92%;
+  height: 80%;
+  margin: 0 auto;
+}
+
+.container label {
+  display: block;
+  color: #b6bac0;
+  font-weight: 900;
+  font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+}
+
+.subContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.3rem 0;
+}
+
+.container input {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: default;
+  width: 20em;
+  height: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.container input::placeholder {
+  color: #f2f3f5;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+}
+
+.container button {
+  background-color: #2b2d31;
+  border: none;
+  border-radius: 7px;
+  color: #fff;
+  padding: 0.5em 1.5em;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#create_group {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  background-color: #36AB4B;
+  border-radius: 20px;
+  padding: 0.3em 2em;
+	font-size: clamp(1rem, 2vw, 1.4rem);
+}
+ */

@@ -1,8 +1,9 @@
 "use client";
 import FriendRequest from "./FriendRequest/FriendRequest";
-import GroupSetting from "./GroupSetting/GroupSetting";
+import NewGroupSetting from "./GroupSetting/NewGroupSetting";
 import SlideButton from "./SlideButton/SlideButton";
 import { useEffect, useState } from "react";
+import GroupMsg from "./GroupMsg/GroupMsg";
 import Style from "./Chat.module.css";
 import Direct from "./Direct/Direct";
 import Group from "./Group/Group";
@@ -14,6 +15,7 @@ export default function Chat() {
   let [friends, setFriends] = useState<UserArrayData>();
   let [user, setUser] = useState<User>();
   const [userFriend, setUserFriend] = useState<User_Friend>();
+  const [groupInput, setGroupInput] = useState<GroupInput>();
 
   useEffect(() => {
     const fetching = async () => {
@@ -74,7 +76,7 @@ export default function Chat() {
           <SlideButton func={turnSwitch} resetChat={setUserFriend} />
           <ul>
             {isGroup ? (
-              <Group data={{}as User_Friend}  choseChat={setUserFriend}  />
+              <Group data={{} as User_Friend} choseChat={setUserFriend} />
             ) : (
               friends.data.map((friend) => {
                 return (
@@ -89,10 +91,13 @@ export default function Chat() {
               })
             )}
           </ul>
-          {isGroup ? <GroupSetting /> : <FriendRequest />}
+          {isGroup ? <NewGroupSetting setGroupInput={setGroupInput} /> : <FriendRequest />}
         </div>
         <div className={Style.right} key={userFriend?.id}>
-          {userFriend ? <Msg friendData={userFriend} myData={user} /> : <></>}
+          {userFriend && !isGroup && (
+            <Msg friendData={userFriend} myData={user} />
+          )}
+          {isGroup && <GroupMsg groupInput={groupInput}/>}
         </div>
       </div>
     </div>
