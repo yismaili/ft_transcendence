@@ -8,7 +8,6 @@ import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { UserDto } from './dtos/user.dto';
-import { RandomService } from 'src/random/random.service';
 import { authenticator } from 'otplib';
 import { UserService } from 'src/user/user.service';
 import { toDataURL } from 'qrcode';
@@ -23,7 +22,6 @@ import { TwoFactorAuthenticationCodeDto } from './dtos/TwoFactorAuthenticationCo
       @InjectRepository(Relation)private relationRepository: Repository<Relation>,
       @InjectRepository(HistoryEntity)private historyRepository: Repository<HistoryEntity>,
       @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
-      private generatenUsename:RandomService,
       private userService: UserService
       ) {}
       
@@ -38,6 +36,18 @@ async findAll() {
   });
  return users;
 }
+
+generateRandom(length: number): string {
+
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
 
 async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
 
@@ -69,7 +79,7 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
       },
     });
     if (existingUsername){
-      const randomString = this.generatenUsename.generateRandomString(2);
+      const randomString = this.generateRandom(2);
       newUsername = randomString + lastName; // Change variable name to 'newUsername'
     }
     username = newUsername;

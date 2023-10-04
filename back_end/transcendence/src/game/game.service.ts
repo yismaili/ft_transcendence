@@ -69,14 +69,20 @@ export class GameService {
     async startGame(roomName: string, playerId: Socket, server: Server): Promise<void>{
       const pongGame = new PongGame();
       pongGame.start();
+      const rootUser = this.players.get(roomName)[0];
+      const friendUser = this.players.get(roomName)[1];
 
       // Set up an event listener for 'updateGame' outside the interval
       playerId.on('updateGame', (data) => {
-  //  console.log(playerId.id);
-        pongGame.setDownPressed(data.downPressed);
-        pongGame.setUpPressed(data.upPressed);
-        pongGame.setWPressed(data.wPressed);
-        pongGame.setSPressed(data.sPressed);
+       const user = this.getUser(playerId);
+        if (rootUser == user){
+          pongGame.setDownPressed(data.downPressed);
+          pongGame.setUpPressed(data.upPressed);
+        }
+        if (friendUser == user){
+          pongGame.setWPressed(data.wPressed);
+          pongGame.setSPressed(data.sPressed);
+        }
       });
 
       // Set up an interval to send ball position data to clients
@@ -98,8 +104,6 @@ export class GameService {
         });
 
         if (!pongGame.getStatus()) {
-          const rootUser = this.players.get(roomName)[0];
-          const friendUser = this.players.get(roomName)[1];
           const info: ResultOfGame = {
             username:rootUser,
             competitor: friendUser,
@@ -115,6 +119,22 @@ export class GameService {
             clearInterval(intervalId);
           }
       }, 1000 / 100); // 100 frames per second
+    }
+  
+   getUser(client: Socket){
+
+      const jwtSecret = 'secrete';
+      const token = client.handshake.headers.authorization;
+  
+      if (!token) {
+        client.emit('error', 'Authorization token missing');
+        client.disconnect(true);
+        return;
+      }
+  
+      let decodedToken = verify(token, jwtSecret);
+      const username = decodedToken['username'];
+      return username;
     }
   
     async matchingFriends(createGameDto: CreateGameDto, playerId: Socket, server: Server): Promise<void> {
