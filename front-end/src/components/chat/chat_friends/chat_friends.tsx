@@ -5,8 +5,6 @@ import Image from "next/image";
 import { cookies } from "next/headers";
 import FriendContextMenu from "./friendContextMenu/friendContextMenu";
 
-
-
 async function ChatFriends() {
   let cookieStore = cookies();
   const data: Friend[] = await fetch("http://localhost:3000/api/friends", {
@@ -18,13 +16,12 @@ async function ChatFriends() {
   })
     .then((data) => data.json())
     .then((test) => test.friends);
-  console.log("test");
+  console.log("test759");
   console.log(data);
-  
 
   return (
     <div className="friends__container">
-      {data.map((F) => {
+      {data?.map((F) => {
         return <ChatFriend friend={F} />;
       })}
     </div>

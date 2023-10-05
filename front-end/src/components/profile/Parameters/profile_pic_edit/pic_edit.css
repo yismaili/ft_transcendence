@@ -25,3 +25,41 @@
     top: 15px;
     right: 3px;
 }
+
+@media (max-width: 1536px) {
+
+}
+
+/* xl */
+@media (max-width: 1280px) {
+
+}
+
+/* lg */
+@media (max-width: 1024px) {
+
+}
+
+/* md */
+@media (max-width: 768px) {
+    /* .Params__profile__pic{
+        width: 120px;
+        height: 120px;
+    }
+    .pic__edit__btn{
+        width: 27px;
+        height: 25px;
+        top: 8px;
+        right: 2px;
+    } */
+}
+
+/* sm */
+@media (max-width: 640px) {
+
+}
+
+/* xs */
+@media (max-width: 475px) {
+
+} 

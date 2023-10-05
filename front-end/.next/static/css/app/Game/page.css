@@ -1,0 +1,301 @@
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[3]!./src/components/game/game_maps/game_maps.css ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************/
+.Game__maps{
+   display: flex;
+    flex: 0.55;
+    align-items: flex-end;
+}
+
+.Game__maps__centering{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+.Game__maps__center{
+    position: relative;
+    animation: fadeIn 2s;
+}
+
+.Game__maps__left__map{
+    display: inline-block;
+    width: 240px;
+    height: 190px;
+    transform: rotateZ(-15deg) ;
+}
+
+.Game__maps__center__map{
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+    width: 360px;
+    height: 240px;
+}
+.center__map__blur{
+    position: absolute;
+    width: 420px;
+    height: 300px;
+    top: -30px;
+    left: -30px;
+    z-index: 0;
+    filter: blur(12px);
+}
+
+.Game__maps__right__map{
+    display: inline-block;
+    width: 240px;
+    height: 190px;
+    transform: rotateZ(15deg) ;
+}
+
+.Game__mapName{
+    color: white;
+    flex: 0.2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.choice{
+    flex: 0.2;
+    display: flex;
+    align-items: center;
+}
+
+.line{
+    position: relative;
+    width: 100%;
+    height: 3px;
+    background-color: white;
+    z-index: 2;
+}
+
+.circle{
+    position: absolute;
+    border-radius: 100%;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.center__circle{
+    left: 50%;
+    transform: translateX(-50%);
+    height: 30px;
+    width: 30px;
+    top: -15px;
+}
+
+.border{
+    left: 50%;
+    transform: translateX(-50%);
+    height: 40px;
+    width: 40px;
+    top: -22px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: white;
+}
+
+.right__circle{
+    left: 67%;
+    transform: translateX(-33%);
+    height: 20px;
+    width: 20px;
+    top: -10px;
+    background-color: white;
+}
+
+.left__circle{
+    left: 33%;
+    transform: translateX(-67%);
+    height: 20px;
+    width: 20px;
+    top: -10px;
+    background-color: white;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@media (max-width: 1536px) {
+
+}
+
+/* xl */
+@media (max-width: 1280px) {
+    .Game__maps__left__map{
+        width: 220px;
+        height: 170px;
+    }
+    .Game__maps__right__map{
+        width: 220px;
+        height: 170px;
+    }
+    .Game__maps__center__map{
+        width: 320px;
+        height: 200px;
+    }
+    .center__map__blur{
+        width: 400px;
+        height: 280px;
+        top: -40px;
+        left: -40px;
+    }
+    
+}
+
+/* lg */
+@media (max-width: 1024px) {
+    .Game__maps__left__map{
+        width: 180px;
+        height: 130px;
+    }
+    .Game__maps__right__map{
+        width: 180px;
+        height: 130px;
+    }
+    .Game__maps__center__map{
+        width: 240px;
+        height: 180px;
+    }
+    .center__map__blur{
+        width: 280px;
+        height: 240px;
+        top: -30px;
+        left: -20px;
+    }
+}
+
+/* md */
+@media (max-width: 768px) {
+    .Game__maps__left__map{
+        display: none;
+    }
+    .Game__maps__right__map{
+        display: none;
+    }
+    .Game__maps__center__map{
+        width: 360px;
+        height: 240px;
+    }
+    .center__map__blur{
+        width: 420px;
+        height: 300px;
+        top: -30px;
+        left: -30px;
+    }
+
+    .rightSwipe{
+        display: block;
+        background-image: url("/img/rightArrow.png");
+        width: 30px;
+        height: 45px;
+    }
+    .leftSwipe{
+        display: block;
+        background-image: url("/img/rightArrow.png");
+        width: 30px;
+        height: 45px;
+        rotate: 180deg;
+    }
+}
+
+/* sm */
+@media (max-width: 640px) {
+    .Game__maps__center__map{
+        width: 320px;
+        height: 200px;
+    }
+    .center__map__blur{
+        width: 400px;
+        height: 280px;
+        top: -40px;
+        left: -40px;
+    }
+
+    .rightSwipe{
+        width: 22px;
+        height: 35px;
+    }
+    .leftSwipe{
+        width: 22px;
+        height: 35px;
+    }
+}
+
+/* xs */
+@media (max-width: 475px) {
+    .Game__maps__center__map{
+        width: 220px;
+        height: 160px;
+    }
+    .center__map__blur{
+        width: 260px;
+        height: 220px;
+        top: -30px;
+        left: -20px;
+    }
+}
+/*!*******************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[3]!./src/global_css/utilityClasses.css ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************/
+body{
+    background-color: #1f1f31;
+}
+.container{
+    height: 100dvh;
+    max-width: 1536px;
+    margin: 0 auto;
+    background-image: linear-gradient(270deg, rgba(38,37,69,1) 0%, rgba(47,42,96,1) 50%, rgba(20,16,49,1) 100%);
+    position: relative;
+}
+
+.bg__image__util{
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.cursor{
+    cursor: pointer;
+}
+
+
+@media (max-width: 1536px) {
+
+}
+
+/* xl */
+@media (max-width: 1280px) {
+
+}
+
+/* lg */
+@media (max-width: 1024px) {
+
+}
+
+/* md */
+@media (max-width: 768px) {
+
+}
+
+/* sm */
+@media (max-width: 640px) {
+
+}
+
+/* xs */
+@media (max-width: 475px) {
+
+}
+/*!**************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[13].oneOf[12].use[3]!./src/components/game/page.css ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************/
+.Game{
+    display: flex;
+    flex-direction: column;
+}

@@ -4,12 +4,11 @@ import "@/components/profile/page.css";
 import React from "react";
 import ProfilePic from "@/components/profile/profile_pic/profile_pic";
 import Analytics from "@/components/profile/analytics/analytics";
-import Achievements from "@/components/profile/achievements/achievements";
-import History from "@/components/profile/history/history";
 import Link from "next/link";
 import getUser from "@/lib/getUser";
 import { cookies } from "next/headers";
 import ProfileHeader from "@/components/profile/profile_header/profile_header";
+import History__Achievements from "@/components/profile/achievement__history/achievement__history";
 
 export default async function Profile() {
   const cookie = cookies().get("userData");
@@ -23,12 +22,9 @@ export default async function Profile() {
         <div className="profile__section">
           <ProfilePic user={user} />
           {user && <Analytics user={user} />}
-          <div className="achievements__history">
-            <Achievements />
-            <History />
-          </div>
+          <History__Achievements />
           <div className="play">
-            <Link href="/Chat" className="play__btn">
+            <Link href="/Game" className="play__btn">
               PLAY
             </Link>
           </div>

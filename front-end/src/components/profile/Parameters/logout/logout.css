@@ -8,5 +8,37 @@
     border-radius: 8px;
     border-color: black;
     border-width: 1px;
-    margin: 0 auto;
+    margin: 0 auto 0.5rem;
 }
+
+
+@media (max-width: 1536px) {
+
+}
+
+/* xl */
+@media (max-width: 1280px) {
+
+}
+
+/* lg */
+@media (max-width: 1024px) {
+
+}
+
+/* md */
+@media (max-width: 768px) {
+    .logout__btn{
+        font-size: 1.1rem;
+    }
+}
+
+/* sm */
+@media (max-width: 640px) {
+
+}
+
+/* xs */
+@media (max-width: 475px) {
+
+} 

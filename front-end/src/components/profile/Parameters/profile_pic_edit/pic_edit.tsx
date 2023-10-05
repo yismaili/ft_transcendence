@@ -16,7 +16,6 @@ export default function PicEdit(props: nums) {
       > <span className="pic__edit__btn">
         </span>
       </span>
-
     </div>
   );
 }
