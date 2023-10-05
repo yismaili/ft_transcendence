@@ -23,10 +23,11 @@
       "static/css/app/Game/page.css",
       "static/chunks/app/Game/page.js"
     ],
-    "/not-found": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/not-found.js"
+      "static/css/app/page.css",
+      "static/chunks/app/page.js"
     ]
   }
 }
