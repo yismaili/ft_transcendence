@@ -22,13 +22,13 @@ type User = {
 
 type UserArrayData = {
   data: UserArray[];
-}
+};
 
 type UserArray = {
-    id: number;
-    status: string;
-    friend: User_Friend;
-    user: User_Friend;
+  id: number;
+  status: string;
+  friend: User_Friend;
+  user: User_Friend;
 };
 
 type User_Friend = {
@@ -61,4 +61,18 @@ type GroupInput = {
   name: string;
   status: string;
   password?: string;
+};
+
+type CreateRoom = {
+  RoomId: string;
+  id: number;
+  name: string;
+  status: string;
+};
+
+type AllRoom = {
+  id: number;
+  statusPermissions: string;
+  statusUser: string;
+  time: any;
 };

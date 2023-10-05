@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Style from "./NewGroupSetting.module.css";
 import NewGroupInput from "./NewGroupInput/NewGroupInput";
 
@@ -12,7 +12,9 @@ export default function NewGroupSetting({ setGroupInput }: props) {
 
   const closePopUp = () => setOpen(!isOpen);
 
-  if (input) setGroupInput(input);
+  useEffect(() => {
+    if (input) setGroupInput(input);
+  }, [input]);
 
   return (
     <>
@@ -31,7 +33,7 @@ export default function NewGroupSetting({ setGroupInput }: props) {
                   <p>Group Setting</p>
                 </div>
               </div>
-              <NewGroupInput setInput={setInput} />
+              <NewGroupInput setInput={setInput} closePopUp={closePopUp} />
             </div>
           </div>
         </>
