@@ -14,6 +14,16 @@
     position: relative;
 }
 
+.param__img{
+    display: block;
+    background-image: url("/img/params.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    width: 40px;
+    height: 40px;
+}
+
 .profile__pic{
     display: inline-block;
     width: 180px;
@@ -53,17 +63,58 @@
     font-size: 2rem;
     margin: -16px;
 }
-/* 
-.params__btn{
-    position: relative;
-    align-self:  flex-start;
-    justify-self: flex-end;
-    order: 1;
-} */
-
 
 .params__btn{
     position: absolute;
     right: 5%;
     top: 5%;
+}
+
+@media (max-width: 1536px) {
+
+}
+
+/* xl */
+@media (max-width: 1280px) {
+
+}
+
+/* lg */
+@media (max-width: 1024px) {
+
+}
+
+/* md */
+@media (max-width: 768px) {
+    .profile{
+        width: 80%;
+    }
+    .profile__pic{
+        width: 140px;
+        height: 140px;
+    }
+
+    .profile__username{
+        font-size: 1.5rem;
+    }
+    .profile__level{
+        width: 30px;
+        height: 30px;
+        bottom: 15px;
+        font-size: 1.3rem;
+    }
+    .param__img{
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* sm */
+@media (max-width: 640px) {
+    
+}
+
+/* xs */
+@media (max-width: 475px) {
+
 }

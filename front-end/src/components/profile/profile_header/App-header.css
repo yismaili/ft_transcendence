@@ -46,7 +46,16 @@
 /* md */
 @media (max-width: 768px) {
     .app__header{
-       display: none;
+        height: 50px;
+        font-size: 2rem;
+    }
+    
+    .app__header__chat{
+        height: 50px;
+    }
+    
+    .app__header__profile{
+        height: 50px;
     }
 }
 
