@@ -2,15 +2,19 @@ import Style from "./NewGroupInput.module.css";
 
 type props = {
   setInput: Function;
+  closePopUp: Function;
 };
 
-export default function NewGroupInput({ setInput }: props) {
+export default function NewGroupInput({ setInput, closePopUp }: props) {
   const handleAction = async (formData: FormData) => {
-    setInput({
-      name: formData.get("name"),
-      status: formData.get("status"),
-      password: formData.get("password"),
-    });
+    if (formData.get("name")) {
+      setInput({
+        name: formData.get("name"),
+        status: formData.get("status"),
+        password: formData.get("password"),
+      });
+      closePopUp();
+    }
   };
 
   return (
