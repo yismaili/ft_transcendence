@@ -1,0 +1,58 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #00000000;
+    width: 100%;
+    max-width: inherit;
+    height: 6rem;
+    position: fixed;
+    z-index: 10;
+}
+
+.links {
+display: flex;
+justify-content: space-between;
+}
+.links a{
+    font-family: 'probert';
+    margin-right: clamp(2rem, 4vw, 4rem);
+    color: #ffffff;
+    font-size: clamp(1rem, 2vw, 2rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.links > :last-child {
+    background-color: #37EEB1;
+    padding: 0.6rem 1.2rem;
+    border-radius: 17px;
+    color: black;
+    font-weight: 100;
+    letter-spacing: 0.2rem;
+}
+
+.imageRes {
+    display: flex;
+    align-items: center;
+    width: 4rem;
+    height: 4rem;
+    margin-left: 2.75rem;
+}
+
+.title {
+    font-family: 'probert';
+    color: #37EEB1;
+    font-weight: bold;
+    font-size: 40px;
+    letter-spacing: 0.2rem;
+    margin-left: .75rem;
+}
+
+.bar {
+    background-color: #ffffff;
+    width: 100%;
+    height: 7px;
+    border-radius: 5px;
+}

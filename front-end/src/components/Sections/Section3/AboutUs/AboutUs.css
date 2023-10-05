@@ -1,0 +1,76 @@
+.ParentDiv {
+  /* background-color: rgb(117, 0, 0); */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-style: solid;
+  border-width: 1px;
+  margin: 0 2rem;
+}
+
+.imageDiv {
+  display: block;
+  width: 100%;
+  clip-path: circle(37% at 50% 39%);
+}
+
+.ParentDiv:hover {
+  position: relative;
+  cursor: pointer;
+}
+
+.ParentDiv:hover .imageDiv{
+  clip-path: none;
+}
+
+.ParentDiv:hover::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(/img/section3/gif_test.gif);
+  opacity: 0.5;
+  background-size: cover;
+}
+
+.imageDiv2 {
+  position: absolute;
+  width: 15%;
+  top: 50%;
+  right: 2%;
+}
+
+.image {
+  object-fit: contain;
+  width: 100% !important;
+  position: relative !important;
+  height: unset !important;
+}
+
+.textContainer {
+  text-align: center;
+  position: absolute;
+  margin: 0 auto;
+  bottom: 10%;
+  right: 0;
+  left: 0;
+}
+
+.name {
+  font-family: "probert";
+  font-size: clamp(0.8rem, 1.5vw, 1.8rem);
+  font-weight: 700;
+  text-align: center;
+  color: #d9d9d9;
+}
+
+.title {
+  font-family: "probert";
+  font-size: clamp(0.8rem, 1.2vw, 1.6rem);
+  font-weight: 500;
+  text-align: center;
+  color: #a6a0c7;
+  margin-top: 5%;
+}
