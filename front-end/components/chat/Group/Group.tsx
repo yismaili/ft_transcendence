@@ -1,14 +1,14 @@
 import Style from './Group.module.css'
 
 type props = {
-  data: User_Friend;
+  room: AllRooms;
   choseChat: Function;
 };
 
-export default function Group({ data, choseChat }: props) {
+export default function Group({ room, choseChat }: props) {
 
   const choseGroup = () => {
-    choseChat(data);
+    choseChat(room);
   };
 
   return (
@@ -16,11 +16,11 @@ export default function Group({ data, choseChat }: props) {
       <div className={Style.imgContainer}>
         <div
           className={Style.avatar}
-          style={{ backgroundImage: `url("${data.picture}")` }}
+          // style={{ backgroundImage: `url("${data.picture}")` }}
         ></div>
-        <div className={Style.onlineStatus}></div>
+        {/* <div className={Style.onlineStatus}></div> */}
       </div>
-      <p className={Style.name}>{data.username}</p>
+      <p className={Style.name}>{room.name}</p>
       <div className={Style.icon}></div>
     </div>
   );
