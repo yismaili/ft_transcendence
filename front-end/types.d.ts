@@ -70,9 +70,16 @@ type CreateRoom = {
   status: string;
 };
 
-type AllRoom = {
+type AllRooms = {
+  RoomId: string;
   id: number;
-  statusPermissions: string;
-  statusUser: string;
-  time: any;
+  name: string;
+  password: string;
+  status: string;
 };
+// type AllRooms = {
+//   id: number;
+//   statusPermissions: string;
+//   statusUser: string;
+//   time: any;
+// };

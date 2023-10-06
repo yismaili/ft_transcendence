@@ -8,10 +8,8 @@ import Style from "./Chat.module.css";
 import Direct from "./Direct/Direct";
 import Group from "./Group/Group";
 import { io, Socket } from "socket.io-client";
-import Cookies from "cookies-ts";
 import Link from "next/link";
 import Msg from "./Msg/Msg";
-import { cookies } from "next/headers";
 
 export default function Chat() {
   const [isGroup, setGroup] = useState(false);
@@ -20,37 +18,53 @@ export default function Chat() {
   const [userFriend, setUserFriend] = useState<User_Friend>();
   const [groupInput, setGroupInput] = useState<GroupInput>();
   const [data, setData] = useState<any>();
-  // const [socket, setSocket] = useState<any>("tacos");
-
-  // const cookies = new Cookies();
-  // const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  // const [socket] = useState(
-  //   io("0.0.0.0:3001", {
-  //     extraHeaders: {
-  //       Authorization: Data.response.token,
-  //     },
-  //   })
-  // );
-  // console.log("fuck", socket);
+  const [allRooms, setAllRooms] = useState<AllRooms[]>();
+  const [choseRoom, setChoseRoom] = useState<AllRooms>();
+  // const [key, setKey] = useState(0);
+  let socket: any;
 
   useEffect(() => {
     if (data) {
-      const test = io("0.0.0.0:3001", {
+      socket = io("0.0.0.0:3001", {
         extraHeaders: { Authorization: data.response.token },
       });
-      test.emit(
-        "chatRoomOfUser",
+      socket.emit(
+        "AllchatRoom",
         {
           username: data.response.user.username,
         },
-        (response: AllRoom) => {
-          console.log("room", response);
+        (response: AllRooms[]) => {
+          setAllRooms(response);
         }
       );
-      console.log("fuck", test);
     }
-  }, [data]);
+    if (groupInput) {
+      socket.emit(
+        "createChatRoom",
+        {
+          name: groupInput.name,
+          status: groupInput.status,
+          user: data.response.user.username,
+          password: groupInput.password,
+          statusPermissions: "admin",
+        },
+        (response: CreateRoom) => {
+          console.log("Yo response", response);
+          socket.emit(
+            "AllchatRoom",
+            {
+              username: data.response.user.username,
+            },
+            (response: AllRooms[]) => {
+              setAllRooms(response);
+            }
+          );
+          setGroupInput(undefined);
+        }
+      );
+      // setKey(key => key + 1);
+    }
+  }, [data, groupInput]);
 
   useEffect(() => {
     const fetching = async () => {
@@ -109,9 +123,15 @@ export default function Chat() {
           <SlideButton func={turnSwitch} resetChat={setUserFriend} />
           <ul>
             {isGroup
-              ? data && (
-                  <Group data={{} as User_Friend} choseChat={setUserFriend} />
-                )
+              ? data &&
+                allRooms &&
+                allRooms.map((room) => {
+                  return (
+                    <li key={room.id}>
+                      <Group room={room} choseChat={setChoseRoom} />
+                    </li>
+                  );
+                })
               : friends.data.map((friend) => {
                   return (
                     <li key={friend.id}>
@@ -128,21 +148,20 @@ export default function Chat() {
                 })}
           </ul>
           {isGroup ? (
-            <NewGroupSetting setGroupInput={setGroupInput} />
+            <NewGroupSetting setGroupInput={setGroupInput} setData={setData} />
           ) : (
             <FriendRequest />
           )}
         </div>
-        <div className={Style.right} key={userFriend?.id}>
+        <div
+          className={Style.right}
+          key={!isGroup ? userFriend?.id : choseRoom?.id}
+        >
           {userFriend && !isGroup && (
             <Msg friendData={userFriend} myData={user} />
           )}
-          {isGroup && (
-            <GroupMsg
-              groupInput={groupInput}
-              setGroupInput={setGroupInput}
-              setData={setData}
-            />
+          {isGroup && choseRoom && (
+            <GroupMsg groupInput={groupInput} room={choseRoom} />
           )}
         </div>
       </div>

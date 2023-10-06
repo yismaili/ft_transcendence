@@ -1,14 +1,23 @@
 import { useEffect, useState } from "react";
 import Style from "./NewGroupSetting.module.css";
 import NewGroupInput from "./NewGroupInput/NewGroupInput";
+import Cookies from "cookies-ts";
 
 type props = {
   setGroupInput: Function;
+  setData: Function;
 };
 
-export default function NewGroupSetting({ setGroupInput }: props) {
+export default function NewGroupSetting({ setGroupInput, setData }: props) {
   const [isOpen, setOpen] = useState(false);
   const [input, setInput] = useState<GroupInput>();
+
+  const cookies = new Cookies();
+  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
+
+  useEffect(() => {
+    if (Data) setData(Data);
+  }, []);
 
   const closePopUp = () => setOpen(!isOpen);
 
