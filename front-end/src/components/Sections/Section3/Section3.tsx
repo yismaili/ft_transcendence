@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import AboutUs from "./AboutUs/AboutUs";
 import PopUp from "./AboutUs/PopUp/PopUp";
 import Style from "./Section3.module.css";
+import PhoneAboutUs from "./PhoneAboutUs/PhoneAboutUs";
 
 export default function Section3() {
   //////////// handle smoth scroll //////////////////
@@ -45,24 +46,27 @@ export default function Section3() {
 
   return (
     <section className={Style.container} id="section3">
-      <AboutUs
-        src="/img/section3/amine_black.png"
-        name="El Amine El Mountassir"
-        title="Front End Dev"
-        set={openPopUp}
-      />
-      <AboutUs
-        src="/img/section3/alouane04_black.png"
-        name="Ali Achraf Riahi"
-        title="Front End Dev"
-        set={openPopUp}
-      />
-      <AboutUs
-        src="/img/section3/dexter.png"
-        name="Younes Ismaili"
-        title="Back End Dev"
-        set={openPopUp}
-      />
+      <div className={Style.largeAboutUs}>
+        <AboutUs
+          src="/img/section3/amine_black.png"
+          name="El Amine El Mountassir"
+          title="Front End Dev"
+          set={openPopUp}
+        />
+        <AboutUs
+          src="/img/section3/alouane04_black.png"
+          name="Ali Achraf Riahi"
+          title="Front End Dev"
+          set={openPopUp}
+        />
+        <AboutUs
+          src="/img/section3/dexter.png"
+          name="Younes Ismaili"
+          title="Back End Dev"
+          set={openPopUp}
+        />
+      </div>
+      <PhoneAboutUs set={openPopUp} />
       {isClick === "El Amine El Mountassir" && (
         <PopUp
           src="/img/section3/amine_white.png"
@@ -96,10 +100,7 @@ export default function Section3() {
           music={"img/section3/alouane04.mp3"}
         />
       )}
-      <div>
-        <div className={Style.scrollElm}></div>
-        <div className={Style.scrollElm}></div>
-      </div>
+
     </section>
   );
 }
