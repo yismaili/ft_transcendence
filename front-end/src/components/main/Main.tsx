@@ -7,11 +7,17 @@ import Style from "./Main.module.css";
 
 export default function Main() {
   return (
-    <main >
+    <main>
       <Section1 />
-      <Section2 />
-      <Section3 />
-      <Section4 />
+      <div className="test23">
+        <div className="scrollBar">
+          <div className={Style.scrollElm}></div>
+          <div className={Style.scrollElm}></div>
+        </div>
+        <Section2 />
+        <Section3 />
+      </div>
+      {/* <Section4 /> */}
     </main>
   );
 }
