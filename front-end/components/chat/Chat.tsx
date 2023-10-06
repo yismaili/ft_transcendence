@@ -20,6 +20,7 @@ export default function Chat() {
   const [data, setData] = useState<any>();
   const [allRooms, setAllRooms] = useState<AllRooms[]>();
   const [choseRoom, setChoseRoom] = useState<AllRooms>();
+  // const [messageGroup, setMessageGroup] = useState<string>();
   // const [key, setKey] = useState(0);
   let socket: any;
 
@@ -64,7 +65,38 @@ export default function Chat() {
       );
       // setKey(key => key + 1);
     }
-  }, [data, groupInput]);
+    if (choseRoom) {
+      socket.emit(
+        "findAllChatRoomConversation",
+        {
+          username: data.response.user.username,
+          chatRoomName: choseRoom.RoomId,
+        },
+        (response: any) => {
+          console.log("Fuck ", response);
+        }
+      );
+    }
+  }, [data, groupInput, choseRoom]);
+  
+  const setMessage = (message: string) => {
+    console.log(socket);
+    
+    socket.emit(
+      "sendMessageToChatRoom",
+      {
+        message: message,
+        username: data.response.user.username,
+        chatRoomName: choseRoom?.RoomId,
+      },
+      (response: any) => {
+        console.log("Message sent", response);
+      }
+    );
+  };
+
+  // console.log('---', choseRoom?.RoomId);
+  
 
   useEffect(() => {
     const fetching = async () => {
@@ -161,7 +193,11 @@ export default function Chat() {
             <Msg friendData={userFriend} myData={user} />
           )}
           {isGroup && choseRoom && (
-            <GroupMsg groupInput={groupInput} room={choseRoom} />
+            <GroupMsg
+              groupInput={groupInput}
+              room={choseRoom}
+              setMessage={setMessage}
+            />
           )}
         </div>
       </div>
