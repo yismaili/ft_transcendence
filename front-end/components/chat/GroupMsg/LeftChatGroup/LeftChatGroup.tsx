@@ -1,8 +1,8 @@
 import Style from "./LeftChatGroup.module.css";
 
 type props = {
-  oldMessage: allMessages | undefined;
-  newMessage: allMessages | undefined;
+  oldMessage: allGroupMessages | undefined;
+  newMessage: allGroupMessages | undefined;
   friendData: User_Friend;
 };
 
@@ -23,7 +23,7 @@ export default function LeftChatGroup({
         ></div>
         <p className={Style.name}>{friendData.username}</p>
         <p className={Style.msg}>{oldMessage.message}</p>
-        <p className={Style.time}>{oldMessage.dateToSend}</p>
+        <p className={Style.time}>{oldMessage.date}</p>
       </div>
     );
   else if (newMessage)
@@ -35,7 +35,7 @@ export default function LeftChatGroup({
         ></div>
         <p className={Style.name}>{friendData.username}</p>
         <p className={Style.msg}>{newMessage.message}</p>
-        <p className={Style.time}>{newMessage.dateToSend}</p>
+        <p className={Style.time}>{newMessage.date}</p>
       </div>
     );
   else return <>test</>;

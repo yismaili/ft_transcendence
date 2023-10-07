@@ -5,10 +5,10 @@ import Cookies from "cookies-ts";
 import io from "socket.io-client";
 
 type props = {
-  setMessage: Function;
+  room: AllRooms;
 };
 
-export default function InputChatGroup({ }: props) {
+export default function InputChatGroup({ room }: props) {
   const ref = useRef<HTMLFormElement>(null);
 
     const cookies = new Cookies();
@@ -30,7 +30,7 @@ export default function InputChatGroup({ }: props) {
       {
         message: message,
         username: Data.response.user.username,
-        chatRoomName: "first good groupsArtjRBdRr",
+        chatRoomName: room.chatRooms.RoomId,
       },
       (response: any) => {
         // console.log("Message sent", response);

@@ -5,9 +5,10 @@ import { motion, useAnimation } from "framer-motion";
 type props = {
   func: Function;
   resetChat: Function;
+  choseChat: Function;
 };
 
-export default function SlideButton({ func, resetChat }: props) {
+export default function SlideButton({ func, resetChat, choseChat }: props) {
   const [isGroup, setGroup] = useState(false);
   const controls = useAnimation();
 
@@ -15,6 +16,7 @@ export default function SlideButton({ func, resetChat }: props) {
     resetChat(undefined);
     func();
     setGroup(!isGroup);
+    choseChat(undefined);
     controls.start(isGroup ? "false" : "true");
   };
 

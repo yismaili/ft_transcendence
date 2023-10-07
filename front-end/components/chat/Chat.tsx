@@ -1,13 +1,14 @@
 "use client";
-import FriendRequest from "./FriendRequest/FriendRequest";
 import NewGroupSetting from "./NewGroupSetting/NewGroupSetting";
+import FriendRequest from "./FriendRequest/FriendRequest";
 import SlideButton from "./SlideButton/SlideButton";
+import { io, Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
 import GroupMsg from "./GroupMsg/GroupMsg";
 import Style from "./Chat.module.css";
 import Direct from "./Direct/Direct";
 import Group from "./Group/Group";
-import { io, Socket } from "socket.io-client";
+import Cookies from "cookies-ts";
 import Link from "next/link";
 import Msg from "./Msg/Msg";
 
@@ -17,44 +18,49 @@ export default function Chat() {
   let [user, setUser] = useState<User>();
   const [userFriend, setUserFriend] = useState<User_Friend>();
   const [groupInput, setGroupInput] = useState<GroupInput>();
-  const [data, setData] = useState<any>();
+  // const [data, setData] = useState<any>();
   const [allRooms, setAllRooms] = useState<AllRooms[]>();
-  const [choseRoom, setChoseRoom] = useState<AllRooms>();
+  const [room, setRoom] = useState<AllRooms>();
   // const [messageGroup, setMessageGroup] = useState<string>();
   // const [key, setKey] = useState(0);
-  let socket: any;
+
+  const cookies = new Cookies();
+  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
+
+  const [socket] = useState(
+    io("0.0.0.0:3001", {
+      extraHeaders: {
+        Authorization: Data.response.token,
+      },
+    })
+  );
 
   useEffect(() => {
-    if (data) {
-      socket = io("0.0.0.0:3001", {
-        extraHeaders: { Authorization: data.response.token },
-      });
-      socket.emit(
-        "AllchatRoom",
-        {
-          username: data.response.user.username,
-        },
-        (response: AllRooms[]) => {
-          setAllRooms(response);
-        }
-      );
-    }
+    socket.emit(
+      "chatRoomOfUser",
+      {
+        username: Data.response.user.username,
+      },
+      (response: AllRooms[]) => {
+        setAllRooms(response);
+      }
+    );
+
     if (groupInput) {
       socket.emit(
         "createChatRoom",
         {
           name: groupInput.name,
           status: groupInput.status,
-          user: data.response.user.username,
+          user: Data.response.user.username,
           password: groupInput.password,
           statusPermissions: "admin",
         },
-        (response: CreateRoom) => {
-          console.log("Yo response", response);
+        () => {
           socket.emit(
-            "AllchatRoom",
+            "chatRoomOfUser",
             {
-              username: data.response.user.username,
+              username: Data.response.user.username,
             },
             (response: AllRooms[]) => {
               setAllRooms(response);
@@ -63,40 +69,8 @@ export default function Chat() {
           setGroupInput(undefined);
         }
       );
-      // setKey(key => key + 1);
     }
-    if (choseRoom) {
-      socket.emit(
-        "findAllChatRoomConversation",
-        {
-          username: data.response.user.username,
-          chatRoomName: choseRoom.RoomId,
-        },
-        (response: any) => {
-          console.log("Fuck ", response);
-        }
-      );
-    }
-  }, [data, groupInput, choseRoom]);
-  
-  const setMessage = (message: string) => {
-    console.log(socket);
-    
-    socket.emit(
-      "sendMessageToChatRoom",
-      {
-        message: message,
-        username: data.response.user.username,
-        chatRoomName: choseRoom?.RoomId,
-      },
-      (response: any) => {
-        console.log("Message sent", response);
-      }
-    );
-  };
-
-  // console.log('---', choseRoom?.RoomId);
-  
+  }, [groupInput]);
 
   useEffect(() => {
     const fetching = async () => {
@@ -132,7 +106,11 @@ export default function Chat() {
         </header>
         <div className={Style.subContainer}>
           <div className={Style.left}>
-            <SlideButton func={turnSwitch} resetChat={setUserFriend} />
+            <SlideButton
+              func={turnSwitch}
+              resetChat={setUserFriend}
+              choseChat={setRoom}
+            />
             {/* {isGroup ? <Group /> : <Direct />} */}
           </div>
           <div className={Style.right}></div>
@@ -152,15 +130,18 @@ export default function Chat() {
       </header>
       <div className={Style.subContainer}>
         <div className={Style.left}>
-          <SlideButton func={turnSwitch} resetChat={setUserFriend} />
+          <SlideButton
+            func={turnSwitch}
+            resetChat={setUserFriend}
+            choseChat={setRoom}
+          />
           <ul>
             {isGroup
-              ? data &&
-                allRooms &&
+              ? allRooms &&
                 allRooms.map((room) => {
                   return (
                     <li key={room.id}>
-                      <Group room={room} choseChat={setChoseRoom} />
+                      <Group room={room} choseChat={setRoom} />
                     </li>
                   );
                 })
@@ -180,25 +161,16 @@ export default function Chat() {
                 })}
           </ul>
           {isGroup ? (
-            <NewGroupSetting setGroupInput={setGroupInput} setData={setData} />
+            <NewGroupSetting setGroupInput={setGroupInput} />
           ) : (
             <FriendRequest />
           )}
         </div>
-        <div
-          className={Style.right}
-          key={!isGroup ? userFriend?.id : choseRoom?.id}
-        >
+        <div className={Style.right} key={!isGroup ? userFriend?.id : room?.id}>
           {userFriend && !isGroup && (
             <Msg friendData={userFriend} myData={user} />
           )}
-          {isGroup && choseRoom && (
-            <GroupMsg
-              groupInput={groupInput}
-              room={choseRoom}
-              setMessage={setMessage}
-            />
-          )}
+          {isGroup && room && <GroupMsg groupInput={groupInput} room={room} />}
         </div>
       </div>
     </div>
