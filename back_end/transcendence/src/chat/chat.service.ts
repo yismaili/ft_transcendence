@@ -370,6 +370,7 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
       where: {
           chatRoom:{id: chatRoom.id},
       },
+      relations:['user'],
       order: {
         id: 'ASC',
       },
@@ -765,7 +766,8 @@ async getAllChatRoomOfUser(chatRoomOfUserDto: ChatRoomOfUserDto): Promise<any>{
       where: {
         user:{id: user.id},
         statusUser: Not('banned'),
-      }
+      },
+      relations: ['chatRooms'],
     });
     // console.log(allChatRooms);
     return allChatRooms;
