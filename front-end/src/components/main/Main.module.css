@@ -1,21 +1,2 @@
-.test23{
-    position: relative;
-    overflow: hidden;
-    height: 100dvh;
-}
 
-.scrollElm {
-    position: absolute;
-    top: -50%;
-    transform: translateY(-50%);
-    right: 10%;
-    width: 1.1rem;
-    height: 15.5rem;
-    border-Radius: 15px;
-    background: #FFF;
-    /* margin: 2rem 2rem 3rem 2rem; */
-    margin-bottom: 2rem;
-    margin-right: 8rem;
-    z-index: 10;
-    /* margin-right: 8vw; */
-}
+

@@ -7,10 +7,22 @@
   height: 100vh;
   background: #14143b;
   position: relative;
+  z-index: -1;
 }
 
 .largeAboutUs{
   display: flex;
+  width: 80%;
+}
+
+.in{
+  z-index: 2;
+  animation: bottomTop 1s;
+}
+
+.out{
+    z-index: -1;
+    animation:  Topbottom 1s;
 }
 
 @media (max-width: 1536px) {
@@ -43,3 +55,21 @@
 @media (max-width: 475px) {
 
 }
+
+@keyframes bottomTop {
+  from {
+    bottom: -100%;
+  }
+  to {
+    bottom: 0%;
+  }
+}
+
+@keyframes Topbottom {
+    from {
+      Top: 0%;
+    }
+    to {
+      Top: 100%;
+    }
+  }
