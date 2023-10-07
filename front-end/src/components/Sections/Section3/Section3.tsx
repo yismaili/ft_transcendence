@@ -4,30 +4,12 @@ import PopUp from "./AboutUs/PopUp/PopUp";
 import Style from "./Section3.module.css";
 import PhoneAboutUs from "./PhoneAboutUs/PhoneAboutUs";
 
-export default function Section3() {
+interface index { 
+  sect: number;
+}
+
+export default function Section3(prop:index) {
   //////////// handle smoth scroll //////////////////
-  useEffect(() => {
-    const handleScroll = (e: WheelEvent) => {
-      const isDown = e.deltaY > 0;
-
-      if (isDown) {
-        if (window.scrollY > -1) {
-          document.getElementById("link4")?.click();
-        }
-      } else {
-        document.getElementById("link2")?.click();
-      }
-    };
-
-    document
-      .getElementById("section3")
-      ?.addEventListener("wheel", handleScroll);
-
-    return () =>
-      document
-        .getElementById("section3")
-        ?.removeEventListener("wheel", handleScroll);
-  }, []);
 
   ////////////////////////////////
 
@@ -45,7 +27,7 @@ export default function Section3() {
   ///////////////////////////////
 
   return (
-    <section className={Style.container} id="section3">
+    <section className={`${Style.container} ${prop.sect == 2 ? `${Style.in}` : `${Style.out}`}`}>
       <div className={Style.largeAboutUs}>
         <AboutUs
           src="/img/section3/amine_black.png"
