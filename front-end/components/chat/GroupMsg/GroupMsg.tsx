@@ -9,47 +9,97 @@ import InputChatGroup from "./InputChatGroup/InputChatGroup";
 
 type props = {
   groupInput: GroupInput | undefined;
-  // setData: Function;
   room: AllRooms;
-  setMessage: Function;
 };
 
-export default function GroupMsg({
-  groupInput,
-  // setData,
-  room,
-  setMessage,
-}: props) {
-  // const cookies = new Cookies();
-  // const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
+export default function GroupMsg({ groupInput, room }: props) {
+  const [allMessages, setAllMessages] = useState<allGroupMessages[]>();
+  const [newMessage, setNewMessage] = useState<allGroupMessages[]>([]);
+  const ref = useRef<HTMLDivElement | null>(null);
 
-  // useEffect(() => {
-  //   if (Data) setData(Data);
-  // }, []);
+  const cookies = new Cookies();
+  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
 
-  // const [socket] = useState(
-  //   io("0.0.0.0:3001", {
-  //     extraHeaders: {
-  //       Authorization: Data.response.token,
-  //     },
-  //   })
-  // );
+  const [socket] = useState(
+    io("0.0.0.0:3001", {
+      extraHeaders: {
+        Authorization: Data.response.token,
+      },
+    })
+  );
+
+  useEffect(() => {
+    socket.on("message", (message: allGroupMessages[]) => {
+      socket.emit(
+        "getAllUserOfChatRoom",
+        {
+          username: Data.response.user.username,
+          chatRoomName: room.chatRooms.RoomId,
+        },
+        (response: allGroupUsers[]) => {
+          response.map((user) => {
+            if (
+              message[message.length - 1].user.username === user.user.username
+            ) {
+              setNewMessage((prevMessages) => [
+                ...prevMessages,
+                message[message.length - 1],
+              ]);
+            }
+          });
+        }
+      );
+      // if ()
+
+      // setNewMessage((prevMessages) => [
+      //   ...prevMessages,
+      //   message[message.length - 1],
+      // ]);
+      // console.log("incoming message is:", message);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (room) {
+      socket.emit(
+        "findAllChatRoomConversation",
+        {
+          username: Data.response.user.username,
+          chatRoomName: room.chatRooms.RoomId,
+        },
+        (response: allGroupMessages[]) => {
+          setAllMessages(response);
+          // console.log("Fuckkk", response);
+        }
+      );
+    }
+  }, [room]);
+
+  const setMessage = (message: string) => {
+    socket.emit("sendMessageToChatRoom", {
+      message: message,
+      username: Data.response.user.username,
+      chatRoomName: room.chatRooms.name,
+    });
+    // console.log("Message sent", message);
+    // setNewMessage(message);
+  };
 
   return (
     <div className={Style.container}>
-      {/* <motion.ul initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+      <motion.ul initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         {allMessages &&
           allMessages.map((message, index) => {
             const isLastMessage = index === allMessages.length - 1;
             return (
               <li key={message.id}>
-                {message.user.username == myData.data.username ? (
+                {message.user.username == Data.response.user.username ? (
                   <RightChatGroup oldMessage={message} newMessage={undefined} />
                 ) : (
                   <LeftChatGroup
                     oldMessage={message}
                     newMessage={undefined}
-                    friendData={friendData}
+                    friendData={message.user}
                   />
                 )}
                 {isLastMessage && <div ref={ref} />}
@@ -59,17 +109,16 @@ export default function GroupMsg({
         {newMessage &&
           newMessage.map((message, index) => {
             const isLastMessage = index === newMessage.length - 1;
-            console.log("test", newMessage);
-
+            // console.log("test", newMessage);
             return (
               <li key={message.id}>
-                {message.user.username == myData.data.username ? (
+                {message.user.username == Data.response.user.username ? (
                   <RightChatGroup oldMessage={undefined} newMessage={message} />
                 ) : (
                   <LeftChatGroup
                     oldMessage={undefined}
                     newMessage={message}
-                    friendData={friendData}
+                    friendData={message.user}
                   />
                 )}
                 {isLastMessage && <div ref={ref} />}
@@ -77,9 +126,7 @@ export default function GroupMsg({
             );
           })}
       </motion.ul>
-      <InputChat socket={socket} setMessage={setMessage} /> */}
-      <InputChatGroup setMessage={setMessage} />
-      test
+      <InputChatGroup room={room} />
     </div>
   );
 }

@@ -71,15 +71,30 @@ type CreateRoom = {
 };
 
 type AllRooms = {
-  RoomId: string;
+  chatRooms: {
+    RoomId: string;
+    id: number;
+    name: string;
+    password: string;
+    status: string;
+  };
   id: number;
-  name: string;
-  password: string;
-  status: string;
+  statusPermissions: string;
+  statusUser: string;
+  time: any;
 };
-// type AllRooms = {
-//   id: number;
-//   statusPermissions: string;
-//   statusUser: string;
-//   time: any;
-// };
+
+type allGroupMessages = {
+  date: string;
+  id: number;
+  message: string;
+  user: User_Friend;
+};
+
+type allGroupUsers = {
+  id: number;
+  statusPermissions: string;
+  statusUser: string;
+  time: any;
+  user: User_Friend;
+};

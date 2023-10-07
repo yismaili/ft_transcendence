@@ -20,7 +20,7 @@ export default function Group({ room, choseChat }: props) {
         ></div>
         {/* <div className={Style.onlineStatus}></div> */}
       </div>
-      <p className={Style.name}>{room.name}</p>
+      <p className={Style.name}>{room.chatRooms.name}</p>
       <div className={Style.icon}></div>
     </div>
   );
