@@ -75,16 +75,6 @@ export default function GroupMsg({ groupInput, room }: props) {
     }
   }, [room]);
 
-  const setMessage = (message: string) => {
-    socket.emit("sendMessageToChatRoom", {
-      message: message,
-      username: Data.response.user.username,
-      chatRoomName: room.chatRooms.name,
-    });
-    // console.log("Message sent", message);
-    // setNewMessage(message);
-  };
-
   return (
     <div className={Style.container}>
       <motion.ul initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
