@@ -4,7 +4,7 @@
   margin: 0 auto;
 }
 
-.container label {
+.container p {
   display: block;
   color: #b6bac0;
   font-weight: 900;
@@ -18,7 +18,7 @@
   padding: 1.3rem 0;
 }
 
-.container input {
+/* .container input {
   background: none;
   border: none;
   outline: none;
@@ -26,14 +26,31 @@
   width: 20em;
   height: 1.5rem;
   margin-top: 0.5rem;
-}
+} */
 
 .container input::placeholder {
+  initial-value: "test";
   color: #f2f3f5;
   font-family: "Inter";
   font-weight: 700;
   font-size: clamp(1rem, 2vw, 1.4rem);
 }
+
+.container input::placeholder {
+  initial-value: "test";
+  color: #f2f3f5;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+}
+
+/* .container input::placeholder:active {
+  initial-value: "test";
+  color: #f2f3f56e;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+} */
 
 .container button {
   background-color: #2b2d31;
@@ -52,5 +69,34 @@
   background-color: #EA5A5A;
   border-radius: 20px;
   padding: 0.3em 2em;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+}
+
+.input {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: default;
+  width: 20em;
+  height: 2rem;
+  margin-top: 0.5rem;
+  color: #fff;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+}
+
+.active {
+  background: none;
+  border: none;
+  outline: none;
+  width: auto;
+  height: 2rem;
+  margin-top: 0.35rem;
+  border: 2px solid #262639db;
+  border-radius: 6px;
+  color: #fff;
+  font-family: "Inter";
+  font-weight: 700;
   font-size: clamp(1rem, 2vw, 1.4rem);
 }

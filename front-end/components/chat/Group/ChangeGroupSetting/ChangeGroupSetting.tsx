@@ -4,11 +4,10 @@ import UserManagement from "./UserManagement/UserManagement";
 import ChangeGroupInput from "./ChangeGroupInput/ChangeGroupInput";
 
 type props = {
-  isOpen: boolean;
   setOpen: Function;
 };
 
-export default function ChangeGroupSetting({ isOpen, setOpen }: props) {
+export default function ChangeGroupSetting({ setOpen }: props) {
   const [isgroupSetting, setgroupSetting] = useState(true);
 
   return (
