@@ -1,5 +1,5 @@
 import Style from "./UserManagement.module.css";
-import User from "./user/user";
+import User from "./user/User";
 
 export default function UserManagement() {
   const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
