@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Style from "./Group.module.css";
-import CustomMenu from "./CustomMenu/CustomMenu";
+import GroupContextMenu from "./GroupContextMenu/GroupContextMenu";
 import ChangeGroupSetting from "./ChangeGroupSetting/ChangeGroupSetting";
 
 type props = {
@@ -42,7 +42,7 @@ export default function Group({ room, choseChat }: props) {
       </div>
       {isOpen && <ChangeGroupSetting setOpen={setOpen} />}
       {isMenuOpen && (
-        <CustomMenu setMenuOpen={setMenuOpen} menuPosition={menuPosition} />
+        <GroupContextMenu setMenuOpen={setMenuOpen} menuPosition={menuPosition} />
       )}
     </>
   );
