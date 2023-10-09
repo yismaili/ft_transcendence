@@ -128,7 +128,7 @@ export class ChatService {
         if (!user){
           throw new Error('his user not exist');
         }
-
+console.log(createChatRoomDto);
         const saltOrRounds = 10
         const hash = await bcrypt.hash(createChatRoomDto.password, saltOrRounds);
         const roomId = this.authService.generateRandom(10);
@@ -345,13 +345,12 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
       const chatRoomConversation = await this.messageRepository.find({
         where: {
           id:newMessage.id
-          // chatRoom: { id: chatRoom.id }
+          //chatRoom: { id: chatRoom.id }
         },
-        relations: ['user']
+        relations:['user']
       });
-
-    server.to(roomName).emit('message', chatRoomConversation);
-
+// console.log(chatRoomConversation);
+      server.to(roomName).emit('message', chatRoomConversation);
   } catch (error) {
     throw new Error('Error sending message');
   }
@@ -375,6 +374,7 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
         id: 'ASC',
       },
     });
+    //console.log(chatRoomConversation);
     return chatRoomConversation;
   }
 
@@ -767,7 +767,7 @@ async getAllChatRoomOfUser(chatRoomOfUserDto: ChatRoomOfUserDto): Promise<any>{
         user:{id: user.id},
         statusUser: Not('banned'),
       },
-      relations: ['chatRooms'],
+      relations:['chatRooms'],
     });
     // console.log(allChatRooms);
     return allChatRooms;
@@ -1246,6 +1246,21 @@ async addUserWithSocketId(clientId: Socket) {
   }
 }
 
+async gitAllUsers():Promise<any>{
+  try{
+    const users = await this.userRepository.find(
+      {
+        select: ['id', 'username', 'firstName', 'lastName', 'status', 'email', 'picture']
+      }
+    );
+    if (!users){
+      throw new Error ("Users not found!!!");
+    }
+    return users;
+  }catch(Error){
+    throw new Error("Error to find all users");
+  }
+}
 
    isconnected: Map<string, Socket[]> = new Map<string, Socket[]>();
   // connectedClients = new Map<string, { socket: Socket; username: string }>();

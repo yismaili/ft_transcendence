@@ -14,6 +14,7 @@ import { Socket, Server} from 'socket.io';
 import { SetHistoryDto } from './dto/set-history.dto';
 import { ResultOfGame } from './dto/result-of-game.dto';
 import { verify } from 'jsonwebtoken';
+import { error } from 'console';
 
 @Injectable()
 export class GameService {
@@ -136,6 +137,32 @@ export class GameService {
       const username = decodedToken['username'];
       return username;
     }
+
+    async checkRelatonStatus(rootUsername: string, friendUsername: string){
+      try{
+        const rootUser = await this.userRepository.findOne({
+          where: {username: rootUsername},
+        });
+        const friendUser = await this.userRepository.findOne({
+          where: {username: friendUsername}
+        });
+        if (!rootUser){
+          throw new Error ("user not found !!");
+        }
+
+        const relationStatus = await this.relationRepository.findOne({
+          where: [{user: {id: rootUser.id}, friend: {id: friendUser.id}, status: Not('blocked')},
+          {friend: {id: rootUser.id}, user: {id: friendUser.id}, status: Not('blocked')}
+        ]
+        });
+        if (!relationStatus){
+          return (0);
+        }
+        return (1);
+      }catch(error){
+        throw new Error("Error check relation status")
+      }
+    }
   
     async matchingFriends(createGameDto: CreateGameDto, playerId: Socket, server: Server): Promise<void> {
       try {
@@ -167,7 +194,6 @@ export class GameService {
     
         // User joins the room
         playerId.join(roomName);
-    
         // Competitor joins the room
         const competitorRoom = this.findCompetitorRoom(competitor.username);
         if (!competitorRoom) {
