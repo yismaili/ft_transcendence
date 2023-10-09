@@ -194,7 +194,6 @@ export class GameService {
     
         // User joins the room
         playerId.join(roomName);
-    
         // Competitor joins the room
         const competitorRoom = this.findCompetitorRoom(competitor.username);
         if (!competitorRoom) {
