@@ -1,13 +1,20 @@
 import Style from "./User.module.css";
 
-export default function User() {
+type props = {
+  user: User_Friend;
+};
+
+export default function User({ user }: props) {
   return (
-    <div className={Style.user}>
+    <>
       <div className={Style.firstChild}>
-        <div className={Style.avatar} />
-        <p className={Style.name}>zina dawdia</p>
+        <div
+          className={Style.avatar}
+          style={{ backgroundImage: `url(${user.picture})` }}
+        />
+        <p className={Style.name}>{user.username}</p>
       </div>
       <div className={Style.icon} />
-    </div>
+    </>
   );
 }
