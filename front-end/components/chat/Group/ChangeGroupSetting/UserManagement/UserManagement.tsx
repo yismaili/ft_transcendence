@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Style from "./UserManagement.module.css";
 import User from "./user/User";
 import Cookies from "cookies-ts";
 import { io, Socket } from "socket.io-client";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function UserManagement() {
-
+  const [allUsers, setAllUsers] = useState<User_Friend[]>();
+  const [matchUsers, setMatchingUsers] = useState<User_Friend[]>([]);
 
   const cookies = new Cookies();
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
@@ -18,13 +20,25 @@ export default function UserManagement() {
     })
   );
 
-  console.log(Data.response.user.username);
-  
+  useEffect(() => {
+    socket.emit("gitAllUsers", (response: User_Friend[]) => {
+      setAllUsers(response);
+    });
+  }, []);
 
-  const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
-    console.log(event.currentTarget.value);
-    // socket.emit('JoinUsertoRoom', {adminUsername: Data.response.user.username, username: , statusPermissions: , chatRoomName: })
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const filtredInput = event.currentTarget.value.trim();
+    setMatchingUsers([]);
+
+    if (allUsers && filtredInput) {
+      allUsers.map((user) => {
+        if (user.username.includes(filtredInput))
+          setMatchingUsers((prev) => [...prev, user]);
+      });
+    }
   };
+
+  console.log(matchUsers);
 
   return (
     <>
@@ -38,9 +52,24 @@ export default function UserManagement() {
         </form>
         <div className={Style.Searchicon} />
       </div>
-      <div className={Style.users}>
-        <User />
-      </div>
+      <ul className={Style.users}>
+        <AnimatePresence>
+          {matchUsers &&
+            matchUsers.map((user) => {
+              return (
+                <motion.li
+                  className={Style.user}
+                  key={user.id}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <User user={user} />
+                </motion.li>
+              );
+            })}
+        </AnimatePresence>
+      </ul>
     </>
   );
 }

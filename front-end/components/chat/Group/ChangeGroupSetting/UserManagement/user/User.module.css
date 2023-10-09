@@ -1,14 +1,3 @@
-.user {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #fdfdfd1a;
-  width: 100%;
-  height: 2.5rem;
-  margin-bottom: 1.5rem;
-  border-radius: 13px;
-}
-
 .firstChild {
   display: flex;
   align-items: center;
