@@ -38,7 +38,22 @@ export default function UserManagement() {
     }
   };
 
-  console.log(matchUsers);
+  ////////////////   handle ContextMenu   ////////////////
+
+  const [isMenuOpen, setMenuOpen] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+
+  const handleContextMenu = (e: React.MouseEvent<HTMLLIElement>) => {
+    e.preventDefault();
+    setMenuOpen((prev) => !prev);
+
+    const x = e.clientX;
+    const y = e.clientY;
+
+    setMenuPosition({ x, y });
+  };
+
+  ////////////////////////////////////////////////////////
 
   return (
     <>
@@ -59,12 +74,18 @@ export default function UserManagement() {
               return (
                 <motion.li
                   className={Style.user}
+                  onContextMenu={handleContextMenu}
                   key={user.id}
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                 >
-                  <User user={user} />
+                  <User
+                    user={user}
+                    isMenuOpen={isMenuOpen}
+                    setMenuOpen={setMenuOpen}
+                    menuPosition={menuPosition}
+                  />
                 </motion.li>
               );
             })}
