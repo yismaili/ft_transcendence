@@ -29,6 +29,7 @@ const ChatApp = () => {
   const [statusPermissions, setstatusPermissions] = useState('admin');
   const [userstatus, setUserstatus] = useState('');
   const [time, setTime] = useState('');
+  const [image, setImage] = useState('');
 
   useEffect(() => {
     socket.on('message', (message) => {
@@ -105,7 +106,8 @@ const ChatApp = () => {
 
 const createChatRoom = () => {
     setstatusPermissions('admin');
-    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, (response) => {
+    handleSendImage();
+    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions, picture:image}, (response) => {
       setMessageText('');
       setJoined(true);
       setchatRoomName(response.RoomId);
@@ -189,6 +191,24 @@ const getAllChatRoom = () => {
 const getAllUserOfChatRoom = () => {
   socket.emit('getAllUserOfChatRoom', {username: user, chatRoomName:chatRoomName}, (response) => {
   });
+}
+
+const handleSendImage = () => {
+  const imageInput = document.getElementById('imageInput');
+  const file = imageInput.files[0];
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const imageData = e.target.result; // Base64-encoded image data
+
+    };
+
+    setImage(reader.readAsDataURL(file));
+  } else {
+    alert('Please select an image to send.');
+  }
 }
 //   return (
 //     <div className="chat">
@@ -277,7 +297,7 @@ return (
           <input value={chatRoomName} onChange={(e) => setchatRoomName(e.target.value)} />
           <label> user: </label>
           <input value={user} onChange={(e) => setName(e.target.value)} />
-          <button onClick={() => joinChatRoomWithAdmin()}>Jion my ChatRomm</button>
+          <button onClick={() => getMessageFromchatRoom()}>Jion my ChatRomm</button>
           <button onClick={() => getAllChatRoom()}>get chatRooms</button>
           <button onClick={() => joinChatRoom()}>Jion chatRoom</button>
         </spam>
@@ -295,6 +315,8 @@ return (
                 <input value={status} onChange={(k) => setStatus(k.target.value)} />
             <label>password:</label>
                 <input value={password} onChange={(l) => setPassword(l.target.value)} />
+            <label>image:</label>
+              <input type="file" id="imageInput" />
             <button type="submit">
               create Chat Room
             </button>

@@ -128,7 +128,7 @@ export class ChatService {
         if (!user){
           throw new Error('his user not exist');
         }
-
+console.log(createChatRoomDto);
         const saltOrRounds = 10
         const hash = await bcrypt.hash(createChatRoomDto.password, saltOrRounds);
         const roomId = this.authService.generateRandom(10);
@@ -349,9 +349,8 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
         },
         relations:['user']
       });
-
-    server.to(roomName).emit('message', chatRoomConversation);
-
+// console.log(chatRoomConversation);
+      server.to(roomName).emit('message', chatRoomConversation);
   } catch (error) {
     throw new Error('Error sending message');
   }
@@ -370,10 +369,12 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
       where: {
           chatRoom:{id: chatRoom.id},
       },
+      relations:['user'],
       order: {
         id: 'ASC',
       },
     });
+    //console.log(chatRoomConversation);
     return chatRoomConversation;
   }
 
@@ -765,7 +766,8 @@ async getAllChatRoomOfUser(chatRoomOfUserDto: ChatRoomOfUserDto): Promise<any>{
       where: {
         user:{id: user.id},
         statusUser: Not('banned'),
-      }
+      },
+      relations:['chatRooms'],
     });
     // console.log(allChatRooms);
     return allChatRooms;
