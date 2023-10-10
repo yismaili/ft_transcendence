@@ -5,7 +5,11 @@ import Cookies from "cookies-ts";
 import { io, Socket } from "socket.io-client";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function UserManagement() {
+type props = {
+  room: AllRooms;
+}
+
+export default function UserManagement({ room }: props) {
   const [allUsers, setAllUsers] = useState<User_Friend[]>();
   const [matchUsers, setMatchingUsers] = useState<User_Friend[]>([]);
 
@@ -32,7 +36,10 @@ export default function UserManagement() {
 
     if (allUsers && filtredInput) {
       allUsers.map((user) => {
-        if (user.username.includes(filtredInput))
+        if (
+          user.username.includes(filtredInput) &&
+          user.username != Data.response.user.username
+        )
           setMatchingUsers((prev) => [...prev, user]);
       });
     }
@@ -85,6 +92,7 @@ export default function UserManagement() {
                     isMenuOpen={isMenuOpen}
                     setMenuOpen={setMenuOpen}
                     menuPosition={menuPosition}
+                    room={room}
                   />
                 </motion.li>
               );

@@ -7,6 +7,7 @@ type props = {
   isMenuOpen: boolean;
   setMenuOpen: Function;
   menuPosition: { x: number; y: number };
+  room: AllRooms;
 };
 
 export default function User({
@@ -14,6 +15,7 @@ export default function User({
   isMenuOpen,
   setMenuOpen,
   menuPosition,
+  room
 }: props) {
   return (
     <>
@@ -29,6 +31,8 @@ export default function User({
         <GroupFriendContextMenu
           setMenuOpen={setMenuOpen}
           menuPosition={menuPosition}
+          name={user.username}
+          room={room}
         />
       )}
     </>

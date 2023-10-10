@@ -1,40 +1,56 @@
 import { useState } from "react";
 import Style from "./ChangeGroupInput.module.css";
 
-export default function ChangeGroupInput() {
-  const [edit, setEdit] = useState(false);
+type props = {
+  setOpen: Function;
+}
 
-  // const handleAction = async (formData: FormData) => {
-  //   if (formData.get("name")) {
-  //     setInput({
-  //       name: formData.get("name"),
-  //       status: formData.get("status"),
-  //       password: formData.get("password"),
-  //     });
-  //     closePopUp();
-  //   }
-  // };
+type obj = {
+  name: string | undefined;
+  status: string | undefined;
+  password: string | undefined;
+};
+
+export default function ChangeGroupInput({ setOpen }: props) {
+  const [editName, setEditName] = useState(false);
+  const [editStatus, setEditStatus] = useState(false);
+  const [editPassword, setEditPassword] = useState(false);
+
+  let obj: obj = {
+    name: "",
+    status: "",
+    password: "",
+  };
+
+  const handleAction = async (formData: FormData) => {
+    if (formData.get("Name")?.toString() == null) {
+        obj.name = formData.get("name")?.toString()
+        obj.name = formData.get("status")?.toString()
+        obj.name = formData.get("password")?.toString()
+    }
+    // setOpen();
+  };
 
   return (
     <div className={Style.container}>
       <div className={Style.subContainer}>
-        <form action="" id="_Name" onSubmit={(e) => e.preventDefault()}>
+        <form action={handleAction} id="_Name" >
           <p>Name</p>
           <input
             type="text"
-            name="Name"
+            name="name"
             placeholder="server123"
-            readOnly={!edit}
-            className={edit ? ` ${Style.active}` : `${Style.input}`}
+            readOnly={!editName}
+            className={editName ? ` ${Style.active}` : `${Style.input}`}
             autoComplete="off"
           />
         </form>
         <button
           type="submit"
           form="_Name"
-          onClick={() => setEdit((prev) => !prev)}
+          onClick={() => setEditName((prev) => !prev)}
         >
-          {edit ? `Save` : "Edit"}
+          {editName ? `Save` : "Edit"}
         </button>
       </div>
       <div className={Style.subContainer}>
@@ -44,12 +60,16 @@ export default function ChangeGroupInput() {
             type="text"
             name="status"
             placeholder="private"
-            readOnly={!edit}
-            className={edit ? ` ${Style.active}` : `${Style.input}`}
+            readOnly={!editStatus}
+            className={editStatus ? ` ${Style.active}` : `${Style.input}`}
             autoComplete="off"
           />
         </form>
-        <button type="submit" form="_Status">
+        <button
+          type="submit"
+          form="_Status"
+          onClick={() => setEditStatus((prev) => !prev)}
+        >
           Edit
         </button>
       </div>
@@ -60,12 +80,16 @@ export default function ChangeGroupInput() {
             type="password"
             name="password"
             placeholder="********"
-            readOnly={!edit}
-            className={edit ? ` ${Style.active}` : `${Style.input}`}
+            readOnly={!editPassword}
+            className={editPassword ? ` ${Style.active}` : `${Style.input}`}
             autoComplete="off"
           />
         </form>
-        <button type="submit" form="_Password">
+        <button
+          type="submit"
+          form="_Password"
+          onClick={() => setEditPassword((prev) => !prev)}
+        >
           Edit
         </button>
       </div>
