@@ -40,7 +40,7 @@ export default function Group({ room, choseChat }: props) {
         <p className={Style.name}>{room.chatRooms.name}</p>
         <div className={Style.icon} onClick={() => setOpen((prev) => !prev)} />
       </div>
-      {isOpen && <ChangeGroupSetting setOpen={setOpen} />}
+      {isOpen && <ChangeGroupSetting setOpen={setOpen} room={room} />}
       {isMenuOpen && (
         <GroupContextMenu setMenuOpen={setMenuOpen} menuPosition={menuPosition} />
       )}
