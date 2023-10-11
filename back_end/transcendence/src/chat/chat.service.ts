@@ -30,6 +30,9 @@ import { AuthService } from 'src/auth/auth.service';
 import { Socket, Server } from 'socket.io';
 import { verify } from 'jsonwebtoken';
 import { updateChatRoom } from './dto/update-chat-room.dto';
+import axios from 'axios';
+import * as fs from 'fs'
+const path = require('path');
 
 @Injectable()
 export class ChatService {
@@ -116,6 +119,23 @@ export class ChatService {
     return roomName;
   }
 
+  async uploadImage(imageData: Buffer) {
+    try {
+      const response = await axios.post('https://api.imgbb.com/1/upload?key=3abb50958940a0dfbde0d032e1fb5573', {
+  
+        image: imageData.toString('base64'),
+      },
+     { headers:{
+       'Content-Type': 'multipart/form-data',
+        
+      }});
+      const imageUrl = response.data.data.url;
+      return imageUrl;
+    } catch (error) {
+      throw error.message;
+    }
+  }
+  
   async createChatRoom(createChatRoomDto: CreateChatRoomDto): Promise<any> {
 
     try {
@@ -128,7 +148,6 @@ export class ChatService {
         if (!user){
           throw new Error('his user not exist');
         }
-console.log(createChatRoomDto);
         const saltOrRounds = 10
         const hash = await bcrypt.hash(createChatRoomDto.password, saltOrRounds);
         const roomId = this.authService.generateRandom(10);
@@ -140,11 +159,30 @@ console.log(createChatRoomDto);
         if (ischatRoomExist){
           throw new Error('his chat room exist');
         }
+        const imageBuffer = createChatRoomDto.picture; // The image data in a buffer
+        const filePath = './uploads'; // The directory where you want to save the image
+        const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.jpg'; // Generate a unique filename with the '.jpg' extension
+        
+        // Combine the directory and filename to create the full path
+        const fullFilePath = path.join(filePath, filename);
+        
+        try {
+          // Write the image buffer to the specified file path
+          fs.writeFileSync(fullFilePath, imageBuffer);
+          console.log('Image saved successfully');
+        } catch (error) {
+          console.error('Error saving the image:', error);
+        }
+        
+        // Now, read the saved image for uploading
+        const response = await this.uploadImage(fs.readFileSync(fullFilePath));
+        // console.log(response);
         const newChatRoom = this.chatRoomRepository.create({
             RoomId: createChatRoomDto.name+roomId,
             name: createChatRoomDto.name,
             status: createChatRoomDto.status,
-            password: hash
+            password: hash,
+            picture: response
         });
 
         const savedNewChatRoom = await this.chatRoomRepository.save(newChatRoom);

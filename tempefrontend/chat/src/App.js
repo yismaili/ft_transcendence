@@ -29,7 +29,7 @@ const ChatApp = () => {
   const [statusPermissions, setstatusPermissions] = useState('admin');
   const [userstatus, setUserstatus] = useState('');
   const [time, setTime] = useState('');
-  const [image, setImage] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     socket.on('message', (message) => {
@@ -106,14 +106,19 @@ const ChatApp = () => {
 
 const createChatRoom = () => {
     setstatusPermissions('admin');
-    handleSendImage();
-    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions, picture:image}, (response) => {
+    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions, picture: selectedImage}, (response) => {
       setMessageText('');
       setJoined(true);
       setchatRoomName(response.RoomId);
     });
   };
-  
+
+const handleImageChange = (e) => {
+  // Capture the selected image from the input element
+  const image = e.target.files[0];
+  setSelectedImage(image);
+};
+
 const JoinUsertoRoom = () =>{
   socket.emit('JoinUsertoRoom', { adminUsername: user, username: users, statusPermissions: statusPermissions, chatRoomName: chatRoomName}, () => {
     setJoined(true);
@@ -191,24 +196,6 @@ const getAllChatRoom = () => {
 const getAllUserOfChatRoom = () => {
   socket.emit('getAllUserOfChatRoom', {username: user, chatRoomName:chatRoomName}, (response) => {
   });
-}
-
-const handleSendImage = () => {
-  const imageInput = document.getElementById('imageInput');
-  const file = imageInput.files[0];
-
-  if (file) {
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      const imageData = e.target.result; // Base64-encoded image data
-
-    };
-
-    setImage(reader.readAsDataURL(file));
-  } else {
-    alert('Please select an image to send.');
-  }
 }
 //   return (
 //     <div className="chat">
@@ -297,7 +284,7 @@ return (
           <input value={chatRoomName} onChange={(e) => setchatRoomName(e.target.value)} />
           <label> user: </label>
           <input value={user} onChange={(e) => setName(e.target.value)} />
-          <button onClick={() => getMessageFromchatRoom()}>Jion my ChatRomm</button>
+          <button onClick={() => joinChatRoomWithAdmin()}>Jion my ChatRomm</button>
           <button onClick={() => getAllChatRoom()}>get chatRooms</button>
           <button onClick={() => joinChatRoom()}>Jion chatRoom</button>
         </spam>
@@ -315,10 +302,10 @@ return (
                 <input value={status} onChange={(k) => setStatus(k.target.value)} />
             <label>password:</label>
                 <input value={password} onChange={(l) => setPassword(l.target.value)} />
-            <label>image:</label>
-              <input type="file" id="imageInput" />
+            <label>picture:</label>
+            <input type="file" onChange={handleImageChange} />
             <button type="submit">
-              create Chat Room
+              create Room
             </button>
           </form>
             {/* {allchatroomOfuser && <div>{allchatroomOfuser}</div>}
