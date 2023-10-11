@@ -18,11 +18,8 @@ export default function Chat() {
   let [user, setUser] = useState<User>();
   const [userFriend, setUserFriend] = useState<User_Friend>();
   const [groupInput, setGroupInput] = useState<GroupInput>();
-  // const [data, setData] = useState<any>();
   const [allRooms, setAllRooms] = useState<AllRooms[]>();
   const [room, setRoom] = useState<AllRooms>();
-  // const [messageGroup, setMessageGroup] = useState<string>();
-  // const [key, setKey] = useState(0);
 
   const cookies = new Cookies();
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
@@ -45,7 +42,6 @@ export default function Chat() {
         setAllRooms(response);
       }
     );
-
     if (groupInput) {
       socket.emit(
         "createChatRoom",

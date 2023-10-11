@@ -42,7 +42,10 @@ export default function Group({ room, choseChat }: props) {
       </div>
       {isOpen && <ChangeGroupSetting setOpen={setOpen} room={room} />}
       {isMenuOpen && (
-        <GroupContextMenu setMenuOpen={setMenuOpen} menuPosition={menuPosition} />
+        <GroupContextMenu
+          setMenuOpen={setMenuOpen}
+          menuPosition={menuPosition}
+        />
       )}
     </>
   );
