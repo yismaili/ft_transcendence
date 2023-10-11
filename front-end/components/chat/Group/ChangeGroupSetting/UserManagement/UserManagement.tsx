@@ -7,11 +7,12 @@ import { motion, AnimatePresence } from "framer-motion";
 
 type props = {
   room: AllRooms;
-}
+};
 
 export default function UserManagement({ room }: props) {
   const [allUsers, setAllUsers] = useState<User_Friend[]>();
   const [matchUsers, setMatchingUsers] = useState<User_Friend[]>([]);
+  const [existsUsers, setExistsUsers] = useState<allGroupUsers[]>([]);
 
   const cookies = new Cookies();
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
@@ -28,6 +29,16 @@ export default function UserManagement({ room }: props) {
     socket.emit("gitAllUsers", (response: User_Friend[]) => {
       setAllUsers(response);
     });
+    socket.emit(
+      "getAllUserOfChatRoom",
+      {
+        username: Data.response.user.username,
+        chatRoomName: room.chatRooms.RoomId,
+      },
+      (response: allGroupUsers[]) => {
+        setExistsUsers(response);
+      }
+    );
   }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +49,10 @@ export default function UserManagement({ room }: props) {
       allUsers.map((user) => {
         if (
           user.username.includes(filtredInput) &&
-          user.username != Data.response.user.username
+          user.username != Data.response.user.username &&
+          !existsUsers.some(
+            (existUser) => existUser.user.username == user.username
+          )
         )
           setMatchingUsers((prev) => [...prev, user]);
       });
@@ -71,10 +85,7 @@ export default function UserManagement({ room }: props) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                 >
-                  <User
-                    user={user}
-                    room={room}
-                  />
+                  <User user={user} room={room} />
                 </motion.li>
               );
             })}

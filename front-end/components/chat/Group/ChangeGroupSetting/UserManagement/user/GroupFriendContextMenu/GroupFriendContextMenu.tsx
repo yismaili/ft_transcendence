@@ -28,14 +28,12 @@ export default function GroupFriendContextMenu({
   );
 
   const joinUserToRoom = (permission: string) => {
-    console.log('menu:', user.username);
-    
-    // socket.emit("JoinUsertoRoom", {
-    //   adminUsername: Data.response.user.username,
-    //   username: name,
-    //   statusPermissions: permission,
-    //   chatRoomName: room.chatRooms.RoomId,
-    // });
+    socket.emit("JoinUsertoRoom", {
+      adminUsername: Data.response.user.username,
+      username: user.username,
+      statusPermissions: permission,
+      chatRoomName: room.chatRooms.RoomId,
+    });
   };
 
   return (
