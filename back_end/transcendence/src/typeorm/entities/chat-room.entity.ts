@@ -19,6 +19,9 @@ export class ChatRoom {
   @Column({ nullable: true })
   password: string;
 
+  @Column({ nullable: true })
+  picture: string;
+
   @OneToMany(() => Message, message => message.chatRoom)
   messages: Message[];
 

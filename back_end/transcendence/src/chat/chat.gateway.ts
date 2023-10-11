@@ -1,4 +1,4 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, WebSocketServer } from '@nestjs/websockets';
+import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, WebSocketServer, WsException } from '@nestjs/websockets';
 import { ChatService } from './chat.service';
 import { UpdateChatDto } from './dto/update-chat.dto';
 import { Socket, Server } from 'socket.io';
@@ -16,6 +16,9 @@ import { LeaveChatRoomDto } from './dto/leave-ChatRoom.dto';
 import { JoinRoom } from './dto/join-room.dto';
 import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
 import { updateChatRoom } from './dto/update-chat-room.dto';
+import { UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from 'src/user/multer.config';
 
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
@@ -36,13 +39,15 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('createChatRoom')
-  async createChatRoom(@MessageBody() createChatRoomDto: CreateChatRoomDto, @ConnectedSocket() client: Socket):Promise<any> {
+  //@UseInterceptors(FileInterceptor('image', multerOptions))
+  async createChatRoom(@MessageBody() createChatRoomDto: CreateChatRoomDto, @ConnectedSocket() client: Socket, @UploadedFile() file):Promise<any> {
+    console.log(createChatRoomDto.picture);
     const ret = await this.chatService.createChatRoom(createChatRoomDto);
     return ret;
   }
 
   @SubscribeMessage('JoinUsertoRoom')
-  joinUsarToChatRoom(@MessageBody() joinUsertoChatRoom: JoinUsertoChatRoom, @ConnectedSocket() client: Socket) {
+  joinUsarToChatRoom(@MessageBody() joinUsertoChatRoom: JoinUsertoChatRoom, @ConnectedSocket() client: Socket){
     this.chatService.joinUserToChatRoom(joinUsertoChatRoom);
   }
 
