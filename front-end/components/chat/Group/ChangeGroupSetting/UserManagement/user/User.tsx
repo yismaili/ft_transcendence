@@ -4,19 +4,27 @@ import GroupFriendContextMenu from "./GroupFriendContextMenu/GroupFriendContextM
 
 type props = {
   user: User_Friend;
-  isMenuOpen: boolean;
-  setMenuOpen: Function;
-  menuPosition: { x: number; y: number };
   room: AllRooms;
 };
 
 export default function User({
   user,
-  isMenuOpen,
-  setMenuOpen,
-  menuPosition,
   room
 }: props) {
+
+  const [isMenuOpen, setMenuOpen] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+
+  const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setMenuOpen((prev) => !prev);
+
+    const x = e.clientX;
+    const y = e.clientY;
+
+    setMenuPosition({ x, y });
+  };
+
   return (
     <>
       <div className={Style.firstChild}>
@@ -26,12 +34,12 @@ export default function User({
         />
         <p className={Style.name}>{user.username}</p>
       </div>
-      <div className={Style.icon} />
+      <div className={Style.icon} onClick={handleContextMenu} />
       {isMenuOpen && (
         <GroupFriendContextMenu
           setMenuOpen={setMenuOpen}
           menuPosition={menuPosition}
-          name={user.username}
+          user={user}
           room={room}
         />
       )}
