@@ -14,7 +14,6 @@ import { User } from 'src/typeorm/entities/User.entity';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import {Not, Repository } from 'typeorm';
 import axios from 'axios';
-import path from 'path';
 
 import * as fs from 'fs'
 
