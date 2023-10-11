@@ -59,8 +59,6 @@ export default function UserManagement({ room }: props) {
     }
   };
 
-  ////////////////////////////////////////////////////////
-
   return (
     <>
       <div className={Style.container}>
