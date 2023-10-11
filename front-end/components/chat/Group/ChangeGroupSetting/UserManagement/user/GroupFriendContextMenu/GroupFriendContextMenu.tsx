@@ -6,14 +6,14 @@ import { io, Socket } from "socket.io-client";
 type props = {
   setMenuOpen: Function;
   menuPosition: { x: number; y: number };
-  name: string;
+  user: User_Friend;
   room: AllRooms;
 };
 
 export default function GroupFriendContextMenu({
   setMenuOpen,
   menuPosition,
-  name,
+  user,
   room,
 }: props) {
   const cookies = new Cookies();
@@ -28,14 +28,14 @@ export default function GroupFriendContextMenu({
   );
 
   const joinUserToRoom = (permission: string) => {
-    // console.log(name);
+    console.log('menu:', user.username);
     
-    socket.emit("JoinUsertoRoom", {
-      adminUsername: Data.response.user.username,
-      username: name,
-      statusPermissions: permission,
-      chatRoomName: room.chatRooms.RoomId,
-    });
+    // socket.emit("JoinUsertoRoom", {
+    //   adminUsername: Data.response.user.username,
+    //   username: name,
+    //   statusPermissions: permission,
+    //   chatRoomName: room.chatRooms.RoomId,
+    // });
   };
 
   return (
