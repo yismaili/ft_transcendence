@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Style from "./NewGroupSetting.module.css";
 import NewGroupInput from "./NewGroupInput/NewGroupInput";
+import GroupManagement from "./GroupManagement/GroupManagement";
 
 type props = {
   setGroupInput: Function;
@@ -9,6 +10,7 @@ type props = {
 export default function NewGroupSetting({ setGroupInput }: props) {
   const [isOpen, setOpen] = useState(false);
   const [input, setInput] = useState<GroupInput>();
+  const [isgroupSetting, setgroupSetting] = useState(true);
 
   const closePopUp = () => setOpen(!isOpen);
 
@@ -29,11 +31,30 @@ export default function NewGroupSetting({ setGroupInput }: props) {
             </div>
             <div className={Style.main}>
               <div className={Style.header}>
-                <div className={Style.groupBtn}>
+                <div
+                  className={`${Style.groupBtn} ${
+                    !isgroupSetting && Style.OnLeft
+                  }`}
+                  onClick={() => setgroupSetting(true)}
+                >
                   <p>Group Setting</p>
                 </div>
+                <div
+                  className={`${Style.usersBtn} ${
+                    isgroupSetting && Style.OnRight
+                  }`}
+                  onClick={() => setgroupSetting(false)}
+                >
+                  <p>Users Management</p>
+                </div>
               </div>
-              <NewGroupInput setInput={setInput} closePopUp={closePopUp} />
+              {isgroupSetting ? (
+                <NewGroupInput setInput={setInput} closePopUp={closePopUp} />
+              ) : (
+                <>
+                  <GroupManagement setOpen={setOpen} />
+                </>
+              )}
             </div>
           </div>
         </>

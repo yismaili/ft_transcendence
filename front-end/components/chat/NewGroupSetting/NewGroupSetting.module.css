@@ -24,7 +24,6 @@
   margin: auto;
   top: 10%;
   left: 10%;
-  /* transform: translate(-50%, -50%); */
   width: 80%;
   height: 80%;
   background-color: #292944;
@@ -68,16 +67,12 @@
 }
 
 .main {
-  /* display: flex; */
-	/* position: relative; */
-  /* background-color: brown; */
   width: 94%;
   height: 60%;
   margin: 1rem 3%;
   margin-top: 4%;
   border-radius: 60px;
 	background-color: #1D1D2D;
-  /* overflow: auto; */
 }
 
 .header {
@@ -88,24 +83,23 @@
 	border-radius: 60px;
 }
 
-.groupBtn {
+.groupBtn,
+.usersBtn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 50%;
   height: 100%;
-	/* cursor: pointer; */
-  /* border-radius: 60px; */
-
+	cursor: pointer;
 }
 
-.groupBtn p {
-  font-family: "probert";
+.groupBtn p,
+.usersBtn p {
+  font-family: "Inter";
   font-size: clamp(1rem, 2vw, 1.8rem);
   font-weight: 700;
-  color: rgba(245, 245, 245, 0.853);
+  color: whitesmoke;
   user-select: none;
-  letter-spacing: 0.1rem;
 }
 
 .OnLeft {
