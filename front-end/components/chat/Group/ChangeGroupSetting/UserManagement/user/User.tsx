@@ -5,13 +5,10 @@ import GroupFriendContextMenu from "./GroupFriendContextMenu/GroupFriendContextM
 type props = {
   user: User_Friend;
   room: AllRooms;
+  setOpen: Function;
 };
 
-export default function User({
-  user,
-  room
-}: props) {
-
+export default function User({ user, room, setOpen }: props) {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
@@ -41,6 +38,7 @@ export default function User({
           menuPosition={menuPosition}
           user={user}
           room={room}
+          setOpen={setOpen}
         />
       )}
     </>

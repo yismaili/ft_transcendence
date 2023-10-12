@@ -8,6 +8,7 @@ type props = {
   menuPosition: { x: number; y: number };
   user: User_Friend;
   room: AllRooms;
+  setOpen: Function;
 };
 
 export default function GroupFriendContextMenu({
@@ -15,6 +16,7 @@ export default function GroupFriendContextMenu({
   menuPosition,
   user,
   room,
+  setOpen
 }: props) {
   const cookies = new Cookies();
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
@@ -28,6 +30,7 @@ export default function GroupFriendContextMenu({
   );
 
   const joinUserToRoom = (permission: string) => {
+    setOpen((prev: boolean) => !prev);
     socket.emit("JoinUsertoRoom", {
       adminUsername: Data.response.user.username,
       username: user.username,

@@ -6,9 +6,10 @@ import ChangeGroupSetting from "./ChangeGroupSetting/ChangeGroupSetting";
 type props = {
   room: AllRooms;
   choseChat: Function;
+  updateRoom: Function;
 };
 
-export default function Group({ room, choseChat }: props) {
+export default function Group({ room, choseChat, updateRoom }: props) {
   const [isOpen, setOpen] = useState(false);
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -38,9 +39,20 @@ export default function Group({ room, choseChat }: props) {
           {/* <div className={Style.onlineStatus}></div> */}
         </div>
         <p className={Style.name}>{room.chatRooms.name}</p>
-        <div className={Style.icon} onClick={() => setOpen((prev) => !prev)} />
+        {room.statusPermissions === "admin" && (
+          <div
+            className={Style.icon}
+            onClick={() => setOpen((prev) => !prev)}
+          />
+        )}
       </div>
-      {isOpen && <ChangeGroupSetting setOpen={setOpen} room={room} />}
+      {isOpen && (
+        <ChangeGroupSetting
+          setOpen={setOpen}
+          room={room}
+          updateRoom={updateRoom}
+        />
+      )}
       {isMenuOpen && (
         <GroupContextMenu
           setMenuOpen={setMenuOpen}
