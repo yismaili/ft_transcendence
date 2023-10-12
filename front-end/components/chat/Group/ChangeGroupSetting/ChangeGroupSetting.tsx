@@ -6,9 +6,10 @@ import ChangeGroupInput from "./ChangeGroupInput/ChangeGroupInput";
 type props = {
   setOpen: Function;
   room: AllRooms;
+  updateRoom: Function;
 };
 
-export default function ChangeGroupSetting({ setOpen, room }: props) {
+export default function ChangeGroupSetting({ setOpen, room, updateRoom }: props) {
   const [isgroupSetting, setgroupSetting] = useState(true);
 
   return (
@@ -42,11 +43,11 @@ export default function ChangeGroupSetting({ setOpen, room }: props) {
           </div>
           {isgroupSetting ? (
             <>
-              <ChangeGroupInput setOpen={setOpen} />
+              <ChangeGroupInput setOpen={setOpen} room={room} updateRoom={updateRoom} />
             </>
           ) : (
             <>
-              <UserManagement room={room} />
+              <UserManagement room={room} setOpen={setOpen} />
             </>
           )}
         </div>

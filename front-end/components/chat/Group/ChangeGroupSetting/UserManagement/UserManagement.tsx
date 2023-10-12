@@ -7,9 +7,10 @@ import { motion, AnimatePresence } from "framer-motion";
 
 type props = {
   room: AllRooms;
+  setOpen: Function;
 };
 
-export default function UserManagement({ room }: props) {
+export default function UserManagement({ room, setOpen }: props) {
   const [allUsers, setAllUsers] = useState<User_Friend[]>();
   const [matchUsers, setMatchingUsers] = useState<User_Friend[]>([]);
   const [existsUsers, setExistsUsers] = useState<allGroupUsers[]>([]);
@@ -83,7 +84,7 @@ export default function UserManagement({ room }: props) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                 >
-                  <User user={user} room={room} />
+                  <User user={user} room={room} setOpen={setOpen} />
                 </motion.li>
               );
             })}

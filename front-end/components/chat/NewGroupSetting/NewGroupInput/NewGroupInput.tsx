@@ -32,7 +32,7 @@ export default function NewGroupInput({ setInput, closePopUp }: props) {
         <div className={Style.subContainer}>
           <label htmlFor="Name">Status</label>
           <div className={Style.forBorder}>
-            <select name="status" id="_status">
+            <select name="status">
               <option value="public">Public</option>
               <option value="private">Private</option>
             </select>
