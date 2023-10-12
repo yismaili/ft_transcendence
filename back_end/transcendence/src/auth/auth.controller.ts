@@ -9,7 +9,6 @@ import {Body, Controller,
     UseGuards
    } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Response} from 'express';
 import { GoogleGuard } from './guard/google.guard';
 import { IntraGuard } from './guard/intra.guard';
 import { JwtAuthGuard } from './guard/jwt.guard';
@@ -20,6 +19,8 @@ import { TwoFactorAuthenticationCodeDto } from './dtos/TwoFactorAuthenticationCo
 import { WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { ChatService } from 'src/chat/chat.service';
+import { Response } from 'express';
+
 
 @Controller('auth')
 export class AuthController {
@@ -38,7 +39,7 @@ export class AuthController {
     return res.status(HttpStatus.OK).json(this.response);
   }
 
-  @UseGuards(GoogleGuard) // route handler add an extra layer of security and control access to certain routes
+  @UseGuards(GoogleGuard)
   @Get('google/callback')
   async googleAuthRedirect( @Req() req: any, @Res() res: Response){
 
