@@ -106,6 +106,8 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
       } 
     const savedUser = await this.userRepository.save(newUser);
     const token = sign({ ...savedUser }, 'secrete');
+    // const savedUser = await this.userRepository.save(newUser);
+    // const token = sign({ username: savedUser.username }, 'secrete');
     return { token, user: savedUser, success: true};
   }
 }
