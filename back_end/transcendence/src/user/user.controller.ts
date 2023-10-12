@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AchievementDto } from 'src/auth/dtos/achievement.dto';
 import { HistoryDto } from 'src/auth/dtos/history.dto';
@@ -9,6 +9,8 @@ import { updateProfileDto } from 'src/auth/dtos/updateProfile.dto';
 import { IAuthenticate } from './utils/types';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from './multer.config';
+import { Response } from 'express';
+
 
 @Controller('users')
 export class UserController {
@@ -30,13 +32,27 @@ export class UserController {
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/updateProfile')
     @UseInterceptors(FileInterceptor('image', multerOptions))
-    async updateProfileDetails(@Req() req, @Param('username') username: string, @Body()userData, @UploadedFile() imageData) : Promise<IAuthenticate>{
+    async updateProfileDetails(@Req() req, @Param('username') username: string, @Body()userData, @UploadedFile() imageData, @Res() res: Response) : Promise<any>{
         const authorization = req.user;
         if (authorization.username == username){
             if (!imageData) {
                 throw new Error('No image file provided.');
             }
-            return this.userService.updateProfileByUsername(username,userData, imageData); 
+            const response =  this.userService.updateProfileByUsername(username,userData, imageData);
+            return res.cookie('userData', { response });
+            //return response;
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Post('profile/:username/addUniquename')
+    async addUniquename(@Req() req, @Param('username') username: string, @Body() uniquename) : Promise<any>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.addUniquename(username,uniquename.uniquename); 
         }
         else{
             throw new ForbiddenException();
