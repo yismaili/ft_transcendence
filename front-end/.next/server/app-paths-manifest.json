@@ -1,3 +1,8 @@
 {
-  "/page": "app/page.js"
+  "/page": "app/page.js",
+  "/Chat/page": "app/Chat/page.js",
+  "/UserProfile/page": "app/UserProfile/page.js",
+  "/Auth/page": "app/Auth/page.js",
+  "/api/friends/route": "app/api/friends/route.js",
+  "/UserProfile/Parameters/page": "app/UserProfile/Parameters/page.js"
 }

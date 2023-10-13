@@ -6,24 +6,32 @@ import { Link } from "react-scroll";
 
 export default function Section23() {
   const [sec, setSection] = useState(1);
+  // const [scroll, setscroll] = useState(true);
+  const [time, setTime] = useState(Date.now());
 
   useEffect(() => {
     const handleScroll = (e: WheelEvent) => {
       const isDown = e.deltaY > 0;
-      let test = 1;
       if (isDown) {
         if (window.scrollY > -1 && sec == 1) {
-          setSection(2);
-        } else {
+          if (Date.now() - time > 1000) {
+            setSection(2);
+            setTime(Date.now());
+          }
+        } else if (Date.now() - time > 500) {
           document.getElementById("link4")?.click();
         }
       } else {
         if (sec == 2) {
-          setSection(1);
-        } else document.getElementById("link1")?.click();
+          if (Date.now() - time > 1000) {
+            setSection(1);
+            setTime(Date.now());
+          }
+        } else if (Date.now() - time > 500) {
+          document.getElementById("link1")?.click();
+        }
       }
     };
-
     document
       .getElementById("section2")
       ?.addEventListener("wheel", handleScroll);
@@ -36,7 +44,7 @@ export default function Section23() {
 
   return (
     <section className={Style.AboutUs} id="section2">
-      <Link id="link4" to="section4" smooth={true}></Link>
+      <Link id="link3" to="section3" smooth={true}></Link>
       <div className={Style.scrollBar}>
         <div
           className={`${Style.scrollElm} ${sec == 1 && `${Style.white}`}`}
@@ -53,3 +61,29 @@ export default function Section23() {
   );
 }
 
+// useEffect(() => {
+//   const handleScroll = (e: WheelEvent) => {
+//     console.log(e);
+//     const isDown = e.deltaY > 0;
+//     let test = 1;
+//     if (isDown) {
+//       if (window.scrollY > -1 && sec == 1) {
+//         setSection(2);
+//       } else {
+//         document.getElementById("link4")?.click();
+//       }
+//     } else {
+//       if (sec == 2) {
+//         setSection(1);
+//       } else document.getElementById("link1")?.click();
+//     }
+//   };
+//   document
+//     .getElementById("section2")
+//     ?.addEventListener("wheel", handleScroll);
+
+//   return () =>
+//     document
+//       .getElementById("section2")
+//       ?.removeEventListener("wheel", handleScroll);
+// }, [sec]);
