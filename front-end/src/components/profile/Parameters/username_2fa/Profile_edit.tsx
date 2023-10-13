@@ -1,3 +1,4 @@
+"use client"
 import "@/global_css/resets.css";
 import "@/global_css/utilityClasses.css";
 import "./Profile_edit.css";
@@ -7,9 +8,19 @@ interface nums {
 }
 
 export default function ProfileEdit(props: nums) {
+  const editUsername = async (formData: FormData) => {
+    if (formData.get("username")?.toString.length)
+    {
+      const username = formData.get("username");
+      const sending = await fetch("http://localhost:3000/api/friends", {
+        method: "PUT",
+        body: JSON.stringify(username),
+      })
+    }
+   };
   return (
     <>
-      <form className="form">
+      <form action={editUsername} className="form">
         <div>
           <label htmlFor="username" className="form__label">
             USERNAME

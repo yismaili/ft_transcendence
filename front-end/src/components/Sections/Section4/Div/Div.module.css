@@ -9,21 +9,6 @@
   margin-top: 10%;
 }
 
-/* .container > div {
-  display: inline-block;
-} */
-
-.title {
-  width: 100%;
-  text-align: center;
-  color: #C7F8FF;
-  font-family: 'probert';
-  font-weight: 500;
-  font-size: clamp(.8rem, 2vw, 1.8rem);
-  /* margin-bottom: 5%; */
-  height: 10%;
-}
-
 .leftImage,
 .text,
 .rightImage {
@@ -32,17 +17,17 @@
   flex: 1;
   /* margin-bottom: 30rem; */
   position: relative;
-  display: flex;
-  align-items: center;
-  height: 90%;
-  width: 100vw;
+  height: 100%;
+  position: relative;
+  animation: bottomUp 1s;
 }
 
+.text{
+  display: flex;
+  align-items: center;
+
+}
 .textChild {
-  /* background-color: white; */
-  position: absolute;
-  /* height: 100%; */
-  /* margin-top: 20%; */
   font-family: "probert";
   font-weight: 700;
   font-size: clamp(1rem, 2.8vw, 2.5rem);
@@ -51,44 +36,71 @@
 }
 
 .ImageChild {
-  /* background-color: blue; */
   width: 100%;
   height: 100%;
-  /* max-height: 75%; */
-  /* margin: 0 auto; */
-  /* margin-top: 20%; */
-
   background-size: clamp(15rem, 30vw, 38rem);
   background-position: center;
   background-repeat: no-repeat;
-  /* object-fit: cover; */
-
   color: transparent;
 }
 
 
-
-
-.imageContainer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  /* flex-direction: column; */
+@keyframes bottomUp {
+  0%{
+    top: 100%;
+    opacity: 0;
+  }
+  40%{
+    opacity: 0.6;
+  }
+  100%{
+    top:0%;
+    opacity:1;
+  }
 }
 
-.side__icons {
-  position: relative;
-  display: block;
-  width: 100%;
+@media (max-width: 1536px) {
+
 }
 
-.side__icons > div {
-  position: unset !important;
+/* xl */
+@media (max-width: 1280px) {
+
 }
 
-.side__icons .side__icons__btn__icon {
-  object-fit: contain;
-  width: 100% !important;
-  position: relative !important;
-  height: unset !important;
+/* lg */
+@media (max-width: 1024px) {
+
+}
+
+/* md */
+@media (max-width: 768px) {
+  .container{
+    flex-direction: column;
+  }
+  .rightImage{
+    display: none;
+  }
+  .leftImage{
+    flex: 0.5;
+  }
+  .text{
+    flex: 0.5;
+    align-self: center;
+    align-items: flex-start;
+    max-width: 70%;
+  }
+  .textChild {
+    font-size: 1.6rem;
+  }
+}
+
+/* sm */
+@media (max-width: 640px) {
+
+}
+
+/* xs */
+@media (max-width: 475px) {
+
 }

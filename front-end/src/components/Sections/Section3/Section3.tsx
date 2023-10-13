@@ -4,11 +4,11 @@ import PopUp from "./AboutUs/PopUp/PopUp";
 import Style from "./Section3.module.css";
 import PhoneAboutUs from "./PhoneAboutUs/PhoneAboutUs";
 
-interface index { 
+interface index {
   sect: number;
 }
 
-export default function Section3(prop:index) {
+export default function Section3(prop: index) {
   //////////// handle smoth scroll //////////////////
 
   ////////////////////////////////
@@ -27,7 +27,11 @@ export default function Section3(prop:index) {
   ///////////////////////////////
 
   return (
-    <section className={`${Style.container} ${prop.sect == 2 ? `${Style.in}` : `${Style.out}`}`}>
+    <section
+      className={`${Style.container} ${
+        prop.sect == 2 ? `${Style.in}` : `${Style.out}`
+      }`}
+    >
       <div className={Style.largeAboutUs}>
         <AboutUs
           src="/img/section3/amine_black.png"
@@ -82,7 +86,6 @@ export default function Section3(prop:index) {
           music={"img/section3/alouane04.mp3"}
         />
       )}
-
     </section>
   );
 }

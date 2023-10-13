@@ -2,6 +2,7 @@ import Image from "next/image";
 import Style from "./Section1.module.css";
 import { useEffect } from "react";
 import "@/global_css/utilityClasses.css"
+import Link from "next/link";
 
 export default function Section1() {
   useEffect(() => {
@@ -27,7 +28,9 @@ export default function Section1() {
         <h1 className={Style.title}>
           FUTURE OF <span>PONG</span> START NOW
         </h1>
-        <button>PLAY NOW</button>
+        <Link href={"/Auth"}>
+          <button >PLAY NOW</button>
+          </Link>
       </div>
       <div className={Style.MainImg}>
           <span className={Style.ball}></span>

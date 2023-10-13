@@ -6,6 +6,10 @@ import { useState } from "react";
 
 export default function Home() {
   const [section, setSection] = useState(0);
+  
+  window.addEventListener('wheel', function (e) {
+    e.preventDefault();
+  }, { passive: false });
 
   return (
     <div className="container">
