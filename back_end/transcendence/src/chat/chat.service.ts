@@ -1164,9 +1164,33 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
     if (!userInfo){
       throw new Error("User not admin update this chat room");
     }
+
+    const saltOrRounds = 10
+    const hash = await bcrypt.hash(updateChatRoomInf.password, saltOrRounds);
+    const roomId = this.authService.generateRandom(10);
+
+    const imageBuffer = updateChatRoomInf.picture; // The image data in a buffer
+    const filePath = './uploads'; // The directory where you want to save the image
+    const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.jpg'; // Generate a unique filename with the '.jpg' extension
+        
+    // Combine the directory and filename to create the full path
+    const fullFilePath = path.join(filePath, filename);
+        
+    try {
+      // Write the image buffer to the specified file path
+      fs.writeFileSync(fullFilePath, imageBuffer);
+      console.log('Image saved successfully');
+    } catch (error) {
+      console.error('Error saving the image:', error);
+  }
+        
+  // Now, read the saved image for uploading
+    const response = await this.uploadImage(fs.readFileSync(fullFilePath));
+    // console.log(response);
     chatRoomInfo.name = updateChatRoomInf.chatRoomName,
     chatRoomInfo.status = updateChatRoomInf.status,
-    chatRoomInfo.password = updateChatRoomInf.password
+    chatRoomInfo.password = hash,
+    chatRoomInfo.picture = response
     
     const saveChatRoomUP = await this.chatRoomRepository.save(chatRoomInfo);
     return saveChatRoomUP;
