@@ -32,20 +32,27 @@ export class UserController {
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/updateProfile')
     @UseInterceptors(FileInterceptor('image', multerOptions))
-    async updateProfileDetails(@Req() req, @Param('username') username: string, @Body()userData, @UploadedFile() imageData, @Res() res: Response) : Promise<any>{
-        const authorization = req.user;
-        if (authorization.username == username){
-            if (!imageData) {
-                throw new Error('No image file provided.');
-            }
-            const response =  this.userService.updateProfileByUsername(username,userData, imageData);
-            return res.cookie('userData', { response });
-            //return response;
+    async updateProfileDetails(
+    @Req() req,
+    @Param('username') username: string,
+    @Body() userData,
+    @UploadedFile() imageData,
+   // @Res() res: Response
+    ): Promise<any> {
+    const authorization = req.user;
+    if (authorization.username === username) {
+        if (!imageData) {
+        throw new Error('No image file provided.');
         }
-        else{
-            throw new ForbiddenException();
-        }
+        // const response = await this.userService.updateProfileByUsername(username, userData, imageData);
+        // res.cookie('userData', response);
+        // return response;
+        return await this.userService.updateProfileByUsername(username, userData, imageData);
+    } else {
+        throw new ForbiddenException();
     }
+    }
+
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Post('profile/:username/addUniquename')
