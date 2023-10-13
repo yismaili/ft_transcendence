@@ -20,7 +20,7 @@ export default function Chat() {
   const [groupInput, setGroupInput] = useState<GroupInput>();
   const [allRooms, setAllRooms] = useState<AllRooms[]>();
   const [room, setRoom] = useState<AllRooms>();
-  const [updateChatRoom, setUpdateChatRoom] = useState(false);
+  // const [updateChatRoom, setUpdateChatRoom] = useState(false);
 
   const cookies = new Cookies();
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
@@ -67,7 +67,7 @@ export default function Chat() {
         }
       );
     }
-  }, [groupInput, updateChatRoom]);
+  }, [groupInput]);
 
   useEffect(() => {
     const fetching = async () => {
@@ -138,7 +138,7 @@ export default function Chat() {
                 allRooms.map((room) => {
                   return (
                     <li key={room.id}>
-                      <Group room={room} choseChat={setRoom} updateRoom={setUpdateChatRoom} />
+                      <Group room={room} choseChat={setRoom} />
                     </li>
                   );
                 })

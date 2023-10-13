@@ -6,10 +6,9 @@ import io from "socket.io-client";
 type props = {
   setOpen: Function;
   room: AllRooms;
-  updateRoom: Function;
 };
 
-export default function ChangeGroupInput({ setOpen, room, updateRoom }: props) {
+export default function ChangeGroupInput({ setOpen, room }: props) {
   const [editName, setEditName] = useState(false);
   const [editStatus, setEditStatus] = useState(false);
   const [editPassword, setEditPassword] = useState(false);
@@ -52,7 +51,8 @@ export default function ChangeGroupInput({ setOpen, room, updateRoom }: props) {
   ) => {
     // console.log("name:", name, "status:", status, "password:", password);
     if (!status) status = room.chatRooms.status;
-
+    console.log("room to change:",room);
+    console.log("new name:",name);
     socket.emit(
       "updateChatRoomInfo",
       {
@@ -63,7 +63,8 @@ export default function ChangeGroupInput({ setOpen, room, updateRoom }: props) {
         password: password,
       },
       (response: any) => {
-        updateRoom((prev: boolean) => !prev);
+        console.log('res', response);
+        
       }
     );
   };
@@ -85,6 +86,21 @@ export default function ChangeGroupInput({ setOpen, room, updateRoom }: props) {
   const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (event.currentTarget.value === "protected") setIsProtected(true);
     else setIsProtected(false);
+  };
+
+  const handleRemove = () => {
+    console.log(Data.response.user.username);
+    
+    socket.emit(
+      "deleteChatRoom",
+      {
+        username: Data.response.user.username,
+        chatRoomName: room.chatRooms.RoomId,
+      },
+      (response: any) => {
+        console.log("remove", response);
+      }
+    );
   };
 
   return (
@@ -150,7 +166,9 @@ export default function ChangeGroupInput({ setOpen, room, updateRoom }: props) {
           {editStatus ? `Save` : `Edit`}
         </button>
       </div>
-      <button id={Style.create_group}>Remove</button>
+      <button id={Style.create_group} onClick={handleRemove}>
+        Remove
+      </button>
     </div>
   );
 }
