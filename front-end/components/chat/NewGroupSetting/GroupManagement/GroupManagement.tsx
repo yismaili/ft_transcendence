@@ -12,6 +12,7 @@ type props = {
 export default function GroupManagement({ setOpen }: props) {
   const [allRooms, setAllRooms] = useState<CreateRoom[]>([]);
   const [matchRooms, setMatchingRooms] = useState<CreateRoom[]>([]);
+  const [allRoomsOfUser, setAllRoomsOfUser] = useState<AllRooms[]>([]);
 
   const cookies = new Cookies();
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
@@ -34,6 +35,14 @@ export default function GroupManagement({ setOpen }: props) {
         setAllRooms(response);
       }
     );
+
+    socket.emit(
+      "chatRoomOfUser",
+      { username: Data.response.user.username },
+      (response: AllRooms[]) => {
+        setAllRoomsOfUser(response);
+      }
+    );
   }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +54,10 @@ export default function GroupManagement({ setOpen }: props) {
         if (
           room.name.includes(filtredInput) &&
           room.name != Data.response.user.username &&
-          room.status != 'private'
+          room.status != "private" &&
+          !allRoomsOfUser.some(
+            (roomForUser) => roomForUser.chatRooms.RoomId === room.RoomId
+          )
         )
           setMatchingRooms((prev) => [...prev, room]);
       });

@@ -34,9 +34,8 @@ export default function GroupFriendContextMenu({
   const joinUserToRoom = () => {
     if (room.status === "protected") {
       setIsPassword(true);
-      setMenuOpen((prev: boolean) => !prev)
-    }
-    else {
+      setMenuOpen((prev: boolean) => !prev);
+    } else {
       socket.emit(
         "joinChatRoom",
         {
@@ -45,7 +44,6 @@ export default function GroupFriendContextMenu({
           password: password,
         },
         (response: any) => {
-          console.log("yoooooo", response);
           setOpen((prev: boolean) => !prev);
         }
       );
@@ -68,7 +66,6 @@ export default function GroupFriendContextMenu({
           </li>
         </menu>
       </div>
-      
     </>
   );
 }

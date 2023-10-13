@@ -10,17 +10,29 @@ export default function NewGroupInput({ setInput, closePopUp }: props) {
   const [isProtected, setIsProtected] = useState(false);
 
   const handleAction = async (formData: FormData) => {
-    if (
-      formData.get("name") &&
-      formData.get("status") === "protected" &&
-      formData.get("password")
-    ) {
-      setInput({
-        name: formData.get("name"),
-        status: formData.get("status"),
-        password: formData.get("password"),
-      });
-      closePopUp();
+    if (formData.get("name")) {
+      if (formData.get("status") === "protected" && formData.get("password")) {
+        setInput({
+          name: formData.get("name"),
+          status: formData.get("status"),
+          password: formData.get("password"),
+        });
+        closePopUp();
+      } else if (formData.get("status") === "private") {
+        setInput({
+          name: formData.get("name"),
+          status: "private",
+          password: "",
+        });
+        closePopUp();
+      } else {
+        setInput({
+          name: formData.get("name"),
+          status: "public",
+          password: "",
+        });
+        closePopUp();
+      }
     }
   };
 

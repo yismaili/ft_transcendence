@@ -8,6 +8,7 @@ type props = {
   setOpen: Function;
 };
 export default function ProtectedGroup({ room, setOpen }: props) {
+  const [isRightPassword, setIsRightPassword] = useState(false);
   const ref = useRef<HTMLFormElement>(null);
 
   const cookies = new Cookies();
@@ -34,18 +35,23 @@ export default function ProtectedGroup({ room, setOpen }: props) {
           password: password,
         },
         (response: any) => {
-          console.log("yoooooo", response);
           setOpen((prev: boolean) => !prev);
         }
       );
     }
+    setIsRightPassword(true);
   };
 
   return (
     <main className={Style.auth__card}>
       <div className={Style.auth__credentials}>
         <h1 className={Style.auth__msg}> Enter Password</h1>
-        <form action={handleAction} id="password_group" ref={ref}>
+        <form
+          action={handleAction}
+          id="password_group"
+          ref={ref}
+          className={`${isRightPassword && Style.falsePassword}`}
+        >
           <input type="password" name="password" placeholder="enter password" />
         </form>
         <button type="submit" form="password_group" className={Style.auth__btn}>
