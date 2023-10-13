@@ -6,10 +6,9 @@ import ChangeGroupSetting from "./ChangeGroupSetting/ChangeGroupSetting";
 type props = {
   room: AllRooms;
   choseChat: Function;
-  updateRoom: Function;
 };
 
-export default function Group({ room, choseChat, updateRoom }: props) {
+export default function Group({ room, choseChat }: props) {
   const [isOpen, setOpen] = useState(false);
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -50,7 +49,6 @@ export default function Group({ room, choseChat, updateRoom }: props) {
         <ChangeGroupSetting
           setOpen={setOpen}
           room={room}
-          updateRoom={updateRoom}
         />
       )}
       {isMenuOpen && (
