@@ -1,7 +1,7 @@
 import { User } from "src/typeorm/entities/User.entity";
 
 export interface IAuthenticate {
-  success: boolean;
+  success: any;
   token: string;
   user: User;
 }

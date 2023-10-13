@@ -80,7 +80,6 @@ async updateProfileByUsername(userName: string, userData, imageData): Promise<IA
 
     const updatedUser = await this.userRepository.save(existingUser);
     const token = sign({ ...updatedUser }, 'secrete');
-
     // const savedUser = await this.userRepository.save(existingUser);
     // const token = sign({ username: savedUser.username }, 'secrete');
     return { token, user: updatedUser, success: true};
