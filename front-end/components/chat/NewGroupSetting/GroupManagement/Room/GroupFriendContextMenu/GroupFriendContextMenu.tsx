@@ -1,13 +1,15 @@
 import Style from "./GroupFriendContextMenu.module.css";
 import Cookies from "cookies-ts";
 import { useState } from "react";
-import { io, Socket } from "socket.io-client";
+import io from "socket.io-client";
 
 type props = {
   setMenuOpen: Function;
   menuPosition: { x: number; y: number };
   room: CreateRoom;
   setOpen: Function;
+  password: string;
+  setIsPassword: Function;
 };
 
 export default function GroupFriendContextMenu({
@@ -15,9 +17,9 @@ export default function GroupFriendContextMenu({
   menuPosition,
   room,
   setOpen,
+  password,
+  setIsPassword,
 }: props) {
-  const [password, setPassword] = useState("");
-
   const cookies = new Cookies();
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
 
@@ -30,18 +32,24 @@ export default function GroupFriendContextMenu({
   );
 
   const joinUserToRoom = () => {
-    socket.emit(
-      "joinChatRoom",
-      {
-        username: Data.response.user.username,
-        chatRoomName: room.RoomId,
-        password: password,
-      },
-      (response: any) => {
-        console.log("yoooooo", response);
-        setOpen((prev: boolean) => !prev);
-      }
-    );
+    if (room.status === "protected") {
+      setIsPassword(true);
+      setMenuOpen((prev: boolean) => !prev)
+    }
+    else {
+      socket.emit(
+        "joinChatRoom",
+        {
+          username: Data.response.user.username,
+          chatRoomName: room.RoomId,
+          password: password,
+        },
+        (response: any) => {
+          console.log("yoooooo", response);
+          setOpen((prev: boolean) => !prev);
+        }
+      );
+    }
   };
 
   return (
@@ -60,6 +68,7 @@ export default function GroupFriendContextMenu({
           </li>
         </menu>
       </div>
+      
     </>
   );
 }
