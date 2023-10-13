@@ -45,7 +45,7 @@ export default function NewGroupSetting({ setGroupInput }: props) {
                   }`}
                   onClick={() => setgroupSetting(false)}
                 >
-                  <p>Users Management</p>
+                  <p>Find Group</p>
                 </div>
               </div>
               {isgroupSetting ? (

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Style from "./GroupManagement.module.css";
-import User from "./user/Room";
+import User from "./Room/Room";
 import Cookies from "cookies-ts";
 import { io, Socket } from "socket.io-client";
 import { motion, AnimatePresence } from "framer-motion";

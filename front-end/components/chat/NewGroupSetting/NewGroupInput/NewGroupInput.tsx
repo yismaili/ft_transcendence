@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Style from "./NewGroupInput.module.css";
 
 type props = {
@@ -6,8 +7,14 @@ type props = {
 };
 
 export default function NewGroupInput({ setInput, closePopUp }: props) {
+  const [isProtected, setIsProtected] = useState(false);
+
   const handleAction = async (formData: FormData) => {
-    if (formData.get("name")) {
+    if (
+      formData.get("name") &&
+      formData.get("status") === "protected" &&
+      formData.get("password")
+    ) {
       setInput({
         name: formData.get("name"),
         status: formData.get("status"),
@@ -15,6 +22,11 @@ export default function NewGroupInput({ setInput, closePopUp }: props) {
       });
       closePopUp();
     }
+  };
+
+  const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    if (event.currentTarget.value === "protected") setIsProtected(true);
+    else setIsProtected(false);
   };
 
   return (
@@ -32,16 +44,24 @@ export default function NewGroupInput({ setInput, closePopUp }: props) {
         <div className={Style.subContainer}>
           <label htmlFor="Name">Status</label>
           <div className={Style.forBorder}>
-            <select name="status">
+            <select name="status" onChange={handleSelect}>
               <option value="public">Public</option>
               <option value="private">Private</option>
+              <option value="protected">Protected</option>
             </select>
           </div>
         </div>
-        <div className={Style.subContainer}>
-          <label htmlFor="Name">Password</label>
-          <input type="password" name="password" placeholder="********" />
-        </div>
+        {isProtected && (
+          <div className={Style.subContainer}>
+            <label htmlFor="Name">Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="********"
+              required
+            />
+          </div>
+        )}
       </form>
       <button id={Style.create_group} type="submit" form="create_group">
         Create
