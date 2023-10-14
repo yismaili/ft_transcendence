@@ -55,6 +55,7 @@ export default function Group({ room, choseChat }: props) {
         <GroupContextMenu
           setMenuOpen={setMenuOpen}
           menuPosition={menuPosition}
+          room={room}
         />
       )}
     </>
