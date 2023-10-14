@@ -37,9 +37,7 @@ export class ChatGateway {
   }
 
   @SubscribeMessage('createChatRoom')
-  //@UseInterceptors(FileInterceptor('image', multerOptions))
   async createChatRoom(@MessageBody() createChatRoomDto: CreateChatRoomDto, @ConnectedSocket() client: Socket, @UploadedFile() file):Promise<any> {
-    console.log(createChatRoomDto.picture);
     const ret = await this.chatService.createChatRoom(createChatRoomDto);
     return ret;
   }
