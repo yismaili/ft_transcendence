@@ -944,7 +944,7 @@ async leaveChatRoom (leaveChatRoomDto: LeaveChatRoomDto) : Promise<any>{
 }
 // delete chat room not working
 async deleteChatRoom (deleteChatRoomDto: LeaveChatRoomDto) : Promise<any>{
-
+try{
   const isAdmin = await this.userRepository.findOne({
     where: { username: deleteChatRoomDto.username },
   });
@@ -972,7 +972,9 @@ async deleteChatRoom (deleteChatRoomDto: LeaveChatRoomDto) : Promise<any>{
     },
   });
 
-  if (chatRoomUser) {
+  if (!chatRoomUser) {
+    throw new Error('User not found in the chat room');
+  }
     const messages = await this.messageRepository.find({
       where: {chatRoom: {id: chatRoom.id}}
     });
@@ -985,9 +987,8 @@ async deleteChatRoom (deleteChatRoomDto: LeaveChatRoomDto) : Promise<any>{
     await this.messageRepository.remove(messages);
     await this.chatRoomUserRepository.remove(usersOfChatRoom);
     await this.chatRoomRepository.remove(chatRoomUser);
-    return { message: 'chat room deleted successfully' };
-  } else {
-    return { message: 'User not found in the chat room' };
+  }catch(error){
+    throw new Error("Error to delete this chat room");
   }
 }
 
@@ -1156,7 +1157,10 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
     const chatRoomInfo = await this.chatRoomRepository.findOne({
       where:{RoomId: updateChatRoomInf.roomId}
     });
-    
+
+    if (!chatRoomInfo){
+      throw new Error("chat room not found");
+    }
     const userInfo = await this.chatRoomUserRepository.findOne({
       where:{user: {id: user.id}, statusPermissions: 'admin', chatRooms: {id: chatRoomInfo.id}}
     });
@@ -1167,12 +1171,10 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
 
     const saltOrRounds = 10
     const hash = await bcrypt.hash(updateChatRoomInf.password, saltOrRounds);
-    const roomId = this.authService.generateRandom(10);
 
-    const imageBuffer = updateChatRoomInf.picture; // The image data in a buffer
-    const filePath = './uploads'; // The directory where you want to save the image
-    const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.jpg'; // Generate a unique filename with the '.jpg' extension
-        
+    const imageBuffer = updateChatRoomInf.picture;
+    const filePath = './uploads';
+    const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.jpg';
     // Combine the directory and filename to create the full path
     const fullFilePath = path.join(filePath, filename);
         
@@ -1181,7 +1183,7 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
       fs.writeFileSync(fullFilePath, imageBuffer);
       console.log('Image saved successfully');
     } catch (error) {
-      console.error('Error saving the image:', error);
+      throw new Error('Error saving the image');
   }
         
   // Now, read the saved image for uploading
@@ -1312,7 +1314,7 @@ async gitAllUsers():Promise<any>{
   try{
     const users = await this.userRepository.find(
       {
-        select: ['id', 'username', 'firstName', 'lastName', 'status', 'email', 'picture']
+        select: ['id', 'username', 'uniquename', 'firstName', 'lastName', 'status', 'email', 'picture']
       }
     );
     if (!users){
