@@ -83,17 +83,39 @@ export default function GroupMsgContextMenu({
     }
   }, [timeToMute]);
 
+  const promote = () => {
+    if (
+      kicker?.statusPermissions === "admin" &&
+      getKicked?.statusPermissions === "member"
+    ) {
+      socket.emit(
+        "changePermission",
+        {
+          username: Data.response.user.username,
+          chatRoomName: room.chatRooms.RoomId,
+          userGetBan: friendData.username,
+        },
+        (response: any) => {
+          console.log("promote", response);
+        }
+      );
+    }
+  };
+
   const handleContextMenu = (e: React.MouseEvent<HTMLLIElement>) => {
     e.preventDefault();
-    setIsTimeToMuteOpen((prev) => !prev);
+    if (
+      kicker?.statusPermissions === "admin" &&
+      getKicked?.statusPermissions === "member"
+    ) {
+      setIsTimeToMuteOpen((prev) => !prev);
+    }
 
     const x = e.clientX;
     const y = e.clientY;
 
     setTimeMenuPosition({ x, y });
   };
-
-  console.log(timeToMute);
 
   return (
     <>
@@ -124,7 +146,7 @@ export default function GroupMsgContextMenu({
             } ${Style.borders}`}
             onClick={handleContextMenu}
           >
-            <p>mute / unmute</p>
+            <p>Mute / Unmute</p>
           </li>
           <li
             className={`${Style.context__menu__opt} ${
@@ -134,9 +156,16 @@ export default function GroupMsgContextMenu({
             } ${Style.borders}`}
             onClick={kick}
           >
-            <p>Ban</p>
+            <p>Ban / unBan</p>
           </li>
-          <li className={`${Style.context__menu__opt} ${Style.borders}`}>
+          <li
+            className={`${Style.context__menu__opt} ${Style.borders} ${
+              (kicker?.statusPermissions !== "admin" ||
+                getKicked?.statusPermissions === "admin") &&
+              Style.hide
+            }`}
+            onClick={promote}
+          >
             <p>Promote / demote</p>
           </li>
           <li className={`${Style.context__menu__opt} ${Style.borders}`}>
