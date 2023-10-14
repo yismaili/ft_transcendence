@@ -150,7 +150,7 @@ async findAllHistoryOfUser(username: string): Promise<HistoryDto[]> {
   }
 }
 
-async searchByUsername(username: string, secondUsername: string){
+async searchToFrindByUsername(username: string, secondUsername: string){
   try {
     const user = await this.userRepository.findOne({
       where: {username: username}
@@ -178,7 +178,39 @@ async searchByUsername(username: string, secondUsername: string){
     }
     return secondUser;
   } catch (error) {
-    throw new Error(`Error fetching history`);
+    throw new Error(`Error fetching user profile`);
+  }
+}
+
+async searchToUserByUsername(username: string, secondUsername: string){
+  try {
+    const user = await this.userRepository.findOne({
+      where: {username: username}
+    });
+    
+    const secondUser = await this.userRepository.findOne({
+      where: {username: secondUsername},
+      select: ['id', 'username','uniquename', 'firstName', 'lastName', 'email'],
+      relations: ['profile']
+    });
+
+    if (!user || !secondUser){
+      throw new Error("User not found");
+    }
+
+    const relation = await this.relationRepository.findOne({
+        where: [
+          { friend: { id: user.id }, user: { id: secondUser.id }, status: 'blocked'},
+          { friend: { id: secondUser.id }, user: { id: user.id }, status: 'blocked'}
+        ]
+    });
+
+    if (relation){
+      throw new Error("you don't have access to this user");
+    }
+    return secondUser;
+  } catch (error) {
+    throw new Error(`Error fetching user profile`);
   }
 }
 
