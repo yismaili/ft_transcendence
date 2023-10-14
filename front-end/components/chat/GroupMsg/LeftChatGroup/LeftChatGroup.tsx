@@ -6,12 +6,16 @@ type props = {
   oldMessage: allGroupMessages | undefined;
   newMessage: allGroupMessages | undefined;
   friendData: User_Friend;
+  allGroupUsers: allGroupUsers[];
+  room: AllRooms;
 };
 
 export default function LeftChatGroup({
   oldMessage,
   newMessage,
   friendData,
+  allGroupUsers,
+  room,
 }: props) {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -42,6 +46,9 @@ export default function LeftChatGroup({
           <GroupMsgContextMenu
             setMenuOpen={setMenuOpen}
             menuPosition={menuPosition}
+            allGroupUsers={allGroupUsers}
+            friendData={friendData}
+            room={room}
           />
         )}
       </>
@@ -62,6 +69,9 @@ export default function LeftChatGroup({
           <GroupMsgContextMenu
             setMenuOpen={setMenuOpen}
             menuPosition={menuPosition}
+            allGroupUsers={allGroupUsers}
+            friendData={friendData}
+            room={room}
           />
         )}
       </>

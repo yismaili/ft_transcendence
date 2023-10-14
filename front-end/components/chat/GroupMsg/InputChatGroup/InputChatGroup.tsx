@@ -11,7 +11,7 @@ type props = {
 export default function InputChatGroup({ room }: props) {
   const ref = useRef<HTMLFormElement>(null);
 
-    const cookies = new Cookies();
+  const cookies = new Cookies();
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
 
   const [socket] = useState(
@@ -23,28 +23,29 @@ export default function InputChatGroup({ room }: props) {
   );
 
   const setMessage = (message: any) => {
-    // console.log('mess', message);
-    
     socket.emit(
-      "sendMessageToChatRoom",
+      "getAllUserOfChatRoom",
       {
-        message: message,
         username: Data.response.user.username,
         chatRoomName: room.chatRooms.RoomId,
       },
-      (response: any) => {
-        // console.log("Message sent", response);
-        console.log('yo--');
-        
+      (response: allGroupUsers[]) => {
+        response.find((user) => {
+          if (user.user.username === Data.response.user.username)
+            if (user.statusUser == "member")
+              socket.emit("sendMessageToChatRoom", {
+                message: message,
+                username: Data.response.user.username,
+                chatRoomName: room.chatRooms.RoomId,
+              });
+        });
       }
     );
   };
 
-
   const create = async (formData: FormData) => {
     ref.current?.reset();
-    if (formData.get("message"))
-      setMessage(formData.get("message"));
+    if (formData.get("message")) setMessage(formData.get("message"));
   };
 
   return (

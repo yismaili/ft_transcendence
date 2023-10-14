@@ -15,6 +15,7 @@ type props = {
 export default function GroupMsg({ groupInput, room }: props) {
   const [allMessages, setAllMessages] = useState<allGroupMessages[]>();
   const [newMessage, setNewMessage] = useState<allGroupMessages[]>([]);
+  const [allGroupUsers, setAllGroupUsers] = useState<allGroupUsers[]>([]);
   const ref = useRef<HTMLDivElement | null>(null);
 
   const cookies = new Cookies();
@@ -37,6 +38,7 @@ export default function GroupMsg({ groupInput, room }: props) {
           chatRoomName: room.chatRooms.RoomId,
         },
         (response: allGroupUsers[]) => {
+          setAllGroupUsers(response);
           response.map((user) => {
             if (
               message[message.length - 1].user.username === user.user.username
@@ -49,15 +51,17 @@ export default function GroupMsg({ groupInput, room }: props) {
           });
         }
       );
-      // if ()
-
-      // setNewMessage((prevMessages) => [
-      //   ...prevMessages,
-      //   message[message.length - 1],
-      // ]);
-      // console.log("incoming message is:", message);
     });
   }, []);
+
+  useEffect(() => {
+    if (ref.current) ref.current.scrollIntoView({ block: "end" });
+  }, [allMessages]);
+
+  useEffect(() => {
+    if (ref.current)
+      ref.current.scrollIntoView({ behavior: "smooth", block: "end" });
+  }, [newMessage]);
 
   useEffect(() => {
     if (room) {
@@ -69,7 +73,16 @@ export default function GroupMsg({ groupInput, room }: props) {
         },
         (response: allGroupMessages[]) => {
           setAllMessages(response);
-          // console.log("Fuckkk", response);
+          socket.emit(
+            "getAllUserOfChatRoom",
+            {
+              username: Data.response.user.username,
+              chatRoomName: room.chatRooms.RoomId,
+            },
+            (response: allGroupUsers[]) => {
+              setAllGroupUsers(response);
+            }
+          );
         }
       );
     }
@@ -90,6 +103,8 @@ export default function GroupMsg({ groupInput, room }: props) {
                     oldMessage={message}
                     newMessage={undefined}
                     friendData={message.user}
+                    allGroupUsers={allGroupUsers}
+                    room={room}
                   />
                 )}
                 {isLastMessage && <div ref={ref} />}
@@ -99,7 +114,6 @@ export default function GroupMsg({ groupInput, room }: props) {
         {newMessage &&
           newMessage.map((message, index) => {
             const isLastMessage = index === newMessage.length - 1;
-            // console.log("test", newMessage);
             return (
               <li key={message.id}>
                 {message.user.username == Data.response.user.username ? (
@@ -109,6 +123,8 @@ export default function GroupMsg({ groupInput, room }: props) {
                     oldMessage={undefined}
                     newMessage={message}
                     friendData={message.user}
+                    allGroupUsers={allGroupUsers}
+                    room={room}
                   />
                 )}
                 {isLastMessage && <div ref={ref} />}
