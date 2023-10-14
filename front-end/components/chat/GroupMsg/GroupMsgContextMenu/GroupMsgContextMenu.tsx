@@ -43,6 +43,39 @@ export default function GroupMsgContextMenu({
     })
   );
 
+  const ban = () => {
+    if (
+      kicker?.statusPermissions === "admin" &&
+      getKicked?.statusPermissions === "member"
+    ) {
+      if (getKicked.statusUser === "banned") {
+        socket.emit(
+          "unbannedUser",
+          {
+            username: Data.response.user.username,
+            chatRoomName: room.chatRooms.RoomId,
+            userGetBan: friendData.username,
+          },
+          (response: any) => {
+            console.log("unbanban", response);
+          }
+        );
+      } else {
+        socket.emit(
+          "banUser",
+          {
+            username: Data.response.user.username,
+            chatRoomName: room.chatRooms.RoomId,
+            userGetBan: friendData.username,
+          },
+          (response: any) => {
+            console.log("ban", response);
+          }
+        );
+      }
+    }
+  };
+
   const kick = () => {
     if (
       kicker?.statusPermissions === "admin" &&
@@ -56,7 +89,7 @@ export default function GroupMsgContextMenu({
           userGetkick: friendData.username,
         },
         (response: any) => {
-          console.log(response);
+          console.log("kick User", response);
         }
       );
     }
@@ -154,7 +187,7 @@ export default function GroupMsgContextMenu({
                 getKicked?.statusPermissions === "admin") &&
               Style.hide
             } ${Style.borders}`}
-            onClick={kick}
+            onClick={ban}
           >
             <p>Ban / unBan</p>
           </li>
@@ -166,7 +199,10 @@ export default function GroupMsgContextMenu({
             }`}
             onClick={promote}
           >
-            <p>Promote / demote</p>
+            <p>Promote to admin</p>
+          </li>
+          <li className={`${Style.context__menu__opt} ${Style.borders}`}>
+            <p>block / unBlock</p>
           </li>
           <li className={`${Style.context__menu__opt} ${Style.borders}`}>
             <p>Play</p>
