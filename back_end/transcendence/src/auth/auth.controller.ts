@@ -87,14 +87,15 @@ export class AuthController {
  
   @Post('2fa/generate')
   @UseGuards(JwtAuthGuard, JwtStrategy)
-  async register(@Req() @Req() req: any) {
-      const { otpauthUrl } = await this.authService.generateTwoFactorAuthSecret(req.user.username);
+  async register(@Req() req: any) {
+      const { otpauthUrl } = await this.authService.generateTwoFactorAuthSecret(req.user);
       return this.authService.generateQrCodeDataURL(otpauthUrl);
   }
 
   @Post('2fa/turn-on')
   @UseGuards(JwtAuthGuard)
   async turnOnTwoFactorAuthentication(@Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
+    console.log(twoFactorAuthenticationCode, request.user.username);
     const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
     if (!isCodeValid) {
       throw new UnauthorizedException('Wrong authentication code');
@@ -109,25 +110,14 @@ export class AuthController {
   }
 
   @Post('2fa/authenticate')
-  @HttpCode(200)
-  @UseGuards(JwtAuthGuard)
-  async authenticate( @Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto, @Res() res: Response) {
-    const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
+  async authenticate(@Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto, @Res() res: Response) {
+    const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, twoFactorAuthenticationCode.username);
     if (!isCodeValid) {
       throw new UnauthorizedException('Wrong authentication code');
     }
-    const user: Partial<User> = {
-      email: request.user.email,
-      firstName: request.user.firstName,
-      lastName: request.user.lastName,
-      picture: request.user.picture
-    };
-
-  const response = await this.authService.googleAuthenticate(user);
-  if (response.success){
+    const response = await this.authService.generateTocken(twoFactorAuthenticationCode.username);
     res.cookie('userData', { response });
+    console.log(response);
     return res.redirect('/auth/home');
-  }
-    return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
   }
 }

@@ -611,8 +611,8 @@ async getStatusOfUsers(username: string) {
 
 async setTwoFactorAuthenticationSecret(secret: string, username: string) {
   try {
-    const user = await this.userRepository.findOne({ where: { username: username } });
 
+    const user = await this.userRepository.findOne({ where: { username: username } });
     if (user) {
       user.twoFactorAuthSecret = secret;
       await this.userRepository.save(user);
