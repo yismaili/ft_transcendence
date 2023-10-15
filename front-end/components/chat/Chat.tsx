@@ -40,7 +40,6 @@ export default function Chat() {
         username: Data.response.user.username,
       },
       (response: AllRooms[]) => {
-        console.log('res', response);
         setAllRooms(response);
       }
     );

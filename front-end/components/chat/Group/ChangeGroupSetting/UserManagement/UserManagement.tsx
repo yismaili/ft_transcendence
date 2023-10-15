@@ -14,6 +14,7 @@ export default function UserManagement({ room, setOpen }: props) {
   const [allUsers, setAllUsers] = useState<User_Friend[]>();
   const [matchUsers, setMatchingUsers] = useState<User_Friend[]>([]);
   const [existsUsers, setExistsUsers] = useState<allGroupUsers[]>([]);
+  const [isGroupUsers, setIsGroupUsers] = useState(true);
 
   const cookies = new Cookies();
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
@@ -71,25 +72,50 @@ export default function UserManagement({ room, setOpen }: props) {
           />
         </form>
         <div className={Style.Searchicon} />
+        <div
+          className={Style.showAllUsers}
+          onClick={() => setIsGroupUsers((prev) => !prev)}
+        />
       </div>
-      <ul className={Style.users}>
-        <AnimatePresence>
-          {matchUsers &&
-            matchUsers.map((user) => {
-              return (
-                <motion.li
-                  className={Style.user}
-                  key={user.id}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                >
-                  <User user={user} room={room} setOpen={setOpen} />
-                </motion.li>
-              );
-            })}
-        </AnimatePresence>
-      </ul>
+      {isGroupUsers ? (
+        <ul className={Style.users}>
+          <AnimatePresence>
+            {existsUsers &&
+              existsUsers.map((user) => {
+                return (
+                  <motion.li
+                    className={Style.user}
+                    key={user.id}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                  >
+                    <User user={user.user} room={room} setOpen={setOpen} />
+                  </motion.li>
+                );
+              })}
+          </AnimatePresence>
+        </ul>
+      ) : (
+        <ul className={Style.users}>
+          <AnimatePresence>
+            {matchUsers &&
+              matchUsers.map((user) => {
+                return (
+                  <motion.li
+                    className={Style.user}
+                    key={user.id}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                  >
+                    <User user={user} room={room} setOpen={setOpen} />
+                  </motion.li>
+                );
+              })}
+          </AnimatePresence>
+        </ul>
+      )}
     </>
   );
 }

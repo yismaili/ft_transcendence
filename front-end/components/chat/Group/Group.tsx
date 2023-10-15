@@ -2,6 +2,7 @@ import { useState } from "react";
 import Style from "./Group.module.css";
 import GroupContextMenu from "./GroupContextMenu/GroupContextMenu";
 import ChangeGroupSetting from "./ChangeGroupSetting/ChangeGroupSetting";
+import AllGroupUsers from "./AllGroupUsers/AllGroupUsers";
 
 type props = {
   room: AllRooms;
@@ -35,21 +36,15 @@ export default function Group({ room, choseChat }: props) {
             className={Style.avatar}
             // style={{ backgroundImage: `url("${data.picture}")` }}
           ></div>
-          {/* <div className={Style.onlineStatus}></div> */}
         </div>
         <p className={Style.name}>{room.chatRooms.name}</p>
-        {room.statusPermissions === "admin" && (
-          <div
-            className={Style.icon}
-            onClick={() => setOpen((prev) => !prev)}
-          />
-        )}
+        <div className={Style.icon} onClick={() => setOpen((prev) => !prev)} />
       </div>
-      {isOpen && (
-        <ChangeGroupSetting
-          setOpen={setOpen}
-          room={room}
-        />
+      {isOpen && room.statusPermissions === "admin" && (
+        <ChangeGroupSetting setOpen={setOpen} room={room} />
+      )}
+      {isOpen && room.statusPermissions !== "admin" && (
+        <AllGroupUsers setOpen={setOpen} room={room} />
       )}
       {isMenuOpen && (
         <GroupContextMenu

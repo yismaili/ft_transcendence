@@ -30,10 +30,7 @@ export default function Msg({ friendData, myData }: props) {
 
   useEffect(() => {
     socket.on("message", (message: allMessages[]) => {
-      setNewMessage((prevMessages) => [
-        ...prevMessages,
-        message[0],
-      ]);
+      setNewMessage((prevMessages) => [...prevMessages, message[0]]);
     });
 
     socket.emit(
@@ -88,8 +85,7 @@ export default function Msg({ friendData, myData }: props) {
           })}
         {newMessage &&
           newMessage.map((message, index) => {
-            const isLastMessage = index === newMessage.length - 1;  
-            
+            const isLastMessage = index === newMessage.length - 1;
             return (
               <li key={message.id}>
                 {message.user.username == myData.data.username ? (
