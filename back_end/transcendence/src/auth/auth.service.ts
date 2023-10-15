@@ -89,7 +89,8 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
         lastName: lastName,
         username: username,
         email: email,
-        picture: picture
+        picture: picture,
+        uniquename: username
     });
       
   // Create a new 'Profile' entity if profile data is provided
@@ -105,10 +106,9 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
         newUser.profile = newProfile;
       }
     const savedUser = await this.userRepository.save(newUser);
-    console.log(savedUser.isTwoFactorAuthEnabled)
-    if (savedUser.isTwoFactorAuthEnabled === true){
-        return savedUser;
-    }
+    // if (savedUser.isTwoFactorAuthEnabled === true){
+    //     return savedUser;
+    // }
     const token = sign({ ...savedUser }, 'secrete');
     return { token, user: savedUser, success: true};
   }
