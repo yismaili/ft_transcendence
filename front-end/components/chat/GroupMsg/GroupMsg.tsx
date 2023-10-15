@@ -30,7 +30,7 @@ export default function GroupMsg({ groupInput, room }: props) {
   );
 
   useEffect(() => {
-    socket.on("message", (message: allGroupMessages[]) => {
+    socket.on("message", (message: allGroupMessages) => {
       socket.emit(
         "getAllUserOfChatRoom",
         {
@@ -40,13 +40,8 @@ export default function GroupMsg({ groupInput, room }: props) {
         (response: allGroupUsers[]) => {
           setAllGroupUsers(response);
           response.map((user) => {
-            if (
-              message[message.length - 1].user.username === user.user.username
-            ) {
-              setNewMessage((prevMessages) => [
-                ...prevMessages,
-                message[message.length - 1],
-              ]);
+            if (message.user.username === user.user.username) {
+              setNewMessage((prevMessages) => [...prevMessages, message]);
             }
           });
         }

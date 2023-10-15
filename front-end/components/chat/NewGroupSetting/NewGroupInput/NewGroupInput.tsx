@@ -4,9 +4,10 @@ import Style from "./NewGroupInput.module.css";
 type props = {
   setInput: Function;
   closePopUp: Function;
+  picture: File | undefined;
 };
 
-export default function NewGroupInput({ setInput, closePopUp }: props) {
+export default function NewGroupInput({ setInput, closePopUp, picture }: props) {
   const [isProtected, setIsProtected] = useState(false);
 
   const handleAction = async (formData: FormData) => {
@@ -16,23 +17,24 @@ export default function NewGroupInput({ setInput, closePopUp }: props) {
           name: formData.get("name"),
           status: formData.get("status"),
           password: formData.get("password"),
+          picture: picture,
         });
-        closePopUp();
       } else if (formData.get("status") === "private") {
         setInput({
           name: formData.get("name"),
           status: "private",
           password: "",
+          picture: picture,
         });
-        closePopUp();
       } else {
         setInput({
           name: formData.get("name"),
           status: "public",
           password: "",
+          picture: picture,
         });
-        closePopUp();
       }
+      closePopUp();
     }
   };
 

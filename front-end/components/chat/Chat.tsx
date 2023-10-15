@@ -40,6 +40,7 @@ export default function Chat() {
         username: Data.response.user.username,
       },
       (response: AllRooms[]) => {
+        console.log('res', response);
         setAllRooms(response);
       }
     );
@@ -51,6 +52,7 @@ export default function Chat() {
           status: groupInput.status,
           user: Data.response.user.username,
           password: groupInput.password,
+          picture: groupInput.picture,
           statusPermissions: "admin",
         },
         () => {
