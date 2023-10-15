@@ -5,19 +5,21 @@ type User = {
     firstName: string;
     email: string;
     picture: string;
-    profile: {
-      id: string;
-      score: number;
-      los: number;
-      win: number;
-      xp: number;
-      level: number;
-    };
+    profile: Profile;
     userRelations: Array;
     friendRelations: Array;
     achievements: Array;
     histories: Array;
   };
+};
+
+type Profile = {
+  id: string;
+  score: number;
+  los: number;
+  win: number;
+  xp: number;
+  level: number;
 };
 
 type UserArrayData = {
@@ -61,6 +63,7 @@ type GroupInput = {
   name: string;
   status: string;
   password?: string;
+  picture: File;
 };
 
 type CreateRoom = {
@@ -97,4 +100,14 @@ type allGroupUsers = {
   statusUser: string;
   time: any;
   user: User_Friend;
+};
+
+type FriendUser = {
+  id: number;
+  username: string;
+  firstName: string;
+  lastName: string;
+  uniquename: string;
+  email: string;
+  profile: Profile;
 };

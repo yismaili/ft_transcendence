@@ -51,19 +51,21 @@
   background-image: url("/img/home/avatar.png");
   background-repeat: no-repeat;
   background-size: contain;
+  clip-path: circle(36.5% at 50% 30%);
   width: clamp(1rem, 20%, 13rem);
   height: clamp(1rem, 27%, 13rem);
 }
 
 .changeImg {
   position: absolute;
-  right: 10%;
-  top: 3%;
+  right: 13%;
+  top: 6%;
   background-image: url("/img/chat/modifyImg.png");
   background-repeat: no-repeat;
   background-size: contain;
   width: clamp(0.5rem, 20%, 13rem);
   height: clamp(0.5rem, 25%, 13rem);
+  cursor: pointer;
 }
 
 .main {

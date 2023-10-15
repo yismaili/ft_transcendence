@@ -32,7 +32,7 @@ export default function Msg({ friendData, myData }: props) {
     socket.on("message", (message: allMessages[]) => {
       setNewMessage((prevMessages) => [
         ...prevMessages,
-        message[message.length - 1],
+        message[0],
       ]);
     });
 

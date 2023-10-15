@@ -2,24 +2,27 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import Style from "./UserDashboard.module.css";
-import Win_loss from "../dashboard/Win_loss/Win_loss";
-import Achievement_history from "../dashboard/Achievement_history/Achievement_history";
+import Win_loss from "./Win_loss/Win_loss";
+import Achievement_history from "./Achievement_history/Achievement_history";
 
-export default async function Dashboard() {
+export default async function UserDashboard({
+  params,
+}: {
+  params: { user: string };
+}) {
   const cookieStore = cookies();
-
-  const data = await fetch("http://localhost:3000/api/home", {
-    credentials: "same-origin",
-    headers: {
-      cookie: "userData=" + cookieStore.get("userData")?.value,
-      SameSite: "none",
-    },
-  });
-  const user = await data.json();
-
-  console.log("data is", data);
-  console.log("user is", user);
-
+  const Data = cookieStore.get("userData")?.value;
+  if (Data) {
+    const cookie = JSON.parse(Data);
+    const token = cookie.response.token;
+    const data = await fetch(
+      `http://localhost:3001/users/profile/${cookie.response.user.username}/searchTouser/${params.user}`,
+      {
+        headers: { authorization: `Bearer ${token}` },
+      }
+    );
+    var user = await data.json();
+  }
 
   return (
     <div className={Style.container}>
@@ -39,8 +42,8 @@ export default async function Dashboard() {
         <p>{user.username}</p>
         <div className={Style.setting}></div>
       </main>
-      {/* <Win_loss Data={data} />
-      <Achievement_history Data={data} /> */}
+      <Win_loss user={user} />
+      {/* <Achievement_history user={user} /> */}
     </div>
   );
 }

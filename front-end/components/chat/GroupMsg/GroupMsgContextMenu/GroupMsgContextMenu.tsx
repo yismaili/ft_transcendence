@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import Cookies from "cookies-ts";
 import { useEffect, useState } from "react";
 import GetMuteTime from "./GetMuteTime/GetMuteTime";
+import Link from 'next/link'
 
 type props = {
   setMenuOpen: Function;
@@ -208,7 +209,7 @@ export default function GroupMsgContextMenu({
             <p>Play</p>
           </li>
           <li className={`${Style.context__menu__opt} ${Style.borders}`}>
-            <p>Profile</p>
+            <p><Link href={`/${friendData.username}`}>Profile</Link></p>
           </li>
         </menu>
       </div>
