@@ -14,9 +14,9 @@ import { User } from 'src/typeorm/entities/User.entity';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import {Not, Repository } from 'typeorm';
 import axios from 'axios';
-import path from 'path';
 
 import * as fs from 'fs'
+import { IAuthenticate } from './utils/types';
 
 @Injectable()
 export class UserService {
@@ -63,7 +63,7 @@ async uploadImage(imageData: Buffer) {
   }
 }
 
-async updateProfileByUsername(userName: string, userData, imageData): Promise<any> {
+async updateProfileByUsername(userName: string, userData, imageData): Promise<IAuthenticate> {
   try {
     const existingUser = await this.findProfileByUsername(userName);
     if (!existingUser) {
@@ -75,14 +75,44 @@ async updateProfileByUsername(userName: string, userData, imageData): Promise<an
 
     existingUser.firstName = userData.firstName;
     existingUser.lastName = userData.lastName;
+    existingUser.uniquename = userData.uniquename;
     existingUser.picture = imageUrl;
 
     const updatedUser = await this.userRepository.save(existingUser);
     const token = sign({ ...updatedUser }, 'secrete');
-
-    return { token, user: updatedUser };
+    // const savedUser = await this.userRepository.save(existingUser);
+    // const token = sign({ username: savedUser.username }, 'secrete');
+    return { token, user: updatedUser, success: true};
   } catch (error) {
     throw new Error('Failed to update profile: ' + error);
+  }
+}
+
+async addUniquename (username: string, uniquename: string){
+
+  try {
+    const user = await this.userRepository.findOne({
+      where: {username: username}
+    });
+    
+    if (!user){
+      throw new Error("User not found");
+    }
+
+    const uniqueNameExist = await this.userRepository.findOne({
+      where: {uniquename: uniquename}
+    });
+
+    if (uniqueNameExist){
+      throw new Error ('Try again to set a unique name.');
+    }
+
+    user.uniquename = uniquename;
+    const updateUser = await this.userRepository.save(user);
+
+    return updateUser;
+  } catch (error) {
+    throw new Error(`Error to set unique name`);
   }
 }
 
@@ -120,7 +150,7 @@ async findAllHistoryOfUser(username: string): Promise<HistoryDto[]> {
   }
 }
 
-async searchByUsername(username: string, secondUsername: string){
+async searchToFrindByUsername(username: string, secondUsername: string){
   try {
     const user = await this.userRepository.findOne({
       where: {username: username}
@@ -128,7 +158,7 @@ async searchByUsername(username: string, secondUsername: string){
     
     const secondUser = await this.userRepository.findOne({
       where: {username: secondUsername},
-      select: ['id', 'username', 'firstName', 'lastName', 'email'],
+      select: ['id', 'username','uniquename', 'firstName', 'lastName', 'email'],
       relations: ['profile']
     });
 
@@ -148,7 +178,39 @@ async searchByUsername(username: string, secondUsername: string){
     }
     return secondUser;
   } catch (error) {
-    throw new Error(`Error fetching history`);
+    throw new Error(`Error fetching user profile`);
+  }
+}
+
+async searchToUserByUsername(username: string, secondUsername: string){
+  try {
+    const user = await this.userRepository.findOne({
+      where: {username: username}
+    });
+    
+    const secondUser = await this.userRepository.findOne({
+      where: {username: secondUsername},
+      select: ['id', 'username','uniquename', 'firstName', 'lastName', 'email'],
+      relations: ['profile']
+    });
+
+    if (!user || !secondUser){
+      throw new Error("User not found");
+    }
+
+    const relation = await this.relationRepository.findOne({
+        where: [
+          { friend: { id: user.id }, user: { id: secondUser.id }, status: 'blocked'},
+          { friend: { id: secondUser.id }, user: { id: user.id }, status: 'blocked'}
+        ]
+    });
+
+    if (relation){
+      throw new Error("you don't have access to this user");
+    }
+    return secondUser;
+  } catch (error) {
+    throw new Error(`Error fetching user profile`);
   }
 }
 

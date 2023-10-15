@@ -54,19 +54,17 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
   let { email, firstName, username, lastName, picture} = userDetails;
 
   const existingUser = await this.userRepository.findOne({
-    where: {
-      email,
-    },
-    relations: ['profile', 'userRelations', 'friendRelations', 'achievements', 'histories'],
+    where: {email: email},
+    relations: ['profile']
   });
       
   if (existingUser) {
-    existingUser.firstName = firstName || existingUser.firstName;
-    existingUser.lastName = lastName || existingUser.lastName;
-    existingUser.username = username || existingUser.username;
-    existingUser.picture = picture|| existingUser.picture;
+    // existingUser.firstName = firstName || existingUser.firstName;
+    // existingUser.lastName = lastName || existingUser.lastName;
+    // existingUser.username = username || existingUser.username;
+    // existingUser.picture = picture|| existingUser.picture;
       
-    await this.userRepository.save(existingUser);
+    // await this.userRepository.save(existingUser);
       
     const token = sign({ ...existingUser }, 'secrete');
       return { token, user: existingUser, success: true};
@@ -85,11 +83,11 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
     username = newUsername;
       // user entity 
     const newUser = this.userRepository.create({
-        firstName,
-        lastName,
-        username,
-        email,
-        picture,
+        firstName: firstName,
+        lastName: lastName,
+        username: username,
+        email: email,
+        picture: picture
     });
       
   // Create a new 'Profile' entity if profile data is provided
@@ -106,16 +104,22 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
       } 
     const savedUser = await this.userRepository.save(newUser);
     const token = sign({ ...savedUser }, 'secrete');
+    // const savedUser = await this.userRepository.save(newUser);
+    // const token = sign({ username: savedUser.username }, 'secrete');
     return { token, user: savedUser, success: true};
   }
 }
-    generateRandomString(arg0: number) {
-      throw new Error('Method not implemented.');
-    }
 
-async updateProfile(userDetails: UserDto){
-  
+async generateUsername(firstname: string):Promise<any>{
+
 }
+//     generateRandomString(arg0: number) {
+//       throw new Error('Method not implemented.');
+//     }
+
+// async updateProfile(userDetails: UserDto){
+  
+// }
       
 async findUserById(user: Partial<User>): Promise<Partial<any>> {
   try {

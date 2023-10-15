@@ -3,5 +3,6 @@ export class updateChatRoom{
     username: string;
     chatRoomName: string;
     status: string;
+    picture: any;
     password: string;
 }
