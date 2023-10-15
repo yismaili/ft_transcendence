@@ -29,6 +29,7 @@ const ChatApp = () => {
   const [statusPermissions, setstatusPermissions] = useState('admin');
   const [userstatus, setUserstatus] = useState('');
   const [time, setTime] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     socket.on('message', (message) => {
@@ -105,13 +106,19 @@ const ChatApp = () => {
 
 const createChatRoom = () => {
     setstatusPermissions('admin');
-    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions}, (response) => {
+    socket.emit('createChatRoom', {name: name, status: status , user: user, password: password, statusPermissions: statusPermissions, picture: selectedImage}, (response) => {
       setMessageText('');
       setJoined(true);
       setchatRoomName(response.RoomId);
     });
   };
-  
+
+const handleImageChange = (e) => {
+  // Capture the selected image from the input element
+  const image = e.target.files[0];
+  setSelectedImage(image);
+};
+
 const JoinUsertoRoom = () =>{
   socket.emit('JoinUsertoRoom', { adminUsername: user, username: users, statusPermissions: statusPermissions, chatRoomName: chatRoomName}, () => {
     setJoined(true);
@@ -295,8 +302,10 @@ return (
                 <input value={status} onChange={(k) => setStatus(k.target.value)} />
             <label>password:</label>
                 <input value={password} onChange={(l) => setPassword(l.target.value)} />
+            <label>picture:</label>
+            <input type="file" onChange={handleImageChange} />
             <button type="submit">
-              create Chat Room
+              create Room
             </button>
           </form>
             {/* {allchatroomOfuser && <div>{allchatroomOfuser}</div>}
