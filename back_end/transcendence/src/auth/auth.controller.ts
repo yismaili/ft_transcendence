@@ -95,7 +95,6 @@ export class AuthController {
   @Post('2fa/turn-on')
   @UseGuards(JwtAuthGuard)
   async turnOnTwoFactorAuthentication(@Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
-    console.log(twoFactorAuthenticationCode, request.user.username);
     const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
     if (!isCodeValid) {
       throw new UnauthorizedException('Wrong authentication code');
@@ -106,6 +105,10 @@ export class AuthController {
   @Post('2fa/turn-off')
   @UseGuards(JwtAuthGuard)
   async turnOffTwoFactorAuthentication(@Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
+    const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
+    if (!isCodeValid) {
+      throw new UnauthorizedException('Wrong authentication code');
+    }
     await this.userService.turnOffTwoFactorAuthentication(request.user.username);
   }
 
@@ -116,8 +119,11 @@ export class AuthController {
       throw new UnauthorizedException('Wrong authentication code');
     }
     const response = await this.authService.generateTocken(twoFactorAuthenticationCode.username);
-    res.cookie('userData', { response });
     console.log(response);
-    return res.redirect('/auth/home');
+    if (response.success){
+      res.cookie('userData', {response})
+      return res.redirect('/auth/home');
+    }
+    return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
   }
 }
