@@ -95,8 +95,8 @@ export class AuthController {
   @Post('2fa/turn-on')
   @UseGuards(JwtAuthGuard)
   async turnOnTwoFactorAuthentication(@Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
-    const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
-    if (!isCodeValid) {
+    const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
+    if (isCodeValid === false) {
       throw new UnauthorizedException('Wrong authentication code');
     }
     await this.userService.turnOnTwoFactorAuthentication(request.user.username);
@@ -105,8 +105,8 @@ export class AuthController {
   @Post('2fa/turn-off')
   @UseGuards(JwtAuthGuard)
   async turnOffTwoFactorAuthentication(@Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
-    const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
-    if (!isCodeValid) {
+    const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
+    if (isCodeValid === false) {
       throw new UnauthorizedException('Wrong authentication code');
     }
     await this.userService.turnOffTwoFactorAuthentication(request.user.username);
@@ -119,7 +119,6 @@ export class AuthController {
       throw new UnauthorizedException('Wrong authentication code');
     }
     const response = await this.authService.generateTocken(twoFactorAuthenticationCode.username);
-    console.log(response);
     if (response.success){
       res.cookie('userData', {response})
       return res.redirect('/auth/home');
