@@ -203,7 +203,7 @@ export class ChatService {
           where: {
             id: savedNewChatRoom.id},
             select: ['id', 'RoomId', 'name', 'status']
-        })
+        });
         return chatRommInfo;
     } catch (error) {
         console.error(error);

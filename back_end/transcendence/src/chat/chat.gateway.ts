@@ -32,14 +32,12 @@ export class ChatGateway {
   // @UseGuards(JwtAuthGuard, JwtStrategy)
   @SubscribeMessage('createChat')
   async createChat(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket){
-    const ret = await this.chatService.createChatDirect(createChatDto, client, this.server);
-    return ret;
+    return await this.chatService.createChatDirect(createChatDto, client, this.server);
   }
 
   @SubscribeMessage('createChatRoom')
   async createChatRoom(@MessageBody() createChatRoomDto: CreateChatRoomDto, @ConnectedSocket() client: Socket, @UploadedFile() file):Promise<any> {
-    const ret = await this.chatService.createChatRoom(createChatRoomDto);
-    return ret;
+    return await this.chatService.createChatRoom(createChatRoomDto);
   }
 
   @SubscribeMessage('JoinUsertoRoom')
