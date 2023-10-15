@@ -158,8 +158,8 @@ async searchToFrindByUsername(username: string, secondUsername: string){
     
     const secondUser = await this.userRepository.findOne({
       where: {username: secondUsername},
-      select: ['id', 'username','uniquename', 'firstName', 'lastName', 'email'],
-      relations: ['profile']
+      select: ['id', 'username','uniquename', 'firstName', 'lastName', 'email', 'picture'],
+      relations: ['profile', 'achievements', 'histories']
     });
 
     if (!user || !secondUser){
@@ -190,8 +190,8 @@ async searchToUserByUsername(username: string, secondUsername: string){
     
     const secondUser = await this.userRepository.findOne({
       where: {username: secondUsername},
-      select: ['id', 'username','uniquename', 'firstName', 'lastName', 'email'],
-      relations: ['profile']
+      select: ['id', 'username','uniquename', 'firstName', 'lastName', 'email', 'picture'],
+      relations: ['profile', 'achievements', 'histories']
     });
 
     if (!user || !secondUser){
