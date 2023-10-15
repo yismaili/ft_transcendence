@@ -121,13 +121,12 @@ export class ChatService {
 
   async uploadImage(imageData: Buffer) {
     try {
-      const response = await axios.post('https://api.imgbb.com/1/upload?key=3abb50958940a0dfbde0d032e1fb5573', {
+      const response = await axios.post('https://api.imgbb.com/1/upload?key=570c815470c9530dc529ad2d1b48814d', {
   
         image: imageData.toString('base64'),
       },
      { headers:{
        'Content-Type': 'multipart/form-data',
-        
       }});
       const imageUrl = response.data.data.url;
       return imageUrl;
@@ -169,13 +168,13 @@ export class ChatService {
         try {
           // Write the image buffer to the specified file path
           fs.writeFileSync(fullFilePath, imageBuffer);
-          console.log('Image saved successfully');
         } catch (error) {
           console.error('Error saving the image:', error);
         }
         
         // Now, read the saved image for uploading
         const response = await this.uploadImage(fs.readFileSync(fullFilePath));
+    
         // console.log(response);
         const newChatRoom = this.chatRoomRepository.create({
             RoomId: createChatRoomDto.name+roomId,
@@ -184,7 +183,6 @@ export class ChatService {
             password: hash,
             picture: response
         });
-
         const savedNewChatRoom = await this.chatRoomRepository.save(newChatRoom);
         const chatRoom = await this.chatRoomRepository.findOne({
             where: {
