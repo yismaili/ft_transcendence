@@ -378,8 +378,8 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
         // Emit the message to the chat room
         const chatRoomConversation = await this.messageRepository.findOne({
           where: {
-              id:newMessage.id
-           // chatRoom: { id: chatRoom.id }
+            id:newMessage.id
+            //chatRoom: { id: chatRoom.id }
           },
             relations:['user']
         });

@@ -35,6 +35,10 @@ const ChatApp = () => {
     socket.on('message', (message) => {
       setMessages(message);
     });
+    socket.on('updateUI', (messaged) => {
+      console.log("hi bro");
+    });
+    
     
     socket.on('istyping', (isTyping) => {
       if (!isTyping) {
@@ -178,7 +182,7 @@ const changePermission = () => {
   socket.emit('changePermission', {username: user, chatRoomName: chatRoomName, userGetBan:users}, (response) => {
     setJoined(true);
   });
-}
+} 
 const leaveChatRoom = () => {
   socket.emit('leaveChatRoom', {username: user, chatRoomName: chatRoomName}, (response) => {
   });
@@ -196,6 +200,9 @@ const getAllChatRoom = () => {
 const getAllUserOfChatRoom = () => {
   socket.emit('getAllUserOfChatRoom', {username: user, chatRoomName:chatRoomName}, (response) => {
   });
+}
+const updateUI = () => {
+  socket.emit('updateUI', {message: 'hi'});
 }
 //   return (
 //     <div className="chat">
@@ -287,6 +294,7 @@ return (
           <button onClick={() => joinChatRoomWithAdmin()}>Jion my ChatRomm</button>
           <button onClick={() => getAllChatRoom()}>get chatRooms</button>
           <button onClick={() => joinChatRoom()}>Jion chatRoom</button>
+          <button onClick={() => updateUI()}>updateUI</button>
         </spam>
           <form
             onSubmit={(e) => {
@@ -361,7 +369,6 @@ return (
               onSubmit={(e) => {
                 e.preventDefault();
                 sendMessageToChatRoom();
-                //getMessageFromchatRoom();
               }}
             >
               <input value={messageTextToChatRoom}
