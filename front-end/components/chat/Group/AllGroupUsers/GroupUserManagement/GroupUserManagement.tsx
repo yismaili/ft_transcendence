@@ -34,22 +34,22 @@ export default function GroupUserManagement({ room, setOpen }: props) {
       },
       (response: allGroupUsers[]) => {
         setExistsUsers(response);
+        setMatchingUsers(response.map((user) => user.user));
       }
     );
   }, []);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const filtredInput = event.currentTarget.value.trim();
-    // setMatchingUsers(existsUsers.map((user) => user.user));
-
-    if (existsUsers && filtredInput) {
-      existsUsers.map((user) => {
-        if (
-          user.user.username.includes(filtredInput) &&
-          user.user.username != Data.response.user.username
-        )
-          setMatchingUsers((prev) => [...prev, user.user]);
-      });
+    setMatchingUsers([]);
+    
+    setMatchingUsers(existsUsers.map((user) => user.user));
+    if (filtredInput) {
+      setMatchingUsers([]);
+      const filtredArray = existsUsers.filter((user) =>
+        user.user.username.includes(filtredInput)
+      );
+      setMatchingUsers(filtredArray.map((user) => user.user));
     }
   };
 
@@ -60,7 +60,7 @@ export default function GroupUserManagement({ room, setOpen }: props) {
           <input
             type="text"
             onChange={handleChange}
-            placeholder="user name to search for"
+            placeholder="user name to search for in Group"
           />
         </form>
         <div className={Style.Searchicon} />
