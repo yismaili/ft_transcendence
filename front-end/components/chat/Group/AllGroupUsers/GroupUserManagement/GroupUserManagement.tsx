@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Style from "./GroupUserManagement.module.css";
-import User from "./user/User";
+import User from "../../ChangeGroupSetting/UserManagement/user/User";
 import Cookies from "cookies-ts";
 import { io, Socket } from "socket.io-client";
 import { motion, AnimatePresence } from "framer-motion";
@@ -34,7 +34,13 @@ export default function GroupUserManagement({ room, setOpen }: props) {
       },
       (response: allGroupUsers[]) => {
         setExistsUsers(response);
-        setMatchingUsers(response.map((user) => user.user));
+        setMatchingUsers(
+          response
+            .filter(
+              (user) => user.user.username !== Data.response.user.username
+            )
+            .map((user) => user.user)
+        );
       }
     );
   }, []);
@@ -42,13 +48,18 @@ export default function GroupUserManagement({ room, setOpen }: props) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const filtredInput = event.currentTarget.value.trim();
     setMatchingUsers([]);
-    
-    setMatchingUsers(existsUsers.map((user) => user.user));
+
+    setMatchingUsers(
+      existsUsers
+        .filter((user) => user.user.username !== Data.response.user.username)
+        .map((user) => user.user)
+    );
     if (filtredInput) {
       setMatchingUsers([]);
-      const filtredArray = existsUsers.filter((user) =>
-        user.user.username.includes(filtredInput)
-      );
+      const filtredArray = existsUsers.filter((user) => {
+        if (user.user.username !== Data.response.user.username)
+          return user.user.username.includes(filtredInput);
+      });
       setMatchingUsers(filtredArray.map((user) => user.user));
     }
   };
@@ -77,7 +88,13 @@ export default function GroupUserManagement({ room, setOpen }: props) {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                 >
-                  <User user={user} room={room} setOpen={setOpen} />
+                  <User
+                    user={user}
+                    room={room}
+                    setOpen={setOpen}
+                    isGroupUsers={true}
+                    allGroupUsers={existsUsers}
+                  />
                 </motion.li>
               );
             })}

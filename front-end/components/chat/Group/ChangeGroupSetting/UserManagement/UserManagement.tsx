@@ -94,7 +94,9 @@ export default function UserManagement({ room, setOpen }: props) {
           <input
             type="text"
             onChange={handleChange}
-            placeholder={`user name to search for in ${isGroupUsers ? 'this group ' : 'all usernames'}`}
+            placeholder={`user name to search for in ${
+              isGroupUsers ? "this group " : "all usernames"
+            }`}
           />
         </form>
         <div className={Style.Searchicon} />
@@ -121,7 +123,13 @@ export default function UserManagement({ room, setOpen }: props) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                   >
-                    <User user={user} room={room} setOpen={setOpen} />
+                    <User
+                      user={user}
+                      room={room}
+                      setOpen={setOpen}
+                      isGroupUsers={isGroupUsers}
+                      allGroupUsers={existsUsers}
+                    />
                   </motion.li>
                 );
               })}
@@ -140,7 +148,13 @@ export default function UserManagement({ room, setOpen }: props) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                   >
-                    <User user={user} room={room} setOpen={setOpen} />
+                    <User
+                      user={user}
+                      room={room}
+                      setOpen={setOpen}
+                      isGroupUsers={isGroupUsers}
+                      allGroupUsers={existsUsers}
+                    />
                   </motion.li>
                 );
               })}
