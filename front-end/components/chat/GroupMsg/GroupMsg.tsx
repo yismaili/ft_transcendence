@@ -17,6 +17,7 @@ export default function GroupMsg({ groupInput, room }: props) {
   const [newMessage, setNewMessage] = useState<allGroupMessages[]>([]);
   const [allGroupUsers, setAllGroupUsers] = useState<allGroupUsers[]>([]);
   const ref = useRef<HTMLDivElement | null>(null);
+  const [isMute, setIsMute] = useState(false);
 
   const cookies = new Cookies();
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
@@ -28,6 +29,20 @@ export default function GroupMsg({ groupInput, room }: props) {
       },
     })
   );
+
+  useEffect(() => {
+    socket.on("updateUI", (messaged: string) => {
+      if (messaged.split(" ")[0] === "muteUser") {
+        if (messaged.split(" ")[1] === Data.response.user.username) {
+          setIsMute(true);
+          let num:number = +messaged.split(" ")[2];
+          setTimeout(() => {
+            setIsMute(false);
+          }, (num * 60 * 1000));
+        }
+      }
+    });
+  }, []);
 
   useEffect(() => {
     socket.on("message", (message: allGroupMessages) => {
@@ -127,7 +142,7 @@ export default function GroupMsg({ groupInput, room }: props) {
             );
           })}
       </motion.ul>
-      <InputChatGroup room={room} />
+      {!isMute && <InputChatGroup room={room} />}
     </div>
   );
 }
