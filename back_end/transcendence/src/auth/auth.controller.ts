@@ -113,16 +113,17 @@ export class AuthController {
   }
 
   @Post('2fa/authenticate')
-  async authenticate(@Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto, @Res() res: Response) {
+  async authenticate(@Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
     const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, twoFactorAuthenticationCode.username);
     if (!isCodeValid) {
       throw new UnauthorizedException('Wrong authentication code');
     }
     const response = await this.authService.generateTocken(twoFactorAuthenticationCode.username);
-    if (response.success){
-      res.cookie('userData', {response})
-      return res.redirect('/auth/home');
-    }
-    return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
+    return response;
+    // if (response.success) {
+    //   res.cookie('userData', JSON.stringify(response), { httpOnly: true });
+    //   return res.redirect('/auth/home');
+    // }
+    // return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
   }
 }
