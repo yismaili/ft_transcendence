@@ -36,7 +36,7 @@ const ChatApp = () => {
       setMessages(message);
     });
     socket.on('updateUI', (messaged) => {
-      console.log("hi bro");
+      console.log(messaged);
     });
     
     
@@ -202,7 +202,7 @@ const getAllUserOfChatRoom = () => {
   });
 }
 const updateUI = () => {
-  socket.emit('updateUI', {message: 'hi'});
+  socket.emit('updateUI', {message: 'hi from update UI'});
 }
 //   return (
 //     <div className="chat">
