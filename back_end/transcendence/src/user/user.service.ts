@@ -14,6 +14,7 @@ import { User } from 'src/typeorm/entities/User.entity';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import {Not, Repository } from 'typeorm';
 import axios from 'axios';
+import {v2 as cloudinary} from 'cloudinary';
 
 import * as fs from 'fs'
 import { IAuthenticate } from './utils/types';
@@ -63,6 +64,26 @@ async uploadImage(imageData: Buffer) {
   }
 }
 
+async uploadImageToCould(fileUrl: string): Promise<any> {
+
+  cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(fileUrl, { public_id: 'olympic_flag' }, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+
+}
+
 async updateProfileByUsername(userName: string, userData, imageData): Promise<IAuthenticate> {
   try {
     const existingUser = await this.findProfileByUsername(userName);
@@ -70,13 +91,15 @@ async updateProfileByUsername(userName: string, userData, imageData): Promise<IA
       throw new Error('User not found');
     }
 
-    const response = await this.uploadImage(fs.readFileSync(imageData.path)); 
-    const imageUrl = response;
+    // const response = await this.uploadImage(fs.readFileSync(imageData.path)); 
+    // const imageUrl = response;
+
+    const ret = await this.uploadImageToCould(imageData.path) ;
 
     existingUser.firstName = userData.firstName;
     existingUser.lastName = userData.lastName;
     existingUser.uniquename = userData.uniquename;
-    existingUser.picture = imageUrl;
+    existingUser.picture = ret.url;
 
     const updatedUser = await this.userRepository.save(existingUser);
     const token = sign({ ...updatedUser }, 'secrete');
@@ -158,8 +181,8 @@ async searchToFrindByUsername(username: string, secondUsername: string){
     
     const secondUser = await this.userRepository.findOne({
       where: {username: secondUsername},
-      select: ['id', 'username','uniquename', 'firstName', 'lastName', 'email'],
-      relations: ['profile']
+      select: ['id', 'username','uniquename', 'firstName', 'lastName', 'email', 'picture'],
+      relations: ['profile', 'achievements', 'histories']
     });
 
     if (!user || !secondUser){
@@ -190,8 +213,8 @@ async searchToUserByUsername(username: string, secondUsername: string){
     
     const secondUser = await this.userRepository.findOne({
       where: {username: secondUsername},
-      select: ['id', 'username','uniquename', 'firstName', 'lastName', 'email'],
-      relations: ['profile']
+      select: ['id', 'username','uniquename', 'firstName', 'lastName', 'email', 'picture'],
+      relations: ['profile', 'achievements', 'histories']
     });
 
     if (!user || !secondUser){
@@ -611,8 +634,8 @@ async getStatusOfUsers(username: string) {
 
 async setTwoFactorAuthenticationSecret(secret: string, username: string) {
   try {
-    const user = await this.userRepository.findOne({ where: { username: username } });
 
+    const user = await this.userRepository.findOne({ where: { username: username } });
     if (user) {
       user.twoFactorAuthSecret = secret;
       await this.userRepository.save(user);
