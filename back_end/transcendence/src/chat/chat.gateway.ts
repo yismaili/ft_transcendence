@@ -41,7 +41,7 @@ export class ChatGateway {
   async updateUI(@MessageBody() updateUIDto: UpdateUIDto, @ConnectedSocket() client: Socket){
     let roomName = `Room_`+updateUIDto.message;
     client.join(roomName);
-    this.server.to(roomName).emit('updateUI', updateUIDto.message);
+    this.server.emit('updateUI', updateUIDto.message);
   }
 
   @SubscribeMessage('createChatRoom')
