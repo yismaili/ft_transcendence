@@ -17,6 +17,8 @@ import { JoinRoom } from './dto/join-room.dto';
 import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
 import { updateChatRoom } from './dto/update-chat-room.dto';
 import { UploadedFile} from '@nestjs/common';
+import { UpdateUIDto } from './dto/update-UI.dto';
+import { emit } from 'process';
 
 
 @WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
@@ -32,14 +34,19 @@ export class ChatGateway {
   // @UseGuards(JwtAuthGuard, JwtStrategy)
   @SubscribeMessage('createChat')
   async createChat(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket){
-    const ret = await this.chatService.createChatDirect(createChatDto, client, this.server);
-    return ret;
+    return await this.chatService.createChatDirect(createChatDto, client, this.server);
+  }
+
+  @SubscribeMessage('updateUI')
+  async updateUI(@MessageBody() updateUIDto: UpdateUIDto, @ConnectedSocket() client: Socket){
+    let roomName = `Room_`+updateUIDto.message;
+    client.join(roomName);
+    this.server.emit('updateUI', updateUIDto.message);
   }
 
   @SubscribeMessage('createChatRoom')
   async createChatRoom(@MessageBody() createChatRoomDto: CreateChatRoomDto, @ConnectedSocket() client: Socket, @UploadedFile() file):Promise<any> {
-    const ret = await this.chatService.createChatRoom(createChatRoomDto);
-    return ret;
+    return await this.chatService.createChatRoom(createChatRoomDto);
   }
 
   @SubscribeMessage('JoinUsertoRoom')

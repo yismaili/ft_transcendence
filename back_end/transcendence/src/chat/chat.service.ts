@@ -33,6 +33,7 @@ import { updateChatRoom } from './dto/update-chat-room.dto';
 import axios from 'axios';
 import * as fs from 'fs'
 const path = require('path');
+import {v2 as cloudinary} from 'cloudinary';
 
 @Injectable()
 export class ChatService {
@@ -121,13 +122,12 @@ export class ChatService {
 
   async uploadImage(imageData: Buffer) {
     try {
-      const response = await axios.post('https://api.imgbb.com/1/upload?key=3abb50958940a0dfbde0d032e1fb5573', {
+      const response = await axios.post('https://api.imgbb.com/1/upload?key=570c815470c9530dc529ad2d1b48814d', {
   
         image: imageData.toString('base64'),
       },
      { headers:{
        'Content-Type': 'multipart/form-data',
-        
       }});
       const imageUrl = response.data.data.url;
       return imageUrl;
@@ -136,6 +136,7 @@ export class ChatService {
     }
   }
   
+
   async createChatRoom(createChatRoomDto: CreateChatRoomDto): Promise<any> {
 
     try {
@@ -159,30 +160,28 @@ export class ChatService {
         if (ischatRoomExist){
           throw new Error('his chat room exist');
         }
-        const imageBuffer = createChatRoomDto.picture; // The image data in a buffer
-        const filePath = './uploads'; // The directory where you want to save the image
-        const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.jpg'; // Generate a unique filename with the '.jpg' extension
+
+        const imageBuffer = createChatRoomDto.picture;
+        const filePath = './uploads';
+        const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.jpg';
         
-        // Combine the directory and filename to create the full path
         const fullFilePath = path.join(filePath, filename);
         
         try {
-          // Write the image buffer to the specified file path
           fs.writeFileSync(fullFilePath, imageBuffer);
-          console.log('Image saved successfully');
         } catch (error) {
           console.error('Error saving the image:', error);
         }
         
-        // Now, read the saved image for uploading
-        const response = await this.uploadImage(fs.readFileSync(fullFilePath));
-        // console.log(response);
+        const ret = await this.uploadImageToCould(fullFilePath) ;
+        const file_path = ret.url;
+
         const newChatRoom = this.chatRoomRepository.create({
-            RoomId: createChatRoomDto.name+roomId,
+            RoomId: `${createChatRoomDto.name}_${roomId}`,
             name: createChatRoomDto.name,
             status: createChatRoomDto.status,
             password: hash,
-            picture: response
+            picture: file_path
         });
 
         const savedNewChatRoom = await this.chatRoomRepository.save(newChatRoom);
@@ -203,7 +202,7 @@ export class ChatService {
           where: {
             id: savedNewChatRoom.id},
             select: ['id', 'RoomId', 'name', 'status']
-        })
+        });
         return chatRommInfo;
     } catch (error) {
         console.error(error);
@@ -211,6 +210,25 @@ export class ChatService {
     }
 }
 
+async uploadImageToCould(fileUrl: string): Promise<any> {
+
+  cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(fileUrl, { public_id: 'olympic_flag' }, (error, result) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+
+}
 
 
 async joinUserToChatRoom(joinUserToChatRoom: JoinUsertoChatRoom): Promise<any> {
@@ -380,8 +398,8 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
         // Emit the message to the chat room
         const chatRoomConversation = await this.messageRepository.findOne({
           where: {
-              id:newMessage.id
-           // chatRoom: { id: chatRoom.id }
+            id:newMessage.id
+            //chatRoom: { id: chatRoom.id }
           },
             relations:['user']
         });
@@ -1180,7 +1198,7 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
     const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.jpg';
     // Combine the directory and filename to create the full path
     const fullFilePath = path.join(filePath, filename);
-        
+    
     try {
       // Write the image buffer to the specified file path
       fs.writeFileSync(fullFilePath, imageBuffer);
@@ -1189,13 +1207,13 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
       throw new Error('Error saving the image');
   }
         
-  // Now, read the saved image for uploading
-    const response = await this.uploadImage(fs.readFileSync(fullFilePath));
-    // console.log(response);
+    const ret = await this.uploadImageToCould(fullFilePath) ;
+    const file_path = ret.url;
+    
     chatRoomInfo.name = updateChatRoomInf.chatRoomName,
     chatRoomInfo.status = updateChatRoomInf.status,
     chatRoomInfo.password = hash,
-    chatRoomInfo.picture = response
+    chatRoomInfo.picture = file_path
     
     const saveChatRoomUP = await this.chatRoomRepository.save(chatRoomInfo);
     return saveChatRoomUP;

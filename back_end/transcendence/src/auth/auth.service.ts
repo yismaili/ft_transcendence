@@ -65,7 +65,9 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
     // existingUser.picture = picture|| existingUser.picture;
       
     // await this.userRepository.save(existingUser);
-      
+    if (existingUser.isTwoFactorAuthEnabled === true){
+        return {user: existingUser, success: true};
+    }
     const token = sign({ ...existingUser }, 'secrete');
       return { token, user: existingUser, success: true};
     } else {
@@ -87,7 +89,8 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
         lastName: lastName,
         username: username,
         email: email,
-        picture: picture
+        picture: picture,
+        uniquename: username
     });
       
   // Create a new 'Profile' entity if profile data is provided
@@ -101,11 +104,12 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
    // Assign the related entities to the new user
       if (newProfile) {
         newUser.profile = newProfile;
-      } 
+      }
     const savedUser = await this.userRepository.save(newUser);
+    // if (savedUser.isTwoFactorAuthEnabled === true){
+    //     return savedUser;
+    // }
     const token = sign({ ...savedUser }, 'secrete');
-    // const savedUser = await this.userRepository.save(newUser);
-    // const token = sign({ username: savedUser.username }, 'secrete');
     return { token, user: savedUser, success: true};
   }
 }
@@ -151,16 +155,32 @@ async findUserById(user: Partial<User>): Promise<Partial<any>> {
     try {
       const user = await this.userRepository.findOne({ where: { username: username }});
       if (user) {
-        return await authenticator.verify({
+        const ret =  await authenticator.verify({
           token: twoFactorAuthenticationCode.code,
           secret: user.twoFactorAuthSecret
         });
+        return ret;
       } 
       else {
         throw new Error('User not found.');
       }
     } catch (error) {
       console.error("Error occurred:", error); 
+      throw new Error(`Error two factor auth`);
+    }
+  }
+
+  async generateTocken(username: string){
+    try {
+      const user = await this.userRepository.findOne({ where: { username: username }});
+      if (user) {
+        const token = sign({ ...user }, 'secrete');
+        return { token, user: user, success: true};
+      } 
+      else {
+        throw new Error('User not found.');
+      }
+    } catch (error) {
       throw new Error(`Error two factor auth`);
     }
   }
