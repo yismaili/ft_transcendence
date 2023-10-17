@@ -24,9 +24,9 @@ export default function GetMuteTime({
         <menu className={Style.context__menu}>
           <li
             className={Style.context__menu__opt}
-            onClick={() => setTimeToMute(5)}
+            onClick={() => setTimeToMute(1)}
           >
-            <p>5 min</p>
+            <p>1 min</p>
           </li>
           <li
             className={`${Style.context__menu__opt} ${Style.borders}`}

@@ -36,6 +36,9 @@ export default function GroupMsgContextMenu({
     allGroupUsers.find((user) => user.user.username === friendData.username)
   );
 
+  if (getKicked)
+    var [isBaned, setIsBaned] = useState(getKicked.statusUser === "banned");
+
   const [socket] = useState(
     io("0.0.0.0:3001", {
       extraHeaders: {
@@ -49,7 +52,7 @@ export default function GroupMsgContextMenu({
       kicker?.statusPermissions === "admin" &&
       getKicked?.statusPermissions === "member"
     ) {
-      if (getKicked.statusUser === "banned") {
+      if (isBaned) {
         socket.emit(
           "unbannedUser",
           {
@@ -58,7 +61,12 @@ export default function GroupMsgContextMenu({
             userGetBan: friendData.username,
           },
           (response: any) => {
-            console.log("unbanban", response);
+            if (response.message === "User unbanned successfully") {
+              setIsBaned((prev) => !prev);
+              socket.emit("updateUI", {
+                message: `banUser ${friendData.username}`,
+              });
+            }
           }
         );
       } else {
@@ -70,7 +78,12 @@ export default function GroupMsgContextMenu({
             userGetBan: friendData.username,
           },
           (response: any) => {
-            console.log("ban", response);
+            if (response.message === "User banned successfully") {
+              setIsBaned((prev) => !prev);
+              socket.emit("updateUI", {
+                message: `banUser ${friendData.username}`,
+              });
+            }
           }
         );
       }
@@ -90,7 +103,10 @@ export default function GroupMsgContextMenu({
           userGetkick: friendData.username,
         },
         (response: any) => {
-          console.log("kick User", response);
+          if (response.message == "User kicked successfully")
+            socket.emit("updateUI", {
+              message: `kickUser ${friendData.username}`,
+            });
         }
       );
     }
@@ -111,7 +127,13 @@ export default function GroupMsgContextMenu({
           time: timeToMute,
         },
         (response: any) => {
-          console.log(response);
+          if (response.message === "User muted successfully") {
+            setTimeToMute(0);
+            setIsTimeToMuteOpen((prev) => !prev);
+            socket.emit("updateUI", {
+              message: `muteUser ${friendData.username} ${timeToMute}`,
+            });
+          }
         }
       );
     }
@@ -131,6 +153,11 @@ export default function GroupMsgContextMenu({
         },
         (response: any) => {
           console.log("promote", response);
+          if (response.message === "User unbanned successfully") {
+            socket.emit("updateUI", {
+              message: `changePermission ${friendData.username} ${Data.response.user.username}`,
+            });
+          }
         }
       );
     }
@@ -149,6 +176,15 @@ export default function GroupMsgContextMenu({
     const y = e.clientY;
 
     setTimeMenuPosition({ x, y });
+  };
+
+  const block = () => {
+    if (
+      kicker?.statusPermissions === "admin" &&
+      getKicked?.statusPermissions === "member"
+    ) {
+      socket.emit("")
+    }
   };
 
   return (
@@ -201,9 +237,6 @@ export default function GroupMsgContextMenu({
             onClick={promote}
           >
             <p>Promote to admin</p>
-          </li>
-          <li className={`${Style.context__menu__opt} ${Style.borders}`}>
-            <p>block / unBlock</p>
           </li>
           <li className={`${Style.context__menu__opt} ${Style.borders}`}>
             <p>Play</p>

@@ -25,7 +25,8 @@ export default function LeftChatGroup({
     setMenuOpen((prev) => !prev);
 
     const x = e.clientX;
-    const y = e.clientY;
+    if (e.clientY > 616) var y = e.clientY - 237;
+    else var y = e.clientY;
 
     setMenuPosition({ x, y });
   };

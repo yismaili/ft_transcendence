@@ -34,6 +34,39 @@ export default function Chat() {
   );
 
   useEffect(() => {
+    socket.on("updateUI", (messaged: string) => {
+      console.log(messaged);
+
+      if (messaged.split(" ")[0] === "kickUser") {
+        if (messaged.split(" ")[1] === Data.response.user.username) {
+          setRoom(undefined);
+        }
+      } else if (messaged.split(" ")[0] === "banUser") {
+        if (messaged.split(" ")[1] === Data.response.user.username) {
+          setRoom(undefined);
+        }
+      } else if (messaged.split(" ")[0] === "changePermission") {
+        if (messaged.split(" ")[1] === Data.response.user.username) {
+          setRoom(undefined);
+        }
+        else if (messaged.split(" ")[2] === Data.response.user.username) {
+            setRoom(undefined);
+          }
+      }
+
+      socket.emit(
+        "chatRoomOfUser",
+        {
+          username: Data.response.user.username,
+        },
+        (response: AllRooms[]) => {
+          setAllRooms(response);
+        }
+      );
+    });
+  }, []);
+
+  useEffect(() => {
     socket.emit(
       "chatRoomOfUser",
       {
