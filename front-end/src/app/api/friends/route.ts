@@ -8,7 +8,7 @@ export async function GET() {
   if (token) {
     const cookieObject = JSON.parse(token.value);
     const data = await fetch(
-      `http://backend:3001/users/profile/${cookieObject.response.user.username}/friends`,
+      `http://localhost:3001/users/profile/${cookieObject.response.user.username}/friends`,
       {
         headers: {
           Authorization: `Bearer ${cookieObject.response.token}`,
@@ -30,8 +30,9 @@ export async function POST(req: Request) {
   if (token) {
     const cookieObject = JSON.parse(token.value);
     const data = await fetch(
-      `http://backend:3001/users/profile/${cookieObject.response.user.username}/sendRequest/${res}`,
+      `http://localhost:3001/users/profile/${cookieObject.response.user.username}/sendRequest/${res}`,
       {
+        method: "POST",
         headers: {
           Authorization: `Bearer ${cookieObject.response.token}`,
         },

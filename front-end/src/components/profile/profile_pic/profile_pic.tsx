@@ -1,7 +1,7 @@
+"use client";
 import "@/global_css/resets.css";
 import "@/global_css/utilityClasses.css";
 import "./profile_pic.css";
-import Image from "next/image";
 import Link from "next/link";
 
 interface nums {
@@ -19,12 +19,14 @@ function ProfilePic(props: nums) {
         <div className="test">
           <span
             className="profile__pic"
-            style={{ backgroundImage: `url(${props.user.picture})` }}
+            style={{ backgroundImage: `url(${props.user.data.picture})` }}
           ></span>
-          <span className="profile__level">{props.user.profile.level}</span>
+          <span className="profile__level">
+            {props.user.data.profile.level}
+          </span>
         </div>
       </div>
-      <h3 className="profile__username">{props.user.username}</h3>
+      <h3 className="profile__username">{props.user.data.uniquename}</h3>
     </div>
   );
 }

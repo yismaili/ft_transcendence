@@ -9,7 +9,6 @@ import {Body, Controller,
     UseGuards
    } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { Response} from 'express';
 import { GoogleGuard } from './guard/google.guard';
 import { IntraGuard } from './guard/intra.guard';
 import { JwtAuthGuard } from './guard/jwt.guard';
@@ -20,20 +19,18 @@ import { TwoFactorAuthenticationCodeDto } from './dtos/TwoFactorAuthenticationCo
 import { WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { ChatService } from 'src/chat/chat.service';
+import { Response } from 'express';
+
 
 @Controller('auth')
 export class AuthController {
   @WebSocketServer() server: Server;
     constructor(private readonly authService: AuthService,  private userService: UserService, private chatService: ChatService) {} //we used this constructor for 'Dependency Injection'
-
-    handleConnection(socket: Socket): void {
-        this.chatService.handleConnection(socket);
-    }
-  @Get('all') // decorator is define an HTTP GET endpoint
-  async findAll(): Promise<User[]> {
-    const users = this.authService.findAll()
-    return users;
-  }
+  // @Get('all') // decorator is define an HTTP GET endpoint
+  // async findAll(): Promise<User[]> {
+  //   const users = this.authService.findAll()
+  //   return users;
+  // }
 
   response: any;
   @Get('home')
@@ -42,7 +39,7 @@ export class AuthController {
     return res.status(HttpStatus.OK).json(this.response);
   }
 
-  @UseGuards(GoogleGuard) // route handler add an extra layer of security and control access to certain routes
+  @UseGuards(GoogleGuard)
   @Get('google/callback')
   async googleAuthRedirect( @Req() req: any, @Res() res: Response){
 
@@ -90,41 +87,43 @@ export class AuthController {
  
   @Post('2fa/generate')
   @UseGuards(JwtAuthGuard, JwtStrategy)
-  async register(@Req() @Req() req: any) {
-      const { otpauthUrl } = await this.authService.generateTwoFactorAuthSecret(req.user.username);
+  async register(@Req() req: any) {
+      const { otpauthUrl } = await this.authService.generateTwoFactorAuthSecret(req.user);
       return this.authService.generateQrCodeDataURL(otpauthUrl);
   }
 
   @Post('2fa/turn-on')
   @UseGuards(JwtAuthGuard)
   async turnOnTwoFactorAuthentication(@Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
-    const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
-    if (!isCodeValid) {
+    const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
+    if (isCodeValid === false) {
       throw new UnauthorizedException('Wrong authentication code');
     }
     await this.userService.turnOnTwoFactorAuthentication(request.user.username);
   }
 
-  @Post('2fa/authenticate')
-  @HttpCode(200)
+  @Post('2fa/turn-off')
   @UseGuards(JwtAuthGuard)
-  async authenticate( @Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto, @Res() res: Response) {
+  async turnOffTwoFactorAuthentication(@Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
     const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
+    if (isCodeValid === false) {
+      throw new UnauthorizedException('Wrong authentication code');
+    }
+    await this.userService.turnOffTwoFactorAuthentication(request.user.username);
+  }
+
+@Post('2fa/authenticate')
+  async authenticate(@Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
+    const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, twoFactorAuthenticationCode.username);
     if (!isCodeValid) {
       throw new UnauthorizedException('Wrong authentication code');
     }
-    const user: Partial<User> = {
-      email: request.user.email,
-      firstName: request.user.firstName,
-      lastName: request.user.lastName,
-      picture: request.user.picture
-    };
-
-  const response = await this.authService.googleAuthenticate(user);
-  if (response.success){
-    res.cookie('userData', { response });
-    return res.redirect('/auth/home');
-  }
-    return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
+    const response = await this.authService.generateTocken(twoFactorAuthenticationCode.username);
+    return response;
+    // if (response.success) {
+    //   res.cookie('userData', JSON.stringify(response), { httpOnly: true });
+    //   return res.redirect('/auth/home');
+    // }
+    // return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
   }
 }
