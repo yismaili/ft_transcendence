@@ -10,17 +10,27 @@ export default function FriendRequest() {
     ref.current?.reset();
 
     const content = formData.get("friendName");
-    console.log(content);
+    console.log("ccooo", content);
+
     const sending = await fetch("http://localhost:3000/api/chat", {
       method: "POST",
       body: JSON.stringify(content),
     })
       .then(async (res) => await res.json())
       .then((e) => {
-        if (e === "doesn't exist") setSent(2);
-        else setSent(1);
+        if (e === "doesn't exist") {
+          console.log("first e", e);
+
+          setSent(2);
+        } else {
+          console.log("second e", e);
+          setSent(1);
+        }
       })
-      .catch(() => setSent(2));
+      .catch(() => {
+        console.log('error ----');
+        setSent(2);
+      });
 
     setTimeout(() => {
       setSent(0);

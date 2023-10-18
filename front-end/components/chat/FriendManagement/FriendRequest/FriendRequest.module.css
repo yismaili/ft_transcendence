@@ -1,0 +1,78 @@
+.container {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  height: 2.5rem;
+  background-color: #484855;
+  border-radius: 10px;
+  margin: 2rem auto;
+}
+
+.container form {
+  display: flex;
+  align-items: center;
+  width: 92%;
+  height: 95%;
+}
+
+.container input {
+  background: none;
+  border: none;
+  width: 87%;
+  height: 60%;
+  /* background-color: aqua; */
+  margin-left: 5%;
+  color: whitesmoke;
+  font-weight: 700;
+}
+
+.container input::-webkit-input-placeholder {
+  color: whitesmoke;
+  font-weight: 700;
+  font-size: clamp(0.6rem, 1.6vw, 1.1rem);
+}
+
+.container input:focus {
+  outline: none;
+}
+
+.Searchicon {
+  /* background-color: rgb(255, 0, 81); */
+  background-image: url("/img/chat/search.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.showAllUsers {
+  position: absolute;
+  right: 6%;
+  background-image: url("/img/chat/user.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.users {
+  /* background-color: black; */
+  width: 43%;
+  height: 55%;
+  margin: 0 auto;
+  overflow: auto;
+  cursor: pointer;
+}
+
+.user {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fdfdfd1a;
+  width: 100%;
+  height: 2.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 13px;
+}

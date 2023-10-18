@@ -1,22 +1,15 @@
 import { useState } from "react";
 import Style from "./User.module.css";
 import GroupFriendContextMenu from "./GroupFriendContextMenu/GroupFriendContextMenu";
-import GroupMsgContextMenu from "../../../../GroupMsg/GroupMsgContextMenu/GroupMsgContextMenu";
 
 type props = {
   user: User_Friend;
-  room: AllRooms;
   setOpen: Function;
-  isGroupUsers: boolean;
-  allGroupUsers: allGroupUsers[];
 };
 
 export default function User({
   user,
-  room,
   setOpen,
-  isGroupUsers,
-  allGroupUsers,
 }: props) {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -41,23 +34,12 @@ export default function User({
         <p className={Style.name}>{user.username}</p>
       </div>
       <div className={Style.icon} onClick={handleContextMenu} />
-      {isMenuOpen && !isGroupUsers && (
+      {isMenuOpen && (
         <GroupFriendContextMenu
           setMenuOpen={setMenuOpen}
           menuPosition={menuPosition}
           user={user}
-          room={room}
           setOpen={setOpen}
-        />
-      )}
-      {isMenuOpen && isGroupUsers && (
-        <GroupMsgContextMenu
-          menuPosition={menuPosition}
-          setMenuOpen={setMenuOpen}
-          allGroupUsers={allGroupUsers}
-          friendData={user}
-          room={room}
-          // set open here to fix 
         />
       )}
     </>

@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
     const res = await fetch(
       `http://localhost:3001/users/profile/${Data.response.user.username}/friends`,
       {
+        cache: "no-cache",
         headers: { authorization: `Bearer ${token}` },
       }
     );
@@ -42,8 +43,8 @@ export async function POST(req: Request) {
       }
     );
     const isSent = await data.json();
-    console.log(isSent.statusCode);
-    if (isSent.statusCode != 200) return NextResponse.json("doesn't exist");
+    if (isSent.username !== cookieObject.response.user.username)
+      return NextResponse.json("doesn't exist");
     return NextResponse.json("exist");
   }
   return NextResponse.json({});
