@@ -1,26 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-export async function PUT(req: Request) {
+export async function POST(req: NextRequest) {
     const cookieStore = cookies();
     const token = cookieStore.get("userData");
-    const res = await req.json();
-
+    const res = JSON.stringify({uniquename : await req.json()});
     if (token) {
         const cookieObject = JSON.parse(token.value);
         const data = await fetch(
-          `http://backend:3001/users/profile/${cookieObject.response.user.username}/sendRequest/${res}`,
+          `http://localhost:3001/users/profile/${cookieObject.response.user.username}/addUniquename`,
           {
+            method: "POST",
             headers: {
+              "Content-Type": "application/json",
               Authorization: `Bearer ${cookieObject.response.token}`,
             },
+            body: res,
           }
         );
         const isSent = await data.json();
-        console.log(isSent.statusCode);
-        if(isSent.statusCode != 200)
-          return NextResponse.json("doesn't exist");
-        return NextResponse.json("exist");
+        if(isSent.uniquename)
+          return NextResponse.json("done");
       }
-      return NextResponse.json({});
+      return NextResponse.json("error");
 }

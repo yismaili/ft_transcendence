@@ -1,10 +1,7 @@
-FROM debian:10
+FROM node:14-buster-slim
 
 WORKDIR /app
+RUN npm install --save react react-dom react-scripts
+RUN npm install
 
-RUN apt-get update && apt-get install -y curl
-RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash -
-RUN apt-get install -y nodejs
-RUN npm install next
-
-CMD ["npm", "run", "dev"]
+CMD ["npm", "start"]

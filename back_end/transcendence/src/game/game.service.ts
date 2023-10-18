@@ -14,6 +14,7 @@ import { Socket, Server} from 'socket.io';
 import { SetHistoryDto } from './dto/set-history.dto';
 import { ResultOfGame } from './dto/result-of-game.dto';
 import { verify } from 'jsonwebtoken';
+import { error } from 'console';
 
 @Injectable()
 export class GameService {
@@ -69,14 +70,20 @@ export class GameService {
     async startGame(roomName: string, playerId: Socket, server: Server): Promise<void>{
       const pongGame = new PongGame();
       pongGame.start();
+      const rootUser = this.players.get(roomName)[0];
+      const friendUser = this.players.get(roomName)[1];
 
       // Set up an event listener for 'updateGame' outside the interval
       playerId.on('updateGame', (data) => {
-  console.log(data);
-        pongGame.setDownPressed(data.downPressed);
-        pongGame.setUpPressed(data.upPressed);
-        pongGame.setWPressed(data.wPressed);
-        pongGame.setSPressed(data.sPressed);
+       const user = this.getUser(playerId);
+        if (rootUser == user){
+          pongGame.setDownPressed(data.downPressed);
+          pongGame.setUpPressed(data.upPressed);
+        }
+        if (friendUser == user){
+          pongGame.setWPressed(data.wPressed);
+          pongGame.setSPressed(data.sPressed);
+        }
       });
 
       // Set up an interval to send ball position data to clients
@@ -98,8 +105,6 @@ export class GameService {
         });
 
         if (!pongGame.getStatus()) {
-          const rootUser = this.players.get(roomName)[0];
-          const friendUser = this.players.get(roomName)[1];
           const info: ResultOfGame = {
             username:rootUser,
             competitor: friendUser,
@@ -117,6 +122,48 @@ export class GameService {
       }, 1000 / 100); // 100 frames per second
     }
   
+   getUser(client: Socket){
+
+      const jwtSecret = 'secrete';
+      const token = client.handshake.headers.authorization;
+  
+      if (!token) {
+        client.emit('error', 'Authorization token missing');
+        client.disconnect(true);
+        return;
+      }
+  
+      let decodedToken = verify(token, jwtSecret);
+      const username = decodedToken['username'];
+      return username;
+    }
+
+    async checkRelatonStatus(rootUsername: string, friendUsername: string){
+      try{
+        const rootUser = await this.userRepository.findOne({
+          where: {username: rootUsername},
+        });
+        const friendUser = await this.userRepository.findOne({
+          where: {username: friendUsername}
+        });
+        if (!rootUser){
+          throw new Error ("user not found !!");
+        }
+
+        const relationStatus = await this.relationRepository.findOne({
+          where: [{user: {id: rootUser.id}, friend: {id: friendUser.id}, status: Not('blocked')},
+          {friend: {id: rootUser.id}, user: {id: friendUser.id}, status: Not('blocked')}
+        ]
+        });
+        if (!relationStatus){
+          return (0);
+        }
+        return (1);
+      }catch(error){
+        throw new Error("Error check relation status")
+      }
+    }
+  
     async matchingFriends(createGameDto: CreateGameDto, playerId: Socket, server: Server): Promise<void> {
       try {
         const user = await this.userRepository.findOne({
@@ -132,7 +179,7 @@ export class GameService {
         }
     
         let roomName;
-        console.log(createGameDto);
+        
         // Check if there's an existing room, otherwise create a new one
         for (const [name, playWithFriend] of this.players) {
           if (playWithFriend.length < 2) {
@@ -147,7 +194,6 @@ export class GameService {
     
         // User joins the room
         playerId.join(roomName);
-    
         // Competitor joins the room
         const competitorRoom = this.findCompetitorRoom(competitor.username);
         if (!competitorRoom) {

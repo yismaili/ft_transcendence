@@ -1,8 +1,8 @@
 {
-  "/page": "app/page.js",
-  "/Chat/page": "app/Chat/page.js",
-  "/UserProfile/page": "app/UserProfile/page.js",
   "/Auth/page": "app/Auth/page.js",
-  "/api/friends/route": "app/api/friends/route.js",
-  "/UserProfile/Parameters/page": "app/UserProfile/Parameters/page.js"
+  "/UserProfile/page": "app/UserProfile/page.js",
+  "/MatchMaking/page": "app/MatchMaking/page.js",
+  "/api/home/route": "app/api/home/route.js",
+  "/UserProfile/Parameters/page": "app/UserProfile/Parameters/page.js",
+  "/api/updateProfile/2fa/generating/route": "app/api/updateProfile/2fa/generating/route.js"
 }

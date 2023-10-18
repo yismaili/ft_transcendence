@@ -1,30 +1,21 @@
-import {Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
+import {Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserDto } from 'src/auth/dtos/user.dto';
 import { AchievementDto } from 'src/auth/dtos/achievement.dto';
 import { HistoryDto } from 'src/auth/dtos/history.dto';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 import { RelationDto } from 'src/auth/dtos/relation.dto';
-import { OutcomeDto} from 'src/auth/dtos/outcome.dto';
 import { updateProfileDto } from 'src/auth/dtos/updateProfile.dto';
-import { AchievementParams, HistoryParams, IAuthenticate, ProfileParams, RelationParams, UserParams } from 'utils/types';
-import { WebSocketServer } from '@nestjs/websockets';
-import { Socket, Server } from 'socket.io';
-import { ChatService } from 'src/chat/chat.service';
+import { IAuthenticate } from './utils/types';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerOptions } from './multer.config';
+import { Response } from 'express';
+
 
 @Controller('users')
 export class UserController {
-    // @WebSocketServer() server: Server;
-    // handleConnection(socket: Socket): void {
-    //     this.chatService.handleConnection(socket);
-    // }
-    constructor(private userService: UserService, private chatService: ChatService){}
-    
-    // @Get(':username')
-    // async getDetailsUser(@Param('username') username: string):Promise<any>{
-    //    return this.userService.findProfileByUsername(username);
-    // }
+    constructor(private userService: UserService)
+    {}
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username')
@@ -33,46 +24,95 @@ export class UserController {
         if (authorization.username == username){
             return this.userService.findProfileByUsername(username);
         }
-        else{
+         else{
             throw new ForbiddenException();
         }
     }
-
-    // @UseGuards(JwtAuthGuard, JwtStrategy)
-    // @Put('profile/:username/updateOutcome')
-    // async updateProfileOutcome(@Req() req, @Param('username') username: string, @Body() updateProfileDto:OutcomeDto) : Promise<ProfileParams>{
-    //     const authorization = req.user;
-    //     if (authorization.username == username){
-    //         return this.userService.updateProfileOutcomeByUsername(username, updateProfileDto); 
-    //     }
-    //     else{
-    //         throw new ForbiddenException();
-    //     }
-    // }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/updateProfile')
-    async updateProfileDetails(@Req() req, @Param('username') username: string, @Body() updateProfileDto: updateProfileDto) : Promise<IAuthenticate>{
+    @UseInterceptors(FileInterceptor('image', multerOptions))
+    async updateProfileDetails(
+    @Req() req,
+    @Param('username') username: string,
+    @Body() userData ,
+    @UploadedFile() imageData,
+   // @Res() res: Response
+    ): Promise<any> {
+    const authorization = req.user;
+    if (authorization.username === username) {
+        if (!imageData) {
+        throw new Error('No image file provided.');
+        }
+        // const response = await this.userService.updateProfileByUsername(username, userData, imageData);
+        // res.cookie('userData', response);
+        // return response;
+        return await this.userService.updateProfileByUsername(username, userData, imageData);
+    } else {
+        throw new ForbiddenException();
+    }
+    }
+
+    /*@UseGuards(JwtAuthGuard, JwtStrategy)
+    @Put('profile/:username/updateProfile')
+    @UseInterceptors(FileInterceptor('image', multerOptions))
+    async updateProfileDetails(
+    @Req() req,
+    @Param('username') username: string,
+    @Body() userData,
+    @UploadedFile() imageData,
+   // @Res() res: Response
+    ): Promise<any> {
+    const authorization = req.user;
+    if (authorization.username === username) {
+        if (!imageData) {
+        throw new Error('No image file provided.');
+        }
+        // const response = await this.userService.updateProfileByUsername(username, userData, imageData);
+        // res.cookie('userData', response);
+        // return response;
+        return await this.userService.updateProfileByUsername(username, userData, imageData);
+    } else {
+        throw new ForbiddenException();
+    }
+    }*/
+
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Post('profile/:username/addUniquename')
+    async addUniquename(@Req() req, @Param('username') username: string, @Body() uniquename) : Promise<any>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.updateProfileByUsername(username, updateProfileDto); 
+            return this.userService.addUniquename(username,uniquename.uniquename); 
         }
         else{
             throw new ForbiddenException();
         }
     }
 
-    // @UseGuards(JwtAuthGuard, JwtStrategy)
-    // @Post('profile/:username/history')
-    // async addHistory(@Req() req, @Param('username') username: string, @Body() historyDto:HistoryDto): Promise<HistoryParams>{
-    //     const authorization = req.user;
-    //     if (authorization.username == username){
-    //         return this.userService.addHistoryByUsername(username, historyDto); 
-    //     }
-    //     else{
-    //         throw new ForbiddenException();
-    //     }
-    // }
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/searchTofriend/:secondUsername')
+    async searchToFrindByUsername(@Req() req, @Param('username') username: string, @Param('secondUsername') secondUsername: string): Promise<any>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.searchToFrindByUsername(username, secondUsername); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/searchTouser/:secondUsername')
+    async searchToUserByUsername(@Req() req, @Param('username') username: string, @Param('secondUsername') secondUsername: string): Promise<any>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.searchToUserByUsername(username, secondUsername); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username/history')
@@ -86,17 +126,17 @@ export class UserController {
         }
     }
     
-    // @UseGuards(JwtAuthGuard, JwtStrategy)
-    // @Post('profile/:username/achievements')
-    // async addAchievementOfUser(@Req() req, @Param('username') username: string, @Body() achievementDto:AchievementDto): Promise<AchievementParams>{
-    //     const authorization = req.user;
-    //     if(authorization.username == username){
-    //         return this.userService.addAchievementOfUser(username, achievementDto);
-    //     }
-    //     else{
-    //         throw new ForbiddenException();
-    //     }
-    // }
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Post('profile/:username/achievements')
+    async addAchievementOfUser(@Req() req, @Param('username') username: string, @Body() achievementDto:AchievementDto): Promise<any>{
+        const authorization = req.user;
+        if(authorization.username == username){
+            return this.userService.addAchievementOfUser(username, achievementDto);
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username/achievements')
@@ -112,7 +152,7 @@ export class UserController {
    
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Post('profile/:username/sendRequest/:secondUsername')
-    async sendRequest(@Req() req, @Param('username') username: string, @Param('secondUsername') secondUsername: string): Promise<RelationParams>{
+    async sendRequest(@Req() req, @Param('username') username: string, @Param('secondUsername') secondUsername: string): Promise<any>{
         const authorization = req.user;
         if(authorization.username == username){
             return this.userService.sendRequest(username, secondUsername);
@@ -197,7 +237,7 @@ export class UserController {
     
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Put('profile/:username/acceptRequest/:secondUser')
-    async acceptRequist(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<RelationParams>{
+    async acceptRequist(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<any>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.acceptRequest(username, secondUser); 
@@ -209,7 +249,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Delete('profile/:username/rejectRequest/:secondUser')
-    async rejectRequist(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<RelationParams>{
+    async rejectRequist(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<any>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.rejectRequest(username, secondUser); 
@@ -221,7 +261,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Delete('profile/:username/cancelRequest/:secondUser')
-    async cancelRequist(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<RelationParams>{
+    async cancelRequist(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<any>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.cancelRequist(username, secondUser); 
@@ -233,7 +273,7 @@ export class UserController {
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Delete('profile/:username/cancelRelation/:secondUser')
-    async cancelRelation(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<RelationParams>{
+    async cancelRelation(@Req() req, @Param('username') username: string, @Param('secondUser') secondUser: string): Promise<any>{
         const authorization = req.user;
         if (authorization.username == username){
             return this.userService.cancelRelation(username, secondUser); 
@@ -254,15 +294,4 @@ export class UserController {
             throw new ForbiddenException();
         }
     }
-    // @UseGuards(JwtAuthGuard, JwtStrategy)
-    // @Get('profile/:username/suggest')
-    // async suggestOfUser(@Req() req, @Param('username') username: string, @Param('relationId') relationId: number): Promise<RelationDto[]>{
-    //     const authorization = req.user;
-    //     if (authorization.username == username){
-    //         return this.userService.findAllSuggestOfUser(username); 
-    //     }
-    //     else{
-    //         throw new ForbiddenException();
-    //     }
-    // }
 }

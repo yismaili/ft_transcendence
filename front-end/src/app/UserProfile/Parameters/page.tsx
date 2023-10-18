@@ -1,30 +1,30 @@
-import PicEdit from "@/components/profile/Parameters/profile_pic_edit/pic_edit";
+"use client"
 import "@/global_css/resets.css";
 import "@/global_css/utilityClasses.css";
-import getUser from "@/lib/getUser";
-import { cookies } from "next/headers";
-import ProfileEdit from "@/components/profile/Parameters/username_2fa/Profile_edit";
-import Logout from "@/components/profile/Parameters/logout/logout";
 import "@/components/profile/Parameters/params.css";
+import EditProfile from "@/components/profile/Parameters/editing/editingProfile";
+import { useState, useEffect } from "react";
 
-export default async function Parametters() {
-  const cookie = cookies().get("userData");
-  console.log(cookie);
-  if (cookie) {
-    console.log("test");
-    const userData: Promise<User> = getUser(cookie.value);
-    const user = await userData;
-    return (
-      <div className="container">
-        <div className="params__container">
-          <PicEdit user={user} />
-          <div className="options__container">
-            <ProfileEdit user={user} />
-            <Logout />
-          </div>
-        </div>
+export default function Parametters() {
+let [user, setUser] = useState<User>();
+let [edit, setEdited] = useState(false);
+
+  useEffect(() => {
+    const fetching = async () => {
+      const res = await fetch("http://localhost:3000/api/home");
+      const user = await res.json();
+      setUser(user);
+      setEdited(false);
+    };
+    fetching();
+  }, [edit]);
+    if(user)
+    {
+      return (
+      <div className="test__container">
+        <EditProfile user={user} update={setEdited}/>
       </div>
-    );
+      );    
   }
   return <></>;
 }

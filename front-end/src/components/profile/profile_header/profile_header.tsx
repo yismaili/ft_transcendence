@@ -1,3 +1,4 @@
+"use client"
 import "@/global_css/resets.css";
 import "@/global_css/utilityClasses.css";
 import "./App-header.css";

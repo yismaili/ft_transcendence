@@ -20,9 +20,13 @@ function AuthSection(){
                 if(mycookie)
                 {
                     let cookie = mycookie.slice(2);
+                    let cookieval = JSON.parse(cookie);
                     cookies.set("userData", cookie);
                     auth_window?.close();
-                    router.push("http://localhost:3000/UserProfile");
+                    if(cookieval.response.user.isTwoFactorAuthEnabled)
+                        router.push("http://localhost:3000/Auth/2FA");
+                    else
+                        router.push("http://localhost:3000/UserProfile");
                     clearInterval(interval);
                 }        
             }, 1000);
