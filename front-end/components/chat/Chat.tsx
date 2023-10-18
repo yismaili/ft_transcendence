@@ -1,6 +1,6 @@
 "use client";
 import NewGroupSetting from "./NewGroupSetting/NewGroupSetting";
-import FriendRequest from "./FriendRequest/FriendRequest";
+import FriendManagement from "./FriendManagement/FriendManagement";
 import SlideButton from "./SlideButton/SlideButton";
 import { io, Socket } from "socket.io-client";
 import { useEffect, useState } from "react";
@@ -20,7 +20,6 @@ export default function Chat() {
   const [groupInput, setGroupInput] = useState<GroupInput>();
   const [allRooms, setAllRooms] = useState<AllRooms[]>();
   const [room, setRoom] = useState<AllRooms>();
-  // const [updateChatRoom, setUpdateChatRoom] = useState(false);
 
   const cookies = new Cookies();
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
@@ -48,10 +47,15 @@ export default function Chat() {
       } else if (messaged.split(" ")[0] === "changePermission") {
         if (messaged.split(" ")[1] === Data.response.user.username) {
           setRoom(undefined);
+        } else if (messaged.split(" ")[2] === Data.response.user.username) {
+          setRoom(undefined);
         }
-        else if (messaged.split(" ")[2] === Data.response.user.username) {
-            setRoom(undefined);
-          }
+      } else if (messaged.split(" ")[0] === "changeFriend") {
+        if (messaged.split(" ")[1] === Data.response.user.username) {
+          fetching();
+        } else if (messaged.split(" ")[2] === Data.response.user.username) {
+          fetching();
+        }
       }
 
       socket.emit(
@@ -64,6 +68,8 @@ export default function Chat() {
         }
       );
     });
+
+    fetching();
   }, []);
 
   useEffect(() => {
@@ -103,18 +109,15 @@ export default function Chat() {
     }
   }, [groupInput]);
 
-  useEffect(() => {
-    const fetching = async () => {
-      const resFriend = await fetch("http://localhost:3000/api/chat");
-      const friend = await resFriend.json();
-      setFriends(friend);
+  const fetching = async () => {
+    const resFriend = await fetch("http://localhost:3000/api/chat");
+    const friend = await resFriend.json();
+    setFriends(friend);
 
-      const resUser = await fetch("http://localhost:3000/api/home");
-      const user = await resUser.json();
-      setUser(user);
-    };
-    fetching();
-  }, []);
+    const resUser = await fetch("http://localhost:3000/api/home");
+    const user = await resUser.json();
+    setUser(user);
+  };
 
   const turnSwitch = () => {
     setGroup(!isGroup);
@@ -194,7 +197,7 @@ export default function Chat() {
           {isGroup ? (
             <NewGroupSetting setGroupInput={setGroupInput} />
           ) : (
-            <FriendRequest />
+            <FriendManagement setGroupInput={setGroupInput} friends={friends} />
           )}
         </div>
         <div className={Style.right} key={!isGroup ? userFriend?.id : room?.id}>

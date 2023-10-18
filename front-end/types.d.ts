@@ -111,3 +111,9 @@ type FriendUser = {
   email: string;
   profile: Profile;
 };
+
+type FriendRequest = {
+  id: number;
+  status: string;
+  user: User_Friend;
+};

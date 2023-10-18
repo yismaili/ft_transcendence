@@ -32,7 +32,7 @@ export default function InputChatGroup({ room }: props) {
       (response: allGroupUsers[]) => {
         response.find((user) => {
           if (user.user.username === Data.response.user.username)
-            if (user.statusUser == "member")
+            if (user.statusUser == "member" || user.statusUser == "muted")
               socket.emit("sendMessageToChatRoom", {
                 message: message,
                 username: Data.response.user.username,
