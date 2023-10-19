@@ -188,8 +188,7 @@ const leaveChatRoom = () => {
   });
 }
 const deleteChatRoom = () => {
-  socket.emit('deleteChatRoom', {username: user, chatRoomName: chatRoomName}, (response) => {
-  });
+  socket.emit('deleteChatRoom', {username: user, chatRoomName: chatRoomName});
 }
 
 const getAllChatRoom = () => {
@@ -338,6 +337,7 @@ return (
               <button onClick={() => changePermission()}>change Permission</button>
               <button onClick={() => leaveChatRoom()}>leave ChatRoom</button>
               <button onClick={() => getAllUserOfChatRoom()}>User Of ChatRoom</button>
+              <button onClick={() => deleteChatRoom()}>Delete</button>
            </spam>
             <label> user: </label>
             <input value={users} onChange={(h) => setUsers(h.target.value)} />
@@ -375,9 +375,6 @@ return (
                 onChange={(e) => setMessageTextToChatRoom(e.target.value)}
                 onInput={emitTyping}
               />
-                <span>
-                      <button onClick={() => deleteChatRoom()}>Delete</button>
-                </span>
               <button type="submit">Send</button>
             </form>
           </div>
