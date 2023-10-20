@@ -134,25 +134,18 @@ class PongGame {
     private GameId: number;
     private intervalId: NodeJS.Timeout | null;
     private ntvBtn:  HTMLElement | null;
+    private cancelBtn:  HTMLElement | null;
 
     constructor() {
         this.canvas = new Canvas();
         // Establish a socket.io connection
         this.socket = io("http://localhost:3001", {
             extraHeaders: {
-              Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inlpc21haWxpIiwiZmlyc3ROYW1lIjoieW91bmVzIiwibGFzdE5hbWUiOiJpc21haWxpIiwiZW1haWwiOiJ5aXNtYWlsaTEzMzdAZ21haWwuY29tIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0p5b1AtQm5mNzFVNUpwMHBYTl9pTFIwcHRYMlZZeGdMR2VzT0JOSUppVjlnPXM5Ni1jIiwicHJvZmlsZSI6eyJzY29yZSI6MCwibG9zIjowLCJ3aW4iOjAsInhwIjowLCJsZXZlbCI6MCwiaWQiOjN9LCJzdGF0dXMiOm51bGwsInR3b0ZhY3RvckF1dGhTZWNyZXQiOm51bGwsImlkIjozLCJpc1R3b0ZhY3RvckF1dGhFbmFibGVkIjpmYWxzZSwiaWF0IjoxNjk2MDkwNTY2fQ.C6zgTQ6etizjTF9b1n4yDofPyPjNhzvdMyBYPwep9-M'}
-
+              Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ5aXNtYWlsaSIsImZpcnN0TmFtZSI6InlvdW5lc3NzcyIsImxhc3ROYW1lIjoiaXNtYWlsaSIsInVuaXF1ZW5hbWUiOiJ5aXNtYWlsaSIsImVtYWlsIjoieWlzbWFpbGkxMzM3QGdtYWlsLmNvbSIsInBpY3R1cmUiOiJodHRwOi8vcmVzLmNsb3VkaW5hcnkuY29tL2RveW1xcHlmay9pbWFnZS91cGxvYWQvdjE2OTc3MTEyNDQvb2x5bXBpY19mbGFnLnBuZyIsInN0YXR1cyI6Im9mZmxpbmUiLCJ0d29GYWN0b3JBdXRoU2VjcmV0IjpudWxsLCJpc1R3b0ZhY3RvckF1dGhFbmFibGVkIjpmYWxzZSwicHJvZmlsZSI6eyJpZCI6MSwic2NvcmUiOjg1MiwibG9zIjoxNywid2luIjoxNSwieHAiOjEyLCJsZXZlbCI6MTEzfSwiaWF0IjoxNjk3NzcyOTE0fQ.tmYRcHl7vvGWeNLAhSr77vPsGno3v4DEl99Cwegzpw4'
+            }
         });
         this.ballX = this.canvas.getWidth() / 2;
         this.ballY = this.canvas.getHeight() / 2;
-
-
-
-
-
-
-
-        
         this.ballSpeedX = 10;
         this.ballSpeedY = 10;
         this.ballRadius = 10;
@@ -179,6 +172,7 @@ class PongGame {
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
         this.JoinBtn = document.getElementById('joinGame-btn');
         this.ntvBtn = document.getElementById('ntv-btn');
+        this.cancelBtn = document.getElementById('cancel-btn');
         // Add keyboard event listeners
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
@@ -190,6 +184,9 @@ class PongGame {
         }
         if (this.ntvBtn){
             this.ntvBtn.addEventListener('click', this. acceptRequest.bind(this));
+        }
+        if (this.cancelBtn){
+            this.cancelBtn.addEventListener('click', this.cancelReq.bind(this));
         }
     }
 
@@ -229,7 +226,7 @@ class PongGame {
     update() {
         // clean canvas 
         this.canvas.clearCanvas();
-        this.socket.emit('updateGame', {sPressed:this.sPressed, wPressed:this.wPressed, upPressed:this.upPressed, downPressed: this.downPressed});         
+        this.socket.emit('updateGame', {sPressed:this.sPressed, wPressed:this.wPressed, upPressed:this.upPressed, downPressed: this.downPressed, username: this.username?.value});         
         this.socket.on('updateGame',(response: {ballX: number, ballY: number, leftPaddle:number, 
             rightPaddle:number, leftPlayerScore:number, rightPlayerScore: number}) => { 
             this.ballX = response.ballX;
@@ -267,6 +264,9 @@ class PongGame {
         const res = true;
         this.socket.emit("responseFromFriend", res);
     }
+    cancelReq() {
+        this.socket.emit("cancelGame", {cancel: true});
+    }
       
 }
 
@@ -274,6 +274,9 @@ const pongGame = new PongGame();
 pongGame.start();
 
 pongGame.socket.on('inviteFriend', (response: {usernam: string, roomName: string }) => {
+    console.log(response);
+  });
+  pongGame.socket.on('players', (response: {rootUsre: string, friendUser: string }) => {
     console.log(response);
   });
         
