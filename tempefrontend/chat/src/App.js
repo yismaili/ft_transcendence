@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import './App.css';
 
 const ChatApp = () => {
-  const [socket] = useState(io('0.0.0.0:3001', {
+  const [socket] = useState(io('0.0.0.0:3001/chat', {
     extraHeaders: {
       Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inlpc21haWxpIiwiZmlyc3ROYW1lIjoieW91bmVzIiwibGFzdE5hbWUiOiJpc21haWxpIiwiZW1haWwiOiJ5aXNtYWlsaTEzMzdAZ21haWwuY29tIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0p5b1AtQm5mNzFVNUpwMHBYTl9pTFIwcHRYMlZZeGdMR2VzT0JOSUppVjlnPXM5Ni1jIiwicHJvZmlsZSI6eyJzY29yZSI6MCwibG9zIjowLCJ3aW4iOjAsInhwIjowLCJsZXZlbCI6MCwiaWQiOjN9LCJzdGF0dXMiOm51bGwsInR3b0ZhY3RvckF1dGhTZWNyZXQiOm51bGwsImlkIjozLCJpc1R3b0ZhY3RvckF1dGhFbmFibGVkIjpmYWxzZSwiaWF0IjoxNjk2MDkwNTY2fQ.C6zgTQ6etizjTF9b1n4yDofPyPjNhzvdMyBYPwep9-M'
     }
