@@ -1,0 +1,115 @@
+.container {
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-left: 0.8rem;
+  background-image: url("/img/chat/add.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}
+
+.backDrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.434);
+  z-index: 50;
+  cursor: pointer;
+}
+
+.popUpContainer {
+  position: absolute;
+  margin: auto;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background-color: #292944;
+  z-index: 100;
+  border-radius: 60px;
+}
+
+.closeImg {
+  position: absolute;
+  right: 3.5%;
+  top: 3.5%;
+  background-image: url("/img/chat/close.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+}
+
+.avatar {
+  /* position: relative;
+  left: 50%;
+  top: 16%;
+  transform: translate(-50%, -50%);
+  background-image: url("/img/home/avatar.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  clip-path: circle(36.5% at 50% 30%); */
+  width: clamp(1rem, 20%, 13rem);
+  height: clamp(1rem, 27%, 13rem);
+}
+
+.changeImg {
+  position: absolute;
+  right: 13%;
+  top: 6%;
+  background-image: url("/img/chat/modifyImg.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: clamp(0.5rem, 20%, 13rem);
+  height: clamp(0.5rem, 25%, 13rem);
+  cursor: pointer;
+}
+
+.main {
+  width: 94%;
+  height: 60%;
+  margin: 1rem 3%;
+  margin-top: 4%;
+  border-radius: 60px;
+	background-color: #1D1D2D;
+}
+
+.header {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 15%;
+	border-radius: 60px;
+}
+
+.groupBtn,
+.usersBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+	cursor: pointer;
+}
+
+.groupBtn p,
+.usersBtn p {
+  font-family: "Inter";
+  font-size: clamp(1rem, 2vw, 1.8rem);
+  font-weight: 700;
+  color: whitesmoke;
+  user-select: none;
+}
+
+.OnLeft {
+  background-color: #ffffff1a;
+  border-radius: 60px 0 0 0;
+}
+
+.OnRight {
+  background-color: #ffffff1a;
+  border-radius: 0 60px 0 0;
+}

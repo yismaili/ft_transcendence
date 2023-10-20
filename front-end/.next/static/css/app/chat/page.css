@@ -1,0 +1,2545 @@
+/*!*************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./styles/global.css ***!
+  \*************************************************************************************************************************************************************************************************************************************************************/
+@font-face {
+  font-family: probert;
+  src: url(/_next/static/media/Probert.842c7909.otf);
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: probert;
+  src: url(/_next/static/media/Probert_Bold.7d83df17.otf);
+  font-weight: bold;
+}
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.container {
+  max-width: 1728px;
+  margin: 0 auto;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/NewGroupSetting/NewGroupInput/NewGroupInput.module.css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************/
+.NewGroupInput_container__6sCzj {
+  /* display: flex;
+  align-items: center;
+  justify-self: center; */
+  width: 92%;
+  height: 80%;
+  /* background-color: violet; */
+  margin: 0 auto;
+}
+
+.NewGroupInput_container__6sCzj label {
+  display: block;
+  color: #b6bac0;
+  font-family: "probert";
+  font-weight: 900;
+  letter-spacing: 0.1rem;
+  font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+}
+
+.NewGroupInput_subContainer__UAWQQ {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  /* background-color: aqua; */
+  padding: 1.3rem 0;
+}
+
+.NewGroupInput_container__6sCzj input {
+  text-align: center;
+  background: none;
+  border: 2px solid #262639db;
+  border-radius: 6px;
+  outline: none;
+  cursor: default;
+  /* background-color: black; */
+  /* width: 30%; */
+  height: 1.5rem;
+  margin-top: 0.5rem;
+  cursor: text;
+  color: #f5f5f5e2;
+  font-family: "Inter";
+  font-weight: 500;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  padding: 0.2rem 0;
+}
+
+.NewGroupInput_container__6sCzj input::placeholder {
+  color: #f2f3f580;
+  font-family: "Inter";
+  font-weight: 500;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+}
+
+.NewGroupInput_container__6sCzj button {
+  background-color: #2b2d31;
+  border: none;
+  border-radius: 7px;
+  color: #fff;
+  padding: 0.5em 1.5em;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.NewGroupInput_subContainer__UAWQQ select {
+  background-color: #000000;
+  background: none;
+  text-align: center;
+  color: #f2f3f580;
+  border: none;
+  font-size: clamp(0.7rem, 1.7vw, 1.2rem);
+  width: clamp(170px, 30%, 236px);
+  outline: none;
+  cursor: pointer;
+}
+
+.NewGroupInput_forBorder__rlJl_ {
+  display: flex;
+  justify-content: space-around;
+  margin-right: 0rem;
+  width: clamp(10.6rem, 30%, 14.5rem);
+  height: 1.5rem;
+  border-radius: 6px;
+  border: 2px solid #262639db;
+  padding: .5rem 0;
+}
+
+#NewGroupInput_create_group__tSwGn {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(7rem, 7vw, 6rem);
+  transform: translate(-50%);
+  background-color: #36ab4b;
+  border-radius: 20px;
+  padding: 0.3em 2em;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+}
+
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/NewGroupSetting/GroupManagement/Room/GroupFriendContextMenu/GroupFriendContextMenu.module.css ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.GroupFriendContextMenu_backDrop_____UWULL {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  cursor: default;
+}
+
+.GroupFriendContextMenu_context__3X7ER{
+  position: fixed;
+  z-index: 4;
+  background-color: #292944;
+  color: #FFFADE;
+  border-radius: 16px;
+}
+
+.GroupFriendContextMenu_context__menu__mNtiP{
+  list-style-type: none;
+  font-size: 1.5rem;
+  padding-bottom: .25rem;
+}
+
+.GroupFriendContextMenu_context__menu__opt__tw1K0{
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1.5rem;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.GroupFriendContextMenu_borders__KoEOI{
+  border-top-style: solid;
+  border-color: #C0B7B7;
+  border-width: 2px;
+  border-radius: 2px;
+}
+
+.GroupFriendContextMenu_context__menu__opt__icon__Wilf5{
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 1rem;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.GroupFriendContextMenu_Battle__g7w_i{
+  background-image: url("/img/chat/battle.png");
+}
+
+.GroupFriendContextMenu_Profile__9TxTo{
+  background-image: url("/img/chat/profile_icon.png");
+}
+
+.GroupFriendContextMenu_Block__qtB_c{
+      background-image: url("/img/chat/block.png");
+}
+
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/NewGroupSetting/GroupManagement/Room/ProtectedGroup/ProtectedGroup.module.css ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.ProtectedGroup_auth__card__Y98HH {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 380px;
+  margin: 10rem auto;
+  align-items: center;
+  background-color: rgb(20, 20, 59);
+  font-size: 1.5rem;
+  color: #6f6fa5;
+  font-weight: 700;
+  border-radius: 16px;
+  border-style: solid;
+  border-color: black;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  z-index: 1;
+}
+
+.ProtectedGroup_auth__msg__GLtb3 {
+  text-align: center;
+  line-height: 1;
+  letter-spacing: 0.1rem;
+  margin: 1rem 0;
+}
+
+.ProtectedGroup_auth__credentials__WOzOr {
+  display: flex;
+  width: 250px;
+  flex-direction: column;
+}
+
+.ProtectedGroup_auth__credentials__WOzOr form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 2rem;
+  background-color: #c1b8ed99;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.ProtectedGroup_auth__credentials__WOzOr input {
+  background: none;
+  border: 2px;
+  width: 87%;
+  height: 60%;
+  margin-left: 5%;
+  color: #edeeff;
+  font-weight: 700;
+}
+
+.ProtectedGroup_auth__credentials__WOzOr input::-webkit-input-placeholder {
+  color: #edeeff;
+  font-weight: 700;
+  font-size: clamp(0.6rem, 1.6vw, 1.1rem);
+}
+
+.ProtectedGroup_auth__credentials__WOzOr input:focus {
+  outline: none;
+}
+
+.ProtectedGroup_auth__btn__WI9r_ {
+  color: #edeeff;
+  font-size: 1.2rem;
+  text-transform: capitalize;
+  margin: 1rem auto;
+  border: 2px solid #6f6fa5;
+  background-color: #23234aba;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 10rem;
+  height: 2rem;
+}
+
+.ProtectedGroup_auth__btn__WI9r_:hover {
+  background-color: #c1b8ed99;
+}
+
+.ProtectedGroup_falsePassword__5q8xr {
+  border: 2px solid red;
+}
+
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/NewGroupSetting/GroupManagement/Room/Room.module.css ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************/
+.Room_firstChild__oPSfe {
+  display: flex;
+  align-items: center;
+}
+
+.Room_avatar__plb7E {
+  background-image: url("/img/home/avatar.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  -webkit-clip-path: circle(48% at 50% 50%);
+          clip-path: circle(48% at 50% 50%);
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.5rem;
+}
+
+.Room_name__zcdOm {
+  color: #f2f3f5;
+  font-size: clamp(0.5rem, 1.5vw, 1rem);
+  font-family: "probert";
+  letter-spacing: 0.15rem;
+  font-weight: 700;
+  margin-left: 1rem;
+}
+
+.Room_icon__wUThd {
+  background-image: url("/img/chat/icon.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 5%;
+}
+
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/NewGroupSetting/GroupManagement/GroupManagement.module.css ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************/
+.GroupManagement_container__5YIwo {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  height: 2.5rem;
+  background-color: #484855;
+  border-radius: 10px;
+  margin: 2rem auto;
+}
+
+.GroupManagement_container__5YIwo form {
+  display: flex;
+  align-items: center;
+  width: 92%;
+  height: 95%;
+}
+
+.GroupManagement_container__5YIwo input {
+  background: none;
+  border: none;
+  width: 87%;
+  height: 60%;
+  /* background-color: aqua; */
+  margin-left: 5%;
+  color: whitesmoke;
+  font-weight: 700;
+}
+
+.GroupManagement_container__5YIwo input::-webkit-input-placeholder {
+  color: whitesmoke;
+  font-weight: 700;
+  font-size: clamp(0.6rem, 1.6vw, 1.1rem);
+}
+
+.GroupManagement_container__5YIwo input:focus {
+  outline: none;
+}
+
+.GroupManagement_Searchicon___L2Gr {
+  /* background-color: rgb(255, 0, 81); */
+  background-image: url("/img/chat/search.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.GroupManagement_users__vy8V9 {
+  /* background-color: black; */
+  width: 43%;
+  height: 55%;
+  margin: 0 auto;
+  overflow: auto;
+  cursor: pointer;
+}
+
+.GroupManagement_user__BarTv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fdfdfd1a;
+  width: 100%;
+  height: 2.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 13px;
+}
+
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/NewGroupSetting/NewGroupSetting.module.css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************/
+.NewGroupSetting_container__caDnD {
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-left: 0.8rem;
+  background-image: url("/img/chat/add.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}
+
+.NewGroupSetting_backDrop__XhWER {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.434);
+  z-index: 50;
+  cursor: pointer;
+}
+
+.NewGroupSetting_popUpContainer__Xuc5K {
+  position: absolute;
+  margin: auto;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background-color: #292944;
+  z-index: 100;
+  border-radius: 60px;
+}
+
+.NewGroupSetting_closeImg__3lChb {
+  position: absolute;
+  right: 3.5%;
+  top: 3.5%;
+  background-image: url("/img/chat/close.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+}
+
+.NewGroupSetting_avatar__GrnYH {
+  position: relative;
+  left: 50%;
+  top: 16%;
+  transform: translate(-50%, -50%);
+  background-image: url("/img/home/avatar.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  -webkit-clip-path: circle(36.5% at 50% 30%);
+          clip-path: circle(36.5% at 50% 30%);
+  width: clamp(1rem, 20%, 13rem);
+  height: clamp(1rem, 27%, 13rem);
+}
+
+.NewGroupSetting_changeImg___Cv3P {
+  position: absolute;
+  right: 13%;
+  top: 6%;
+  background-image: url("/img/chat/modifyImg.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: clamp(0.5rem, 20%, 13rem);
+  height: clamp(0.5rem, 25%, 13rem);
+  cursor: pointer;
+}
+
+.NewGroupSetting_main__s_cj3 {
+  width: 94%;
+  height: 60%;
+  margin: 1rem 3%;
+  margin-top: 4%;
+  border-radius: 60px;
+	background-color: #1D1D2D;
+}
+
+.NewGroupSetting_header__GINpG {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 15%;
+	border-radius: 60px;
+}
+
+.NewGroupSetting_groupBtn__LAV6o,
+.NewGroupSetting_usersBtn__7tO_U {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+	cursor: pointer;
+}
+
+.NewGroupSetting_groupBtn__LAV6o p,
+.NewGroupSetting_usersBtn__7tO_U p {
+  font-family: "Inter";
+  font-size: clamp(1rem, 2vw, 1.8rem);
+  font-weight: 700;
+  color: whitesmoke;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.NewGroupSetting_OnLeft___SGqa {
+  background-color: #ffffff1a;
+  border-radius: 60px 0 0 0;
+}
+
+.NewGroupSetting_OnRight___Piuu {
+  background-color: #ffffff1a;
+  border-radius: 0 60px 0 0;
+}
+
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/FriendManagement/FriendRequest/user/GroupFriendContextMenu/GroupFriendContextMenu.module.css ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.GroupFriendContextMenu_backDrop_____hN7fg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  cursor: default;
+}
+
+.GroupFriendContextMenu_context__cE0Wr{
+  position: fixed;
+  z-index: 4;
+  background-color: #292944;
+  color: #FFFADE;
+  border-radius: 16px;
+}
+
+.GroupFriendContextMenu_context__menu__yK2n6{
+  list-style-type: none;
+  font-size: 1.5rem;
+  padding-bottom: .25rem;
+}
+
+.GroupFriendContextMenu_context__menu__opt__AvJIU{
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1.5rem;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.GroupFriendContextMenu_borders__nHUD_{
+  border-top-style: solid;
+  border-color: #C0B7B7;
+  border-width: 2px;
+  border-radius: 2px;
+}
+
+.GroupFriendContextMenu_context__menu__opt__icon__0zPBM{
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 1rem;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.GroupFriendContextMenu_Battle__GA6dC{
+  background-image: url("/img/chat/battle.png");
+}
+
+.GroupFriendContextMenu_Profile__X_4Mc{
+  background-image: url("/img/chat/profile_icon.png");
+}
+
+.GroupFriendContextMenu_Block__rfRgW{
+      background-image: url("/img/chat/block.png");
+}
+
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/FriendManagement/FriendRequest/user/User.module.css ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************/
+.User_firstChild__aAYMr {
+  display: flex;
+  align-items: center;
+}
+
+.User_avatar__E8WKj {
+  background-image: url("/img/home/avatar.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  -webkit-clip-path: circle(48% at 50% 50%);
+          clip-path: circle(48% at 50% 50%);
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.5rem;
+}
+
+.User_name__7WKRx {
+  color: #f2f3f5;
+  font-size: clamp(0.5rem, 1.5vw, 1rem);
+  font-family: "probert";
+  letter-spacing: 0.15rem;
+  font-weight: 700;
+  margin-left: 1rem;
+}
+
+.User_icon__pw207 {
+  background-image: url("/img/chat/icon.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 5%;
+}
+
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/FriendManagement/FriendRequest/FriendRequest.module.css ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************/
+.FriendRequest_container__3jbxZ {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  height: 2.5rem;
+  background-color: #484855;
+  border-radius: 10px;
+  margin: 2rem auto;
+}
+
+.FriendRequest_container__3jbxZ form {
+  display: flex;
+  align-items: center;
+  width: 92%;
+  height: 95%;
+}
+
+.FriendRequest_container__3jbxZ input {
+  background: none;
+  border: none;
+  width: 87%;
+  height: 60%;
+  /* background-color: aqua; */
+  margin-left: 5%;
+  color: whitesmoke;
+  font-weight: 700;
+}
+
+.FriendRequest_container__3jbxZ input::-webkit-input-placeholder {
+  color: whitesmoke;
+  font-weight: 700;
+  font-size: clamp(0.6rem, 1.6vw, 1.1rem);
+}
+
+.FriendRequest_container__3jbxZ input:focus {
+  outline: none;
+}
+
+.FriendRequest_Searchicon__3Ekap {
+  /* background-color: rgb(255, 0, 81); */
+  background-image: url("/img/chat/search.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.FriendRequest_showAllUsers__C27tS {
+  position: absolute;
+  right: 6%;
+  background-image: url("/img/chat/user.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.FriendRequest_users__OxHO4 {
+  /* background-color: black; */
+  width: 43%;
+  height: 55%;
+  margin: 0 auto;
+  overflow: auto;
+  cursor: pointer;
+}
+
+.FriendRequest_user__rBe96 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fdfdfd1a;
+  width: 100%;
+  height: 2.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 13px;
+}
+
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/FriendManagement/NewFriend/user/GroupFriendContextMenu/GroupFriendContextMenu.module.css ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.GroupFriendContextMenu_backDrop_____KqxYO {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  cursor: default;
+}
+
+.GroupFriendContextMenu_context__2ftmy{
+  position: fixed;
+  z-index: 4;
+  background-color: #292944;
+  color: #FFFADE;
+  border-radius: 16px;
+}
+
+.GroupFriendContextMenu_context__menu__6IrpF{
+  list-style-type: none;
+  font-size: 1.5rem;
+  padding-bottom: .25rem;
+}
+
+.GroupFriendContextMenu_context__menu__opt__3zLAu{
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1.5rem;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.GroupFriendContextMenu_borders__Ahemx{
+  border-top-style: solid;
+  border-color: #C0B7B7;
+  border-width: 2px;
+  border-radius: 2px;
+}
+
+.GroupFriendContextMenu_context__menu__opt__icon__XOlV9{
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 1rem;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.GroupFriendContextMenu_Battle__C__yM{
+  background-image: url("/img/chat/battle.png");
+}
+
+.GroupFriendContextMenu_Profile____D4z{
+  background-image: url("/img/chat/profile_icon.png");
+}
+
+.GroupFriendContextMenu_Block__ohpFz{
+      background-image: url("/img/chat/block.png");
+}
+
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/FriendManagement/NewFriend/user/User.module.css ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************/
+.User_firstChild__ZDIa2 {
+  display: flex;
+  align-items: center;
+}
+
+.User_avatar___pH1e {
+  background-image: url("/img/home/avatar.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  -webkit-clip-path: circle(48% at 50% 50%);
+          clip-path: circle(48% at 50% 50%);
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.5rem;
+}
+
+.User_name__Pn_1L {
+  color: #f2f3f5;
+  font-size: clamp(0.5rem, 1.5vw, 1rem);
+  font-family: "probert";
+  letter-spacing: 0.15rem;
+  font-weight: 700;
+  margin-left: 1rem;
+}
+
+.User_icon__ReBGj {
+  background-image: url("/img/chat/icon.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 5%;
+}
+
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/FriendManagement/NewFriend/NewFriend.module.css ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************/
+.NewFriend_container__YNNJJ {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  height: 2.5rem;
+  background-color: #484855;
+  border-radius: 10px;
+  margin: 2rem auto;
+}
+
+.NewFriend_container__YNNJJ form {
+  display: flex;
+  align-items: center;
+  width: 92%;
+  height: 95%;
+}
+
+.NewFriend_container__YNNJJ input {
+  background: none;
+  border: none;
+  width: 87%;
+  height: 60%;
+  /* background-color: aqua; */
+  margin-left: 5%;
+  color: whitesmoke;
+  font-weight: 700;
+}
+
+.NewFriend_container__YNNJJ input::-webkit-input-placeholder {
+  color: whitesmoke;
+  font-weight: 700;
+  font-size: clamp(0.6rem, 1.6vw, 1.1rem);
+}
+
+.NewFriend_container__YNNJJ input:focus {
+  outline: none;
+}
+
+.NewFriend_Searchicon__lnnnH {
+  /* background-color: rgb(255, 0, 81); */
+  background-image: url("/img/chat/search.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.NewFriend_showAllUsers__6P_qM {
+  position: absolute;
+  right: 6%;
+  background-image: url("/img/chat/user.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.NewFriend_users__gG0ok {
+  /* background-color: black; */
+  width: 43%;
+  height: 55%;
+  margin: 0 auto;
+  overflow: auto;
+  cursor: pointer;
+}
+
+.NewFriend_user__J84GG {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fdfdfd1a;
+  width: 100%;
+  height: 2.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 13px;
+}
+
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/FriendManagement/FriendManagement.module.css ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************/
+.FriendManagement_container__BGmwv {
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-left: 0.8rem;
+  background-image: url("/img/chat/add.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}
+
+.FriendManagement_backDrop__LpIew {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.434);
+  z-index: 50;
+  cursor: pointer;
+}
+
+.FriendManagement_popUpContainer__1OAj2 {
+  position: absolute;
+  margin: auto;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background-color: #292944;
+  z-index: 100;
+  border-radius: 60px;
+}
+
+.FriendManagement_closeImg__rmfYT {
+  position: absolute;
+  right: 3.5%;
+  top: 3.5%;
+  background-image: url("/img/chat/close.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+}
+
+.FriendManagement_avatar__ohdpn {
+  /* position: relative;
+  left: 50%;
+  top: 16%;
+  transform: translate(-50%, -50%);
+  background-image: url("/img/home/avatar.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  clip-path: circle(36.5% at 50% 30%); */
+  width: clamp(1rem, 20%, 13rem);
+  height: clamp(1rem, 27%, 13rem);
+}
+
+.FriendManagement_changeImg__xXzs3 {
+  position: absolute;
+  right: 13%;
+  top: 6%;
+  background-image: url("/img/chat/modifyImg.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: clamp(0.5rem, 20%, 13rem);
+  height: clamp(0.5rem, 25%, 13rem);
+  cursor: pointer;
+}
+
+.FriendManagement_main__pKxuT {
+  width: 94%;
+  height: 60%;
+  margin: 1rem 3%;
+  margin-top: 4%;
+  border-radius: 60px;
+	background-color: #1D1D2D;
+}
+
+.FriendManagement_header__an761 {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 15%;
+	border-radius: 60px;
+}
+
+.FriendManagement_groupBtn__8dH50,
+.FriendManagement_usersBtn__yx97_ {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+	cursor: pointer;
+}
+
+.FriendManagement_groupBtn__8dH50 p,
+.FriendManagement_usersBtn__yx97_ p {
+  font-family: "Inter";
+  font-size: clamp(1rem, 2vw, 1.8rem);
+  font-weight: 700;
+  color: whitesmoke;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.FriendManagement_OnLeft__CmBFw {
+  background-color: #ffffff1a;
+  border-radius: 60px 0 0 0;
+}
+
+.FriendManagement_OnRight__PfIRz {
+  background-color: #ffffff1a;
+  border-radius: 0 60px 0 0;
+}
+
+/*!********************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/SlideButton/SlideButton.module.css ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************/
+.SlideButton_slideBtn__oIyBF {
+  width: 75%;
+  height: 7.5%;
+  background-color: #141132;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 5vh;
+  margin-bottom: 3vh;
+  border-radius: 20px;
+  position: relative;
+}
+
+.SlideButton_directTxt__pKliA,
+.SlideButton_groupTxt__UBn4f {
+  font-size: clamp(0.5rem, 3vw, 2.7rem);
+  font-family: "probert";
+  color: #fffae099;
+  z-index: 1;
+  width: 50%;
+  height: 100%;
+  /* text-align: center; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  cursor: pointer;
+  /* border-radius: 36px; */
+}
+
+.SlideButton_slideBtn__oIyBF div {
+    position: absolute;
+    background-color: #54527D;
+    width: 50%;
+    height: 100%;
+    left: 0;
+    border-radius: 20px;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.SlideButton_On__2cw_M {
+  color: #FFFADE;
+}
+
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/GroupMsg/GroupMsgContextMenu/GetMuteTime/GetMuteTime.module.css ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.GetMuteTime_backDrop_____YL6NI {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.GetMuteTime_context__W3YFn {
+  position: fixed;
+  z-index: 5;
+  background-color: #292944;
+  color: #fffade;
+  border-radius: 16px;
+}
+
+.GetMuteTime_context__menu__RiypQ {
+  list-style-type: none;
+  font-size: 1.5rem;
+  padding-bottom: 0.25rem;
+}
+
+.GetMuteTime_context__menu__opt__dMbHA {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1.5rem;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.GetMuteTime_borders__BQUAn {
+  border-top-style: solid;
+  border-color: #c0b7b7;
+  border-width: 2px;
+  border-radius: 2px;
+}
+
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/GroupMsg/GroupMsgContextMenu/GroupMsgContextMenu.module.css ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************/
+.GroupMsgContextMenu_backDrop_____Y5nzH {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.GroupMsgContextMenu_context__y0yqh{
+  position: fixed;
+  z-index: 4;
+  background-color: #292944;
+  color: #FFFADE;
+  border-radius: 16px;
+}
+
+.GroupMsgContextMenu_context__menu__UEv7W{
+  list-style-type: none;
+  font-size: 1.5rem;
+  padding-bottom: .25rem;
+}
+
+.GroupMsgContextMenu_context__menu__opt__ibFKf{
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1.5rem;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.GroupMsgContextMenu_borders__rRV3J{
+  border-top-style: solid;
+  border-color: #C0B7B7;
+  border-width: 2px;
+  border-radius: 2px;
+}
+
+.GroupMsgContextMenu_hide__Z4mJg {
+  color: transparent;
+  text-shadow: 0 0 5px #ffffff4c;
+  cursor: not-allowed;
+}
+
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/GroupMsg/LeftChatGroup/LeftChatGroup.module.css ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************/
+.LeftChatGroup_container__FyhKu {
+  position: relative;
+  background-color: #54527d;
+  width: 40%;
+  height: auto;
+  min-height: 2rem;
+  margin: 3%;
+  margin-left: clamp(4rem, 3vw, 8rem);
+  border-radius: 18px;
+}
+
+.LeftChatGroup_img__q0q4E {
+  position: absolute;
+  top: 25%;
+  left: clamp(-3.4rem, -35%, -2rem);
+  background-image: url('/img/home/avatar.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 3rem;
+  height: 3rem;
+  -webkit-clip-path: circle(48% at 50% 50%);
+          clip-path: circle(48% at 50% 50%);
+}
+
+.LeftChatGroup_name__AK7pL {
+  position: absolute;
+  top: 8%;
+  left: 5%;
+  width: 5px;
+  font-family: 'probert';
+  font-size: clamp(0.5rem, 1.7vw, 1.2rem);
+  font-weight: 100;
+  letter-spacing: 0.1rem;
+  color: white;
+}
+
+.LeftChatGroup_msg__a9u9l {
+  color: #ffffffcd;
+  font-family: "Inter";
+  font-size: clamp(0.7rem, 2vw, 1.5rem);
+  padding: 0.8rem;
+  padding-bottom: 1.8rem;
+  padding-top: 2rem;
+  line-height: 2rem;
+  border-radius: 18px;
+}
+
+.LeftChatGroup_time__39a_E {
+  position: absolute;
+  right: 5%;
+  bottom: 8px;
+  color: #ddd9d993;
+  font-weight: lighter;
+  font-size: clamp(0.45rem, 1vw, 1rem);
+}
+
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/GroupMsg/RightChatGroup/RightChatGroup.module.css ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************/
+.RightChatGroup_container__I8ILz {
+  position: relative;
+  background-color: #54527d;
+  width: 40%;
+  height: auto;
+  min-height: 2rem;
+  margin: 3%;
+  margin-left: calc(60% - 2.5rem);
+  border-radius: 18px;
+}
+
+.RightChatGroup_msg__H9PeC {
+  color: #ffffffcd;
+  font-family: "Inter";
+  font-size: clamp(0.7rem, 2vw, 1.5rem);
+  padding: 0.8rem;
+  padding-bottom: 1.8rem;
+  line-height: 2rem;
+  border-radius: 18px;
+}
+
+.RightChatGroup_time__FqvTq {
+  position: absolute;
+  right: 5%;
+  bottom: 8px;
+  color: #ddd9d993;
+  font-weight: lighter;
+  font-size: clamp(0.45rem, 1vw, 1rem);
+}
+
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/GroupMsg/InputChatGroup/InputChatGroup.module.css ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************/
+.InputChatGroup_container__rQWrb {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #54527de6;
+  width: 100%;
+  height: 100px;
+  bottom: 0;
+}
+
+.InputChatGroup_subContainer__DVsVC {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #292944;
+  width: 80%;
+  height: 65%;
+  border-radius: 40px;
+}
+
+.InputChatGroup_subContainer__DVsVC input {
+  background-color: transparent;
+  width: 35vw;
+  height: 100%;
+  margin-left: 3rem;
+  border: none;
+  color: #c8c8c8;
+  font-size: clamp(1rem, 1.7vw, 1.2rem);
+}
+
+.InputChatGroup_subContainer__DVsVC input::-webkit-input-placeholder {
+  color: #ffffff56;
+  font-family: "Inter";
+  font-size: clamp(1rem, 1.7vw, 1.2rem);
+  letter-spacing: 0.05rem;
+  -webkit-user-select: none;
+          user-select: none;
+}
+
+.InputChatGroup_subContainer__DVsVC input:focus {
+  place-content: "";
+  outline: none;
+}
+
+.InputChatGroup_sendIcon__pnk82 {
+  position: absolute;
+  right: 0;
+  top: 30%;
+  background: none;
+  background-image: url("/img/chat/send.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: clamp(1.5rem, 5%, 3rem);
+  height: 40%;
+  margin-right: 1rem;
+  cursor: pointer;
+  border: none;
+}
+
+/*!**************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/GroupMsg/GroupMsg.module.css ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************/
+.GroupMsg_container__D_V8o {
+    width: 100%;
+    height: calc(100% - 100px);
+    overflow: auto;
+}
+
+/*!**********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Direct/Direct.module.css ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************/
+.Direct_container__zc3XR {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+  width: 88%;
+  height: 4rem;
+  border-radius: 20px;
+  background-color: #3e3e56;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  cursor: pointer;
+}
+
+.Direct_imgContainer__t7W1K {
+    position: relative;
+    margin-left: 5%;
+}
+
+.Direct_avatar__Wvl9u {
+  background-image: url("/img/home/avatar.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  -webkit-clip-path: circle(48% at 50% 50%);
+          clip-path: circle(48% at 50% 50%);
+  width: 3rem;
+  height: 3.1rem;
+}
+
+.Direct_onlineStatus__pUoCu {
+  position: absolute;
+  right: 0.3rem;
+  bottom: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background-color: #1bdb1b;
+}
+
+.Direct_name__Br3yS {
+  position: absolute;
+  left: clamp(3.5rem, 30%, 6rem);
+  color: #f2f3f5;
+  font-size: clamp(0.5rem, 1.7vw, 1.2rem);
+  font-family: "probert";
+  letter-spacing: 0.15rem;
+  font-weight: 700;
+}
+
+.Direct_icon__lU_dg {
+  background-image: url("/img/chat/icon.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 5%;
+}
+
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Group/GroupContextMenu/GroupContextMenu.module.css ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************/
+.GroupContextMenu_backDrop_____FBcHG {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.GroupContextMenu_context___26x5{
+  position: absolute;
+  z-index: 4;
+  background-color: #292944;
+  color: #FFFADE;
+  border-radius: 16px;
+}
+
+.GroupContextMenu_context__menu__b83aM{
+  list-style-type: none;
+  font-size: 1.5rem;
+  padding-bottom: .25rem;
+}
+
+.GroupContextMenu_context__menu__opt__1eHUd{
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1.5rem;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.GroupContextMenu_borders__IItX8{
+  border-top-style: solid;
+  border-color: #C0B7B7;
+  border-width: 2px;
+  border-radius: 2px;
+}
+
+.GroupContextMenu_context__menu__opt__icon__H2Tg1{
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 1rem;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.GroupContextMenu_Battle__LjyR8{
+  background-image: url("/img/chat/battle.png");
+}
+
+.GroupContextMenu_Profile__VqStx{
+  background-image: url("/img/chat/profile_icon.png");
+}
+
+.GroupContextMenu_Block__twk6P{
+      background-image: url("/img/chat/block.png");
+}
+
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Group/ChangeGroupSetting/UserManagement/user/GroupFriendContextMenu/GroupFriendContextMenu.module.css ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.GroupFriendContextMenu_backDrop_____EpdNa {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  cursor: default;
+}
+
+.GroupFriendContextMenu_context__xS6My{
+  position: fixed;
+  z-index: 4;
+  background-color: #292944;
+  color: #FFFADE;
+  border-radius: 16px;
+}
+
+.GroupFriendContextMenu_context__menu__pKG0w{
+  list-style-type: none;
+  font-size: 1.5rem;
+  padding-bottom: .25rem;
+}
+
+.GroupFriendContextMenu_context__menu__opt__AbyPv{
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1.5rem;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.GroupFriendContextMenu_borders__U3Vgu{
+  border-top-style: solid;
+  border-color: #C0B7B7;
+  border-width: 2px;
+  border-radius: 2px;
+}
+
+.GroupFriendContextMenu_context__menu__opt__icon__i0RgD{
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 1rem;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.GroupFriendContextMenu_Battle__IG4_f{
+  background-image: url("/img/chat/battle.png");
+}
+
+.GroupFriendContextMenu_Profile__qOb0b{
+  background-image: url("/img/chat/profile_icon.png");
+}
+
+.GroupFriendContextMenu_Block__lkAX4{
+      background-image: url("/img/chat/block.png");
+}
+
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Group/ChangeGroupSetting/UserManagement/user/User.module.css ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************/
+.User_firstChild__wLJuU {
+  display: flex;
+  align-items: center;
+}
+
+.User_avatar__z7BNA {
+  background-image: url("/img/home/avatar.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  -webkit-clip-path: circle(48% at 50% 50%);
+          clip-path: circle(48% at 50% 50%);
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.5rem;
+}
+
+.User_name__IflfP {
+  color: #f2f3f5;
+  font-size: clamp(0.5rem, 1.5vw, 1rem);
+  font-family: "probert";
+  letter-spacing: 0.15rem;
+  font-weight: 700;
+  margin-left: 1rem;
+}
+
+.User_icon__3z2T_ {
+  background-image: url("/img/chat/icon.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 5%;
+}
+
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Group/ChangeGroupSetting/UserManagement/UserManagement.module.css ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.UserManagement_container__PKXrw {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  height: 2.5rem;
+  background-color: #484855;
+  border-radius: 10px;
+  margin: 2rem auto;
+}
+
+.UserManagement_container__PKXrw form {
+  display: flex;
+  align-items: center;
+  width: 92%;
+  height: 95%;
+}
+
+.UserManagement_container__PKXrw input {
+  background: none;
+  border: none;
+  width: 87%;
+  height: 60%;
+  /* background-color: aqua; */
+  margin-left: 5%;
+  color: whitesmoke;
+  font-weight: 700;
+}
+
+.UserManagement_container__PKXrw input::-webkit-input-placeholder {
+  color: whitesmoke;
+  font-weight: 700;
+  font-size: clamp(0.6rem, 1.6vw, 1.1rem);
+}
+
+.UserManagement_container__PKXrw input:focus {
+  outline: none;
+}
+
+.UserManagement_Searchicon__STLA2 {
+  /* background-color: rgb(255, 0, 81); */
+  background-image: url("/img/chat/search.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.UserManagement_showAllUsers__ylsQ5 {
+  position: absolute;
+  right: 6%;
+  background-image: url("/img/chat/user.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.UserManagement_users__yVZvZ {
+  /* background-color: black; */
+  width: 43%;
+  height: 55%;
+  margin: 0 auto;
+  overflow: auto;
+  cursor: pointer;
+}
+
+.UserManagement_user__0co9h {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fdfdfd1a;
+  width: 100%;
+  height: 2.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 13px;
+}
+
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Group/ChangeGroupSetting/ChangeGroupInput/ChangeGroupInput.module.css ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.ChangeGroupInput_container__ifD1M {
+  width: 92%;
+  height: 80%;
+  margin: 0 auto;
+}
+
+.ChangeGroupInput_container__ifD1M p {
+  display: block;
+  color: #b6bac0;
+  font-weight: 900;
+  font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+}
+
+.ChangeGroupInput_subContainer__wbbS_ {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.3rem 0;
+}
+
+/* .container input {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: default;
+  width: 20em;
+  height: 1.5rem;
+  margin-top: 0.5rem;
+} */
+
+.ChangeGroupInput_container__ifD1M input::placeholder {
+  initial-value: "test";
+  color: #f2f3f5;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+}
+
+.ChangeGroupInput_container__ifD1M input::placeholder {
+  initial-value: "test";
+  color: #f2f3f5;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+}
+
+/* .container input::placeholder:active {
+  initial-value: "test";
+  color: #f2f3f56e;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+} */
+
+.ChangeGroupInput_container__ifD1M button {
+  background-color: #2b2d31;
+  border: none;
+  border-radius: 7px;
+  color: #fff;
+  padding: 0.5em 1.5em;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#ChangeGroupInput_create_group__PQwau {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  background-color: #EA5A5A;
+  border-radius: 20px;
+  padding: 0.3em 2em;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+}
+
+.ChangeGroupInput_input__Gvl_o {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: default;
+  width: 20em;
+  height: 2rem;
+  margin-top: 0.5rem;
+  color: #fff;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+}
+
+.ChangeGroupInput_active__eN1xz {
+  background: none;
+  border: none;
+  outline: none;
+  width: auto;
+  height: 2rem;
+  margin-top: 0.35rem;
+  border: 2px solid #262639db;
+  border-radius: 6px;
+  color: #fff;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: clamp(1rem, 2vw, 1.4rem);
+}
+
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Group/ChangeGroupSetting/ChangeGroupSetting.module.css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************/
+.ChangeGroupSetting_container__Oto56 {
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-left: 0.8rem;
+  background-image: url("/img/chat/add.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}
+
+.ChangeGroupSetting_backDrop__MLesm {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.434);
+  z-index: 50;
+  cursor: pointer;
+}
+
+.ChangeGroupSetting_popUpContainer__OWurp {
+  position: absolute;
+  margin: auto;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background-color: #292944;
+  z-index: 100;
+  border-radius: 60px;
+}
+
+.ChangeGroupSetting_closeImg__MZqMN {
+  position: absolute;
+  right: 3.5%;
+  top: 3.5%;
+  background-image: url("/img/chat/close.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+}
+
+.ChangeGroupSetting_avatar__87j_2 {
+  position: relative;
+  left: 50%;
+  top: 16%;
+  transform: translate(-50%, -50%);
+  background-image: url("/img/home/avatar.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: clamp(1rem, 20%, 13rem);
+  height: clamp(1rem, 27%, 13rem);
+}
+
+.ChangeGroupSetting_changeImg__uO513 {
+  position: absolute;
+  right: 10%;
+  top: 3%;
+  background-image: url("/img/chat/modifyImg.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: clamp(0.5rem, 20%, 13rem);
+  height: clamp(0.5rem, 25%, 13rem);
+}
+
+.ChangeGroupSetting_main__3cZa9 {
+  width: 94%;
+  height: 60%;
+  margin: 1rem 3%;
+  margin-top: 4%;
+  border-radius: 60px;
+	background-color: #1D1D2D;
+}
+
+.ChangeGroupSetting_header__GoADb {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 15%;
+	border-radius: 60px;
+}
+
+.ChangeGroupSetting_groupBtn__emun7,
+.ChangeGroupSetting_usersBtn__wSdQG {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+	cursor: pointer;
+}
+
+.ChangeGroupSetting_groupBtn__emun7 p,
+.ChangeGroupSetting_usersBtn__wSdQG p {
+  font-family: "Inter";
+  font-size: clamp(1rem, 2vw, 1.8rem);
+  font-weight: 700;
+  color: whitesmoke;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.ChangeGroupSetting_OnLeft___ryyN {
+  background-color: #ffffff1a;
+  border-radius: 60px 0 0 0;
+}
+
+.ChangeGroupSetting_OnRight__hSnzp {
+  background-color: #ffffff1a;
+  border-radius: 0 60px 0 0;
+}
+
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Group/AllGroupUsers/GroupUserManagement/GroupUserManagement.module.css ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.GroupUserManagement_container__knU92 {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  height: 2.5rem;
+  background-color: #484855;
+  border-radius: 10px;
+  margin: 2rem auto;
+}
+
+.GroupUserManagement_container__knU92 form {
+  display: flex;
+  align-items: center;
+  width: 92%;
+  height: 95%;
+}
+
+.GroupUserManagement_container__knU92 input {
+  background: none;
+  border: none;
+  width: 87%;
+  height: 60%;
+  /* background-color: aqua; */
+  margin-left: 5%;
+  color: whitesmoke;
+  font-weight: 700;
+}
+
+.GroupUserManagement_container__knU92 input::-webkit-input-placeholder {
+  color: whitesmoke;
+  font-weight: 700;
+  font-size: clamp(0.6rem, 1.6vw, 1.1rem);
+}
+
+.GroupUserManagement_container__knU92 input:focus {
+  outline: none;
+}
+
+.GroupUserManagement_Searchicon__fIEek {
+  /* background-color: rgb(255, 0, 81); */
+  background-image: url("/img/chat/search.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.GroupUserManagement_showAllUsers__cFDC8 {
+  position: absolute;
+  right: 6%;
+  background-image: url("/img/chat/user.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.GroupUserManagement_users__GRKmV {
+  /* background-color: black; */
+  width: 43%;
+  height: 55%;
+  margin: 0 auto;
+  overflow: auto;
+  cursor: pointer;
+}
+
+.GroupUserManagement_user__d_Blf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fdfdfd1a;
+  width: 100%;
+  height: 2.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 13px;
+}
+
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Group/AllGroupUsers/AllGroupUsers.module.css ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************/
+.AllGroupUsers_container__tX78p {
+  width: 2.6rem;
+  height: 2.6rem;
+  margin-left: 0.8rem;
+  background-image: url("/img/chat/add.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}
+
+.AllGroupUsers_backDrop__3aJjA {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.434);
+  z-index: 50;
+  cursor: pointer;
+}
+
+.AllGroupUsers_popUpContainer__5hcZg {
+  position: absolute;
+  margin: auto;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  background-color: #292944;
+  z-index: 100;
+  border-radius: 60px;
+}
+
+.AllGroupUsers_closeImg__Ihzlc {
+  position: absolute;
+  right: 3.5%;
+  top: 3.5%;
+  background-image: url("/img/chat/close.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+}
+
+.AllGroupUsers_avatar__mqjox {
+  position: relative;
+  left: 50%;
+  top: 16%;
+  transform: translate(-50%, -50%);
+  background-image: url("/img/home/avatar.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: clamp(1rem, 20%, 13rem);
+  height: clamp(1rem, 27%, 13rem);
+}
+
+.AllGroupUsers_changeImg__lvr7q {
+  position: absolute;
+  right: 10%;
+  top: 3%;
+  background-image: url("/img/chat/modifyImg.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: clamp(0.5rem, 20%, 13rem);
+  height: clamp(0.5rem, 25%, 13rem);
+}
+
+.AllGroupUsers_main__smDjN {
+  width: 94%;
+  height: 60%;
+  margin: 1rem 3%;
+  margin-top: 4%;
+  border-radius: 60px;
+	background-color: #1D1D2D;
+}
+
+.AllGroupUsers_header__NiPtQ {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 15%;
+	border-radius: 60px;
+}
+
+.AllGroupUsers_usersBtn__SXsqi {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+	cursor: pointer;
+}
+
+.AllGroupUsers_usersBtn__SXsqi p {
+  font-family: "Inter";
+  font-size: clamp(1rem, 2vw, 1.8rem);
+  font-weight: 700;
+  color: whitesmoke;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.AllGroupUsers_OnLeft__nWx2s {
+  background-color: #ffffff1a;
+  border-radius: 60px 0 0 0;
+}
+
+.AllGroupUsers_OnRight__5teve {
+  background-color: #ffffff1a;
+  border-radius: 0 60px 0 0;
+}
+
+/*!********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Group/Group.module.css ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************/
+.Group_container__HFoPy {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    margin-bottom: 2rem;
+    width: 88%;
+    height: 4rem;
+    border-radius: 20px;
+    background-color: #3e3e56;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+            user-select: none;
+    cursor: pointer;
+  }
+  
+  .Group_imgContainer__4LfAM {
+      position: relative;
+      margin-left: 5%;
+  }
+  
+  .Group_avatar__zBQ2Z {
+    background-image: url("/img/home/avatar.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    -webkit-clip-path: circle(48% at 50% 50%);
+            clip-path: circle(48% at 50% 50%);
+    width: 3rem;
+    height: 3.1rem;
+  }
+  
+  .Group_onlineStatus__axSLJ {
+    position: absolute;
+    right: 0.3rem;
+    bottom: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background-color: #1bdb1b;
+  }
+  
+  .Group_name__xtJS3 {
+    position: absolute;
+    left: clamp(3.5rem, 30%, 6rem);
+    color: #f2f3f5;
+    font-size: clamp(0.5rem, 1.7vw, 1.2rem);
+    font-family: "probert";
+    letter-spacing: 0.15rem;
+    font-weight: 700;
+  }
+  
+  .Group_icon__7ewtL {
+    background-image: url("/img/chat/icon.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 5%;
+  }
+  
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./components/chat/Msg/FriendContextMenu/FriendContextMenu.css ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************/
+.backDrop___ {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.context{
+    position: fixed;
+    z-index: 2;
+    background-color: #292944;
+    color: #FFFADE;
+    border-radius: 16px;
+  }
+  
+  .context__menu{
+    list-style-type: none;
+    font-size: 1.5rem;
+  }
+  
+  .context__menu__opt{
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 1.5rem;
+    margin: 0 0.5rem;
+    cursor: pointer;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+            user-select: none;
+  }
+  
+  .borders{
+    border-top-style: solid;
+    border-bottom-style: solid;
+    border-color: #C0B7B7;
+    border-width: 1px;
+  }
+  
+  .context__menu__opt__icon{
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 1rem;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  
+  .Battle{
+    background-image: url("/img/chat/battle.png");
+  }
+  
+  .Profile{
+    background-image: url("/img/chat/profile_icon.png");
+  }
+  
+  .Block{
+        background-image: url("/img/chat/block.png");
+  }
+  
+/*!******************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Msg/LeftChat/LeftChat.module.css ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************/
+.LeftChat_container__OGyrY {
+  position: relative;
+  background-color: #54527d;
+  width: 40%;
+  height: auto;
+  min-height: 2rem;
+  margin: 3%;
+  margin-left: clamp(4rem, 3vw, 8rem);
+  border-radius: 18px;
+}
+
+.LeftChat_img__GCcUB {
+  position: absolute;
+  top: 25%;
+  left: clamp(-3.4rem, -35%, -2rem);
+  background-image: url('/img/home/avatar.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 3rem;
+  height: 3rem;
+  -webkit-clip-path: circle(48% at 50% 50%);
+          clip-path: circle(48% at 50% 50%);
+}
+
+.LeftChat_name__r0tCD {
+  position: absolute;
+  top: 8%;
+  left: 5%;
+  width: 5px;
+  font-family: 'probert';
+  font-size: clamp(0.5rem, 1.7vw, 1.2rem);
+  font-weight: 100;
+  letter-spacing: 0.1rem;
+  color: white;
+}
+
+.LeftChat_msg__rcrsc {
+  color: #ffffffcd;
+  font-family: "Inter";
+  font-size: clamp(0.7rem, 2vw, 1.5rem);
+  padding: 0.8rem;
+  padding-bottom: 1.8rem;
+  padding-top: 2rem;
+  line-height: 2rem;
+  border-radius: 18px;
+}
+
+.LeftChat_time__MmYZ5 {
+  position: absolute;
+  right: 5%;
+  bottom: 8px;
+  color: #ddd9d993;
+  font-weight: lighter;
+  font-size: clamp(0.45rem, 1vw, 1rem);
+}
+
+/*!********************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Msg/RightChat/RightChat.module.css ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************/
+.RightChat_container__93jOB {
+  position: relative;
+  background-color: #54527d;
+  width: 40%;
+  height: auto;
+  min-height: 2rem;
+  margin: 3%;
+  margin-left: calc(60% - 2.5rem);
+  border-radius: 18px;
+}
+
+.RightChat_msg__Bil4H {
+  color: #ffffffcd;
+  font-family: "Inter";
+  font-size: clamp(0.7rem, 2vw, 1.5rem);
+  padding: 0.8rem;
+  padding-bottom: 1.8rem;
+  line-height: 2rem;
+  border-radius: 18px;
+}
+
+.RightChat_time__MthCb {
+  position: absolute;
+  right: 5%;
+  bottom: 8px;
+  color: #ddd9d993;
+  font-weight: lighter;
+  font-size: clamp(0.45rem, 1vw, 1rem);
+}
+
+/*!********************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Msg/InputChat/InputChat.module.css ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************/
+.InputChat_container__8nErN {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #54527de6;
+  width: 100%;
+  height: 100px;
+  bottom: 0;
+}
+
+.InputChat_subContainer__zndzn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #292944;
+  width: 80%;
+  height: 65%;
+  border-radius: 40px;
+}
+
+.InputChat_subContainer__zndzn input {
+  background-color: transparent;
+  width: 35vw;
+  height: 100%;
+  margin-left: 3rem;
+  border: none;
+  color: #c8c8c8;
+  font-size: clamp(1rem, 1.7vw, 1.2rem);
+}
+
+.InputChat_subContainer__zndzn input::-webkit-input-placeholder {
+  color: #ffffff56;
+  font-family: "Inter";
+  font-size: clamp(1rem, 1.7vw, 1.2rem);
+  letter-spacing: 0.05rem;
+  -webkit-user-select: none;
+          user-select: none;
+}
+
+.InputChat_subContainer__zndzn input:focus {
+  place-content: "";
+  outline: none;
+}
+
+.InputChat_sendIcon__FBcNR {
+  position: absolute;
+  right: 0;
+  top: 30%;
+  background: none;
+  background-image: url("/img/chat/send.svg");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: clamp(1.5rem, 5%, 3rem);
+  height: 40%;
+  margin-right: 1rem;
+  cursor: pointer;
+  border: none;
+}
+
+/*!****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Msg/Msg.module.css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************/
+.Msg_container__E2wDw {
+    width: 100%;
+    height: calc(100% - 100px);
+    overflow: auto;
+}
+
+/*!*************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/chat/Chat.module.css ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************/
+.Chat_container__hFUPi {
+  width: 100%;
+  height: 100vh;
+  /* background: linear-gradient(90deg, #141132 0%, #2f2a61 50%, #141132 100%); */
+}
+
+.Chat_header__8paBo {
+  display: flex;
+  width: 100%;
+  height: 8%;
+  background-color: yellow;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  cursor: pointer;
+}
+
+.Chat_chatRoomBtn__rI_if {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+  background-color: #14143b;
+}
+
+.Chat_profileBtn__15CRm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+  background-color: #262643;
+}
+
+.Chat_header__8paBo p {
+  font-family: "probert";
+  color: #c1b8ed;
+  font-size: clamp(1rem, 3vw, 3.5rem);
+}
+
+/* /////////////      left      ////////////// */
+
+.Chat_subContainer__dNgqs {
+  display: flex;
+  width: 100%;
+  height: 92%;
+  background: linear-gradient(90deg, #141132 0%, #2f2a61 70%, #141132 100%);
+}
+
+.Chat_left__DZP_v {
+  width: 35%;
+  height: 100%;
+  background-color: #292944;
+}
+
+.Chat_left__DZP_v ul {
+  overflow: auto;
+  /* height: auto; */
+  height: 77%;
+}
+
+/* /////////////      right      ////////////// */
+
+.Chat_right__ojGu8 {
+  position: relative;
+  width: 65%;
+  height: 100%;
+  background-image: url("/img/chat/background.svg");
+}
+
