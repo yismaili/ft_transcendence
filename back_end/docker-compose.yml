@@ -58,21 +58,21 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: /home/dexter/Desktop/ft_transcendence/back_end/transcendence
+      device: ${HOME}/Desktop/ft_transcendence/back_end/transcendence
 
   postgres-src:
     driver: local
     driver_opts:
       o: bind
       type: none
-      device: /home/dexter/Desktop/ft_transcendence/postgres 
+      device: ${HOME}/Desktop/ft_transcendence/postgres 
 
   frontend-src:
     driver: local
     driver_opts:
       o: bind
       type: none
-      device: /home/dexter/Desktop/ft_transcendence/tempefrontend/chat
+      device: ${HOME}/Desktop/ft_transcendence/tempefrontend/chat
 
 networks:
   app-net:

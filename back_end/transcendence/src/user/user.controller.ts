@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, ForbiddenException, Get, Param, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import {Body, Controller, Delete, ForbiddenException, Get, HttpException, Param, Post, Put, Req, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AchievementDto } from 'src/auth/dtos/achievement.dto';
 import { HistoryDto } from 'src/auth/dtos/history.dto';
@@ -67,11 +67,23 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
-    @Get('profile/:username/search/:secondUsername')
-    async addHistory(@Req() req, @Param('username') username: string, @Param('secondUsername') secondUsername: string): Promise<any>{
+    @Get('profile/:username/searchTofriend/:secondUsername')
+    async searchToFrindByUsername(@Req() req, @Param('username') username: string, @Param('secondUsername') secondUsername: string): Promise<any>{
         const authorization = req.user;
         if (authorization.username == username){
-            return this.userService.searchByUsername(username, secondUsername); 
+            return this.userService.searchToFrindByUsername(username, secondUsername); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/searchTouser/:secondUsername')
+    async searchToUserByUsername(@Req() req, @Param('username') username: string, @Param('secondUsername') secondUsername: string): Promise<any>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.searchToUserByUsername(username, secondUsername); 
         }
         else{
             throw new ForbiddenException();

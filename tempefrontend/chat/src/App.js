@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import './App.css';
 
 const ChatApp = () => {
-  const [socket] = useState(io('0.0.0.0:3001', {
+  const [socket] = useState(io('0.0.0.0:3001/chat', {
     extraHeaders: {
       Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Inlpc21haWxpIiwiZmlyc3ROYW1lIjoieW91bmVzIiwibGFzdE5hbWUiOiJpc21haWxpIiwiZW1haWwiOiJ5aXNtYWlsaTEzMzdAZ21haWwuY29tIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0p5b1AtQm5mNzFVNUpwMHBYTl9pTFIwcHRYMlZZeGdMR2VzT0JOSUppVjlnPXM5Ni1jIiwicHJvZmlsZSI6eyJzY29yZSI6MCwibG9zIjowLCJ3aW4iOjAsInhwIjowLCJsZXZlbCI6MCwiaWQiOjN9LCJzdGF0dXMiOm51bGwsInR3b0ZhY3RvckF1dGhTZWNyZXQiOm51bGwsImlkIjozLCJpc1R3b0ZhY3RvckF1dGhFbmFibGVkIjpmYWxzZSwiaWF0IjoxNjk2MDkwNTY2fQ.C6zgTQ6etizjTF9b1n4yDofPyPjNhzvdMyBYPwep9-M'
     }
@@ -35,6 +35,10 @@ const ChatApp = () => {
     socket.on('message', (message) => {
       setMessages(message);
     });
+    socket.on('updateUI', (messaged) => {
+      console.log(messaged);
+    });
+    
     
     socket.on('istyping', (isTyping) => {
       if (!isTyping) {
@@ -178,14 +182,13 @@ const changePermission = () => {
   socket.emit('changePermission', {username: user, chatRoomName: chatRoomName, userGetBan:users}, (response) => {
     setJoined(true);
   });
-}
+} 
 const leaveChatRoom = () => {
   socket.emit('leaveChatRoom', {username: user, chatRoomName: chatRoomName}, (response) => {
   });
 }
 const deleteChatRoom = () => {
-  socket.emit('deleteChatRoom', {username: user, chatRoomName: chatRoomName}, (response) => {
-  });
+  socket.emit('deleteChatRoom', {username: user, chatRoomName: chatRoomName});
 }
 
 const getAllChatRoom = () => {
@@ -196,6 +199,9 @@ const getAllChatRoom = () => {
 const getAllUserOfChatRoom = () => {
   socket.emit('getAllUserOfChatRoom', {username: user, chatRoomName:chatRoomName}, (response) => {
   });
+}
+const updateUI = () => {
+  socket.emit('updateUI', {message: 'hi from update UI'});
 }
 //   return (
 //     <div className="chat">
@@ -287,6 +293,7 @@ return (
           <button onClick={() => joinChatRoomWithAdmin()}>Jion my ChatRomm</button>
           <button onClick={() => getAllChatRoom()}>get chatRooms</button>
           <button onClick={() => joinChatRoom()}>Jion chatRoom</button>
+          <button onClick={() => updateUI()}>updateUI</button>
         </spam>
           <form
             onSubmit={(e) => {
@@ -330,6 +337,7 @@ return (
               <button onClick={() => changePermission()}>change Permission</button>
               <button onClick={() => leaveChatRoom()}>leave ChatRoom</button>
               <button onClick={() => getAllUserOfChatRoom()}>User Of ChatRoom</button>
+              <button onClick={() => deleteChatRoom()}>Delete</button>
            </spam>
             <label> user: </label>
             <input value={users} onChange={(h) => setUsers(h.target.value)} />
@@ -361,16 +369,12 @@ return (
               onSubmit={(e) => {
                 e.preventDefault();
                 sendMessageToChatRoom();
-                //getMessageFromchatRoom();
               }}
             >
               <input value={messageTextToChatRoom}
                 onChange={(e) => setMessageTextToChatRoom(e.target.value)}
                 onInput={emitTyping}
               />
-                <span>
-                      <button onClick={() => deleteChatRoom()}>Delete</button>
-                </span>
               <button type="submit">Send</button>
             </form>
           </div>

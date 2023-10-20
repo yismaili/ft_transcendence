@@ -87,16 +87,16 @@ export class AuthController {
  
   @Post('2fa/generate')
   @UseGuards(JwtAuthGuard, JwtStrategy)
-  async register(@Req() @Req() req: any) {
-      const { otpauthUrl } = await this.authService.generateTwoFactorAuthSecret(req.user.username);
+  async register(@Req() req: any) {
+      const { otpauthUrl } = await this.authService.generateTwoFactorAuthSecret(req.user);
       return this.authService.generateQrCodeDataURL(otpauthUrl);
   }
 
   @Post('2fa/turn-on')
   @UseGuards(JwtAuthGuard)
   async turnOnTwoFactorAuthentication(@Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
-    const isCodeValid = this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
-    if (!isCodeValid) {
+    const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
+    if (isCodeValid === false) {
       throw new UnauthorizedException('Wrong authentication code');
     }
     await this.userService.turnOnTwoFactorAuthentication(request.user.username);
@@ -105,29 +105,25 @@ export class AuthController {
   @Post('2fa/turn-off')
   @UseGuards(JwtAuthGuard)
   async turnOffTwoFactorAuthentication(@Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
+    const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
+    if (isCodeValid === false) {
+      throw new UnauthorizedException('Wrong authentication code');
+    }
     await this.userService.turnOffTwoFactorAuthentication(request.user.username);
   }
 
   @Post('2fa/authenticate')
-  @HttpCode(200)
-  @UseGuards(JwtAuthGuard)
-  async authenticate( @Req() request: any, @Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto, @Res() res: Response) {
-    const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, request.user.username);
+  async authenticate(@Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
+    const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, twoFactorAuthenticationCode.username);
     if (!isCodeValid) {
       throw new UnauthorizedException('Wrong authentication code');
     }
-    const user: Partial<User> = {
-      email: request.user.email,
-      firstName: request.user.firstName,
-      lastName: request.user.lastName,
-      picture: request.user.picture
-    };
-
-  const response = await this.authService.googleAuthenticate(user);
-  if (response.success){
-    res.cookie('userData', { response });
-    return res.redirect('/auth/home');
-  }
-    return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
+    const response = await this.authService.generateTocken(twoFactorAuthenticationCode.username);
+    return response;
+    // if (response.success) {
+    //   res.cookie('userData', JSON.stringify(response), { httpOnly: true });
+    //   return res.redirect('/auth/home');
+    // }
+    // return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
   }
 }

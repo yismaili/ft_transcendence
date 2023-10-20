@@ -80,9 +80,9 @@ var PongGame = /** @class */ (function () {
     function PongGame() {
         this.canvas = new Canvas();
         // Establish a socket.io connection
-        this.socket = io("http://localhost:3001", {
+        this.socket = io("http://localhost:3001/game", {
             extraHeaders: {
-                Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ5aXNtYWlsaSIsImZpcnN0TmFtZSI6InlvdW5lcyIsImxhc3ROYW1lIjoiaXNtYWlsaSIsImVtYWlsIjoieWlzbWFpbGkxMzM3QGdtYWlsLmNvbSIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NKeW9QLUJuZjcxVTVKcDBwWE5faUxSMHB0WDJWWXhnTEdlc09CTklKaVY5Zz1zOTYtYyIsInByb2ZpbGUiOnsiaWQiOjEsInNjb3JlIjowLCJsb3MiOjAsIndpbiI6MCwieHAiOjAsImxldmVsIjowfSwidXNlclJlbGF0aW9ucyI6W10sImZyaWVuZFJlbGF0aW9ucyI6W10sImFjaGlldmVtZW50cyI6W10sImhpc3RvcmllcyI6W10sImlhdCI6MTY5NDg2OTE1M30._BgOmYPL6IU0NV0VPf7W0G31DfT6wEvE-GuyMIRUsIk'
+                Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ5aXNtYWlsaSIsImZpcnN0TmFtZSI6InlvdW5lc3NzcyIsImxhc3ROYW1lIjoiaXNtYWlsaSIsInVuaXF1ZW5hbWUiOiJ5aXNtYWlsaSIsImVtYWlsIjoieWlzbWFpbGkxMzM3QGdtYWlsLmNvbSIsInBpY3R1cmUiOiJodHRwOi8vcmVzLmNsb3VkaW5hcnkuY29tL2RveW1xcHlmay9pbWFnZS91cGxvYWQvdjE2OTc3MTEyNDQvb2x5bXBpY19mbGFnLnBuZyIsInN0YXR1cyI6Im9mZmxpbmUiLCJ0d29GYWN0b3JBdXRoU2VjcmV0IjpudWxsLCJpc1R3b0ZhY3RvckF1dGhFbmFibGVkIjpmYWxzZSwicHJvZmlsZSI6eyJpZCI6MSwic2NvcmUiOjg1MiwibG9zIjoxNywid2luIjoxNSwieHAiOjEyLCJsZXZlbCI6MTEzfSwiaWF0IjoxNjk3NzcyOTE0fQ.tmYRcHl7vvGWeNLAhSr77vPsGno3v4DEl99Cwegzpw4'
             }
         });
         this.ballX = this.canvas.getWidth() / 2;
@@ -113,6 +113,7 @@ var PongGame = /** @class */ (function () {
         this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
         this.JoinBtn = document.getElementById('joinGame-btn');
         this.ntvBtn = document.getElementById('ntv-btn');
+        this.cancelBtn = document.getElementById('cancel-btn');
         // Add keyboard event listeners
         document.addEventListener("keydown", this.keyDownHandler.bind(this));
         document.addEventListener("keyup", this.keyUpHandler.bind(this));
@@ -124,6 +125,9 @@ var PongGame = /** @class */ (function () {
         }
         if (this.ntvBtn) {
             this.ntvBtn.addEventListener('click', this.acceptRequest.bind(this));
+        }
+        if (this.cancelBtn) {
+            this.cancelBtn.addEventListener('click', this.cancelReq.bind(this));
         }
     }
     PongGame.prototype.keyDownHandler = function (e) {
@@ -164,9 +168,10 @@ var PongGame = /** @class */ (function () {
     };
     PongGame.prototype.update = function () {
         var _this = this;
+        var _a;
         // clean canvas 
         this.canvas.clearCanvas();
-        this.socket.emit('updateGame', { sPressed: this.sPressed, wPressed: this.wPressed, upPressed: this.upPressed, downPressed: this.downPressed });
+        this.socket.emit('updateGame', { sPressed: this.sPressed, wPressed: this.wPressed, upPressed: this.upPressed, downPressed: this.downPressed, username: (_a = this.username) === null || _a === void 0 ? void 0 : _a.value });
         this.socket.on('updateGame', function (response) {
             _this.ballX = response.ballX;
             _this.ballY = response.ballY;
@@ -203,10 +208,16 @@ var PongGame = /** @class */ (function () {
         var res = true;
         this.socket.emit("responseFromFriend", res);
     };
+    PongGame.prototype.cancelReq = function () {
+        this.socket.emit("cancelGame", { cancel: true });
+    };
     return PongGame;
 }());
 var pongGame = new PongGame();
 pongGame.start();
 pongGame.socket.on('inviteFriend', function (response) {
+    console.log(response);
+});
+pongGame.socket.on('players', function (response) {
     console.log(response);
 });
