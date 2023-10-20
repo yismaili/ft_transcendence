@@ -139,7 +139,7 @@ class PongGame {
     constructor() {
         this.canvas = new Canvas();
         // Establish a socket.io connection
-        this.socket = io("http://localhost:3001", {
+        this.socket = io("http://localhost:3001/game", {
             extraHeaders: {
               Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJ5aXNtYWlsaSIsImZpcnN0TmFtZSI6InlvdW5lc3NzcyIsImxhc3ROYW1lIjoiaXNtYWlsaSIsInVuaXF1ZW5hbWUiOiJ5aXNtYWlsaSIsImVtYWlsIjoieWlzbWFpbGkxMzM3QGdtYWlsLmNvbSIsInBpY3R1cmUiOiJodHRwOi8vcmVzLmNsb3VkaW5hcnkuY29tL2RveW1xcHlmay9pbWFnZS91cGxvYWQvdjE2OTc3MTEyNDQvb2x5bXBpY19mbGFnLnBuZyIsInN0YXR1cyI6Im9mZmxpbmUiLCJ0d29GYWN0b3JBdXRoU2VjcmV0IjpudWxsLCJpc1R3b0ZhY3RvckF1dGhFbmFibGVkIjpmYWxzZSwicHJvZmlsZSI6eyJpZCI6MSwic2NvcmUiOjg1MiwibG9zIjoxNywid2luIjoxNSwieHAiOjEyLCJsZXZlbCI6MTEzfSwiaWF0IjoxNjk3NzcyOTE0fQ.tmYRcHl7vvGWeNLAhSr77vPsGno3v4DEl99Cwegzpw4'
             }
