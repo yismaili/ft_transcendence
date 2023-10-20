@@ -5,7 +5,7 @@
     height: 100vh;
     width: 100%;
     background-color: #14143bb9;
-    z-index: 20;
+    z-index: 10;
 }
 
 .window {
@@ -13,17 +13,18 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 15%;
-    left: 25%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
     background-color: #f6f6f6;
-    width: 50%;
+    width: 60%;
     height: 75%;
     z-index: 100;
 }
 
 .leftside {
     background-color: black;
-    width: 40%;
+    width: 340px;
     height: 100%;
     border-style: solid;
     border-width: 1px;
@@ -37,17 +38,23 @@
 
 .imageDiv {
     display: block;
-    width: 100%;
+    width: 340px;
     height: 60%;
     background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-.image {
-    object-fit: contain;
-    width: 100% !important;
-    position: relative !important;
-    height: unset !important;
+.linkdin{
+    display: inline-block;
+    background-image: url("/img/linkedin.png");
+    width: 30px;
+    height: 30px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
+
 
 .button {
     font-weight: 700;
@@ -60,10 +67,10 @@
     width: 90%;
     margin: 20% 5%;
     cursor: pointer;
-}
-
-.button i {
-    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
 }
 
 .title {
@@ -74,11 +81,13 @@
 .title h2 {
     font-family: 'probert';
     letter-spacing: 0.2rem;
-    font-size: clamp(.4rem, 1.5vw, 1.9rem);
+    font-size: clamp(1rem, 1.5vw, 1.9rem);
     font-weight: 900;
 }
 
 .title p {
+    display: inline-block;
+    max-width: 100%;
     margin-top: 2%;
     font-weight: 300;
     letter-spacing: 0.15rem;
@@ -86,4 +95,58 @@
 
 .rightside p {
     color: gray;
+}
+
+@media (max-width: 1536px) {
+
+}
+
+/* xl */
+@media (max-width: 1280px) {
+
+}
+
+/* lg */
+@media (max-width: 1024px) {
+    .window {
+        flex-direction: column;
+        width: 70%;
+    }
+    .leftside {
+        display: flex;
+        width: 100%;
+    }    
+    .imageDiv {
+        width: 360px;
+        height: 100%;
+    }
+    .button {
+        font-size: clamp(.8rem, 1vw, 1rem);
+        height:50px;
+        width: 40%;
+        cursor: pointer;
+        margin: 10%;
+    }
+}
+
+/* md */
+@media (max-width: 768px) {
+    .btnText{
+        display: none;
+    }
+    .button {
+        font-size: clamp(.8rem, 1vw, 1rem);
+        height:50px;
+        width: 50px;
+    }
+}
+
+/* sm */
+@media (max-width: 640px) {
+
+}
+
+/* xs */
+@media (max-width: 475px) {
+
 }

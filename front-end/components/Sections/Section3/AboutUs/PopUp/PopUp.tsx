@@ -35,8 +35,8 @@ export default function PopUp(props: props) {
             style={{ backgroundImage: `url(${props.src})` }}
           ></div>
           <button className={Style.button} onClick={handleClick}>
-            <i className="fa">&#xf08c;</i>
-            CONNECT ON LINKDIN
+            <span className={Style.linkdin}></span>
+            <span className={Style.btnText}>CONNECT ON LINKDIN</span>
           </button>
         </div>
         <div className={Style.rightside}>
