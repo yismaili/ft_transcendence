@@ -112,7 +112,7 @@ export class AuthController {
     await this.userService.turnOffTwoFactorAuthentication(request.user.username);
   }
 
-@Post('2fa/authenticate')
+  @Post('2fa/authenticate')
   async authenticate(@Body() twoFactorAuthenticationCode: TwoFactorAuthenticationCodeDto) {
     const isCodeValid = await this.authService.isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode, twoFactorAuthenticationCode.username);
     if (!isCodeValid) {

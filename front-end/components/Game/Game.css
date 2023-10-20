@@ -1,0 +1,16 @@
+.Game___container {
+  flex-direction: column;
+  margin-top: 270px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+canvas {
+  background: #000;
+  border: 1px solid black;
+  width: 60vw;
+  min-width: 400px;
+  height: 60vh;
+  min-height: 200px;
+}

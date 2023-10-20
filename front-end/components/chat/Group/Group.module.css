@@ -1,0 +1,58 @@
+.container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    margin-bottom: 2rem;
+    width: 88%;
+    height: 4rem;
+    border-radius: 20px;
+    background-color: #3e3e56;
+    user-select: none;
+    cursor: pointer;
+  }
+  
+  .imgContainer {
+      position: relative;
+      margin-left: 5%;
+  }
+  
+  .avatar {
+    background-image: url("/img/home/avatar.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    clip-path: circle(48% at 50% 50%);
+    width: 3rem;
+    height: 3.1rem;
+  }
+  
+  .onlineStatus {
+    position: absolute;
+    right: 0.3rem;
+    bottom: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background-color: #1bdb1b;
+  }
+  
+  .name {
+    position: absolute;
+    left: clamp(3.5rem, 30%, 6rem);
+    color: #f2f3f5;
+    font-size: clamp(0.5rem, 1.7vw, 1.2rem);
+    font-family: "probert";
+    letter-spacing: 0.15rem;
+    font-weight: 700;
+  }
+  
+  .icon {
+    background-image: url("/img/chat/icon.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 5%;
+  }
+  
