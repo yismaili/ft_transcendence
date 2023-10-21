@@ -16,8 +16,8 @@
 .pic__edit__btn{
     display: inline-block;
     width: 32px;
-    height: 30px;
-    background-image: url("/img/pic_editer.png");
+    height: 32px;
+    background-image: url("/img/param/edit.png");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;

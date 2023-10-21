@@ -1,33 +1,39 @@
-.app__header{
+.app__header {
+    display: flex;
     width: 100%;
-    height: 70px;
-    background-color: white;
-    text-align: center;
-    font-size: 3rem;
+    height: 8vh;
+    background-color: yellow;
     user-select: none;
-}
-
-.app__header__chat{
-    width: 50%;
-    height: 70px;
-    display: inline-block;
-    background-color: #14143B;
-    color: #C1B8ED;
+    cursor: pointer;
+    font-family: "probert";
+    
+    font-size: clamp(1rem, 3vw, 3.5rem);
+    
+  }
+  
+  .app__header__chat {
     text-decoration: none;
-}
-
-.app__header__profile{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 50%;
-    height: 70px;
-    display: inline-block;
-    background-color: #14143B;
-    color: #C1B8ED;
+    height: 100%;
+    background-color: #262643;
+    
+    color: #c1b8ed;
+  }
+  
+  .app__header__profile {
     text-decoration: none;
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+    background-color: #14143b;
+    color: #c1b8ed;
+  }
 
-.opac{
-    opacity: 0.6;
-}
 
 @media (max-width: 1536px) {
 

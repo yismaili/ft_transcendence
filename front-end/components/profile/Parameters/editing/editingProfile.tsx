@@ -6,6 +6,7 @@ import "./editingProfile.css"
 import Enable2FAPopUP from "@/components/profile/Parameters/2FA_popup/enable/Enable__2FA";
 import { useState } from "react";
 import Disable2FAPopUP from "@/components/profile/Parameters/2FA_popup/disable/disable__2FA";
+import "@/styles/global.css"
 
 interface user{
     user:User;
