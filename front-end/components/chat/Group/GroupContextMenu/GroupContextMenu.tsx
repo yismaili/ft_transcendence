@@ -23,7 +23,10 @@ export default function GroupContextMenu({
         chatRoomName: room.chatRooms.RoomId,
       },
       (response: any) => {
-        console.log(response);
+        if (response.message === "User kicked successfully")
+        socket.emit("updateUI", {
+          message: `leaveChatRoom ${Data.response.user.username}`,
+        });
       }
     );
   };
