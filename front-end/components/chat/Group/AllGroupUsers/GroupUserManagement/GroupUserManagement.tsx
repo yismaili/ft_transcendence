@@ -18,7 +18,7 @@ export default function GroupUserManagement({ room, setOpen }: props) {
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
 
   const [socket] = useState(
-    io("0.0.0.0:3001", {
+    io("0.0.0.0:3001/chat", {
       extraHeaders: {
         Authorization: Data.response.token,
       },

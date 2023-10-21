@@ -18,7 +18,7 @@ export default function GroupContextMenu({
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
 
   const [socket] = useState(
-    io("0.0.0.0:3001", {
+    io("0.0.0.0:/chat", {
       extraHeaders: {
         Authorization: Data.response.token,
       },
