@@ -241,7 +241,7 @@ export default function GroupMsgContextMenu({
           <li className={`${Style.context__menu__opt} ${Style.borders}`}>
             <p>Play</p>
           </li>
-          <Link href={`/${friendData.username}`}>
+          <Link href={`/UserProfile/${friendData.username}`}>
             <li className={`${Style.context__menu__opt} ${Style.borders}`}>
               <p style={{ color: "#FFFADE" }}>Profile</p>
             </li>

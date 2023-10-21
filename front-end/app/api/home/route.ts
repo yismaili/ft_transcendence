@@ -10,13 +10,14 @@ export async function GET(request: NextRequest) {
     const res = await fetch(
       `http://localhost:3001/users/profile/${Data.response.user.username}`,
       {
+        cache: "no-cache",
         headers: { authorization: `Bearer ${token}` },
       }
     );
 
     const data = await res.json();
     // console.log(Data);
-    
+
     return NextResponse.json({ data });
   }
 
