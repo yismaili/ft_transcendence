@@ -959,13 +959,16 @@ async leaveChatRoom (leaveChatRoomDto: LeaveChatRoomDto) : Promise<any>{
     return { message: 'User not found in the chat room' };
   }
 }
-// delete chat room not working
+
 async deleteChatRoom (deleteChatRoomDto: LeaveChatRoomDto) : Promise<any>{
 try{
-  const isAdmin = await this.userRepository.findOne({
+  const user = await this.userRepository.findOne({
     where: { username: deleteChatRoomDto.username },
   });
 
+  if (!user) {
+    throw new Error('User not found');
+  }
   const chatRoom = await this.chatRoomRepository.findOne({
     where: {
           RoomId : deleteChatRoomDto.chatRoomName
@@ -975,41 +978,41 @@ try{
   if (!chatRoom) {
     throw new Error('chat room not found');
   }
-
+  const chatRoomId = chatRoom.id;
+  
   const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
     where: {
-      user: { id: isAdmin.id },
+      user: { id: user.id },
       statusPermissions: 'admin',
-      chatRooms: {id: chatRoom.id},
+      chatRooms: { RoomId: deleteChatRoomDto.chatRoomName },
     },
   });
-
+  
   if (!adminUserChatRoom) {
-    throw new Error('you are not admin');
+    throw new Error('You do not have the necessary permissions to delete this chat room.');
   }
-
-  const chatRoomUser = await this.chatRoomRepository.findOne({
-    where: {
-      chatRoomUser: { id: isAdmin.id },
-    },
-  });
-
-  if (!chatRoomUser) {
-    throw new Error('User not found in the chat room');
-  }
+  
+  
+  // const chatRoomUser = await this.chatRoomRepository.findOne({
+  //   where: {
+  //     chatRoomUser: { id: user.id },
+  //   },
+  // });
+  // if (!chatRoomUser) {
+  //   throw new Error('User not found in the chat room');
+  // }
     const messages = await this.messageRepository.find({
-      where: {chatRoom: {id: chatRoom.id}}
+      where: {chatRoom: {RoomId: deleteChatRoomDto.chatRoomName}}
     });
-    // console.log(messages);
     const usersOfChatRoom =  await this.chatRoomUserRepository.find({
-      where: {chatRooms: {id: chatRoom.id}}
+      where: {chatRooms: {RoomId: deleteChatRoomDto.chatRoomName}}
     });
-   
     await this.messageRepository.remove(messages);
     await this.chatRoomUserRepository.remove(usersOfChatRoom);
-    await this.chatRoomRepository.remove(chatRoomUser);
-  }catch(error){
-    throw new Error("Error to delete this chat room");
+   await this.chatRoomRepository.delete(chatRoom.id);
+  }catch (error) {
+    console.error('Error while deleting chat room:', error);
+    throw new Error('Error to delete this chat room');
   }
 }
 
