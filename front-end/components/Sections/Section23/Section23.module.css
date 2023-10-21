@@ -1,0 +1,28 @@
+.AboutUs {
+  position: relative;
+  overflow: hidden;
+  height: 100dvh;
+}
+
+.scrollBar {
+  position: absolute;
+  z-index: 5;
+  /* right: 10%;
+    bottom: -50%;
+    transform: translateY(50%); */
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10%;
+}
+
+.scrollElm {
+  width: 1.1rem;
+  height: 15.5rem;
+  border-radius: 15px;
+  background: grey;
+  margin-bottom: 2rem;
+}
+
+.white {
+  background-color: white;
+}

@@ -1,0 +1,32 @@
+.firstChild {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  background-image: url("/img/home/avatar.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  clip-path: circle(48% at 50% 50%);
+  width: 2rem;
+  height: 2rem;
+  margin-left: 0.5rem;
+}
+
+.name {
+  color: #f2f3f5;
+  font-size: clamp(0.5rem, 1.5vw, 1rem);
+  font-family: "probert";
+  letter-spacing: 0.15rem;
+  font-weight: 700;
+  margin-left: 1rem;
+}
+
+.icon {
+  background-image: url("/img/chat/icon.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  width: 1rem;
+  height: 1rem;
+  margin-right: 5%;
+}

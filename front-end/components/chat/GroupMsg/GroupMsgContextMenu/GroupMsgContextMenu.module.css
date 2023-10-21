@@ -1,0 +1,44 @@
+.backDrop___ {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.context{
+  position: fixed;
+  z-index: 4;
+  background-color: #292944;
+  color: #FFFADE;
+  border-radius: 16px;
+}
+
+.context__menu{
+  list-style-type: none;
+  font-size: 1.5rem;
+  padding-bottom: .25rem;
+}
+
+.context__menu__opt{
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1.5rem;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.borders{
+  border-top-style: solid;
+  border-color: #C0B7B7;
+  border-width: 2px;
+  border-radius: 2px;
+}
+
+.hide {
+  color: transparent;
+  text-shadow: 0 0 5px #ffffff4c;
+  cursor: not-allowed;
+}
