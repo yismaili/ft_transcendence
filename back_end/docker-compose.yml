@@ -36,8 +36,6 @@ services:
       - "3001:3001"
     volumes:
       - backend-src:/app
-    networks:
-      - app-net
 
   # frontend:
   #   build: ./frontend_tools
@@ -46,12 +44,12 @@ services:
   #   depends_on:
   #     - backend
   #   ports:
-  #     - "5000:5000"
+  #     - 3000:3000
   #   volumes:
   #     - frontend-src:/app
   #   networks:
   #     - app-net
-
+  
 volumes:
   backend-src:
     driver: local
@@ -72,7 +70,7 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: ${HOME}/Desktop/ft_transcendence//tempefrontend/chat
+      device: ${HOME}/Desktop/ft_transcendence/front-end
 
 networks:
   app-net:
