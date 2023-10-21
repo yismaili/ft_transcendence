@@ -1,0 +1,70 @@
+.app__header{
+    width: 100%;
+    height: 70px;
+    background-color: white;
+    text-align: center;
+    font-size: 3rem;
+    user-select: none;
+}
+
+.app__header__chat{
+    width: 50%;
+    height: 70px;
+    display: inline-block;
+    background-color: #14143B;
+    color: #C1B8ED;
+    text-decoration: none;
+}
+
+.app__header__profile{
+    width: 50%;
+    height: 70px;
+    display: inline-block;
+    background-color: #14143B;
+    color: #C1B8ED;
+    text-decoration: none;
+}
+
+.opac{
+    opacity: 0.6;
+}
+
+@media (max-width: 1536px) {
+
+}
+
+/* xl */
+@media (max-width: 1280px) {
+
+}
+
+/* lg */
+@media (max-width: 1024px) {
+
+}
+
+/* md */
+@media (max-width: 768px) {
+    .app__header{
+        height: 50px;
+        font-size: 2rem;
+    }
+    
+    .app__header__chat{
+        height: 50px;
+    }
+    
+    .app__header__profile{
+        height: 50px;
+    }
+}
+
+/* sm */
+@media (max-width: 640px) {
+
+}
+
+/* xs */
+@media (max-width: 475px) {
+
+}
