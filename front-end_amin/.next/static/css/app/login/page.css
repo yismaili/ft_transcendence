@@ -1,0 +1,337 @@
+/*!***************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/login/Login.module.css ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************/
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap");
+
+.Login_container__TS8RC {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(90deg, #141132 0%, #2f2a61 50%, #141132 100%);
+}
+
+.Login_leftDiv__vMST8 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+}
+
+.Login_imageDiv__8d0k7 {
+  height: 60%;
+  width: 100%;
+  background-image: url("/img/login/enemy.png");
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.Login_rightDiv__lsfAd {
+  width: 50%;
+  height: 100%;
+}
+
+.Login_rightDiv__lsfAd h1 {
+  text-align: center;
+  color: #d9d9d9;
+  font-family: "Inter";
+  font-size: clamp(1rem, 5vw, 8rem);
+  margin-top: 10vh;
+  margin-bottom: 6vh;
+}
+
+.Login_firstP__QgmYJ {
+  color: #d9d9d9;
+  font-family: "Inter";
+  font-weight: 700;
+  font-size: clamp(1rem, 3vw, 5rem);
+  margin-left: 5.9vw;
+}
+
+/*!******************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/login/sign_up_in/auth/Auth.module.css ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************/
+.Auth_googleBtn__RcaGB,
+.Auth_intraBtn__qG9ZP {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #14143b;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #14143b;
+  height: 8vh;
+  border-radius: 36px;
+  position: relative;
+  width: 100%;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  cursor: pointer;
+}
+
+.Auth_googleImg__TxW0x {
+  background-image: url("/img/login/google_logo.png");
+  width: 2.5vw;
+  height: 2.5vw;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 3vw;
+}
+
+.Auth_intraImg__MCFQQ {
+  background-image: url("/img/login/intra_logo.png");
+  width: 6.5vw;
+  height: 4vw;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 1vw;
+}
+
+.Auth_googleBtn__RcaGB p,
+.Auth_intraBtn__qG9ZP p {
+  color: #6f6fa5fa;
+  font-family: "Inter";
+  font-size: clamp(0.6rem, 2.2vw, 2.2rem);
+  margin-left: 2vw;
+}
+
+.Auth_boundary__Vm7PN {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 6vh;
+}
+
+.Auth_boundary__Vm7PN p {
+  color: #ffffffbf;
+  font-size: clamp(0.4rem, 1.7vw, 1rem);
+  margin: 0 4%;
+}
+
+.Auth_leftLine__rpbYM,
+.Auth_rightLine__VBqQj {
+  background-color: #6f6fa5fa;
+  width: 41%;
+  height: 2px;
+}
+
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[7].use[3]!./components/login/sign_up_in/Sign_up_in.module.css ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************/
+.Sign_up_in_inputs__vsrop {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  height: 60vh;
+  margin-left: 5.9vw;
+  margin-top: 5vh;
+}
+
+.Sign_up_in_slideBtn__T9o33 {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #191941;
+  width: 90%;
+  height: clamp(2rem, 7.5vw, 4.5rem);
+  border-radius: 36px;
+  position: relative;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #14143b;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  margin: 0 auto;
+  margin-bottom: 5vw;
+}
+
+.Sign_up_in_signUpTxt__UUXni,
+.Sign_up_in_signInTxt__Tlasj {
+  font-size: clamp(0.5rem, 3vw, 2.7rem);
+  font-family: "probert";
+  color: #383961;
+  z-index: 1;
+  width: 50%;
+  height: 100%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 36px;
+}
+
+.Sign_up_in_On__lKzI7 {
+  color: #d9d9d9;
+}
+
+.Sign_up_in_subSlideBtn__wVUWg {
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  background-color: #54527d;
+  border-radius: 36px;
+  left: 0;
+}
+
+/*!*************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[5].oneOf[12].use[3]!./styles/global.css ***!
+  \*************************************************************************************************************************************************************************************************************************************************************/
+@font-face {
+  font-family: probert;
+  src: url(/_next/static/media/Probert.842c7909.otf);
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: probert;
+  src: url(/_next/static/media/Probert_Bold.7d83df17.otf);
+  font-weight: bold;
+}
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.container {
+  max-width: 1728px;
+  margin: 0 auto;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+

@@ -1,0 +1,51 @@
+{
+  "pages": {
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/page.css",
+      "static/chunks/app/page.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/layout.js"
+    ],
+    "/login/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/login/page.css",
+      "static/chunks/app/login/page.js"
+    ],
+    "/login/2FA/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/login/2FA/page.css",
+      "static/chunks/app/login/2FA/page.js"
+    ],
+    "/UserProfile/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/UserProfile/page.css",
+      "static/chunks/app/UserProfile/page.js"
+    ],
+    "/chat/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/chat/page.css",
+      "static/chunks/app/chat/page.js"
+    ],
+    "/UserProfile/Parameters/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/UserProfile/Parameters/page.css",
+      "static/chunks/app/UserProfile/Parameters/page.js"
+    ],
+    "/game/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/game/page.css",
+      "static/chunks/app/game/page.js"
+    ]
+  }
+}
