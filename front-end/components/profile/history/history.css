@@ -1,0 +1,14 @@
+.history{
+    text-align: center;
+    margin: 1rem 0;
+    height: 95%;
+    width: 55%;
+    background-color: #292944;
+    border-radius: 16px;
+}
+
+.history__title{
+    color: #C1B8ED;
+    font-size: 2rem;
+    padding: 1rem 0;
+}

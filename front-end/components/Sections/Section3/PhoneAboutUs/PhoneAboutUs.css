@@ -1,0 +1,65 @@
+.PhoneAboutUs{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    display: none;
+}
+
+.circle{
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border-radius: 1000px;
+    background-color: grey;
+    margin: 0 1rem;
+}
+
+.white{
+    background-color: white;
+}
+
+.circles{
+    display: flex;
+    justify-content: center;
+    margin: 2.5rem;
+}
+
+@media (max-width: 1536px) {
+
+}
+
+/* xl */
+@media (max-width: 1280px) {
+    .PhoneAboutUs{
+        display: block;
+        width: 40%;
+    }
+}
+
+/* lg */
+@media (max-width: 1024px) {
+    .PhoneAboutUs{
+        width: 55%;
+    }
+}
+
+/* md */
+@media (max-width: 768px) {
+    .PhoneAboutUs{
+        width: 60%;
+    }
+}
+
+/* sm */
+@media (max-width: 640px) {
+    .PhoneAboutUs{
+        width: 75%;
+    }
+}
+
+/* xs */
+@media (max-width: 475px) {
+    .PhoneAboutUs{
+        width: 85%;
+    }
+}

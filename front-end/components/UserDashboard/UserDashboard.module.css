@@ -1,0 +1,87 @@
+.container {
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(90deg, #141132 0%, #2f2a61 50%, #141132 100%);
+}
+
+.header {
+  display: flex;
+  width: 100%;
+  height: 8vh;
+  background-color: yellow;
+  user-select: none;
+  cursor: pointer;
+}
+
+.chatRoomBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+  background-color: #14143b;
+}
+
+.profileBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  height: 100%;
+  background-color: #262643;
+}
+
+.header p {
+  font-family: "probert";
+  color: #c1b8ed;
+  font-size: clamp(1rem, 3vw, 3.5rem);
+}
+
+/* ////////////      MAIN      //////////// */
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  height: 25%;
+  /* background-color: violet; */
+}
+
+.main p {
+  font-family: "probert";
+  font-weight: 700;
+  /* font-size: ; */
+  /* background-color: tomato; */
+  color: #f2f3f5;
+  letter-spacing: 0.15rem;
+}
+
+.image {
+  position: relative;
+  width: 10rem;
+  height: 10rem;
+  /* background-color: wheat; */
+  background-image: url("/img/home/avatar.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  margin-bottom: 1.3rem;
+}
+
+.image p {
+  position: absolute;
+  top: 90%;
+  left: 39.5%;
+  width: 18%;
+  height: 18%;
+  color: #fffade;
+  font-family: "probert";
+  border-radius: 100%;
+  text-align: center;
+  line-height: 25px;
+  background-color: #262643;
+  padding-left: 2.8%;
+  padding-top: 2.8%;
+}
