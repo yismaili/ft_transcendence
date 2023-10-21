@@ -2,6 +2,7 @@
 import "@/global_css/resets.css";
 import "@/global_css/utilityClasses.css";
 import "@/components/profile/page.css";
+import "@/styles/global.css"
 import React from "react";
 import ProfilePic from "@/components/profile/profile_pic/profile_pic";
 import Analytics from "@/components/profile/analytics/analytics";

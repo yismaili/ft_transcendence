@@ -2,9 +2,11 @@
     display: flex;
     margin: 1rem auto;
     background-color: #292944;
+    padding: 0.5rem;
     width: 90%;
     text-align: center;
     border-radius: 16px;
+    font-family: probert;
 }
 .all__data{
     display: flex;
@@ -42,6 +44,8 @@
 }
 .xp__text{
     position: relative;
+    top: 50%;
+    transform: translateY(-50%);
     z-index: 2;
 }
 
@@ -51,10 +55,12 @@
     border-left-style: solid;
     border-right-style: solid;
     border-color: #7B7B9B;
+    border-width: 2px;
 }
 
 .data__title{
     color: #C1B8ED;
+    margin: 0 0 0.5rem;
 }
 
 .data__value{

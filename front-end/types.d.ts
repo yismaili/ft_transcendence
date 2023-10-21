@@ -3,6 +3,9 @@ type User = {
     id: number;
     username: string;
     firstName: string;
+    lastName:string;
+    uniquename: string;
+    isTwoFactorAuthEnabled:boolean;
     email: string;
     picture: string;
     profile: Profile;
@@ -10,6 +13,7 @@ type User = {
     friendRelations: Array;
     achievements: Array;
     histories: Array;
+    status: string;
   };
 };
 

@@ -4,10 +4,17 @@
     width: 100%;
     height: 100%;
     background-color: #00000076;
+    font-family: probert;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #807AAC;
 }
 
 .enable__2fa{
-    position: fixed;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     z-index: 3;
     background-color: #292944;
     border-radius: 1rem;
@@ -16,6 +23,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%,-50%);
+    padding: 1rem;
 }
 
 .auth__2fa__profile {
@@ -28,12 +36,15 @@
 .auth__2fa__username {
     text-align: center;
     letter-spacing: 0.05rem;
+    margin: 0.5rem 0;
+    
 }
 
 .auth__2fa__msg {
     text-align: center;
     font-size: 1.2rem;
     font-weight: 500;
+    max-width: 18ch;
     margin: 1rem 0;
 }
 
@@ -63,6 +74,7 @@
 }
 
 .auth__2fa__form__btn {
+    font-family: probert;
     text-transform: capitalize;
     padding: 0.2rem 3rem;
     border-radius: 8px;
@@ -74,5 +86,17 @@
     border-width: 1px;
     margin: 0.5rem 0 1.5rem;
     font-weight: 500;
-    letter-spacing: 0.1rem;
+    letter-spacing: 0.15rem;
+}
+
+.close__btn{
+    background-image: url("/img/util/close.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    width: 24px;
+    height: 32px;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
 }

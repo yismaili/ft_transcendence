@@ -5,12 +5,13 @@
   justify-content: space-between;
   height: 55%;
   position: relative;
+  font-family: probert;
 }
 
 .achievements__history__Scroll {
   width: 32px;
   height: 36px;
-  background-image: url("/img/nextScroll.png");
+  background-image: url("/img/home/next.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -61,10 +62,6 @@
 
   .history__title{
     font-size: 1.8rem;
-  }
-
-  .play {
-    display: none;
   }
 
   .show__history {

@@ -65,6 +65,7 @@ export default function ProfileEdit(props: nums) {
             placeholder={`${props.user.data.uniquename}`}
             id="username"
             name="username"
+            className="input__username"
           />
         </div>
         <input type="submit" value="Edit" className="edit__btn" />
@@ -77,7 +78,7 @@ export default function ProfileEdit(props: nums) {
           <label htmlFor="2FA" className="form__label">
             2FA
           </label>
-          <select id="2FA" name="2fa" size={1}>
+          <select id="2FA" name="2fa" size={1} className="hide">
             {!props.user.data.isTwoFactorAuthEnabled && (
               <option value="enable">Enabled</option>
             )}
@@ -86,7 +87,7 @@ export default function ProfileEdit(props: nums) {
             )}
           </select>
         </div>
-        <input type="submit" value="Edit" className="edit__btn" />
+        <input type="submit" value={props.user.data.isTwoFactorAuthEnabled ? "disable" : "enable"} className="edit__btn" />
       </form>
     </>
   );
