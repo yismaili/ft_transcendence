@@ -1,0 +1,49 @@
+::placeholder { 
+    color: white;
+    opacity: 1; 
+  }
+.form{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1.5rem 2rem;
+}
+
+.form__label{
+    display: block;
+    color: #B6BAC0;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0 0 8px;
+}
+
+.edit__btn{
+    font-size: 1.2rem;
+    padding: 0.2rem 1rem;
+    background-color: #2B2D31;
+    border-style: solid;
+    border-width: 0.5px;
+    color: white;
+    border-color:black;
+    border-radius: 8px;
+}
+
+#username{
+    font-size: 1.2rem;
+    background-color: transparent;
+    border-style: solid;
+    border-width: 0;
+    color: white;
+}
+
+@media (max-width: 475px) {
+    .form__label{
+        font-size: 1rem;
+    }
+    .edit__btn{
+        font-size: 1rem;
+    }
+    #username{
+        font-size: 1rem;
+    }
+}

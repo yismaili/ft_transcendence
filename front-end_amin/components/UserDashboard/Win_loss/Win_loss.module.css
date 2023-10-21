@@ -1,0 +1,68 @@
+.profileBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #292944;
+  border-radius: 40px;
+  width: 90%;
+  height: 10%;
+  margin: 0 auto;
+}
+
+.win_loss {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  width: 35%;
+  height: 80%;
+}
+
+.line {
+  height: 80%;
+  width: 2px;
+  background-color: #c1b8ed;
+}
+
+.subContainer {
+  width: 25%;
+  height: 80%;
+}
+
+.subContainer h3 {
+  font-family: "probert";
+  font-size: clamp(0.8rem, 1.5vw, 1.7rem);
+  font-weight: 700;
+  color: #c1b8ed;
+  margin-bottom: clamp(1rem, 10%, 16px);
+  width: 100%;
+  height: 40%;
+}
+
+#special_case {
+  font-size: clamp(0.8rem, 1.2vw, 1.4rem);
+}
+
+.subContainer p {
+  color: #fffade;
+  font-family: "probert";
+  font-size: clamp(0.7rem, 1.2vw, 1.5rem);
+  height: 40%;
+  width: 100%;
+}
+
+.xp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30px;
+  width: 50%;
+  height: 40%;
+  margin-left: 5%;
+  background-color: turquoise;
+}
+
+.xp p {
+  font-family: "probert";
+  color: black;
+}
