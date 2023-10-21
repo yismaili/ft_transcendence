@@ -2,10 +2,9 @@ import Style from "./Msg.module.css";
 import LeftChat from "./LeftChat/LeftChat";
 import RightChat from "./RightChat/RightChat";
 import InputChat from "./InputChat/InputChat";
-import io from "socket.io-client";
-import Cookies from "cookies-ts";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { useSocketContext } from "@/contexts/socket-context";
 
 type props = {
   friendData: User_Friend;
@@ -13,20 +12,10 @@ type props = {
 };
 
 export default function Msg({ friendData, myData }: props) {
+  const { socket } = useSocketContext();
   const [allMessages, setAllMessages] = useState<allMessages[]>();
   const [newMessage, setNewMessage] = useState<allMessages[]>([]);
   const ref = useRef<HTMLDivElement | null>(null);
-
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  const [socket] = useState(
-    io("0.0.0.0:3001", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
 
   useEffect(() => {
     socket.on("message", (message: allMessages[]) => {
