@@ -4,13 +4,19 @@ import Style from "./NewGroupInput.module.css";
 type props = {
   setInput: Function;
   closePopUp: Function;
-  picture: File | undefined;
+  picture: File | null | undefined;
 };
 
-export default function NewGroupInput({ setInput, closePopUp, picture }: props) {
+export default function NewGroupInput({
+  setInput,
+  closePopUp,
+  picture,
+}: props) {
   const [isProtected, setIsProtected] = useState(false);
 
   const handleAction = async (formData: FormData) => {
+    if (picture == undefined) picture = null;
+
     if (formData.get("name")) {
       if (formData.get("status") === "protected" && formData.get("password")) {
         setInput({
