@@ -10,6 +10,7 @@ interface nums {
 }
 
 export default function PicEdit(props: nums) {
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     let form = new FormData();
     let img = e.target.files;
@@ -27,7 +28,8 @@ export default function PicEdit(props: nums) {
         }
       );
       let res = await fetching.text();
-      if(res == "done")
+      console.log(res);
+      if(res == "\"done\"")
         props.update(true);
       // else
     }

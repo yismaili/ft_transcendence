@@ -11,9 +11,11 @@
   background-color: yellow;
   user-select: none;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .chatRoomBtn {
+
   display: flex;
   align-items: center;
   justify-content: center;
