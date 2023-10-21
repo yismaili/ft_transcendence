@@ -4,6 +4,7 @@ import "@/global_css/utilityClasses.css";
 import "@/components/profile/Parameters/params.css";
 import EditProfile from "@/components/profile/Parameters/editing/editingProfile";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 export default function Parametters() {
 let [user, setUser] = useState<User>();
@@ -23,6 +24,9 @@ let [edit, setEdited] = useState(false);
       return (
       <div className="test__container">
         <EditProfile user={user} update={setEdited}/>
+        <Link href="/UserProfile">
+          <div className="back__btn"><span className="back__arrow"></span> <span>back to Profile</span></div>
+        </Link>
       </div>
       );    
   }
