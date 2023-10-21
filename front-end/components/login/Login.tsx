@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Style from "./Login.module.css";
 import Sign_up_in from "./sign_up_in/Sign_up_in";
 import Cookies from "cookies-ts";
@@ -13,20 +13,23 @@ export default function Login() {
     setSign_up(is_sign_up);
   };
   
-  const checkToken = () => {
-    const cookies = new Cookies();
-    const mycookie = cookies.get("userData");
-    if(mycookie)
-    {
-      let cookieval = JSON.parse(JSON.stringify(mycookie));
-      if(cookieval.response.token)
+  useEffect(() => {
+    const checkToken = () => {
+      const cookies = new Cookies();
+      const mycookie = cookies.get("userData");
+      if(mycookie)
       {
-        router.push("http://localhost:3000/UserProfile");
+        let cookieval = JSON.parse(JSON.stringify(mycookie));
+        if(cookieval.response.token)
+        {
+          router.push("http://localhost:3000/UserProfile");
+        }
       }
     }
-  }
+  
+    checkToken();
+  })
 
-  checkToken();
   return (
     <main className={Style.container}>
       <div className={Style.leftDiv}>

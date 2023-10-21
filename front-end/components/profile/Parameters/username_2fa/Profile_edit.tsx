@@ -66,6 +66,7 @@ export default function ProfileEdit(props: nums) {
             id="username"
             name="username"
             className="input__username"
+            minLength={1}
           />
         </div>
         <input type="submit" value="Edit" className="edit__btn" />
