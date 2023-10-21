@@ -20,7 +20,7 @@ services:
     container_name: adminer
     restart: always
     ports:
-     - '8090:8080'
+     - '8080:8080'
     depends_on:
       - postgres_db
     networks:
@@ -36,9 +36,6 @@ services:
       - "3001:3001"
     volumes:
       - backend-src:/app
-
-    networks:
-      - app-net
 
   # frontend:
   #   build: ./frontend_tools
