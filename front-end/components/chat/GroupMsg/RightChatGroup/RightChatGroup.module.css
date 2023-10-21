@@ -1,0 +1,29 @@
+.container {
+  position: relative;
+  background-color: #54527d;
+  width: 40%;
+  height: auto;
+  min-height: 2rem;
+  margin: 3%;
+  margin-left: calc(60% - 2.5rem);
+  border-radius: 18px;
+}
+
+.msg {
+  color: #ffffffcd;
+  font-family: "Inter";
+  font-size: clamp(0.7rem, 2vw, 1.5rem);
+  padding: 0.8rem;
+  padding-bottom: 1.8rem;
+  line-height: 2rem;
+  border-radius: 18px;
+}
+
+.time {
+  position: absolute;
+  right: 5%;
+  bottom: 8px;
+  color: #ddd9d993;
+  font-weight: lighter;
+  font-size: clamp(0.45rem, 1vw, 1rem);
+}
