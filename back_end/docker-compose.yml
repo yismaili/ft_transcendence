@@ -36,6 +36,7 @@ services:
       - "3001:3001"
     volumes:
       - backend-src:/app
+
     networks:
       - app-net
 
@@ -51,7 +52,6 @@ services:
       - frontend-src:/app
     networks:
       - app-net
-
 volumes:
   backend-src:
     driver: local

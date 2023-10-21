@@ -1,0 +1,75 @@
+.container {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  height: 100vh;
+  background: #14143b;
+  position: relative;
+  z-index: -1;
+}
+
+.largeAboutUs{
+  display: flex;
+  width: 80%;
+}
+
+.in{
+  z-index: 2;
+  animation: bottomTop 1s;
+}
+
+.out{
+    z-index: -1;
+    animation:  Topbottom 1s;
+}
+
+@media (max-width: 1536px) {
+
+}
+
+/* xl */
+@media (max-width: 1280px) {
+  .largeAboutUs{
+    display: none;
+  }
+}
+
+/* lg */
+@media (max-width: 1024px) {
+
+}
+
+/* md */
+@media (max-width: 768px) {
+
+}
+
+/* sm */
+@media (max-width: 640px) {
+
+}
+
+/* xs */
+@media (max-width: 475px) {
+
+}
+
+@keyframes bottomTop {
+  from {
+    bottom: -100%;
+  }
+  to {
+    bottom: 0%;
+  }
+}
+
+@keyframes Topbottom {
+    from {
+      Top: 0%;
+    }
+    to {
+      Top: 100%;
+    }
+  }
