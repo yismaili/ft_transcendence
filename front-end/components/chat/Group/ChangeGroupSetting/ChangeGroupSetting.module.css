@@ -64,6 +64,7 @@
   background-size: contain;
   width: clamp(0.5rem, 20%, 13rem);
   height: clamp(0.5rem, 25%, 13rem);
+  cursor: pointer;
 }
 
 .main {
