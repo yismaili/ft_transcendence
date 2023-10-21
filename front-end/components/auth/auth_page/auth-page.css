@@ -1,0 +1,101 @@
+body{
+    background-image: linear-gradient(270deg, rgba(38,37,69,1) 0%, rgba(47,42,96,1) 50%, rgba(20,16,49,1) 100%);
+}
+
+.auth__card{
+    display: flex;
+    flex-direction: column;
+    width: 380px;
+    margin: 10rem auto;
+    align-items: center;
+    background-color: rgba(20, 20, 59, 0.56);
+    font-size: 1.5rem;
+    color: #6F6FA5;
+    font-weight: 700;
+    border-radius: 16px;
+    border-style: solid;
+    border-color: black;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
+}
+
+.auth__msg{
+    text-align: center;
+    line-height: 1 ;
+    letter-spacing: 0.1rem;
+    margin: 1rem 0 ;
+}
+
+.auth__credentials{
+    display: flex;
+    width: 250px;
+    flex-direction: column;
+}
+
+
+
+.auth__btn{
+    color: #EDEEFF;
+    font-size: 1.2rem;
+    text-transform: capitalize;
+    margin: 0.6rem 0;
+    border-style: solid;
+    background-color: rgba(193, 184, 237, 0.6);
+    border-radius: 8px;
+    cursor: pointer;
+}
+.auth__or{
+    align-self: center;
+}
+
+.auth__btn:hover{
+    color: #4D4692;
+    background-color: rgba(20, 20, 59, 0.73);
+}
+
+
+@media (max-width: 1536px) {
+
+}
+  
+  /* xl */
+@media (max-width: 1280px) {
+
+}
+  
+  /* lg */
+@media (max-width: 1024px) {
+
+}
+  
+  /* md */
+@media (max-width: 768px) {
+
+}
+  
+  /* sm */
+  @media (max-width: 640px) {
+
+  }
+  
+  /* xs */
+  @media (max-width: 475px) {
+    .auth__card{
+        width: 100dvw;
+        height: 100dvh;
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 500;
+
+    }
+    .auth__btn{
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    .intra__btn{
+        font-size: 1rem;
+    }
+
+  }
+
+
