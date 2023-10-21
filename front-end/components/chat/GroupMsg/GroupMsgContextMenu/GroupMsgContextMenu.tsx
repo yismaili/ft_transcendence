@@ -1,9 +1,8 @@
 import Style from "./GroupMsgContextMenu.module.css";
-import io from "socket.io-client";
-import Cookies from "cookies-ts";
 import { useEffect, useState } from "react";
 import GetMuteTime from "./GetMuteTime/GetMuteTime";
 import Link from "next/link";
+import { useSocketContext } from "@/contexts/socket-context";
 
 type props = {
   setMenuOpen: Function;
@@ -20,12 +19,10 @@ export default function GroupMsgContextMenu({
   friendData,
   room,
 }: props) {
+  const { socket, Data } = useSocketContext();
   const [timeToMute, setTimeToMute] = useState(0);
   const [istimeToMuteOpen, setIsTimeToMuteOpen] = useState(false);
   const [timeMenuPosition, setTimeMenuPosition] = useState({ x: 0, y: 0 });
-
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
 
   const [kicker] = useState(
     allGroupUsers.find(
@@ -38,14 +35,6 @@ export default function GroupMsgContextMenu({
 
   if (getKicked)
     var [isBaned, setIsBaned] = useState(getKicked.statusUser === "banned");
-
-  const [socket] = useState(
-    io("0.0.0.0:3001", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
 
   const ban = () => {
     if (
@@ -183,7 +172,7 @@ export default function GroupMsgContextMenu({
       kicker?.statusPermissions === "admin" &&
       getKicked?.statusPermissions === "member"
     ) {
-      socket.emit("")
+      socket.emit("");
     }
   };
 

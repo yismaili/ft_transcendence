@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import Style from "./GroupUserManagement.module.css";
 import User from "../../ChangeGroupSetting/UserManagement/user/User";
-import Cookies from "cookies-ts";
-import { io, Socket } from "socket.io-client";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSocketContext } from "@/contexts/socket-context";
 
 type props = {
   room: AllRooms;
@@ -11,19 +10,9 @@ type props = {
 };
 
 export default function GroupUserManagement({ room, setOpen }: props) {
+  const { socket, Data } = useSocketContext();
   const [matchUsers, setMatchingUsers] = useState<User_Friend[]>([]);
   const [existsUsers, setExistsUsers] = useState<allGroupUsers[]>([]);
-
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  const [socket] = useState(
-    io("0.0.0.0:3001", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
 
   useEffect(() => {
     socket.emit(
