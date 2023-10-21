@@ -4,9 +4,10 @@ import { useSocketContext } from "@/contexts/socket-context";
 type props = {
   setOpen: Function;
   room: AllRooms;
+  picture: File | null | undefined;
 };
 
-export default function ChangeGroupInput({ setOpen, room }: props) {
+export default function ChangeGroupInput({ setOpen, room, picture }: props) {
   const { socket, Data } = useSocketContext();
   const [editName, setEditName] = useState(false);
   const [editStatus, setEditStatus] = useState(false);
@@ -15,9 +16,7 @@ export default function ChangeGroupInput({ setOpen, room }: props) {
     room.chatRooms.status === "protected"
   );
   const [disabled, setDisabled] = useState(true);
-  const [newName, setNewName] = useState<string | undefined>(
-    room.chatRooms.name
-  );
+  const [newName, setNewName] = useState<string | null>(room.chatRooms.name);
 
   const options = [
     { value: "public", label: "Public" },
@@ -33,14 +32,20 @@ export default function ChangeGroupInput({ setOpen, room }: props) {
   options.splice(0, options.length, ...sortedOptions);
 
   const updateData = (
-    name: string | undefined,
-    status: string | undefined,
-    password: string | undefined
+    name: string | null,
+    status: string | null,
+    password: string | null
   ) => {
     // console.log("name:", name, "status:", status, "password:", password);
     if (!status) status = room.chatRooms.status;
     console.log("room to change:", room);
     console.log("new name:", name);
+    
+    if (picture == undefined) picture = null
+    
+    console.log("picture:", picture);
+    console.log();
+    
     socket.emit(
       "updateChatRoomInfo",
       {
@@ -49,6 +54,7 @@ export default function ChangeGroupInput({ setOpen, room }: props) {
         chatRoomName: name,
         status: status,
         password: password,
+        picture: picture,
       },
       (response: any) => {
         console.log("res", response);
@@ -59,13 +65,20 @@ export default function ChangeGroupInput({ setOpen, room }: props) {
   const handleAction = async (formData: FormData) => {
     setDisabled(true);
     if (formData.get("name")?.length) {
-      setNewName(formData.get("name")?.toString());
-      updateData(formData.get("name")?.toString(), undefined, undefined);
-    } else {
-      if (formData.get("secure")?.toString() === "protected") {
-        updateData(newName, "protected", formData.get("password")?.toString());
+      const name = formData.get("name")?.toString();
+      if (name == undefined) {
+        setNewName(null);
+        updateData(null, null, null);
       } else {
-        updateData(newName, formData.get("secure")?.toString(), undefined);
+        setNewName(name);
+        updateData(name, null, null);
+      }
+    } else {
+      const secure = formData.get("secure")?.toString();
+      if (secure === "protected") {
+        updateData(newName, "protected", secure);
+      } else {
+        updateData(newName, "private", null);
       }
     }
   };
