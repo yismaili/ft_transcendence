@@ -21,12 +21,20 @@ export default function GroupFriendContextMenu({
 
   const joinUserToRoom = (permission: string) => {
     setOpen((prev: boolean) => !prev);
-    socket.emit("JoinUsertoRoom", {
-      adminUsername: Data.response.user.username,
-      username: user.username,
-      statusPermissions: permission,
-      chatRoomName: room.chatRooms.RoomId,
-    });
+    socket.emit(
+      "JoinUsertoRoom",
+      {
+        adminUsername: Data.response.user.username,
+        username: user.username,
+        statusPermissions: permission,
+        chatRoomName: room.chatRooms.RoomId,
+      },
+      () => {
+        socket.emit("updateUI", {
+          message: `JoinUsertoRoom ${Data.response.user.username} ${user.username}`,
+        });
+      }
+    );
   };
 
   return (
