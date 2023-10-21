@@ -12,6 +12,7 @@
     border-style: solid;
     border-width: 1px;
     overflow: auto;
+    font-family: probert;
 }
 
 .options__container {

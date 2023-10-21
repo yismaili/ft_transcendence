@@ -8,7 +8,7 @@ interface nums {
   user: User;
 }
 
-function ProfilePic(props: nums) {
+function ProfilePic(props: nums) {  
   return (
     <div className="profile">
       <div className="profile__pic__level">
@@ -23,6 +23,7 @@ function ProfilePic(props: nums) {
           ></span>
           <span className="profile__level">
             {props.user.data.profile.level}
+            
           </span>
         </div>
       </div>

@@ -20,7 +20,7 @@ function Analytics(prop: nums) {
           {prop.user.data.profile.score != 0 ? (
             <p className="data__value">
               {" "}
-              {(prop.user.data.profile.win / prop.user.data.profile.score) * 100} %
+              {((prop.user.data.profile.win / prop.user.data.profile.score) * 100).toFixed(0)} %
             </p>
           ) : (
             <p className="data__value"> {prop.user.data.profile.win} %</p>
@@ -31,7 +31,7 @@ function Analytics(prop: nums) {
           {prop.user.data.profile.score != 0 ? (
             <p className="data__value">
               {" "}
-              {prop.user.data.profile.los / prop.user.data.profile.score} %
+              {((prop.user.data.profile.los / prop.user.data.profile.score) * 100).toFixed(0)} %
             </p>
           ) : (
             <p className="data__value"> {prop.user.data.profile.los} %</p>
