@@ -160,7 +160,9 @@ export class ChatService {
         if (ischatRoomExist){
           throw new Error('his chat room exist');
         }
-
+        if (createChatRoomDto.picture == ''){
+          
+        }
         const imageBuffer = createChatRoomDto.picture;
         const filePath = './uploads';
         const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.jpg';
