@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import Style from "./FriendRequest.module.css";
 import User from "./user/User";
-import Cookies from "cookies-ts";
-import { io, Socket } from "socket.io-client";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSocketContext } from "@/contexts/socket-context";
 
 type props = {
   setOpen: Function;
@@ -11,22 +10,12 @@ type props = {
 };
 
 export default function FriendRequest({ setOpen, friends }: props) {
+  const { socket, Data } = useSocketContext();
   const [allRequests, setAllRequests] = useState<FriendRequest[]>();
   const [matchUsers, setMatchingUsers] = useState<User_Friend[]>([]);
   const [swap, setSwap] = useState<FriendRequest[]>([]);
   const [existsUsers, setExistsUsers] = useState<allGroupUsers[]>([]);
   const [isGroupUsers, setIsGroupUsers] = useState(true);
-
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  const [socket] = useState(
-    io("0.0.0.0:3001/chat", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
 
   useEffect(() => {
     socket.on("updateUI", (messaged: string) => {

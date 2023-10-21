@@ -1,29 +1,17 @@
+import { useSocketContext } from "@/contexts/socket-context";
 import { useEffect, useState } from "react";
 import Style from "./NewFriend.module.css";
 import User from "./user/User";
-import Cookies from "cookies-ts";
-import io from "socket.io-client";
 import { motion, AnimatePresence } from "framer-motion";
-
 type props = {
   setOpen: Function;
   friends: UserArrayData;
 };
 
 export default function NewFriend({ setOpen, friends }: props) {
+  const { socket, Data } = useSocketContext();
   const [allUsers, setAllUsers] = useState<User_Friend[]>();
   const [matchUsers, setMatchingUsers] = useState<User_Friend[]>([]);
-
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  const [socket] = useState(
-    io("0.0.0.0:3001/chat", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
 
   useEffect(() => {
     socket.emit("gitAllUsers", (response: User_Friend[]) => {
