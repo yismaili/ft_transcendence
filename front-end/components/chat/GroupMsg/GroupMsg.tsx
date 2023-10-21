@@ -1,11 +1,10 @@
 import Style from "./GroupMsg.module.css";
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import io from "socket.io-client";
-import Cookies from "cookies-ts";
 import LeftChatGroup from "./LeftChatGroup/LeftChatGroup";
 import RightChatGroup from "./RightChatGroup/RightChatGroup";
 import InputChatGroup from "./InputChatGroup/InputChatGroup";
+import { useSocketContext } from "@/contexts/socket-context";
 
 type props = {
   groupInput: GroupInput | undefined;
@@ -13,22 +12,12 @@ type props = {
 };
 
 export default function GroupMsg({ groupInput, room }: props) {
+  const { socket, Data } = useSocketContext();
   const [allMessages, setAllMessages] = useState<allGroupMessages[]>();
   const [newMessage, setNewMessage] = useState<allGroupMessages[]>([]);
   const [allGroupUsers, setAllGroupUsers] = useState<allGroupUsers[]>([]);
   const ref = useRef<HTMLDivElement | null>(null);
   const [isMute, setIsMute] = useState(false);
-
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  const [socket] = useState(
-    io("0.0.0.0:3001/chat", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
 
   useEffect(() => {
     socket.on("updateUI", (messaged: string) => {

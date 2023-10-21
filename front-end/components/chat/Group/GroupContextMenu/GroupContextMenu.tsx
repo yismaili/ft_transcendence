@@ -1,7 +1,6 @@
 import Style from "./GroupContextMenu.module.css";
-import io from "socket.io-client";
-import Cookies from "cookies-ts";
 import { useState } from "react";
+import { useSocketContext } from "@/contexts/socket-context";
 
 type props = {
   setMenuOpen: Function;
@@ -14,16 +13,7 @@ export default function GroupContextMenu({
   menuPosition,
   room,
 }: props) {
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  const [socket] = useState(
-    io("0.0.0.0:3001/chat", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
+  const { socket, Data } = useSocketContext();
 
   const leave = () => {
     socket.emit(

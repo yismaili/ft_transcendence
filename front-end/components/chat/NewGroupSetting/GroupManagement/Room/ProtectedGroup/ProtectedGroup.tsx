@@ -1,26 +1,15 @@
 import { useRef, useState } from "react";
 import Style from "./ProtectedGroup.module.css";
-import Cookies from "cookies-ts";
-import io from "socket.io-client";
+import { useSocketContext } from "@/contexts/socket-context";
 
 type props = {
   room: CreateRoom;
   setOpen: Function;
 };
 export default function ProtectedGroup({ room, setOpen }: props) {
+  const { socket, Data } = useSocketContext();
   const [isRightPassword, setIsRightPassword] = useState(false);
   const ref = useRef<HTMLFormElement>(null);
-
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  const [socket] = useState(
-    io("0.0.0.0:3001/chat", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
 
   const handleAction = async (formData: FormData) => {
     ref.current?.reset();
