@@ -18,10 +18,9 @@ import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
 import { updateChatRoom } from './dto/update-chat-room.dto';
 import { UploadedFile} from '@nestjs/common';
 import { UpdateUIDto } from './dto/update-UI.dto';
-import { emit } from 'process';
 
 
-@WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
+@WebSocketGateway({ cors: { origin: '*' }, namespace: 'chat'}) // Allow all origins; adjust as needed
 export class ChatGateway {
   @WebSocketServer() server: Server;
   constructor(private readonly chatService: ChatService) {}
