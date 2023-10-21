@@ -14,7 +14,7 @@
   background-image: url("/img/home/next.png");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: contain;
   position: absolute;
   top: 50%;
   left: 102%;
