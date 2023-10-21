@@ -2,7 +2,7 @@
 import NewGroupSetting from "./NewGroupSetting/NewGroupSetting";
 import FriendManagement from "./FriendManagement/FriendManagement";
 import SlideButton from "./SlideButton/SlideButton";
-import { io, Socket } from "socket.io-client";
+import io from "socket.io-client";
 import { useEffect, useState } from "react";
 import GroupMsg from "./GroupMsg/GroupMsg";
 import Style from "./Chat.module.css";
@@ -134,7 +134,7 @@ export default function Chat() {
           <div className={Style.chatRoomBtn}>
             <p>Loading ...</p>
           </div>
-          <Link href="/home" className={Style.profileBtn}>
+          <Link href="/UserProfile" className={Style.profileBtn}>
             <p>Loading ...</p>
           </Link>
         </header>
@@ -158,7 +158,7 @@ export default function Chat() {
         <div className={Style.chatRoomBtn}>
           <p>chat room</p>
         </div>
-        <Link href="/home" className={Style.profileBtn}>
+        <Link href="/UserProfile" className={Style.profileBtn}>
           <p>profile</p>
         </Link>
       </header>

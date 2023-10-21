@@ -1,4 +1,4 @@
-import "../../styles/global.css";
+import "../../../styles/global.css";
 import UserDashboard from "@/components/UserDashboard/UserDashboard";
 
 export default function Users({ params }: { params: { user: string } }) {
