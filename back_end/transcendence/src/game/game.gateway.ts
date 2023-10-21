@@ -2,8 +2,9 @@ import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, WebSo
 import { GameService } from './game.service';
 import { Socket, Server} from 'socket.io';
 import { CreateGameDto } from './dto/create-game.dto';
+import { verify } from 'jsonwebtoken';
 
-@WebSocketGateway({ cors: { origin: '*' }, namespace: 'game' })
+@WebSocketGateway()
 export class GameGateway {
   @WebSocketServer()
   server: Server;
@@ -23,4 +24,19 @@ export class GameGateway {
   createGameFriend(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
     return this.gameService.matchingFriends(createGameDto, soketId, this.server);
   }
+
+  // @SubscribeMessage('invite')
+  // test(socketid) {
+  //   console.log("hi")
+
+  //   socketid.join("yismaili")
+
+  //   this.server.to("yismaili").emit('invite1');
+  // }
+
+  // @SubscribeMessage('acceptRequest')
+  // acceptRequest(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
+  //   console.log(createGameDto);
+  //   return this.gameService.accepteGameRequest(createGameDto);
+  // }
 }

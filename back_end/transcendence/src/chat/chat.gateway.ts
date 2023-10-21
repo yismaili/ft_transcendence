@@ -20,7 +20,7 @@ import { UploadedFile} from '@nestjs/common';
 import { UpdateUIDto } from './dto/update-UI.dto';
 
 
-@WebSocketGateway({ cors: { origin: '*' }, namespace: 'chat'}) // Allow all origins; adjust as needed
+@WebSocketGateway({ cors: { origin: '*' } }) // Allow all origins; adjust as needed
 export class ChatGateway {
   @WebSocketServer() server: Server;
   constructor(private readonly chatService: ChatService) {}
