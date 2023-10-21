@@ -61,6 +61,7 @@ export default function Enable2FAPopUP(prop:twofa){
                 <button className="auth__2fa__form__btn">confirm</button>
             </form>
             {warning === 1 && <p style={{color: "red"}}>Wrong 2FA Code</p>}
+            <span className="close__btn" onClick={() => prop.state(0)}></span>
         </div>
         </div>
     );

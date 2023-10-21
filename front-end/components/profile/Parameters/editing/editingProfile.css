@@ -7,12 +7,14 @@
     top: 45%;
     transform: translate(-50%, -55%);
     width: 70%;
+    max-width: 768px;
     background-color: #292944;
     border-radius: 24px;
     border-style: solid;
     border-width: 1px;
     overflow: auto;
     font-family: probert;
+    padding: 1rem;
 }
 
 .options__container {
@@ -20,6 +22,7 @@
     background-color: #1D1D2D;
     margin: 1rem auto;
     border-radius: 16px;
+    padding: 1rem;
 }
 
 @media (max-width: 1536px) {}

@@ -5,3 +5,24 @@
       background-image: linear-gradient(270deg, rgba(38, 37, 69, 1) 0%, rgba(47, 42, 96, 1) 50%, rgba(20, 16, 49, 1) 100%);
       position: relative;
 }
+
+.back__btn{
+      position: absolute;
+      top: 1rem;
+      left:1rem;
+      display: flex;
+      align-items: center;
+      font-family: probert;
+      font-size: 1rem;
+      color: white;
+      z-index: 100;
+}
+
+.back__arrow{
+      background-image: url("/img/util/arrow.png");
+      background-repeat: no-repeat;
+      background-position: center;
+      display: inline-block;
+      width: 48px;
+      height: 32px;
+}
