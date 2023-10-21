@@ -1,8 +1,6 @@
 import Style from "./GroupFriendContextMenu.module.css";
-import Cookies from "cookies-ts";
 import { useState } from "react";
-import { io, Socket } from "socket.io-client";
-
+import { useSocketContext } from "@/contexts/socket-context";
 type props = {
   setMenuOpen: Function;
   menuPosition: { x: number; y: number };
@@ -16,16 +14,7 @@ export default function GroupFriendContextMenu({
   user,
   setOpen,
 }: props) {
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  const [socket] = useState(
-    io("0.0.0.0:3001/chat", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
+  const { socket } = useSocketContext();
 
   const joinUserToRoom = async () => {
     const sending = await fetch("http://localhost:3000/api/chat", {

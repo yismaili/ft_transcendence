@@ -21,8 +21,11 @@ export async function PUT(req: NextRequest) {
         );
         const isSent = await data.json();
         console.log("test74:", isSent);
-        if(isSent.uniquename)
+        if(isSent.user.uniquename)
+        {
+          console.log("sbar")
           return NextResponse.json("done");
+        }
       }
       return NextResponse.json("error");
 }

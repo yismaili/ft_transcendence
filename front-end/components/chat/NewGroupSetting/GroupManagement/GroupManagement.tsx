@@ -1,29 +1,18 @@
 import { useEffect, useState } from "react";
 import Style from "./GroupManagement.module.css";
 import User from "./Room/Room";
-import Cookies from "cookies-ts";
-import { io, Socket } from "socket.io-client";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSocketContext } from "@/contexts/socket-context";
 
 type props = {
   setOpen: Function;
 };
 
 export default function GroupManagement({ setOpen }: props) {
+  const { socket, Data } = useSocketContext();
   const [allRooms, setAllRooms] = useState<CreateRoom[]>([]);
   const [matchRooms, setMatchingRooms] = useState<CreateRoom[]>([]);
   const [allRoomsOfUser, setAllRoomsOfUser] = useState<AllRooms[]>([]);
-
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  const [socket] = useState(
-    io("0.0.0.0:3001/chat", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
 
   useEffect(() => {
     socket.emit(

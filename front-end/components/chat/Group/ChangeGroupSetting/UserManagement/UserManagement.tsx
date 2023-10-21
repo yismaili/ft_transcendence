@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import Style from "./UserManagement.module.css";
 import User from "./user/User";
-import Cookies from "cookies-ts";
-import { io, Socket } from "socket.io-client";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSocketContext } from "@/contexts/socket-context";
 
 type props = {
   room: AllRooms;
@@ -11,21 +10,11 @@ type props = {
 };
 
 export default function UserManagement({ room, setOpen }: props) {
+  const { socket, Data } = useSocketContext();
   const [allUsers, setAllUsers] = useState<User_Friend[]>();
   const [matchUsers, setMatchingUsers] = useState<User_Friend[]>([]);
   const [existsUsers, setExistsUsers] = useState<allGroupUsers[]>([]);
   const [isGroupUsers, setIsGroupUsers] = useState(true);
-
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  const [socket] = useState(
-    io("0.0.0.0:3001/chat", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
 
   useEffect(() => {
     socket.emit("gitAllUsers", (response: User_Friend[]) => {

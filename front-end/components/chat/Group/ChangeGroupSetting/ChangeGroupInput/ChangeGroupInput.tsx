@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import Style from "./ChangeGroupInput.module.css";
-import Cookies from "cookies-ts";
-import io from "socket.io-client";
-
+import { useSocketContext } from "@/contexts/socket-context";
 type props = {
   setOpen: Function;
   room: AllRooms;
 };
 
 export default function ChangeGroupInput({ setOpen, room }: props) {
+  const { socket, Data } = useSocketContext();
   const [editName, setEditName] = useState(false);
   const [editStatus, setEditStatus] = useState(false);
   const [editPassword, setEditPassword] = useState(false);
@@ -33,17 +32,6 @@ export default function ChangeGroupInput({ setOpen, room }: props) {
   });
   options.splice(0, options.length, ...sortedOptions);
 
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  const [socket] = useState(
-    io("0.0.0.0:3001/chat", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
-
   const updateData = (
     name: string | undefined,
     status: string | undefined,
@@ -51,8 +39,8 @@ export default function ChangeGroupInput({ setOpen, room }: props) {
   ) => {
     // console.log("name:", name, "status:", status, "password:", password);
     if (!status) status = room.chatRooms.status;
-    console.log("room to change:",room);
-    console.log("new name:",name);
+    console.log("room to change:", room);
+    console.log("new name:", name);
     socket.emit(
       "updateChatRoomInfo",
       {
@@ -63,8 +51,7 @@ export default function ChangeGroupInput({ setOpen, room }: props) {
         password: password,
       },
       (response: any) => {
-        console.log('res', response);
-        
+        console.log("res", response);
       }
     );
   };
@@ -90,7 +77,7 @@ export default function ChangeGroupInput({ setOpen, room }: props) {
 
   const handleRemove = () => {
     console.log(Data.response.user.username);
-    
+
     socket.emit(
       "deleteChatRoom",
       {
