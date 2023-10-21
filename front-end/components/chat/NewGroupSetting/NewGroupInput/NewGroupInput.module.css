@@ -78,7 +78,7 @@
   justify-content: space-around;
   margin-right: 0rem;
   width: clamp(10.6rem, 30%, 14.5rem);
-  height: 1.5rem;
+  /* height: 1.5rem; */
   border-radius: 6px;
   border: 2px solid #262639db;
   padding: .5rem 0;

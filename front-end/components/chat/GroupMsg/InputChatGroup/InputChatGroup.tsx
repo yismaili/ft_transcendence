@@ -1,26 +1,14 @@
-import { revalidatePath } from "next/cache";
+import { useSocketContext } from "@/contexts/socket-context";
 import Style from "./InputChatGroup.module.css";
 import { useRef, useState } from "react";
-import Cookies from "cookies-ts";
-import io from "socket.io-client";
 
 type props = {
   room: AllRooms;
 };
 
 export default function InputChatGroup({ room }: props) {
+  const { socket, Data } = useSocketContext();
   const ref = useRef<HTMLFormElement>(null);
-
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  const [socket] = useState(
-    io("0.0.0.0:3001", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
 
   const setMessage = (message: any) => {
     socket.emit(

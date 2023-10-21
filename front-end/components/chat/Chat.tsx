@@ -1,18 +1,18 @@
 "use client";
 import NewGroupSetting from "./NewGroupSetting/NewGroupSetting";
 import FriendManagement from "./FriendManagement/FriendManagement";
+import { useSocketContext } from "@/contexts/socket-context";
 import SlideButton from "./SlideButton/SlideButton";
-import io from "socket.io-client";
 import { useEffect, useState } from "react";
 import GroupMsg from "./GroupMsg/GroupMsg";
 import Style from "./Chat.module.css";
 import Direct from "./Direct/Direct";
 import Group from "./Group/Group";
-import Cookies from "cookies-ts";
 import Link from "next/link";
 import Msg from "./Msg/Msg";
 
 export default function Chat() {
+  const { socket, Data } = useSocketContext();
   const [isGroup, setGroup] = useState(false);
   let [friends, setFriends] = useState<UserArrayData>();
   let [user, setUser] = useState<User>();
@@ -20,17 +20,6 @@ export default function Chat() {
   const [groupInput, setGroupInput] = useState<GroupInput>();
   const [allRooms, setAllRooms] = useState<AllRooms[]>();
   const [room, setRoom] = useState<AllRooms>();
-
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  const [socket] = useState(
-    io("0.0.0.0:3001", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
 
   useEffect(() => {
     socket.on("updateUI", (messaged: string) => {

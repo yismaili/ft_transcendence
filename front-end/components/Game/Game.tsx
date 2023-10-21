@@ -1,19 +1,9 @@
 import "./Game.css";
-import io from "socket.io-client";
-import Cookies from "cookies-ts";
 import { useEffect, useState } from "react";
+import { useSocketContext } from "@/contexts/socket-context";
 
 export default function Game() {
-  const cookies = new Cookies();
-  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  const [socket] = useState(
-    io("0.0.0.0:3001", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
+  const { socket, Data } = useSocketContext();
 
   class Canvas {
     private canvas: HTMLCanvasElement;
