@@ -66,7 +66,7 @@
   display: block;
   height: 32px;
   width: 32px;
-  background-image: url("/img/phoneNav.png");
+  background-image: url("/img/nav/phoneNav.png");
   background-position: center;
 }
 
@@ -74,7 +74,7 @@
   display: block;
   height: 32px;
   width: 32px;
-  background-image: url("/img/closeNav.png");
+  background-image: url("/img/nav/closeNav.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
