@@ -45,6 +45,23 @@ export default function Chat() {
         } else if (messaged.split(" ")[2] === Data.response.user.username) {
           fetching();
         }
+      } else if (messaged.split(" ")[0] === "JoinUsertoRoom") {
+        if (messaged.split(" ")[1] === Data.response.user.username) {
+          setRoom(undefined);
+        } 
+        else if (messaged.split(" ")[2] === Data.response.user.username) {
+          setRoom(undefined);
+          // fetching();s
+        }
+      } else if (messaged.split(" ")[0] === "leaveChatRoom") {
+        if (messaged.split(" ")[1] === Data.response.user.username) {
+          setRoom(undefined);
+          // fetching();
+        }
+      } else if (messaged.split(" ")[0] === "joinChatRoom") {
+        if (messaged.split(" ")[1] === Data.response.user.username) {
+          setRoom(undefined);
+        }
       }
 
       socket.emit(

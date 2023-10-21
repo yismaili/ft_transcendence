@@ -34,6 +34,10 @@ export default function GroupFriendContextMenu({
           password: password,
         },
         (response: any) => {
+          if (response)
+          socket.emit("updateUI", {
+            message: `joinChatRoom ${Data.response.user.username}`,
+          });
           setOpen((prev: boolean) => !prev);
         }
       );
