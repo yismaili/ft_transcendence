@@ -1,0 +1,65 @@
+.backdrop{
+    position: fixed;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    background-color: #00000076;
+}
+
+.enable__2fa{
+    position: fixed;
+    z-index: 3;
+    background-color: #292944;
+    border-radius: 1rem;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.auth__2fa__msg {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 1rem 0;
+}
+
+.auth__2fa__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.auth__2fa__form__inputs {
+    display: flex;
+    justify-content: space-around;
+    margin: 0 0 1rem;
+    gap: 0.2rem;
+}
+
+.auth__2fa__input {
+    width: 12%;
+    border-radius: 8px;
+    border-width: 1px;
+    background-color: #14143B;
+    border-style: solid;
+    border-color: black;
+    text-align: center;
+    font-size: 1rem;
+    color: white;
+}
+
+.auth__2fa__form__btn {
+    text-transform: capitalize;
+    padding: 0.2rem 3rem;
+    border-radius: 8px;
+    border-style: solid;
+    border-color: black;
+    background-color: #807AAC;
+    color: white;
+    font-size: 1rem;
+    border-width: 1px;
+    margin: 0.5rem 0 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.1rem;
+}
