@@ -40,7 +40,7 @@ export default function GroupMsgContextMenu({
     var [isBaned, setIsBaned] = useState(getKicked.statusUser === "banned");
 
   const [socket] = useState(
-    io("0.0.0.0:3001", {
+    io("0.0.0.0:3001/chat", {
       extraHeaders: {
         Authorization: Data.response.token,
       },
