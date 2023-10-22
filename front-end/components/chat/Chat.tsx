@@ -48,8 +48,7 @@ export default function Chat() {
       } else if (messaged.split(" ")[0] === "JoinUsertoRoom") {
         if (messaged.split(" ")[1] === Data.response.user.username) {
           setRoom(undefined);
-        } 
-        else if (messaged.split(" ")[2] === Data.response.user.username) {
+        } else if (messaged.split(" ")[2] === Data.response.user.username) {
           setRoom(undefined);
           // fetching();s
         }
@@ -61,6 +60,14 @@ export default function Chat() {
       } else if (messaged.split(" ")[0] === "joinChatRoom") {
         if (messaged.split(" ")[1] === Data.response.user.username) {
           setRoom(undefined);
+        }
+      } else if (messaged.split(" ")[0] === "block") {
+        if (messaged.split(" ")[1] === Data.response.user.username) {
+          fetching();
+          setUserFriend(undefined);
+        } else if (messaged.split(" ")[2] === Data.response.user.username) {
+          fetching();
+          setUserFriend(undefined);
         }
       }
 
@@ -123,6 +130,16 @@ export default function Chat() {
     const resUser = await fetch("http://localhost:3000/api/home");
     const user = await resUser.json();
     setUser(user);
+
+    const resBlocked = await fetch(
+      `http://localhost:3001/users/profile/${Data.response.user.username}/blocked`,
+      {
+        cache: "no-cache",
+        headers: { authorization: `Bearer ${Data.response.token}` },
+      }
+    );
+    const blocked = await resBlocked.json();
+    console.log("blocked is", blocked);
   };
 
   const turnSwitch = () => {
@@ -164,7 +181,10 @@ export default function Chat() {
         <div className={Style.chatRoomBtn}>
           <p>chat room</p>
         </div>
-        <Link href={`/UserProfile/${Data.response.user.username}`} className={Style.profileBtn}>
+        <Link
+          href={`/UserProfile/${Data.response.user.username}`}
+          className={Style.profileBtn}
+        >
           <p>profile</p>
         </Link>
       </header>
