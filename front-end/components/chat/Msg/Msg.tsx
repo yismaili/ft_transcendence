@@ -19,6 +19,8 @@ export default function Msg({ friendData, myData }: props) {
 
   useEffect(() => {
     socket.on("message", (message: allMessages[]) => {
+      console.log('sse');
+      
       setNewMessage((prevMessages) => [...prevMessages, message[0]]);
     });
 
