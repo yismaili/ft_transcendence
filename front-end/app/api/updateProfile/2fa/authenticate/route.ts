@@ -20,5 +20,5 @@ export  async function POST(req:NextRequest) {
     {
       return NextResponse.json({response});
     }
-    return NextResponse.json({});
+    return NextResponse.json({"false"});
 }
