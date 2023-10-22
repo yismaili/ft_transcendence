@@ -149,9 +149,18 @@ export class ChatService {
         if (!user){
           throw new Error('his user not exist');
         }
-        const saltOrRounds = 10
-        const hash = await bcrypt.hash(createChatRoomDto.password, saltOrRounds);
-        const roomId = this.authService.generateRandom(10);
+
+        const allowedStatuses = ['protected', 'public', 'private'];
+        if (!allowedStatuses.includes(createChatRoomDto.status)) {
+          throw new Error("Status of the chat room is not correct.");
+        }
+
+        let hash = "Dexter's is here";
+        if (createChatRoomDto.password != null && createChatRoomDto.status === 'protected'){
+          const saltOrRounds = 10
+          hash = await bcrypt.hash(createChatRoomDto.password, saltOrRounds);
+        }
+        const roomId = this.authService.generateRandom(30);
         
         const ischatRoomExist = await this.chatRoomRepository.findOne({
           where:{chatRoomUser: { id: user.id}, RoomId: createChatRoomDto.name+roomId}
@@ -160,22 +169,22 @@ export class ChatService {
         if (ischatRoomExist){
           throw new Error('his chat room exist');
         }
-
-        const imageBuffer = createChatRoomDto.picture;
-        const filePath = './uploads';
-        const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.jpg';
-        
-        const fullFilePath = path.join(filePath, filename);
-        
-        try {
-          fs.writeFileSync(fullFilePath, imageBuffer);
-        } catch (error) {
-          console.error('Error saving the image:', error);
-        }
-        
-        const ret = await this.uploadImageToCould(fullFilePath) ;
-        const file_path = ret.url;
-
+          let file_path = 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697945199/Daco_261299_d6ycty.png';
+          if (createChatRoomDto.picture != null){
+          const imageBuffer = createChatRoomDto.picture;
+          const filePath = './uploads';
+          const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.jpg';
+          
+          const fullFilePath = path.join(filePath, filename);
+          
+          try {
+            fs.writeFileSync(fullFilePath, imageBuffer);
+          } catch (error) {
+            console.error('Error saving the image:', error);
+          }
+          const ret = await this.uploadImageToCould(fullFilePath) ;
+          file_path = ret.url;
+      }
         const newChatRoom = this.chatRoomRepository.create({
             RoomId: `${createChatRoomDto.name}_${roomId}`,
             name: createChatRoomDto.name,
@@ -229,7 +238,6 @@ async uploadImageToCould(fileUrl: string): Promise<any> {
   });
 
 }
-
 
 async joinUserToChatRoom(joinUserToChatRoom: JoinUsertoChatRoom): Promise<any> {
   const user = await this.userRepository.findOne({
@@ -1177,51 +1185,68 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
     if (!user){
       throw new Error("User NOt found!!");
     }
-
     const chatRoomInfo = await this.chatRoomRepository.findOne({
       where:{RoomId: updateChatRoomInf.roomId}
     });
-
     if (!chatRoomInfo){
       throw new Error("chat room not found");
     }
-    const userInfo = await this.chatRoomUserRepository.findOne({
-      where:{user: {id: user.id}, statusPermissions: 'admin', chatRooms: {id: chatRoomInfo.id}}
-    });
 
-    if (!userInfo){
+    const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
+      where: {
+        user: { id: user.id },
+        statusPermissions: 'admin',
+        chatRooms: {id: chatRoomInfo.id},
+      },
+    });
+    if (!adminUserChatRoom){
       throw new Error("User not admin update this chat room");
     }
-
-    const saltOrRounds = 10
-    const hash = await bcrypt.hash(updateChatRoomInf.password, saltOrRounds);
-
-    const imageBuffer = updateChatRoomInf.picture;
-    const filePath = './uploads';
-    const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.jpg';
-    // Combine the directory and filename to create the full path
-    const fullFilePath = path.join(filePath, filename);
     
-    try {
-      // Write the image buffer to the specified file path
-      fs.writeFileSync(fullFilePath, imageBuffer);
-      console.log('Image saved successfully');
-    } catch (error) {
-      throw new Error('Error saving the image');
-  }
-        
-    const ret = await this.uploadImageToCould(fullFilePath) ;
-    const file_path = ret.url;
+    let hash = chatRoomInfo.password;
+    let file_path = chatRoomInfo.picture;
+    let chatRoomName = chatRoomInfo.picture
+    let chatRoomStatus = updateChatRoomInf.status;
+
+    if (updateChatRoomInf.status != null){
+        chatRoomStatus = updateChatRoomInf.status;
+    }
+
+    if (updateChatRoomInf.chatRoomName != null){
+      chatRoomName = updateChatRoomInf.chatRoomName;
+    }
+
+    if (updateChatRoomInf.password != null){
+      const saltOrRounds = 10
+      hash = await bcrypt.hash(updateChatRoomInf.password, saltOrRounds);
+    }
+
+    if (updateChatRoomInf.picture != null){
+      const imageBuffer = updateChatRoomInf.picture;
+      const filePath = './uploads';
+      const filename = Date.now() + '-' + Math.round(Math.random() * 1e9) + '.jpg';
+      // Combine the directory and filename to create the full path
+      const fullFilePath = path.join(filePath, filename);
+      try {
+        // Write the image buffer to the specified file path
+        fs.writeFileSync(fullFilePath, imageBuffer);
+        console.log('Image saved successfully');
+      } catch (error) {
+        throw new Error('Error saving the image');
+      }
+      const ret = await this.uploadImageToCould(fullFilePath);
+      file_path = ret.url;
+    }
     
-    chatRoomInfo.name = updateChatRoomInf.chatRoomName,
-    chatRoomInfo.status = updateChatRoomInf.status,
+    chatRoomInfo.name = chatRoomName,
+    chatRoomInfo.status = chatRoomStatus,
     chatRoomInfo.password = hash,
     chatRoomInfo.picture = file_path
-    
     const saveChatRoomUP = await this.chatRoomRepository.save(chatRoomInfo);
     return saveChatRoomUP;
 
   }catch(error) {
+    console.log(error);
     throw new Error ('Error to update chat room');
   }
 }

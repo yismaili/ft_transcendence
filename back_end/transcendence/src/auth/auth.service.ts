@@ -48,6 +48,27 @@ generateRandom(length: number): string {
   return result;
 }
 
+async randomAvatar(): Promise<string> {
+  const avatarObject = {
+    avatar1: 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940567/numbuh_glitch_by_pinkandorangesunset_dfjncnp_zrfxfs.png',
+    avatar2: 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940566/numbuh_1197_by_pinkandorangesunset_dfjncfj_udm2py.png',
+    avatar3: 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940564/numbuh_750_by_pinkandorangesunset_dfjncfc_1_altcgc.png',
+    avatar4: 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940562/numbuh_1997_by_pinkandorangesunset_dfjncfq_bydwyk.png',
+    avatar5: 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940562/numbuh_1197_by_pinkandorangesunset_dfjncfj_1_kz2urp.png',
+    avatar6: 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940560/numbuh_95_by_pinkandorangesunset_dfjncnj_k5na6z.png',
+    avatar7: 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940560/numbuh_750_by_pinkandorangesunset_dfjncfc_gaijcu.png',
+    avatar8: 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940559/numbuh_580_by_pinkandorangesunset_dfjncfg_cch46y.png',
+    avatar9: 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940559/numbuh_k2_by_pinkandorangesunset_dfjncnr_zef2ii.png',
+    avatar10:'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940558/numbuh_7_by_pinkandorangesunset_dfjncab_qhzkzb.png'
+    
+  };
+
+  const avatarKeys = Object.keys(avatarObject);
+  const randomIndex = Math.floor(Math.random() * avatarKeys.length);
+  const randomAvatarUrl = avatarObject[avatarKeys[randomIndex]];
+  return randomAvatarUrl;
+}
+
 
 async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
 
@@ -82,6 +103,7 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
       const randomString = this.generateRandom(2);
       newUsername = randomString + lastName; // Change variable name to 'newUsername'
     }
+    picture = await this.randomAvatar();
     username = newUsername;
       // user entity 
     const newUser = this.userRepository.create({

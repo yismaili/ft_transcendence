@@ -1,9 +1,9 @@
 import "./Game.css";
 import { useEffect, useState } from "react";
-import { useSocketContext } from "@/contexts/socket-context";
+import { useSocketGameContext } from "@/contexts/socket-game-context";
 
 export default function Game() {
-  const { socket, Data } = useSocketContext();
+  const { socket, Data } = useSocketGameContext();
 
   class Canvas {
     private canvas: HTMLCanvasElement;
