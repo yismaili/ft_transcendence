@@ -11,13 +11,11 @@ import cookies from "cookies-ts";
 import ProfileHeader from "@/components/profile/profile_header/profile_header";
 import History__Achievements from "@/components/profile/achievement__history/achievement__history";
 import { useState, useEffect } from "react";
-import io from "socket.io-client";
 
 export default function Profile({ params }: { params: { user: string } }) {
   let [user, setUser] = useState<User>();
   let [owner, setOwner] = useState(true);
   let [path, setPath] = useState("");
-  const [socket, setSocket] = useState<any>();
 
   useEffect(() => {
     const cookieStore = new cookies();
@@ -33,14 +31,6 @@ export default function Profile({ params }: { params: { user: string } }) {
           setOwner(true);
         };
         fetching();
-
-        setSocket(
-          io("0.0.0.0:3001", {
-            extraHeaders: {
-              Authorization: cookie.response.token,
-            },
-          })
-        );
       } else {
         const fetching = async () => {
           const res = await fetch("http://localhost:3000/api/friend", {
