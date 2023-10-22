@@ -164,7 +164,7 @@ export default function Chat() {
         <div className={Style.chatRoomBtn}>
           <p>chat room</p>
         </div>
-        <Link href="/UserProfile" className={Style.profileBtn}>
+        <Link href={`/UserProfile/${Data.response.user.username}`} className={Style.profileBtn}>
           <p>profile</p>
         </Link>
       </header>
