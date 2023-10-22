@@ -16,9 +16,9 @@ export  async function POST(req:NextRequest) {
       }
     );
     const response =  await data.json();
-    if(response)
+    if(response.user)
     {
       return NextResponse.json({response});
     }
-    return NextResponse.json({"false"});
+    return NextResponse.json("false");
 }
