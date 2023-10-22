@@ -24,7 +24,7 @@ let [edit, setEdited] = useState(false);
       return (
       <div className="test__container">
         <EditProfile user={user} update={setEdited}/>
-        <Link href="/UserProfile">
+        <Link href={`/UserProfile/${user.data.username}`}>
           <div className="back__btn"><span className="back__arrow"></span> <span>back to Profile</span></div>
         </Link>
       </div>
