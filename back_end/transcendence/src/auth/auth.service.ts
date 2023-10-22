@@ -59,8 +59,7 @@ async randomAvatar(): Promise<string> {
     avatar7: 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940560/numbuh_750_by_pinkandorangesunset_dfjncfc_gaijcu.png',
     avatar8: 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940559/numbuh_580_by_pinkandorangesunset_dfjncfg_cch46y.png',
     avatar9: 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940559/numbuh_k2_by_pinkandorangesunset_dfjncnr_zef2ii.png',
-    avatar10:'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940558/numbuh_7_by_pinkandorangesunset_dfjncab_qhzkzb.png',
-    avatar11:'https://res.cloudinary.com/doymqpyfk/image/upload/v1697936982/olympic_flag.jpg'
+    avatar10:'https://res.cloudinary.com/doymqpyfk/image/upload/v1697940558/numbuh_7_by_pinkandorangesunset_dfjncab_qhzkzb.png'
     
   };
 
