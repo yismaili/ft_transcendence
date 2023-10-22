@@ -31,7 +31,7 @@ export class GameService {
 
     async createGameRandom(createGameDto: CreateGameDto, playerId: Socket, server: Server): Promise<void> {
       try {
-        const user = await this.userRepository.findOne({
+          const user = await this.userRepository.findOne({
           where: { username: createGameDto.username },
         });
         if (!user) {
@@ -58,12 +58,12 @@ export class GameService {
         }
         
         this.players.get(roomName).push(user.username);
+  
         if (this.players.get(roomName).length === 2) {
-         await this.startGame(roomName, playerId, server);
+          await this.startGame(roomName, playerId, server);
         }else{
           playerId.on('cancelGame', async () => {
-            console.log("hi");
-           await this.handleLeaveRoom(playerId, roomName);
+            await this.handleLeaveRoom(playerId, roomName);
           });
         }
       } catch (error) {
