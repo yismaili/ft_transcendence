@@ -3,9 +3,9 @@ import React, { createContext, useState, useContext } from "react";
 import Cookies from "cookies-ts";
 import io from "socket.io-client";
 
-const socketContext = createContext<any>(null);
+const socketOnlineContext = createContext<any>(null);
 
-export default function SocketContextProvider({
+export default function SocketOnlineContextProvider({
   children,
 }: {
   children: React.ReactNode;
@@ -14,13 +14,6 @@ export default function SocketContextProvider({
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
 
   const [socket] = useState(
-    io("0.0.0.0:3001/chat", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
-  const [onlineSocket] = useState(
     io("0.0.0.0:3001", {
       extraHeaders: {
         Authorization: Data.response.token,
@@ -29,15 +22,17 @@ export default function SocketContextProvider({
   );
 
   return (
-    <socketContext.Provider value={{ socket, Data }}>
+    <socketOnlineContext.Provider value={{ socket, Data }}>
       {children}
-    </socketContext.Provider>
+    </socketOnlineContext.Provider>
   );
 }
 
-export function useSocketContext() {
-  const context = useContext(socketContext);
+export function useSocketOnlineContext() {
+  const context = useContext(socketOnlineContext);
   if (!context)
-    throw Error("useSocketContext must be used within a SocketContext");
+    throw Error(
+      "useSocketOnlineContext must be used within a SocketOnlineContext"
+    );
   return context;
 }
