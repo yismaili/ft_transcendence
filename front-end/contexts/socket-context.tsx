@@ -29,7 +29,7 @@ export default function SocketContextProvider({
   );
 
   return (
-    <socketContext.Provider value={{ socket, Data }}>
+    <socketContext.Provider value={{ socket, Data, onlineSocket }}>
       {children}
     </socketContext.Provider>
   );
