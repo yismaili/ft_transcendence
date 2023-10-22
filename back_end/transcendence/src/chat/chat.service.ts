@@ -53,12 +53,6 @@ export class ChatService {
   rooms: Map<string, Socket[]> = new Map<string, Socket[]>();
 
   async createChatDirect(createChatDto, clientId, server) : Promise<any>{
-    // for (const [key, value] of this.isconnected) {
-    //     console.log();
-    //   for (const socket of value) {
-    //      console.log(socket.id);
-    //   }
-    // }
     try {
       const user = await this.userRepository.findOne({
         where: {
@@ -87,12 +81,13 @@ export class ChatService {
       await this.chatRepository.save(newChatMessage);
       
       // Iterate through connected sockets and make them join the room
+
       for (const [room, sockets] of this.isconnected) {
-        console.log(room);
+        // console.log(room);
         if (room === secondUser.username) {
           for (const socket of sockets) {
             await socket.join(roomName);
-            console.log(sockets);
+            // console.log(socket.id);
           }
         }
       }
@@ -405,8 +400,10 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
         
         for (const chatRoomUser of chatRoomUsers) {
           const username = chatRoomUser.user.username;
+          // console.log(username);
           for (const socket of this.isconnected.get(username) || []) {
             await socket.join(roomName);
+            // console.log(socket.id);
           }
         }
         
