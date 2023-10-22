@@ -6,15 +6,16 @@ import Link from "next/link";
 
 interface nums {
   user: User;
+  param: boolean;
 }
 
 function ProfilePic(props: nums) {  
   return (
     <div className="profile">
       <div className="profile__pic__level">
-        <Link href="/UserProfile/Parameters" className="params__btn">
+        {props.param &&<Link href={`/UserProfile/${props.user.data.username}/Parameters`} className="params__btn">
           <span className="param__img"></span>
-        </Link>
+        </Link>}
 
         <div className="test">
           <span
@@ -23,7 +24,6 @@ function ProfilePic(props: nums) {
           ></span>
           <span className="profile__level">
             {props.user.data.profile.level}
-            
           </span>
         </div>
       </div>

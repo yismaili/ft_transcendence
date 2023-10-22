@@ -1,24 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   const mycookie = request.cookies.get("userData");
-  console.log("sbr");
+  let req = await request.text();
+  console.log("test97:", req);
+  
   if (mycookie) {
     const Data = JSON.parse(mycookie!.value);
     const token = Data?.response?.token;
 
-    // console.log("its me", data.response.user.username);
     const res = await fetch(
-      `http://localhost:3001/users/profile/${Data.response.user.username}`,
+      `http://localhost:3001/users/profile/${Data.response.user.username}/searchTouser/${req}`,
       {
+        method:"GET",
         cache: "no-cache",
         headers: { authorization: `Bearer ${token}` },
       }
     );
 
     const data = await res.json();
-    // console.log(Data);
-
     return NextResponse.json({ data });
   }
 
