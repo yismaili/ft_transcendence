@@ -19,8 +19,8 @@ export async function POST(request: NextRequest) {
     );
 
     const data = await res.json();
-    return NextResponse.json({ data });
+    if(data.username)
+      return NextResponse.json({ data });
   }
-
   return NextResponse.json({});
 }
