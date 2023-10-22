@@ -7,12 +7,13 @@ import { useRouter } from "next/navigation";
 import { useSocketContext } from "@/contexts/socket-context";
 
 export default function Logout() {
-  const { socket, Data } = useSocketContext();
+  const { socket, Data, onlineSocket } = useSocketContext();
   const cookies = new Cookies();
   const router = useRouter();
 
   const logout = () => {
-    socket.emit("updateUi", { message: `status offline` });
+    socket.emit("updateUI", { message: `status offline` });
+    // onlineSocket.disconnect();
     cookies.remove("userData");
     router.push("http://localhost:3000/login");
   };
