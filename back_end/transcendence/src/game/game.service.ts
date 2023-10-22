@@ -84,7 +84,6 @@ export class GameService {
           throw new Error("user not found");
         }
         user.status = 'inGame';
-        console.log(user);
         return await this.userRepository.save(user);
       }catch(error){
         throw error;
@@ -113,15 +112,10 @@ export class GameService {
 
     async startGame(roomName: string, playerId: Socket, server: Server): Promise<void>{
     
-      // const rootUser = this.players.get(roomName)[0];
-      // const friendUser = this.players.get(roomName)[1];
-      const rootUser = await this.getUser(playerId);
-      const friendUser = await this.getUser(playerId);
-
-      // await this.statusInGame(rootUser);
-      // await this.statusInGame(friendUser);
-      console.log(rootUser);
-      console.log(friendUser);
+      const rootUser = this.players.get(roomName)[0];
+      const friendUser = this.players.get(roomName)[1];
+      await this.statusInGame(rootUser);
+      await this.statusInGame(friendUser);
       server.to(roomName).emit('players',{
         rootUser,
         friendUser
