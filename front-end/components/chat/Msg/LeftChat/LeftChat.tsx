@@ -42,6 +42,7 @@ export default function LeftChat({
           <FriendContextMenu
             setMenuOpen={setMenuOpen}
             menuPosition={menuPosition}
+            friendData={friendData}
           />
         )}
       </>
@@ -62,6 +63,7 @@ export default function LeftChat({
           <FriendContextMenu
             setMenuOpen={setMenuOpen}
             menuPosition={menuPosition}
+            friendData={friendData}
           />
         )}
       </>
