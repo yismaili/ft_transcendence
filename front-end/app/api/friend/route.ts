@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   const mycookie = request.cookies.get("userData");
   let req = await request.text();
-  console.log("test97:", req);
   
   if (mycookie) {
     const Data = JSON.parse(mycookie!.value);
