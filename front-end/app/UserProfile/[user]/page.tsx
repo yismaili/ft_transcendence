@@ -32,7 +32,6 @@ export default function Profile({ params }: { params: { user: string } }) {
           setOwner(true);
         };
         fetching();
-<<<<<<< HEAD
 
         setSocket(
           io("0.0.0.0:3001", {
@@ -41,8 +40,7 @@ export default function Profile({ params }: { params: { user: string } }) {
             },
           })
         );
-=======
->>>>>>> 01a62b9444e43130b946fb86b9e9cbed2b1975d7
+
       } else {
         const fetching = async () => {
           const res = await fetch("http://localhost:3000/api/friend", {
