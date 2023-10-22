@@ -3,9 +3,9 @@ type User = {
     id: number;
     username: string;
     firstName: string;
-    lastName:string;
+    lastName: string;
     uniquename: string;
-    isTwoFactorAuthEnabled:boolean;
+    isTwoFactorAuthEnabled: boolean;
     email: string;
     picture: string;
     profile: Profile;
@@ -83,6 +83,7 @@ type AllRooms = {
     id: number;
     name: string;
     password: string;
+    picture: string;
     status: string;
   };
   id: number;

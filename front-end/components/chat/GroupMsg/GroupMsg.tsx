@@ -24,10 +24,10 @@ export default function GroupMsg({ groupInput, room }: props) {
       if (messaged.split(" ")[0] === "muteUser") {
         if (messaged.split(" ")[1] === Data.response.user.username) {
           setIsMute(true);
-          let num:number = +messaged.split(" ")[2];
+          let num: number = +messaged.split(" ")[2];
           setTimeout(() => {
             setIsMute(false);
-          }, (num * 60 * 1000));
+          }, num * 60 * 1000);
         }
       }
     });
@@ -35,21 +35,22 @@ export default function GroupMsg({ groupInput, room }: props) {
 
   useEffect(() => {
     socket.on("message", (message: allGroupMessages) => {
-      socket.emit(
-        "getAllUserOfChatRoom",
-        {
-          username: Data.response.user.username,
-          chatRoomName: room.chatRooms.RoomId,
-        },
-        (response: allGroupUsers[]) => {
-          setAllGroupUsers(response);
-          response.map((user) => {
-            if (message.user.username === user.user.username) {
-              setNewMessage((prevMessages) => [...prevMessages, message]);
-            }
-          });
-        }
-      );
+      if (message.user)
+        socket.emit(
+          "getAllUserOfChatRoom",
+          {
+            username: Data.response.user.username,
+            chatRoomName: room.chatRooms.RoomId,
+          },
+          (response: allGroupUsers[]) => {
+            setAllGroupUsers(response);
+            response.map((user) => {
+              if (message.user.username === user.user.username) {
+                setNewMessage((prevMessages) => [...prevMessages, message]);
+              }
+            });
+          }
+        );
     });
   }, []);
 

@@ -34,7 +34,7 @@ export default function Group({ room, choseChat }: props) {
         <div className={Style.imgContainer}>
           <div
             className={Style.avatar}
-            // style={{ backgroundImage: `url("${data.picture}")` }}
+            style={{ backgroundImage: `url("${room.chatRooms.picture}")` }}
           ></div>
         </div>
         <p className={Style.name}>{room.chatRooms.name}</p>
