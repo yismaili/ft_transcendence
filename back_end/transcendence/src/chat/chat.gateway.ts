@@ -25,10 +25,10 @@ export class ChatGateway {
   @WebSocketServer() server: Server;
   constructor(private readonly chatService: ChatService) {}
 
-  handleConnection(socket: Socket): void {
-   // this.chatService.handleConnection(socket);
-    this.chatService.addUserWithSocketId(socket);
-  }
+  // handleConnection(socket: Socket): void {
+  //  // this.chatService.handleConnection(socket);
+  //   this.chatService.addUserWithSocketId(socket);
+  // }
   
   // @UseGuards(JwtAuthGuard, JwtStrategy)
   @SubscribeMessage('createChat')

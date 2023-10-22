@@ -14,8 +14,8 @@
 }
 
 .imgContainer {
-    position: relative;
-    margin-left: 5%;
+  position: relative;
+  margin-left: 5%;
 }
 
 .avatar {
@@ -30,11 +30,11 @@
 .onlineStatus {
   position: absolute;
   right: 0.3rem;
-  bottom: 0;
-  width: 10px;
-  height: 10px;
+  bottom: 2px;
+  width: 13px;
+  height: 13px;
   border-radius: 100%;
-  background-color: #1bdb1b;
+  background-color: #908989;
 }
 
 .name {
@@ -54,4 +54,8 @@
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 5%;
+}
+
+.On {
+  background-color: #1bdb1b;
 }

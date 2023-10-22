@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { createContext, useState, useContext } from "react";
 import Cookies from "cookies-ts";
 import io from "socket.io-client";
@@ -13,6 +13,9 @@ export default function SocketGameContextProvider({
   const cookies = new Cookies();
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
 
+  console.log('test');
+  
+
   const [socket] = useState(
     io("0.0.0.0:3001/game", {
       extraHeaders: {
@@ -21,8 +24,16 @@ export default function SocketGameContextProvider({
     })
   );
 
+  const [onlineSocket] = useState(
+    io("0.0.0.0:3001", {
+      extraHeaders: {
+        Authorization: Data.response.token,
+      },
+    })
+  );
+
   return (
-    <socketGameContext.Provider value={{ socket, Data }}>
+    <socketGameContext.Provider value={{ socket, Data, onlineSocket }}>
       {children}
     </socketGameContext.Provider>
   );
