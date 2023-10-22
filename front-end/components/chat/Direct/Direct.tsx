@@ -15,7 +15,7 @@ export default function Direct({ data, choseChat }: props) {
   };
 
   useEffect(() => {
-    socket.on("updateUi", (messaged: string) => {
+    socket.on("updateUI", (messaged: string) => {
       console.log(messaged);
       if (messaged.split(" ")[0] === "status") {
         setStatus(messaged.split(" ")[1]);
@@ -32,7 +32,7 @@ export default function Direct({ data, choseChat }: props) {
         ></div>
         <div
           className={`${Style.onlineStatus} ${
-            data.status === "online" && Style.On
+            status === "online" && Style.On
           }`}
         ></div>
       </div>
