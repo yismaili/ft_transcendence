@@ -149,9 +149,18 @@ export class ChatService {
         if (!user){
           throw new Error('his user not exist');
         }
-        const saltOrRounds = 10
-        const hash = await bcrypt.hash(createChatRoomDto.password, saltOrRounds);
-        const roomId = this.authService.generateRandom(10);
+
+        const allowedStatuses = ['protected', 'public', 'private'];
+        if (!allowedStatuses.includes(createChatRoomDto.status)) {
+          throw new Error("Status of the chat room is not correct.");
+        }
+
+        let hash = "Dexter's is here";
+        if (createChatRoomDto.password != null && createChatRoomDto.status === 'protected'){
+          const saltOrRounds = 10
+          hash = await bcrypt.hash(createChatRoomDto.password, saltOrRounds);
+        }
+        const roomId = this.authService.generateRandom(30);
         
         const ischatRoomExist = await this.chatRoomRepository.findOne({
           where:{chatRoomUser: { id: user.id}, RoomId: createChatRoomDto.name+roomId}
@@ -160,7 +169,7 @@ export class ChatService {
         if (ischatRoomExist){
           throw new Error('his chat room exist');
         }
-          let file_path = 'https://avatars.githubusercontent.com/u/69278312?v=4';
+          let file_path = 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697945199/Daco_261299_d6ycty.png';
           if (createChatRoomDto.picture != null){
           const imageBuffer = createChatRoomDto.picture;
           const filePath = './uploads';
@@ -229,7 +238,6 @@ async uploadImageToCould(fileUrl: string): Promise<any> {
   });
 
 }
-
 
 async joinUserToChatRoom(joinUserToChatRoom: JoinUsertoChatRoom): Promise<any> {
   const user = await this.userRepository.findOne({
