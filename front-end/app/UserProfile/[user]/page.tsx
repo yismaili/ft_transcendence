@@ -33,7 +33,6 @@ export default function Profile({ params }: { params: { user: string } }) {
           setOwner(true);
         };
         fetching();
-        
         setSocket(
           io("0.0.0.0:3001", {
             extraHeaders: {
