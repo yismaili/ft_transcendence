@@ -11,7 +11,6 @@ import cookies from "cookies-ts";
 import ProfileHeader from "@/components/profile/profile_header/profile_header";
 import History__Achievements from "@/components/profile/achievement__history/achievement__history";
 import { useState, useEffect } from "react";
-import io from "socket.io-client";
 
 export default function Profile({ params }: { params: { user: string } }) {
   let [user, setUser] = useState<User>();
@@ -33,7 +32,6 @@ export default function Profile({ params }: { params: { user: string } }) {
           setOwner(true);
         };
         fetching();
-
         setSocket(
           io("0.0.0.0:3001", {
             extraHeaders: {
