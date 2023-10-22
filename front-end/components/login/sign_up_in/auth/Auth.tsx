@@ -29,7 +29,7 @@ export default function Auth({ Sign_in_up }: Props) {
           auth_window?.close();
           if (cookieval.response.user.isTwoFactorAuthEnabled)
           router.push("http://localhost:3000/login/2FA");
-        else router.push("http://localhost:3000/UserProfile");
+        else router.push(`http://localhost:3000/UserProfile/${cookieval.response.user.username}`);
         console.clear();
         }
       }, 1000);
