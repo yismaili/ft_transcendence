@@ -4,7 +4,7 @@ import { Socket, Server } from 'socket.io';
 import { ChatService } from 'src/chat/chat.service';
 import { UserService } from 'src/user/user.service';
 
-@WebSocketGateway({cors: { origin: '*' }, namespace: 'userstatus'})
+@WebSocketGateway({cors: { origin: '*' }})
 export class UserStatusGateway {
   @WebSocketServer() server: Server;
   constructor(private readonly chatService: ChatService, private userService: UserService) {}
