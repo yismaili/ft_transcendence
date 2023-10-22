@@ -22,7 +22,7 @@ export default function Login() {
         let cookieval = JSON.parse(JSON.stringify(mycookie));
         if(cookieval.response.token)
         {
-          router.push("http://localhost:3000/UserProfile");
+          router.push(`http://localhost:3000/UserProfile/${cookieval.response.user.username}`);
         }
       }
     }

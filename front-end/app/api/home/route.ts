@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const mycookie = request.cookies.get("userData");
-  console.log("sbr");
   if (mycookie) {
     const Data = JSON.parse(mycookie!.value);
     const token = Data?.response?.token;
@@ -18,7 +17,6 @@ export async function GET(request: NextRequest) {
 
     const data = await res.json();
     // console.log(Data);
-
     return NextResponse.json({ data });
   }
 

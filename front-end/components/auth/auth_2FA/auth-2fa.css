@@ -1,6 +1,16 @@
 .auth__2fa{
     align-items: center;
     color: white;
+    font-family: probert;
+}
+.auth__2fa__img{
+    display: inline-block;
+    width: 180px;
+    height: 180px;
+    border-radius: 1000px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
 }
 
 .auth__2fa__profile{
@@ -45,6 +55,7 @@
 }
 
 .auth__2fa__form__btn{
+    font-family: inherit;
     text-transform: capitalize;
     padding: 0.2rem 3rem;
     border-radius: 8px;
