@@ -53,7 +53,12 @@ export class ChatService {
   rooms: Map<string, Socket[]> = new Map<string, Socket[]>();
 
   async createChatDirect(createChatDto, clientId, server) : Promise<any>{
-
+    // for (const [key, value] of this.isconnected) {
+    //     console.log();
+    //   for (const socket of value) {
+    //      console.log(socket.id);
+    //   }
+    // }
     try {
       const user = await this.userRepository.findOne({
         where: {
@@ -83,9 +88,11 @@ export class ChatService {
       
       // Iterate through connected sockets and make them join the room
       for (const [room, sockets] of this.isconnected) {
+        console.log(room);
         if (room === secondUser.username) {
           for (const socket of sockets) {
             await socket.join(roomName);
+            console.log(sockets);
           }
         }
       }
@@ -1252,94 +1259,94 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
 }
 
 // handleng connection
-//  async handleConnection(socket: Socket) {
-//     try {
-
-//       const jwtSecret = 'secrete';
-//       const token = socket.handshake.headers.authorization;
-
-//       if (!token) {
-//         socket.emit('error', 'Authorization token missing');
-//         socket.disconnect(true);
-//         return;
-//       }
-
-//       let decodedToken = verify(token, jwtSecret);
-//       const clientId = socket.id;
-//       const username = decodedToken['username'];
-
-//       const user = await this.userRepository.findOne({
-//         where: {username: username}
-//       });
-//       user.status = 'online';
-
-//       this.connectedClients.set(clientId, { socket, username });
-//       await this.userRepository.save(user);
-//       socket.on('disconnect', async () => {
-//         user.status = 'offline';
-//         await this.userRepository.save(user);
-//         this.connectedClients.delete(clientId);
-//       });
-//     } catch (error) {
-//       socket.emit('error', 'Authentication failed');
-//       socket.disconnect(true);
-//     }
-//   }
-
-// async addUserWithSocketId(username: string ,clientId: Socket) {
-//     try {
-//       if (!this.isconnected.has(username)) {
-//         this.isconnected.set(username,[]);
-//       }
-//       this.isconnected.get(username).push(clientId);
-      
-//       // Handle user disconnection and remove them from the map
-//       clientId.on('disconnect', () => {
-//         if (this.isconnected.has(username)) {
-//           this.isconnected.delete(username);
-//         }
-//       });
-//     } catch (error) {
-//       throw error;
-//     }
-//   }
-
-async addUserWithSocketId(clientId: Socket) {
-  try {
-    const jwtSecret = 'secrete';
-    // Extract the JWT token
-    const token = clientId.handshake.headers.authorization;
-
-    if (!token) {
-      clientId.emit('error', 'Authorization token missing');
-      clientId.disconnect(true);
-      return;
-    }
-    // Verify the JWT token using the secret
-    let decodedToken;
+ async handleConnection(socket: Socket) {
     try {
-      decodedToken = verify(token, jwtSecret);
+
+      const jwtSecret = 'secrete';
+      const token = socket.handshake.headers.authorization;
+
+      if (!token) {
+        socket.emit('error', 'Authorization token missing');
+        socket.disconnect(true);
+        return;
+      }
+
+      let decodedToken = verify(token, jwtSecret);
+      const clientId = socket.id;
+      const username = decodedToken['username'];
+
+      const user = await this.userRepository.findOne({
+        where: {username: username}
+      });
+      user.status = 'online';
+
+      this.connectedClients.set(clientId, { socket, username });
+      await this.userRepository.save(user);
+      socket.on('disconnect', async () => {
+        user.status = 'offline';
+        await this.userRepository.save(user);
+        this.connectedClients.delete(clientId);
+      });
     } catch (error) {
-      clientId.emit('error', 'Invalid authorization token');
-      clientId.disconnect(true);
-      return;
+      socket.emit('error', 'Authentication failed');
+      socket.disconnect(true);
     }
+  }
 
-    const username = decodedToken['username'];
-    const user = await this.userRepository.findOne({
-      where: { username: username }
-    });
+async addUserWithSocketId(username: string ,clientId: Socket) {
+    try {
+      if (!this.isconnected.has(username)) {
+        this.isconnected.set(username,[]);
+      }
+      this.isconnected.get(username).push(clientId);
+      
+      // Handle user disconnection and remove them from the map
+      clientId.on('disconnect', () => {
+        if (this.isconnected.has(username)) {
+          this.isconnected.delete(username);
+        }
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
 
-    if (!user) {
-      clientId.emit('error', 'User does not exist');
-      clientId.disconnect(true);
-      return;
-    }
-    // Join the user to a room based on their username
-    if (!this.isconnected.has(username)) {
-      this.isconnected.set(username,[]);
-    }
-    this.isconnected.get(username).push(clientId);
+// async addUserWithSocketId(clientId: Socket) {
+//   try {
+//     const jwtSecret = 'secrete';
+//     // Extract the JWT token
+//     const token = clientId.handshake.headers.authorization;
+
+//     if (!token) {
+//       clientId.emit('error', 'Authorization token missing');
+//       clientId.disconnect(true);
+//       return;
+//     }
+//     // Verify the JWT token using the secret
+//     let decodedToken;
+//     try {
+//       decodedToken = verify(token, jwtSecret);
+//     } catch (error) {
+//       clientId.emit('error', 'Invalid authorization token');
+//       clientId.disconnect(true);
+//       return;
+//     }
+
+//     const username = decodedToken['username'];
+//     const user = await this.userRepository.findOne({
+//       where: { username: username }
+//     });
+
+//     if (!user) {
+//       clientId.emit('error', 'User does not exist');
+//       clientId.disconnect(true);
+//       return;
+//     }
+//     // Join the user to a room based on their username
+//     if (!this.isconnected.has(username)) {
+//       this.isconnected.set(username,[]);
+//     }
+//     this.isconnected.get(username).push(clientId);
 
     // for (const [key, value] of this.isconnected) {
     //     console.log(username);
@@ -1348,16 +1355,16 @@ async addUserWithSocketId(clientId: Socket) {
     //   }
     // }
     
-    // Handle user disconnection and remove them from the map
-    clientId.on('disconnect', () => {
-      if (this.isconnected.has(username)) {
-        this.isconnected.delete(username);
-      }
-    });
-  } catch (error) {
-    throw error;
-  }
-}
+//     // Handle user disconnection and remove them from the map
+//     clientId.on('disconnect', () => {
+//       if (this.isconnected.has(username)) {
+//         this.isconnected.delete(username);
+//       }
+//     });
+//   } catch (error) {
+//     throw error;
+//   }
+// }
 
 async gitAllUsers():Promise<any>{
   try{
@@ -1376,6 +1383,6 @@ async gitAllUsers():Promise<any>{
 }
 
    isconnected: Map<string, Socket[]> = new Map<string, Socket[]>();
-  // connectedClients = new Map<string, { socket: Socket; username: string }>();
+   connectedClients = new Map<string, { socket: Socket; username: string }>();
 }
 
