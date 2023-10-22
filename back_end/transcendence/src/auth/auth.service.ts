@@ -80,12 +80,6 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
   });
       
   if (existingUser) {
-    // existingUser.firstName = firstName || existingUser.firstName;
-    // existingUser.lastName = lastName || existingUser.lastName;
-    // existingUser.username = username || existingUser.username;
-    // existingUser.picture = picture|| existingUser.picture;
-      
-    // await this.userRepository.save(existingUser);
     if (existingUser.isTwoFactorAuthEnabled === true){
         return {user: existingUser, success: true};
     }
@@ -128,24 +122,10 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
         newUser.profile = newProfile;
       }
     const savedUser = await this.userRepository.save(newUser);
-    // if (savedUser.isTwoFactorAuthEnabled === true){
-    //     return savedUser;
-    // }
     const token = sign({ ...savedUser }, 'secrete');
     return { token, user: savedUser, success: true};
   }
 }
-
-async generateUsername(firstname: string):Promise<any>{
-
-}
-//     generateRandomString(arg0: number) {
-//       throw new Error('Method not implemented.');
-//     }
-
-// async updateProfile(userDetails: UserDto){
-  
-// }
       
 async findUserById(user: Partial<User>): Promise<Partial<any>> {
   try {
