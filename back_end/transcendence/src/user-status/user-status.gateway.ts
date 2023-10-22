@@ -23,7 +23,7 @@ export class UserStatusGateway {
     let decodedToken = verify(token, jwtSecret);
     const username = decodedToken['username'];
     this.userService.setUserstatus(username, 'online');
-    // this.chatService.addUserWithSocketId(username, client);
+    //this.chatService.addUserWithSocketId(username, client);
   }
 
   handleDisconnect(client: Socket) {
