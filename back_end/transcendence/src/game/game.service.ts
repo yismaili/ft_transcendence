@@ -12,9 +12,7 @@ import { Not, Repository } from 'typeorm';
 import { UpdateResultDto } from './dto/update-result.dto';
 import { Socket, Server} from 'socket.io';
 import { SetHistoryDto } from './dto/set-history.dto';
-import { ResultOfGame } from './dto/result-of-game.dto';
 import { verify } from 'jsonwebtoken';
-import { error } from 'console';
 
 @Injectable()
 export class GameService {
@@ -103,14 +101,14 @@ export class GameService {
       // Set up an event listener for 'updateGame' outside the interval
       playerId.on('updateGame', async (data) => {
         const user = await this.getUser(playerId);
-        if (rootUser == user){
+        // if (rootUser == user){
           pongGame.setDownPressed(data.downPressed);
           pongGame.setUpPressed(data.upPressed);
-        }
-       else{
+      //   }
+      //  else{
           pongGame.setWPressed(data.wPressed);
           pongGame.setSPressed(data.sPressed);
-        }
+       // }
       });
 
       // Set up an interval to send ball position data to clients
@@ -146,7 +144,7 @@ export class GameService {
             this.handleLeaveRoom(playerId, roomName);
             clearInterval(intervalId);
           }
-      }, 1000 / 100); // 100 frames per second
+      }, 1000 / 1000); // 100 frames per second
     }
   
    async getUser(client: Socket){
@@ -544,60 +542,60 @@ async UpdateResult(updateResultDto: UpdateResultDto): Promise<HistoryEntity>{
     return saveUpdate;
 } 
 
-async addUserWithSocketId(playerId: Socket) {
-  try {
-    const jwtSecret = 'secrete';
-    // Extract the JWT token
-    const token = playerId.handshake.headers.authorization;
+// async addUserWithSocketId(playerId: Socket) {
+//   try {
+//     const jwtSecret = 'secrete';
+//     // Extract the JWT token
+//     const token = playerId.handshake.headers.authorization;
 
-    if (!token) {
-      playerId.emit('error', 'Authorization token missing');
-      playerId.disconnect(true);
-      return;
-    }
-    // Verify the JWT token using the secret
-    let decodedToken;
-    try {
-      decodedToken = verify(token, jwtSecret);
-    } catch (error) {
-      playerId.emit('error', 'Invalid authorization token');
-      playerId.disconnect(true);
-      return;
-    }
+//     if (!token) {
+//       playerId.emit('error', 'Authorization token missing');
+//       playerId.disconnect(true);
+//       return;
+//     }
+//     // Verify the JWT token using the secret
+//     let decodedToken;
+//     try {
+//       decodedToken = verify(token, jwtSecret);
+//     } catch (error) {
+//       playerId.emit('error', 'Invalid authorization token');
+//       playerId.disconnect(true);
+//       return;
+//     }
 
-    const username = decodedToken['username'];
-    const user = await this.userRepository.findOne({
-      where: { username: username }
-    });
+//     const username = decodedToken['username'];
+//     const user = await this.userRepository.findOne({
+//       where: { username: username }
+//     });
 
-    if (!user) {
-      playerId.emit('error', 'User does not exist');
-      playerId.disconnect(true);
-      return;
-    }
-    // Join the user to a room based on their username
-    if (!this.isconnected.has(username)) {
-      this.isconnected.set(username,[]);
-    }
-    this.isconnected.get(username).push(playerId);
+//     if (!user) {
+//       playerId.emit('error', 'User does not exist');
+//       playerId.disconnect(true);
+//       return;
+//     }
+//     // Join the user to a room based on their username
+//     if (!this.isconnected.has(username)) {
+//       this.isconnected.set(username,[]);
+//     }
+//     this.isconnected.get(username).push(playerId);
 
-    for (const [key, value] of this.isconnected) {
-      // console.log(username);
-      for (const socket of value) {
-        // console.log(socket.id);
-      }
-    }
+//     for (const [key, value] of this.isconnected) {
+//       console.log(username);
+//       for (const socket of value) {
+//         console.log(socket.id);
+//       }
+//     }
     
-    // Handle user disconnection and remove them from the map
-    playerId.on('disconnect', () => {
-      if (this.isconnected.has(username)) {
-        this.isconnected.delete(username);
-      }
-    });
-  } catch (error) {
-    throw error;
-  }
-}
+//     // Handle user disconnection and remove them from the map
+//     playerId.on('disconnect', () => {
+//       if (this.isconnected.has(username)) {
+//         this.isconnected.delete(username);
+//       }
+//     });
+//   } catch (error) {
+//     throw error;
+//   }
+// }
 isconnected: Map<string, Socket[]> = new Map<string, Socket[]>();
 }
 
