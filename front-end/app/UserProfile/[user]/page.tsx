@@ -11,6 +11,7 @@ import cookies from "cookies-ts";
 import ProfileHeader from "@/components/profile/profile_header/profile_header";
 import History__Achievements from "@/components/profile/achievement__history/achievement__history";
 import { useState, useEffect } from "react";
+import { io } from "socket.io-client";
 
 export default function Profile({ params }: { params: { user: string } }) {
   let [user, setUser] = useState<User>();
@@ -32,8 +33,7 @@ export default function Profile({ params }: { params: { user: string } }) {
           setOwner(true);
         };
         fetching();
-<<<<<<< HEAD
-
+        
         setSocket(
           io("0.0.0.0:3001", {
             extraHeaders: {
@@ -41,8 +41,7 @@ export default function Profile({ params }: { params: { user: string } }) {
             },
           })
         );
-=======
->>>>>>> 01a62b9444e43130b946fb86b9e9cbed2b1975d7
+
       } else {
         const fetching = async () => {
           const res = await fetch("http://localhost:3000/api/friend", {
