@@ -1,5 +1,4 @@
 "use client";
-
 import UserProfile from "@/components/profile/UserProfile/UserProfile";
 
 export default function Profile({
@@ -8,5 +7,4 @@ export default function Profile({
   params: { user: string };
 }) {
   return(<><UserProfile params={params}/></>);
-
 }

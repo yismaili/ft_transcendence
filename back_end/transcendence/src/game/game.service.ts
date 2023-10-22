@@ -596,6 +596,59 @@ async UpdateResult(updateResultDto: UpdateResultDto): Promise<HistoryEntity>{
 //     throw error;
 //   }
 // }
+
+async handleConnection(socket: Socket) {
+  try {
+
+    const jwtSecret = 'secrete';
+    const token = socket.handshake.headers.authorization;
+
+    if (!token) {
+      socket.emit('error', 'Authorization token missing');
+      socket.disconnect(true);
+      return;
+    }
+
+    let decodedToken = verify(token, jwtSecret);
+    const clientId = socket.id;
+    const username = decodedToken['username'];
+
+    const user = await this.userRepository.findOne({
+      where: {username: username}
+    });
+    user.status = 'online';
+
+    this.connectedClients.set(clientId, { socket, username });
+    await this.userRepository.save(user);
+    socket.on('disconnect', async () => {
+      user.status = 'offline';
+      await this.userRepository.save(user);
+      this.connectedClients.delete(clientId);
+    });
+  } catch (error) {
+    socket.emit('error', 'Authentication failed');
+    socket.disconnect(true);
+  }
+}
+
+async addUserWithSocketId(username: string ,clientId: Socket) {
+  try {
+    if (!this.isconnected.has(username)) {
+      this.isconnected.set(username,[]);
+    }
+    this.isconnected.get(username).push(clientId);
+    
+    // Handle user disconnection and remove them from the map
+    clientId.on('disconnect', () => {
+      if (this.isconnected.has(username)) {
+        this.isconnected.delete(username);
+      }
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+connectedClients = new Map<string, { socket: Socket; username: string }>();
 isconnected: Map<string, Socket[]> = new Map<string, Socket[]>();
 }
 
