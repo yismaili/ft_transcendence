@@ -17,6 +17,7 @@ export default function Profile({ params }: { params: { user: string } }) {
   let [user, setUser] = useState<User>();
   let [owner, setOwner] = useState(true);
   let [path, setPath] = useState("");
+  const [socket, setSocket] = useState<any>();
 
   useEffect(() => {
     const cookieStore = new cookies();
@@ -33,7 +34,7 @@ export default function Profile({ params }: { params: { user: string } }) {
         };
         fetching();
 
-        const [socket] = useState(
+        setSocket(
           io("0.0.0.0:3001", {
             extraHeaders: {
               Authorization: cookie.response.token,
