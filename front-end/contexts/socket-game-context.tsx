@@ -12,8 +12,6 @@ export default function SocketGameContextProvider({
 }) {
   const cookies = new Cookies();
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
-  console.log('test');
   
 
   const [socket] = useState(
@@ -24,16 +22,8 @@ export default function SocketGameContextProvider({
     })
   );
 
-  const [onlineSocket] = useState(
-    io("0.0.0.0:3001", {
-      extraHeaders: {
-        Authorization: Data.response.token,
-      },
-    })
-  );
-
   return (
-    <socketGameContext.Provider value={{ socket, Data, onlineSocket }}>
+    <socketGameContext.Provider value={{ socket, Data }}>
       {children}
     </socketGameContext.Provider>
   );

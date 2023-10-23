@@ -13,7 +13,7 @@ export default function Logout() {
 
   const logout = () => {
     socket.emit("updateUI", { message: `status offline` });
-    // onlineSocket.disconnect();
+    onlineSocket.disconnect();
     cookies.remove("userData");
     router.push("http://localhost:3000/login");
   };
