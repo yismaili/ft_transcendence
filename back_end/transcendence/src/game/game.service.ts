@@ -77,7 +77,7 @@ export class GameService {
       }
     }
 
-    async statusInGame(username: string) {
+    async statusInGame(username: string) :Promise<any> {
       try{
         const user = await this.userRepository.findOne({where: {username: username}});
         if (!user){
@@ -139,6 +139,8 @@ export class GameService {
 
       // Set up an interval to send ball position data to clients
       const intervalId = setInterval(async () => {
+        // await this.statusInGame(rootUser);
+        // await this.statusInGame(friendUser);
         let ballX = pongGame.getBallX();
         let ballY = pongGame.getBallY();
         let leftPaddle = pongGame.getLeftPaddle();

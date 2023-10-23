@@ -307,7 +307,7 @@ export default function Game() {
         this.intervalId = setInterval(() => {
           this.update();
           this.draw();
-        }, 1000 / 100); // 100 frames per second
+        }, 1000 / 1000); // 100 frames per second
       }
     }
     joinGame() {
