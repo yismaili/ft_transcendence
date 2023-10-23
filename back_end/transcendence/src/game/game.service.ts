@@ -35,11 +35,21 @@ export class GameService {
         if (!user) {
           throw new Error('User does not exist');
         }
+        for (const [name, players] of this.players) {
+          for(const player of players)
+          {
+            if ( player == user.username) {
+              console.log("hi");
+              const room = await this.getGameRoom(player);
+              await playerId.join(room);
+              break;
+            }
+          }
+        }
         let roomName = '';
-        // await this.statusInGame(user.username);
-        if (this.players.size === 0) {
-          roomName = 'room_' + user.username;
-        } else {
+        // if (this.players.size === 0) {
+            roomName = user.username;
+        // } else {
           const maxPlayersPerRoom = 2;
           for (const [name, players] of this.players) {
             if (players.length < maxPlayersPerRoom) {
@@ -47,15 +57,27 @@ export class GameService {
               break;
             }
           }
-          if (!roomName) {
-            roomName = 'room_' + user.username + this.players.size;
-          }
-        }
+          // if (!roomName) {
+          //   roomName = 'room_' + user.username;
+          // }
+        //}
         await playerId.join(roomName);
         if (!this.players.has(roomName)) {
           this.players.set(roomName, []);
         }
-        
+       //await this.addUserWithSocket(playerId);
+        // Iterate through connected sockets and make them join the room
+// console.log(roomName);
+        for (const [room, sockets] of this.isconnected) {
+          if (room === createGameDto.username) {
+            console.log(room);
+            for (const socket of sockets) {
+             await socket.join(roomName);
+              console.log(socket.id);
+            }
+          }
+        }
+
         this.players.get(roomName).push(user.username);
         if (this.players.get(roomName).length === 2) {
           await this.startGame(roomName, playerId, server);
@@ -68,6 +90,22 @@ export class GameService {
         throw error;
       }
     }
+
+  async getGameRoom(username: string): Promise<any>{
+    try{
+      for (const [name, players] of this.players) {
+        for(const player of players)
+        {
+          if (player === username) {
+            return name;
+          }
+        }
+      }
+      return null;
+    }catch(error){
+      throw new Error("...");
+    }
+  }
 
    async handleLeaveRoom(client: Socket, roomName: string) {
        
@@ -114,8 +152,8 @@ export class GameService {
     
       const rootUser = this.players.get(roomName)[0];
       const friendUser = this.players.get(roomName)[1];
-      await this.statusInGame(rootUser);
-      await this.statusInGame(friendUser);
+      // await this.statusInGame(rootUser);
+      // await this.statusInGame(friendUser);
       server.to(roomName).emit('players',{
         rootUser,
         friendUser
@@ -139,8 +177,6 @@ export class GameService {
 
       // Set up an interval to send ball position data to clients
       const intervalId = setInterval(async () => {
-        // await this.statusInGame(rootUser);
-        // await this.statusInGame(friendUser);
         let ballX = pongGame.getBallX();
         let ballY = pongGame.getBallY();
         let leftPaddle = pongGame.getLeftPaddle();
@@ -174,7 +210,7 @@ export class GameService {
             // await this.statusOutGame(roomName);
             // await this.statusOutGame(friendUser);
           }
-      }, 1000 / 1000); // 100 frames per second
+      }, 1000 / 60); // 100 frames per second
     }
   
    async getUser(client: Socket){
@@ -479,7 +515,7 @@ export class GameService {
       }
     }
     
-    async createGameFriend(createGameDto: CreateGameDto): Promise<any> {
+    async createGameF1riend(createGameDto: CreateGameDto): Promise<any> {
         try {
           const user = await this.userRepository.findOne({
             where: { username: createGameDto.username }
@@ -572,92 +608,101 @@ async UpdateResult(updateResultDto: UpdateResultDto): Promise<HistoryEntity>{
     return saveUpdate;
 } 
 
-// async addUserWithSocketId(playerId: Socket) {
-//   try {
-//     const jwtSecret = 'secrete';
-//     // Extract the JWT token
-//     const token = playerId.handshake.headers.authorization;
-
-//     if (!token) {
-//       playerId.emit('error', 'Authorization token missing');
-//       playerId.disconnect(true);
-//       return;
-//     }
-//     // Verify the JWT token using the secret
-//     let decodedToken;
-//     try {
-//       decodedToken = verify(token, jwtSecret);
-//     } catch (error) {
-//       playerId.emit('error', 'Invalid authorization token');
-//       playerId.disconnect(true);
-//       return;
-//     }
-
-//     const username = decodedToken['username'];
-//     const user = await this.userRepository.findOne({
-//       where: { username: username }
-//     });
-
-//     if (!user) {
-//       playerId.emit('error', 'User does not exist');
-//       playerId.disconnect(true);
-//       return;
-//     }
-//     // Join the user to a room based on their username
-//     if (!this.isconnected.has(username)) {
-//       this.isconnected.set(username,[]);
-//     }
-//     this.isconnected.get(username).push(playerId);
-
-//     for (const [key, value] of this.isconnected) {
-//       console.log(username);
-//       for (const socket of value) {
-//         console.log(socket.id);
-//       }
-//     }
-    
-//     // Handle user disconnection and remove them from the map
-//     playerId.on('disconnect', () => {
-//       if (this.isconnected.has(username)) {
-//         this.isconnected.delete(username);
-//       }
-//     });
-//   } catch (error) {
-//     throw error;
-//   }
-// }
-
-async handleConnection(socket: Socket) {
+async addUserWithSocket(playerId: Socket) {
   try {
-
     const jwtSecret = 'secrete';
-    const token = socket.handshake.headers.authorization;
+    // Extract the JWT token
+    const token = playerId.handshake.headers.authorization;
 
     if (!token) {
-      socket.emit('error', 'Authorization token missing');
-      socket.disconnect(true);
+      playerId.emit('error', 'Authorization token missing');
+      playerId.disconnect(true);
+      return;
+    }
+    // Verify the JWT token using the secret
+    let decodedToken;
+    try {
+      decodedToken = verify(token, jwtSecret);
+    } catch (error) {
+      playerId.emit('error', 'Invalid authorization token');
+      playerId.disconnect(true);
       return;
     }
 
-    let decodedToken = verify(token, jwtSecret);
-    const clientId = socket.id;
     const username = decodedToken['username'];
+    const user = await this.userRepository.findOne({
+      where: { username: username }
+    });
 
+    if (!user) {
+      playerId.emit('error', 'User does not exist');
+      playerId.disconnect(true);
+      return;
+    }
+    // Join the user to a room based on their username
+    if (!this.isconnected.has(username)) {
+      this.isconnected.set(username,[]);
+    }
+    this.isconnected.get(username).push(playerId);
+
+    // for (const [key, value] of this.isconnected) {
+    //   console.log(username);
+    //   for (const socket of value) {
+    //     console.log(socket.id);
+    //   }
+    // }
+    
+    // Handle user disconnection and remove them from the map
+    playerId.on('disconnect', () => {
+      if (this.isconnected.has(username)) {
+        this.isconnected.delete(username);
+      }
+    });
+  } catch (error) {
+    throw error;
+  }
+}
+
+async handleConnection(socketId: Socket, username:string) {
+  try {
+
+    // const jwtSecret = 'secrete';
+    // const token = socket.handshake.headers.authorization;
+
+    // if (!token) {
+    //   socket.emit('error', 'Authorization token missing');
+    //   socket.disconnect(true);
+    //   return;
+    // }
+
+    // let decodedToken = verify(token, jwtSecret);
+    // const clientId = socket.id;
+    // const username = decodedToken['username'];
+    if (!this.isconnected.has(username)) {
+      this.isconnected.set(username,[]);
+    }
+    console.log('connect:---->   '+ socketId.id);
+    this.isconnected.get(username).push(socketId);
     const user = await this.userRepository.findOne({
       where: {username: username}
     });
-    user.status = 'online';
+    user.status = 'inGame';
 
-    this.connectedClients.set(clientId, { socket, username });
+   // this.connectedClients.set(clientId, { socket, username });
     await this.userRepository.save(user);
-    socket.on('disconnect', async () => {
-      user.status = 'offline';
+    socketId.on('disconnect', async () => {
+      user.status = 'online';
       await this.userRepository.save(user);
-      this.connectedClients.delete(clientId);
+      if (this.isconnected.has(username)) {
+        console.log('desconnect: =====>  '+ socketId.id);
+        this.isconnected.delete(username);
+        console.log(this.isconnected.get(username));
+      }
+      //this.connectedClients.delete(clientId);
     });
   } catch (error) {
-    socket.emit('error', 'Authentication failed');
-    socket.disconnect(true);
+    socketId.emit('error', 'Authentication failed');
+    socketId.disconnect(true);
   }
 }
 
@@ -666,12 +711,15 @@ async addUserWithSocketId(username: string ,clientId: Socket) {
     if (!this.isconnected.has(username)) {
       this.isconnected.set(username,[]);
     }
+    console.log('connect:---->   '+ clientId.id);
     this.isconnected.get(username).push(clientId);
     
     // Handle user disconnection and remove them from the map
     clientId.on('disconnect', () => {
       if (this.isconnected.has(username)) {
+        console.log('desconnect: =====>  '+ clientId.id);
         this.isconnected.delete(username);
+        console.log(this.isconnected.get(username));
       }
     });
   } catch (error) {
@@ -852,7 +900,7 @@ class PongGame {
           this.isRunning = true;
           this.intervalId = setInterval(() => {
               this.updateGame();
-          }, 1000 / 100);
+          }, 1000 / 60);
       }
   }
 

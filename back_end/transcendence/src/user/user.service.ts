@@ -689,7 +689,6 @@ async setUserstatus(username:string, status:string) {
     }
 
     user.status = status;
-    console.log("hiiiiiiiiii");
     await this.userRepository.save(user);
   } catch (error) {
     throw new Error('failed');

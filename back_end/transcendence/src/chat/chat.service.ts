@@ -1275,13 +1275,13 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
       const user = await this.userRepository.findOne({
         where: {username: username}
       });
-      user.status = 'online';
+      // user.status = 'online';
 
-      this.connectedClients.set(clientId, { socket, username });
+      // this.connectedClients.set(clientId, { socket, username });
       await this.userRepository.save(user);
       socket.on('disconnect', async () => {
-        user.status = 'offline';
-        await this.userRepository.save(user);
+        // user.status = 'offline';
+        // await this.userRepository.save(user);
         this.connectedClients.delete(clientId);
       });
     } catch (error) {
