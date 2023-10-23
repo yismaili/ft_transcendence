@@ -1256,39 +1256,39 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
 }
 
 // handleng connection
- async handleConnection(socket: Socket) {
-    try {
+//  async handleConnection(socket: Socket) {
+//     try {
 
-      const jwtSecret = 'secrete';
-      const token = socket.handshake.headers.authorization;
+//       const jwtSecret = 'secrete';
+//       const token = socket.handshake.headers.authorization;
 
-      if (!token) {
-        socket.emit('error', 'Authorization token missing');
-        socket.disconnect(true);
-        return;
-      }
+//       if (!token) {
+//         socket.emit('error', 'Authorization token missing');
+//         socket.disconnect(true);
+//         return;
+//       }
 
-      let decodedToken = verify(token, jwtSecret);
-      const clientId = socket.id;
-      const username = decodedToken['username'];
+//       let decodedToken = verify(token, jwtSecret);
+//       const clientId = socket.id;
+//       const username = decodedToken['username'];
 
-      const user = await this.userRepository.findOne({
-        where: {username: username}
-      });
-      // user.status = 'online';
+//       const user = await this.userRepository.findOne({
+//         where: {username: username}
+//       });
+//       // user.status = 'online';
 
-      // this.connectedClients.set(clientId, { socket, username });
-      await this.userRepository.save(user);
-      socket.on('disconnect', async () => {
-        // user.status = 'offline';
-        // await this.userRepository.save(user);
-        this.connectedClients.delete(clientId);
-      });
-    } catch (error) {
-      socket.emit('error', 'Authentication failed');
-      socket.disconnect(true);
-    }
-  }
+//       // this.connectedClients.set(clientId, { socket, username });
+//       await this.userRepository.save(user);
+//       socket.on('disconnect', async () => {
+//         // user.status = 'offline';
+//         // await this.userRepository.save(user);
+//         this.connectedClients.delete(clientId);
+//       });
+//     } catch (error) {
+//       socket.emit('error', 'Authentication failed');
+//       socket.disconnect(true);
+//     }
+//   }
 
 async addUserWithSocketId(username: string ,clientId: Socket) {
     try {

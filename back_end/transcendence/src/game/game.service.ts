@@ -681,7 +681,7 @@ async handleConnection(socketId: Socket, username:string) {
     if (!this.isconnected.has(username)) {
       this.isconnected.set(username,[]);
     }
-    console.log('connect:---->   '+ socketId.id);
+   // console.log('connect:---->   '+ socketId.id);
     this.isconnected.get(username).push(socketId);
     const user = await this.userRepository.findOne({
       where: {username: username}
@@ -694,9 +694,9 @@ async handleConnection(socketId: Socket, username:string) {
       user.status = 'online';
       await this.userRepository.save(user);
       if (this.isconnected.has(username)) {
-        console.log('desconnect: =====>  '+ socketId.id);
+       // console.log('desconnect: =====>  '+ socketId.id);
         this.isconnected.delete(username);
-        console.log(this.isconnected.get(username));
+       // console.log(this.isconnected.get(username));
       }
       //this.connectedClients.delete(clientId);
     });
