@@ -36,6 +36,7 @@ export class GameService {
           throw new Error('User does not exist');
         }
         let roomName = '';
+        // await this.statusInGame(user.username);
         if (this.players.size === 0) {
           roomName = 'room_' + user.username;
         } else {
@@ -56,7 +57,6 @@ export class GameService {
         }
         
         this.players.get(roomName).push(user.username);
-  
         if (this.players.get(roomName).length === 2) {
           await this.startGame(roomName, playerId, server);
         }else{
@@ -77,6 +77,31 @@ export class GameService {
       }
     }
 
+    async statusInGame(username: string) :Promise<any> {
+      try{
+        const user = await this.userRepository.findOne({where: {username: username}});
+        if (!user){
+          throw new Error("user not found");
+        }
+        user.status = 'inGame';
+        return await this.userRepository.save(user);
+      }catch(error){
+        throw error;
+      }
+    }
+
+    async statusOutGame(username: string) {
+      try{
+        const user = await this.userRepository.findOne({where: {username: username}});
+        if (!user){
+          throw new Error("user not found");
+        }
+        user.status = 'online';
+        return await this.userRepository.save(user);
+      }catch(error){
+        throw error;
+      }
+    }
     async waitForTenMinutes(): Promise<void> {
       return new Promise((resolve) => {
         setTimeout(() => {
@@ -86,10 +111,11 @@ export class GameService {
     }
 
     async startGame(roomName: string, playerId: Socket, server: Server): Promise<void>{
-      
+    
       const rootUser = this.players.get(roomName)[0];
       const friendUser = this.players.get(roomName)[1];
-
+      await this.statusInGame(rootUser);
+      await this.statusInGame(friendUser);
       server.to(roomName).emit('players',{
         rootUser,
         friendUser
@@ -112,7 +138,9 @@ export class GameService {
       });
 
       // Set up an interval to send ball position data to clients
-      const intervalId = setInterval(() => {
+      const intervalId = setInterval(async () => {
+        // await this.statusInGame(rootUser);
+        // await this.statusInGame(friendUser);
         let ballX = pongGame.getBallX();
         let ballY = pongGame.getBallY();
         let leftPaddle = pongGame.getLeftPaddle();
@@ -143,6 +171,8 @@ export class GameService {
             this.addHistory(history);
             this.handleLeaveRoom(playerId, roomName);
             clearInterval(intervalId);
+            // await this.statusOutGame(roomName);
+            // await this.statusOutGame(friendUser);
           }
       }, 1000 / 1000); // 100 frames per second
     }
