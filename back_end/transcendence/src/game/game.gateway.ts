@@ -28,24 +28,26 @@ export class GameGateway {
 
     let decodedToken = verify(token, jwtSecret);
     const username = decodedToken['username'];
-      this.gameService.addUserWithSocketId(username, client);
+     // this.gameService.addUserWithSocketId(username, client);
+      this.gameService.handleConnection(client, username);
   }
 
-  handleDisconnect(client: Socket) {
+  // handleDisconnect(client: Socket) {
 
-    const jwtSecret = 'secrete';
-    const token = client.handshake.headers.authorization;
+  //   const jwtSecret = 'secrete';
+  //   const token = client.handshake.headers.authorization;
+  //   this.gameService.handleConnection(client, username);
 
-    if (!token) {
-      client.emit('error', 'Authorization token missing');
-      client.disconnect(true);
-      return;
-    }
+  //   if (!token) {
+  //     client.emit('error', 'Authorization token missing');
+  //     client.disconnect(true);
+  //     return;
+  //   }
 
-    let decodedToken = verify(token, jwtSecret);
-    const username = decodedToken['username'];
-      this.gameService.addUserWithSocketId(username, client);
-  }
+  //   let decodedToken = verify(token, jwtSecret);
+  //   const username = decodedToken['username'];
+  //    // this.gameService.addUserWithSocketId(username, client);
+  // }
   
 
   @SubscribeMessage('createGame')
