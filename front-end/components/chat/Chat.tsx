@@ -1,16 +1,18 @@
 "use client";
-import NewGroupSetting from "./NewGroupSetting/NewGroupSetting";
 import FriendManagement from "./FriendManagement/FriendManagement";
 import GameNotification from "./GameNotification/GameNotification";
+import NewGroupSetting from "./NewGroupSetting/NewGroupSetting";
 import { useSocketContext } from "@/contexts/socket-context";
 import SlideButton from "./SlideButton/SlideButton";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import GroupMsg from "./GroupMsg/GroupMsg";
 import Style from "./Chat.module.css";
 import Direct from "./Direct/Direct";
 import Group from "./Group/Group";
 import Link from "next/link";
 import Msg from "./Msg/Msg";
+
 export default function Chat() {
   const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
   const [isGroup, setGroup] = useState(false);
@@ -21,6 +23,7 @@ export default function Chat() {
   const [allRooms, setAllRooms] = useState<AllRooms[]>();
   const [room, setRoom] = useState<AllRooms>();
   const [game, setGame] = useState<gameRequest[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     socket.on("updateUI", (messaged: string) => {
@@ -70,6 +73,10 @@ export default function Chat() {
           fetching();
           setUserFriend(undefined);
         }
+      } else if (messaged.split(" ")[0] === "game") {
+        if (messaged.split(" ")[1] === Data.response.user.username) {
+          router.push(`/users/${Data.response.user.username}/game`);
+        }
       }
 
       socket.emit(
@@ -85,7 +92,12 @@ export default function Chat() {
 
     gameSocket.on("inviteFriend", (response: gameRequest) => {
       console.log("new invire for game in chat: ", response);
-      setGame((prevGame) => [...prevGame, response]);
+      if (!game.length) setGame([response]);
+      else
+        game.map((request) => {
+          if (request.sender.username !== response.sender.username)
+            setGame((prevGame) => [...prevGame, response]);
+        });
     });
 
     fetching();
