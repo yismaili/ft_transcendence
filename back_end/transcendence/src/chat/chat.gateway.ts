@@ -26,7 +26,7 @@ export class ChatGateway {
   @WebSocketServer() server: Server;
   constructor(private readonly chatService: ChatService) {}
 
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: Socket) {
 
     const jwtSecret = 'secrete';
     const token = client.handshake.headers.authorization;
@@ -36,27 +36,27 @@ export class ChatGateway {
       client.disconnect(true);
       return;
     }
-
+    
     let decodedToken = verify(token, jwtSecret);
     const username = decodedToken['username'];
     this.chatService.addUserWithSocketId(username, client);
   }
 
-  handleDisconnect(client: Socket) {
+  // handleDisconnect(client: Socket) {
 
-    const jwtSecret = 'secrete';
-    const token = client.handshake.headers.authorization;
+  //   const jwtSecret = 'secrete';
+  //   const token = client.handshake.headers.authorization;
 
-    if (!token) {
-      client.emit('error', 'Authorization token missing');
-      client.disconnect(true);
-      return;
-    }
+  //   if (!token) {
+  //     client.emit('error', 'Authorization token missing');
+  //     client.disconnect(true);
+  //     return;
+  //   }
 
-    let decodedToken = verify(token, jwtSecret);
-    const username = decodedToken['username'];
-    this.chatService.addUserWithSocketId(username, client);
-  }
+  //   let decodedToken = verify(token, jwtSecret);
+  //   const username = decodedToken['username'];
+  //   this.chatService.addUserWithSocketId(username, client);
+  // }
   
   // @UseGuards(JwtAuthGuard, JwtStrategy)
   @SubscribeMessage('createChat')
