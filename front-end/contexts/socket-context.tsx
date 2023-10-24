@@ -20,6 +20,7 @@ export default function SocketContextProvider({
       },
     })
   );
+
   const [onlineSocket] = useState(
     io("0.0.0.0:3001", {
       extraHeaders: {
@@ -28,8 +29,16 @@ export default function SocketContextProvider({
     })
   );
 
+  const [gameSocket] = useState(
+    io("0.0.0.0:3001/game", {
+      extraHeaders: {
+        Authorization: Data.response.token,
+      },
+    })
+  );
+
   return (
-    <socketContext.Provider value={{ socket, Data, onlineSocket }}>
+    <socketContext.Provider value={{ socket, Data, onlineSocket, gameSocket }}>
       {children}
     </socketContext.Provider>
   );

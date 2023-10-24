@@ -1,6 +1,7 @@
 "use client";
 import NewGroupSetting from "./NewGroupSetting/NewGroupSetting";
 import FriendManagement from "./FriendManagement/FriendManagement";
+import GameNotification from "./GameNotification/GameNotification";
 import { useSocketContext } from "@/contexts/socket-context";
 import SlideButton from "./SlideButton/SlideButton";
 import { useEffect, useState } from "react";
@@ -10,9 +11,8 @@ import Direct from "./Direct/Direct";
 import Group from "./Group/Group";
 import Link from "next/link";
 import Msg from "./Msg/Msg";
-
 export default function Chat() {
-  const { socket, Data } = useSocketContext();
+  const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
   const [isGroup, setGroup] = useState(false);
   let [friends, setFriends] = useState<UserArrayData>();
   let [user, setUser] = useState<User>();
@@ -20,6 +20,7 @@ export default function Chat() {
   const [groupInput, setGroupInput] = useState<GroupInput>();
   const [allRooms, setAllRooms] = useState<AllRooms[]>();
   const [room, setRoom] = useState<AllRooms>();
+  const [game, setGame] = useState<gameRequest[]>([]);
 
   useEffect(() => {
     socket.on("updateUI", (messaged: string) => {
@@ -82,8 +83,30 @@ export default function Chat() {
       );
     });
 
+    gameSocket.on("inviteFriend", (response: gameRequest) => {
+      console.log("new invire for game in chat: ", response);
+      setGame((prevGame) => [...prevGame, response]);
+    });
+
     fetching();
   }, []);
+
+  useEffect(() => {
+    // Use a setTimeout to remove the first element after 10 seconds
+    const timeout = setTimeout(() => {
+      setGame((prevGame) => {
+        if (prevGame.length > 0) {
+          const updatedGame = [...prevGame];
+          updatedGame.splice(0, 1); // Remove the first element
+          return updatedGame;
+        }
+        return prevGame; // No change if the array is empty
+      });
+    }, 15000); // 10 seconds in milliseconds
+
+    // Clear the timeout to prevent it from running if the component unmounts
+    return () => clearTimeout(timeout);
+  }, [game]);
 
   useEffect(() => {
     socket.emit(
@@ -157,7 +180,10 @@ export default function Chat() {
           <div className={Style.chatRoomBtn}>
             <p>Loading ...</p>
           </div>
-          <Link href={`/users/${Data.response.user.username}`} className={Style.profileBtn}>
+          <Link
+            href={`/users/${Data.response.user.username}`}
+            className={Style.profileBtn}
+          >
             <p>Loading ...</p>
           </Link>
         </header>
@@ -225,6 +251,7 @@ export default function Chat() {
           ) : (
             <FriendManagement setGroupInput={setGroupInput} friends={friends} />
           )}
+          {game && <GameNotification data={game} />}
         </div>
         <div className={Style.right} key={!isGroup ? userFriend?.id : room?.id}>
           {userFriend && !isGroup && (
