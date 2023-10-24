@@ -20,6 +20,7 @@ export default function Auth({ Sign_in_up }: Props) {
       let interval = setInterval(() => {
         const cookies = new Cookies();
         const mycookie = cookies.get("userData");
+        console.log("test753:", JSON.parse(JSON.stringify(mycookie)).j);
 
         if (mycookie) {
           clearInterval(interval);
