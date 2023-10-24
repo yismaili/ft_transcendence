@@ -46,6 +46,7 @@ type User_Friend = {
   picture: string;
   status: string;
   twoFactorAuthSecret: string;
+  uniquename: string;
   username: string;
 };
 
@@ -121,4 +122,9 @@ type FriendRequest = {
   id: number;
   status: string;
   user: User_Friend;
+};
+
+type gameRequest = {
+  roomName: string;
+  sender: User_Friend;
 };
