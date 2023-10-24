@@ -193,7 +193,7 @@ var PongGame = /** @class */ (function () {
             this.intervalId = setInterval(function () {
                 _this.update();
                 _this.draw();
-            }, 1000 / 100); // 100 frames per second
+            }, 1000 / 60); // 100 frames per second
         }
     };
     PongGame.prototype.joinGame = function () {

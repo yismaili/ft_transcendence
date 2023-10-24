@@ -302,13 +302,14 @@ export default function Game() {
     }
 
     start() {
-      if (!this.isRunning) {
-        this.isRunning = true;
-        this.intervalId = setInterval(() => {
+      // if (!this.isRunning) {
+        // this.isRunning = true;
+        // this.intervalId = setInterval(() => {
           this.update();
           this.draw();
-        }, 1000 / 100); // 100 frames per second
-      }
+          console.log("this.draw();")
+        // }, 1000 / 60); // 100 frames per second
+      // }
     }
     joinGame() {
       this.socket.emit("createGame", { username: this.username?.value });
@@ -328,9 +329,15 @@ export default function Game() {
   }
 
   useEffect(() => {
-    socket.emit("createGame", { username: Data.response.user.username });
+
     const pongGame = new PongGame();
-    pongGame.start();
+    function call() {
+      console.log("HRER");
+      pongGame.start()
+      window.requestAnimationFrame(call);
+    }
+    socket.emit("createGame", { username: Data.response.user.username });
+    window.requestAnimationFrame(call);
     console.log("test");
   }, []);
 

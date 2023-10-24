@@ -15,19 +15,21 @@ export default function FriendContextMenu({
 }: props) {
   const { socket, Data } = useSocketContext();
 
-  const handleBlock = () => {
-    console.log("block test");
-
-    socket.emit(
-      "blockUser",
+  const handleBlock = async () => {
+    const res = await fetch(
+      `http://localhost:3001/users/profile/${Data.response.user.username}/block/${friendData.username}`,
       {
-        username: Data.response.user.username,
-        secondUser: friendData.username,
-      },
-      (response: any) => {
-        console.log("block response: ", response);
+        method: "PUT",
+        cache: "no-cache",
+        headers: { authorization: `Bearer ${Data.response.token}` },
       }
     );
+    // const data = await res.json();
+
+    socket.emit("updateUI", {
+      message: `block ${Data.response.user.username} ${friendData.username}`,
+    });
+    setMenuOpen((prev: boolean) => !prev)
   };
 
   return (
