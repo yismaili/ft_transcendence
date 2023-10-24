@@ -13,7 +13,7 @@ function ProfilePic(props: nums) {
   return (
     <div className="profile">
       <div className="profile__pic__level">
-        {props.param &&<Link href={`/UserProfile/${props.user.data.username}/Parameters`} className="params__btn">
+        {props.param &&<Link href={`/users/${props.user.data.username}/Parameters`} className="params__btn">
           <span className="param__img"></span>
         </Link>}
 

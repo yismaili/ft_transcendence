@@ -44,7 +44,7 @@ function Auth_2fa() {
       if (val != "\"false\"") {
         cookie.set("userData", val);
         router.push(
-          `http://localhost:3000/UserProfile/${data.response.user.username}`
+          `http://localhost:3000/users/${data.response.user.username}`
         );
       }
       else{

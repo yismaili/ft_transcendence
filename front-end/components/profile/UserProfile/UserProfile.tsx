@@ -59,14 +59,14 @@ export default function UserProfile({ params }: { params: { user: string } }) {
   if (user && found) {
     return (
       <div className="container">
-        <ProfileHeader path={path} />
+        <ProfileHeader path={path} user={user} />
         <div className="profile__section">
           <ProfilePic user={user} param={owner} />
           {user && <Analytics user={user} />}
           <History__Achievements />
           <div className="play">
             {owner && (
-              <Link href="/game" className="play__btn">
+              <Link href={`/users/${user.data.username}/game`} className="play__btn">
                 PLAY
               </Link>
             )}
