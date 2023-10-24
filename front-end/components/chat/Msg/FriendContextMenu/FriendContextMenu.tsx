@@ -13,7 +13,7 @@ export default function FriendContextMenu({
   menuPosition,
   friendData,
 }: props) {
-  const { socket, Data } = useSocketContext();
+  const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
 
   const handleBlock = async () => {
     const res = await fetch(
@@ -29,7 +29,20 @@ export default function FriendContextMenu({
     socket.emit("updateUI", {
       message: `block ${Data.response.user.username} ${friendData.username}`,
     });
-    setMenuOpen((prev: boolean) => !prev)
+    setMenuOpen((prev: boolean) => !prev);
+  };
+
+  const handlePlay = () => {
+    gameSocket.emit(
+      "createGameFriend",
+      {
+        username: Data.response.user.username,
+        friendUsername: friendData.username,
+      },
+      (response: any) => {
+        console.log("createGame res :", response);
+      }
+    );
   };
 
   return (
@@ -43,7 +56,7 @@ export default function FriendContextMenu({
         className="context"
       >
         <menu className="context__menu">
-          <li className="context__menu__opt">
+          <li className="context__menu__opt" onClick={handlePlay}>
             <span className="context__menu__opt__icon Battle"></span>
             <p>Play</p>
           </li>
