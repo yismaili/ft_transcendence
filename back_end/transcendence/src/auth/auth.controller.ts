@@ -53,7 +53,6 @@ export class AuthController {
     const response = await this.authService.googleAuthenticate(user);
     if (response.success){
       res.cookie('userData', { response });
-      console.log(response);
       return res.redirect('/auth/home');
     }
     return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
