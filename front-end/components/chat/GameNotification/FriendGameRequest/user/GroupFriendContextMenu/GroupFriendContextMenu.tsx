@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 import Style from "./GroupFriendContextMenu.module.css";
 import { useSocketContext } from "@/contexts/socket-context";
 
@@ -15,13 +16,18 @@ export default function GroupFriendContextMenu({
   setOpen,
 }: props) {
   const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
+  const router = useRouter();
 
-  const handleAccept = async () => {
+  const handleAccept = () => {
     gameSocket.emit("responseFromFriend", true);
+    socket.emit("updateUI", {
+      message: `game ${user.username}`,
+    });
+    router.push(`/users/${Data.response.user.username}/game`);
     setOpen((prev: boolean) => !prev);
   };
 
-  const handleReject = async () => {
+  const handleReject =  () => {
     gameSocket.emit("cancelGame", { cancel: true });
     setOpen((prev: boolean) => !prev);
   };
