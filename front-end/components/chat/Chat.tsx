@@ -157,7 +157,7 @@ export default function Chat() {
           <div className={Style.chatRoomBtn}>
             <p>Loading ...</p>
           </div>
-          <Link href="/UserProfile" className={Style.profileBtn}>
+          <Link href={`/users/${Data.response.user.username}`} className={Style.profileBtn}>
             <p>Loading ...</p>
           </Link>
         </header>
@@ -182,7 +182,7 @@ export default function Chat() {
           <p>chat room</p>
         </div>
         <Link
-          href={`/UserProfile/${Data.response.user.username}`}
+          href={`/users/${Data.response.user.username}`}
           className={Style.profileBtn}
         >
           <p>profile</p>

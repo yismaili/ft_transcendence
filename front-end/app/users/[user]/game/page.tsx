@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import "../../styles/global.css";
+import "@/styles/global.css";
 import Game from "@/components/Game/Game";
 import SocketGameContextProvider from "@/contexts/socket-game-context";
 
