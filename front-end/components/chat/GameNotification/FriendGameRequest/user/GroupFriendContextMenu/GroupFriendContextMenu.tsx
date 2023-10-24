@@ -19,15 +19,17 @@ export default function GroupFriendContextMenu({
   const router = useRouter();
 
   const handleAccept = () => {
-    gameSocket.emit("responseFromFriend", true);
+    gameSocket.emit("responseFromFriend", { responseFromFriend: true });
     socket.emit("updateUI", {
-      message: `game ${user.username}`,
+      message: `game ${user.username} ${Data.response.user.username}`,
     });
-    router.push(`/users/${Data.response.user.username}/game`);
+    router.push(
+      `/users/${Data.response.user.username}/${user.username}-vs-${Data.response.user.username}`
+    );
     setOpen((prev: boolean) => !prev);
   };
 
-  const handleReject =  () => {
+  const handleReject = () => {
     gameSocket.emit("cancelGame", { cancel: true });
     setOpen((prev: boolean) => !prev);
   };
