@@ -17,6 +17,7 @@ import { verify } from 'jsonwebtoken';
 @Injectable()
 export class GameService {
   players: Map<string, string[]> = new Map<string, string[]>();
+  rooms: Map<string, string[]> = new Map<string, string[]>();
   playWithFriend: Map<string, string[]> = new Map<string, string[]>();
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
@@ -29,45 +30,84 @@ export class GameService {
 
     async createGameRandom(createGameDto: CreateGameDto, playerId: Socket, server: Server): Promise<void> {
       try {
-          const user = await this.userRepository.findOne({
+        // Find the user in the database
+        const user = await this.userRepository.findOne({
           where: { username: createGameDto.username },
         });
+    
         if (!user) {
           throw new Error('User does not exist');
         }
+    
+        // Check if the user is already in a room
         let roomName = '';
-        if (this.players.size === 0) {
-          roomName = 'room_' + user.username;
+        for (const [name, players] of this.players) {
+          if (players.includes(user.username)) {
+            roomName = name;
+            break;
+          }
+        }
+    
+        if (roomName && this.players.get(roomName).length >= 2) {
+          await playerId.join(roomName);
         } else {
+          // Find a room with available space or create a new one
           const maxPlayersPerRoom = 2;
           for (const [name, players] of this.players) {
-            if (players.length < maxPlayersPerRoom) {
+            if (players.length < maxPlayersPerRoom && name !== user.username) {
               roomName = name;
               break;
             }
           }
+    
           if (!roomName) {
-            roomName = 'room_' + user.username + this.players.size;
+            roomName = user.username;
+          }
+
+          await playerId.join(roomName);
+    
+          if (!this.players.has(roomName)) {
+            this.players.set(roomName, []);
           }
         }
-        await playerId.join(roomName);
-        if (!this.players.has(roomName)) {
-          this.players.set(roomName, []);
-        }
-        
+    
         this.players.get(roomName).push(user.username);
-  
+    
         if (this.players.get(roomName).length === 2) {
-          await this.startGame(roomName, playerId, server);
-        }else{
+          if (this.players.get(roomName)[0] === user.username)
+          {
+            await this.handleLeaveRoom(playerId, roomName);
+          }
+          else{
+            await this.startGame(roomName, playerId, server);
+          }
+        } else {
           playerId.on('cancelGame', async () => {
             await this.handleLeaveRoom(playerId, roomName);
           });
         }
       } catch (error) {
+        console.error('Error in createGameRandom:', error);
         throw error;
       }
     }
+    
+
+  async getGameRoom(username: string): Promise<any>{
+    try{
+      for (const [name, players] of this.players) {
+        for(const player of players)
+        {
+          if (player === username) {
+            return name;
+          }
+        }
+      }
+      return null;
+    }catch(error){
+      throw new Error("...");
+    }
+  }
 
    async handleLeaveRoom(client: Socket, roomName: string) {
        
@@ -77,7 +117,33 @@ export class GameService {
       }
     }
 
-    async waitForTenMinutes(): Promise<void> {
+    async statusInGame(username: string) :Promise<any> {
+      try{
+        const user = await this.userRepository.findOne({where: {username: username}});
+        if (!user){
+          throw new Error("user not found");
+        }
+        user.status = 'inGame';
+        return await this.userRepository.save(user);
+      }catch(error){
+        throw error;
+      }
+    }
+
+    async statusOutGame(username: string) {
+      try{
+        const user = await this.userRepository.findOne({where: {username: username}});
+        if (!user){
+          throw new Error("user not found");
+        }
+        user.status = 'online';
+        return await this.userRepository.save(user);
+      }catch(error){
+        throw error;
+      }
+    }
+
+    async waitMinute(): Promise<void> {
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve();
@@ -85,68 +151,63 @@ export class GameService {
       });
     }
 
-    async startGame(roomName: string, playerId: Socket, server: Server): Promise<void>{
+    async startGame(roomName: string, playerId: Socket, server: Server): Promise<void> {
+      const [rootUser, friendUser] = this.players.get(roomName);
       
-      const rootUser = this.players.get(roomName)[0];
-      const friendUser = this.players.get(roomName)[1];
-
-      server.to(roomName).emit('players',{
+      // Emit the initial player information to clients
+      server.to(roomName).emit('players', {
         rootUser,
         friendUser
       });
-      
-      await this.waitForTenMinutes();
+    
+      await this.waitMinute();
+    
+      // Create a PongGame instance and start the game
       const pongGame = new PongGame();
       pongGame.start();
-      // Set up an event listener for 'updateGame' outside the interval
+    
       playerId.on('updateGame', async (data) => {
-        const user = await this.getUser(playerId);
-        // if (rootUser == user){
+       //if (await this.getUser(playerId) === rootUser) {
           pongGame.setDownPressed(data.downPressed);
           pongGame.setUpPressed(data.upPressed);
-      //   }
-      //  else{
+       //} else if (await this.getUser(playerId) === friendUser) {
           pongGame.setWPressed(data.wPressed);
           pongGame.setSPressed(data.sPressed);
-       // }
+    //   }
       });
-
-      // Set up an interval to send ball position data to clients
-      const intervalId = setInterval(() => {
-        let ballX = pongGame.getBallX();
-        let ballY = pongGame.getBallY();
-        let leftPaddle = pongGame.getLeftPaddle();
-        let rightPaddle = pongGame.getRightPaddle();
-        let rightPlayerScore = pongGame.getrRightPlayerScore();
-        let leftPlayerScore = pongGame.getlLeftPlayerScore();
-
-        server.to(roomName).emit('updateGame', {
-          ballX,
-          ballY,
-          leftPaddle,
-          rightPaddle,
-          leftPlayerScore,
-          rightPlayerScore,
-        });
-
+      
+      // send game state updates to clients
+      const intervalId = setInterval(async () => {
+        const gameData = {
+          ballX: pongGame.getBallX(),
+          ballY: pongGame.getBallY(),
+          leftPaddle: pongGame.getLeftPaddle(),
+          rightPaddle: pongGame.getRightPaddle(),
+          leftPlayerScore: pongGame.getlLeftPlayerScore(),
+          rightPlayerScore: pongGame.getrRightPlayerScore(),
+        };
+        
+        server.to(roomName).emit('updateGame', gameData);
+    
         if (!pongGame.getStatus()) {
-          // const info: ResultOfGame = {
-          //   username:rootUser,
-          //   competitor: friendUser,
-          // }
-          const history: SetHistoryDto = {
-              resulteOfCompetitor: leftPlayerScore,
-              resulteOfUser: rightPlayerScore,
-              username: rootUser,
-              userCompetitor: friendUser,
-            };
-            this.addHistory(history);
-            this.handleLeaveRoom(playerId, roomName);
-            clearInterval(intervalId);
-          }
-      }, 1000 / 1000); // 100 frames per second
-    }
+          // clean up and add result to db
   
+          const history: SetHistoryDto = {
+            resulteOfCompetitor: gameData.leftPlayerScore,
+            resulteOfUser: gameData.rightPlayerScore,
+            username: rootUser,
+            userCompetitor: friendUser,
+          };
+
+          this.addHistory(history);
+    
+          this.handleLeaveRoom(playerId, roomName);
+          clearInterval(intervalId);
+        }
+      }, 1000 / 60);
+    }
+
+    
    async getUser(client: Socket){
 
       const jwtSecret = 'secrete';
@@ -188,24 +249,24 @@ export class GameService {
         throw new Error("Error check relation status")
       }
     }
-  
+
     async matchingFriends(createGameDto: CreateGameDto, playerId: Socket, server: Server): Promise<void> {
       try {
         const user = await this.userRepository.findOne({
-          where: { username: createGameDto.username }
+          where: { username: createGameDto.username },
         });
     
         const competitor = await this.userRepository.findOne({
-          where: { username: createGameDto.friendUsername }
+          where: { username: createGameDto.friendUsername },
         });
     
         if (!user || !competitor) {
-          throw new Error('User not found');
+          throw new Error('User or competitor not found');
         }
     
         let roomName;
-        
-        // Check if there's an existing room, otherwise create a new one
+    
+        // check for an existing room
         for (const [name, playWithFriend] of this.players) {
           if (playWithFriend.length < 2) {
             roomName = name;
@@ -217,43 +278,43 @@ export class GameService {
           roomName = `room_${user.username}_${competitor.username}`;
         }
     
-        // User joins the room
         playerId.join(roomName);
-        // Competitor joins the room
+    
+        // competitor joins the room
         const competitorRoom = this.findCompetitorRoom(competitor.username);
         if (!competitorRoom) {
           throw new Error('Competitor socket room not found');
         }
         playerId.join(competitorRoom);
+    
         if (!this.players.has(roomName)) {
           this.players.set(roomName, []);
         }
+    
         this.players.get(roomName).push(user.username);
-        // Emit an invitation to the competitor
+    
+        // emit an invitation to the competitor
         server.to(competitorRoom).emit('inviteFriend', { sender: user.username, roomName });
     
         // Listen for the response from the friend
         const responseListener = (response: { responseFromFriend: boolean }) => {
-            // if (response.responseFromFriend == true){
-              this.players.get(roomName).push(competitor.username);
-            // }
-            // else{
-            //   playerId.removeListener('responseFromFriend', responseListener);
-            // }
+          if (response.responseFromFriend === true) {
+            this.players.get(roomName).push(competitor.username);
+          }
+          playerId.removeListener('responseFromFriend', responseListener);
+    
           // Check if there are now 2 players in the room
           if (this.players.get(roomName).length === 2) {
-            playerId.removeListener('responseFromFriend', responseListener);
             this.startGame(roomName, playerId, server);
           }
         };
     
         playerId.on('responseFromFriend', responseListener);
-    
       } catch (error) {
         console.error('Error in matchingFriends:', error);
-        // Handle errors or send an error response to the client
       }
     }
+    
     
     // Helper function to find the socket associated with a competitor
     private findCompetitorRoom(username: string): string | undefined {
@@ -264,18 +325,6 @@ export class GameService {
       }
       return undefined;
     }
-    
-    
-    private generateUniqueRoomName(user: User, competitor: User): string {
-      let roomName = `room_${user.username}_${competitor.username}`;
-      let count = 1;
-      while (this.players.has(roomName)) {
-        roomName = `room_${user.username}_${competitor.username}_${count}`;
-        count++;
-      }
-      return roomName;
-    }
-    
     
     async addHistory(addhistory: SetHistoryDto): Promise<any> {
       try {
@@ -449,7 +498,7 @@ export class GameService {
       }
     }
     
-    async createGameFriend(createGameDto: CreateGameDto): Promise<any> {
+    async createGameF1riend(createGameDto: CreateGameDto): Promise<any> {
         try {
           const user = await this.userRepository.findOne({
             where: { username: createGameDto.username }
@@ -529,73 +578,46 @@ export class GameService {
         }
       }
       
-async UpdateResult(updateResultDto: UpdateResultDto): Promise<HistoryEntity>{
+  async UpdateResult(updateResultDto: UpdateResultDto): Promise<HistoryEntity>{
     const gameHistory = await this.historyRepository.findOne({
-        where: {id: updateResultDto.id}
+      where: {id: updateResultDto.id}
     });
+    
     if (!gameHistory){
-        throw new Error('history not found');
+      throw new Error('history not found');
     }
     gameHistory.resulteOfUser = updateResultDto.userResult;
     gameHistory.resulteOfCompetitor = updateResultDto.competitorResult;
     const saveUpdate = await this.historyRepository.save(gameHistory);
     return saveUpdate;
-} 
+  } 
 
-// async addUserWithSocketId(playerId: Socket) {
-//   try {
-//     const jwtSecret = 'secrete';
-//     // Extract the JWT token
-//     const token = playerId.handshake.headers.authorization;
+async handleConnection(socketId: Socket, username:string) {
+  try {
+    if (!this.isconnected.has(username)) {
+      this.isconnected.set(username,[]);
+    }
 
-//     if (!token) {
-//       playerId.emit('error', 'Authorization token missing');
-//       playerId.disconnect(true);
-//       return;
-//     }
-//     // Verify the JWT token using the secret
-//     let decodedToken;
-//     try {
-//       decodedToken = verify(token, jwtSecret);
-//     } catch (error) {
-//       playerId.emit('error', 'Invalid authorization token');
-//       playerId.disconnect(true);
-//       return;
-//     }
+    this.isconnected.get(username).push(socketId);
+    const user = await this.userRepository.findOne({
+      where: {username: username}
+    });
+    user.status = 'inGame';
 
-//     const username = decodedToken['username'];
-//     const user = await this.userRepository.findOne({
-//       where: { username: username }
-//     });
+    await this.userRepository.save(user);
+    socketId.on('disconnect', async () => {
+      user.status = 'online';
+      await this.userRepository.save(user);
+      if (this.isconnected.has(username)) {
+        this.isconnected.delete(username);
+      }
+    });
+  } catch (error) {
+    socketId.emit('error', 'Authentication failed');
+    socketId.disconnect(true);
+  }
+}
 
-//     if (!user) {
-//       playerId.emit('error', 'User does not exist');
-//       playerId.disconnect(true);
-//       return;
-//     }
-//     // Join the user to a room based on their username
-//     if (!this.isconnected.has(username)) {
-//       this.isconnected.set(username,[]);
-//     }
-//     this.isconnected.get(username).push(playerId);
-
-//     for (const [key, value] of this.isconnected) {
-//       console.log(username);
-//       for (const socket of value) {
-//         console.log(socket.id);
-//       }
-//     }
-    
-//     // Handle user disconnection and remove them from the map
-//     playerId.on('disconnect', () => {
-//       if (this.isconnected.has(username)) {
-//         this.isconnected.delete(username);
-//       }
-//     });
-//   } catch (error) {
-//     throw error;
-//   }
-// }
 isconnected: Map<string, Socket[]> = new Map<string, Socket[]>();
 }
 
@@ -618,19 +640,20 @@ class PongGame {
   private sPressed: boolean;
   private ballY: number;
   private ballX: number;
-  private player:string;
+  private player: string;
   private intervalId: NodeJS.Timeout | null;
   private isRunning: boolean;
 
   constructor() {
+    // Initialize game properties
     this.canvasWidth = 800;
     this.canvasHeight = 600;
     this.paddleWidth = 10;
     this.paddleHeight = 80;
     this.paddleSpeed = 10;
     this.ballRadius = 10;
-    this.ballSpeedX = 5;
-    this.ballSpeedY = 5;
+    this.ballSpeedX = 10;
+    this.ballSpeedY = 10;
     this.leftPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
     this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
     this.leftPlayerScore = 0;
@@ -646,143 +669,154 @@ class PongGame {
     this.isRunning = false;
   }
 
+  /**
+   * Update the game state including paddle movement, ball position, collisions, and scoring.
+   */
   async updateGame() {
+      // Paddle movement 
     if (this.upPressed && this.rightPaddle > 0) {
       this.rightPaddle -= this.paddleSpeed;
-  } else if (this.downPressed && this.rightPaddle < this.canvasHeight - this.paddleHeight) {
+    } else if (this.downPressed && this.rightPaddle < this.canvasHeight - this.paddleHeight) {
       this.rightPaddle += this.paddleSpeed;
-  }
+    }
 
-  if (this.wPressed && this.leftPaddle > 0) {
+    if (this.wPressed && this.leftPaddle > 0) {
       this.leftPaddle -= this.paddleSpeed;
-  } else if (this.sPressed && this.leftPaddle < this.canvasHeight - this.paddleHeight) {
+    } else if (this.sPressed && this.leftPaddle < this.canvasHeight - this.paddleHeight) {
       this.leftPaddle += this.paddleSpeed;
-  }
+    }
 
-  // Calculate automatic paddle movement
-  // if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
-  //     this.leftPaddle += this.paddleSpeed;
-  // } else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
-  //     this.leftPaddle -= this.paddleSpeed;
-  // }
-  // if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
-  //     this.rightPaddle += this.paddleSpeed;
-  // } else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
-  //     this.rightPaddle -= this.paddleSpeed;
-  // }
+    // Calculate automatic paddle movement
+    if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
+      this.leftPaddle += this.paddleSpeed;
+    } else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
+      this.leftPaddle -= this.paddleSpeed;
+    }
 
-  // Update ball position
-  this.ballX += this.ballSpeedX;
-  this.ballY += this.ballSpeedY;
-  
-  // Handle ball collisions
-  if (this.ballY - this.ballRadius < 0 || this.ballY + this.ballRadius > this.canvasHeight) {
+    if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
+      this.rightPaddle += this.paddleSpeed;
+    } else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
+      this.rightPaddle -= this.paddleSpeed;
+    }
+
+    // Update ball position
+    this.ballX += this.ballSpeedX;
+    this.ballY += this.ballSpeedY;
+
+    // Handle ball collisions with top and bottom walls
+    if (this.ballY - this.ballRadius < 0 || this.ballY + this.ballRadius > this.canvasHeight) {
+      // Reverse the vertical direction of the ball when it hits the top or bottom
       this.ballSpeedY *= -1;
-  }
+    }
 
-  if (
+    // Handle ball collisions with paddles
+    if (
       this.ballY > this.leftPaddle - this.ballRadius &&
       this.ballY < this.leftPaddle + this.paddleHeight + this.ballRadius &&
       this.ballX - this.ballRadius < this.paddleWidth
-  ) {
+    ) {
+      // Reverse the horizontal direction of the ball when it hits the left paddle
       this.ballSpeedX *= -1;
-  }
+    }
 
-  if (
+    if (
       this.ballY > this.rightPaddle - this.ballRadius &&
       this.ballY < this.rightPaddle + this.paddleHeight + this.ballRadius &&
       this.ballX + this.ballRadius > this.canvasWidth - this.paddleWidth
-  ) {
+    ) {
+      // Reverse the horizontal direction of the ball when it hits the right paddle
       this.ballSpeedX *= -1;
-  }
+    }
 
-  // Handle scoring and winning conditions
-  if (this.ballX < 0) {
+    // Handle scoring and winning conditions
+    if (this.ballX < 0) {
       this.rightPlayerScore++;
       this.resetGame();
-  } else if (this.ballX > this.canvasWidth) {
+    } else if (this.ballX > this.canvasWidth) {
       this.leftPlayerScore++;
       this.resetGame();
-  }
+    }
 
-  if (this.leftPlayerScore === 5) {
+    if (this.leftPlayerScore === 5) {
       this.player = 'left player';
       this.resetGame();
       this.isGameOver();
-  } else if (this.rightPlayerScore === 5) {
+    } else if (this.rightPlayerScore === 5) {
       this.player = 'right player';
       this.resetGame();
       this.isGameOver();
-  }
+    }
+
   }
 
   resetGame() {
-   this.ballX =this.canvasWidth / 2;
-   this.ballY =this.canvasHeight / 2;
-   this.ballSpeedX = -this.ballSpeedX;
-   this.ballSpeedY = Math.random() * 10 - 10;
+    this.ballX = this.canvasWidth / 2;
+    this.ballY = this.canvasHeight / 2;
+    this.ballSpeedX = -this.ballSpeedX;
+    this.ballSpeedY = Math.random() * 10 - 10;
   }
- 
-  getBallX() :number{
+
+  getBallX(): number {
     return this.ballX;
   }
 
-  getBallY() :number{
+  getBallY(): number {
     return this.ballY;
   }
 
-  getLeftPaddle() :number{
+  getLeftPaddle(): number {
     return this.leftPaddle;
   }
 
-  getRightPaddle() :number{
+  getRightPaddle(): number {
     return this.rightPaddle;
   }
 
-  setUpPressed(up: boolean){
-  this.upPressed = up;
+  setUpPressed(up: boolean) {
+    this.upPressed = up;
   }
 
-  setDownPressed(down: boolean){
+  setDownPressed(down: boolean) {
     this.downPressed = down;
   }
 
-  setWPressed (w: boolean){
+  setWPressed(w: boolean) {
     this.wPressed = w;
   }
 
-  setSPressed (s: boolean){
+  setSPressed(s: boolean) {
     this.sPressed = s;
   }
-  getlLeftPlayerScore(): number{
+
+  getlLeftPlayerScore(): number {
     return this.leftPlayerScore;
   }
-  getrRightPlayerScore(): number{
+
+  getrRightPlayerScore(): number {
     return this.rightPlayerScore;
   }
+
   getStatus(): boolean {
     return this.isRunning;
   }
 
   start() {
-      if (!this.isRunning) {
-          this.isRunning = true;
-          this.intervalId = setInterval(() => {
-              this.updateGame();
-          }, 1000 / 100);
-      }
+    if (!this.isRunning) {
+      this.isRunning = true;
+      this.intervalId = setInterval(() => {
+        this.updateGame();
+      }, 1000 / 60);
+    }
   }
 
   isGameOver(): boolean {
     if (this.isRunning) {
       clearInterval(this.intervalId);
       this.isRunning = false;
-      // this.leftPlayerScore = 0;
-      // this.rightPlayerScore = 0;
       return true;
     }
-    return false; 
+    return false;
   }
-  
 }
+
 

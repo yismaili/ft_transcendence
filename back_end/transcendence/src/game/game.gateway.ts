@@ -2,6 +2,7 @@ import { WebSocketGateway, SubscribeMessage, MessageBody, ConnectedSocket, WebSo
 import { GameService } from './game.service';
 import { Socket, Server} from 'socket.io';
 import { CreateGameDto } from './dto/create-game.dto';
+import { verify } from 'jsonwebtoken';
 
 @WebSocketGateway({ cors: { origin: '*' }, namespace: 'game' })
 export class GameGateway {
@@ -13,6 +14,41 @@ export class GameGateway {
   // handleConnection(socket: Socket): void {
   //   this.gameService.addUserWithSocketId(socket);
   // }
+
+  handleConnection(client: Socket, ...args: any[]) {
+
+    const jwtSecret = 'secrete';
+    const token = client.handshake.headers.authorization;
+
+    if (!token) {
+      client.emit('error', 'Authorization token missing');
+      client.disconnect(true);
+      return;
+    }
+
+    let decodedToken = verify(token, jwtSecret);
+    const username = decodedToken['username'];
+     // this.gameService.addUserWithSocketId(username, client);
+      this.gameService.handleConnection(client, username);
+  }
+
+  // handleDisconnect(client: Socket) {
+
+  //   const jwtSecret = 'secrete';
+  //   const token = client.handshake.headers.authorization;
+  //   this.gameService.handleConnection(client, username);
+
+  //   if (!token) {
+  //     client.emit('error', 'Authorization token missing');
+  //     client.disconnect(true);
+  //     return;
+  //   }
+
+  //   let decodedToken = verify(token, jwtSecret);
+  //   const username = decodedToken['username'];
+  //    // this.gameService.addUserWithSocketId(username, client);
+  // }
+  
 
   @SubscribeMessage('createGame')
   create(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() playerId: Socket) {
