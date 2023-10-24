@@ -22,7 +22,7 @@ export default function Params() {
     return (
       <div className="test__container">
         <EditProfile user={user} update={setEdited} />
-        <Link href={`/UserProfile/${user.data.username}`}>
+        <Link href={`/users/${user.data.username}`}>
           <div className="back__btn">
             <span className="back__arrow"></span> <span>back to Profile</span>
           </div>

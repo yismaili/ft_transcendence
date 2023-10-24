@@ -20,7 +20,6 @@ export default function Auth({ Sign_in_up }: Props) {
       let interval = setInterval(() => {
         const cookies = new Cookies();
         const mycookie = cookies.get("userData");
-        console.log("test753:", JSON.parse(JSON.stringify(mycookie)).j);
 
         if (mycookie) {
           clearInterval(interval);
@@ -32,7 +31,7 @@ export default function Auth({ Sign_in_up }: Props) {
             router.push("http://localhost:3000/login/2FA");
           else
             router.push(
-              `http://localhost:3000/UserProfile/${cookieval.response.user.username}`
+              `http://localhost:3000/users/${cookieval.response.user.username}`
             );
           console.clear();
         }
