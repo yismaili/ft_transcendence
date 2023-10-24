@@ -7,6 +7,7 @@ import SlideButton from "./SlideButton/SlideButton";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import GroupMsg from "./GroupMsg/GroupMsg";
+import Blocked from "./Blocked/Blocked";
 import Style from "./Chat.module.css";
 import Direct from "./Direct/Direct";
 import Group from "./Group/Group";
@@ -23,6 +24,7 @@ export default function Chat() {
   const [allRooms, setAllRooms] = useState<AllRooms[]>();
   const [room, setRoom] = useState<AllRooms>();
   const [game, setGame] = useState<gameRequest[]>([]);
+  const [blocked, setBlocked] = useState<FriendRequest2[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -75,7 +77,14 @@ export default function Chat() {
         }
       } else if (messaged.split(" ")[0] === "game") {
         if (messaged.split(" ")[1] === Data.response.user.username) {
-          router.push(`/users/${Data.response.user.username}/game`);
+          console.log('chat', socket);
+          console.log('game', gameSocket);
+          console.log('online', onlineSocket);
+          router.push(
+            `/users/${Data.response.user.username}/${
+              Data.response.user.username
+            }-vs-${messaged.split(" ")[2]}`
+          );
         }
       }
 
@@ -174,7 +183,7 @@ export default function Chat() {
       }
     );
     const blocked = await resBlocked.json();
-    console.log("blocked is", blocked);
+    setBlocked(blocked);
   };
 
   const turnSwitch = () => {
@@ -257,6 +266,15 @@ export default function Chat() {
                     </li>
                   );
                 })}
+            {!isGroup &&
+              blocked &&
+              blocked.map((user) => {
+                return (
+                  <li key={user.id}>
+                    <Blocked data={user.friend} />
+                  </li>
+                );
+              })}
           </ul>
           {isGroup ? (
             <NewGroupSetting setGroupInput={setGroupInput} />
