@@ -12,11 +12,10 @@ export class GameGateway {
   constructor(private readonly gameService: GameService) {
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: Socket) {
 
     const jwtSecret = 'secrete';
-    const token = client.handshake.headers.authorization;
-
+    const token = client.handshake.headers.authorization;;
     if (!token) {
       client.emit('error', 'Authorization token missing');
       client.disconnect(true);
@@ -25,7 +24,7 @@ export class GameGateway {
 
     let decodedToken = verify(token, jwtSecret);
     const username = decodedToken['username'];
-      this.gameService.handleConnection(client, username);
+    this.gameService.handleConnection(client, username);
   }
 
   @SubscribeMessage('createGame')
