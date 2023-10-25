@@ -31,10 +31,16 @@ export default function RootLayout({
         {/* <meta content='IE=Edge;chrome=35+' https-equiv='X-UA-Compatible'/> */}
       </head>
       <body>
-        {pathname != "/" && pathname != "/login" && pathname != "/login/2FA" ? (
-          <SocketContextProvider>{children}</SocketContextProvider>
-        ) : (
-          children
+        {test && (
+          <div>
+            {pathname != "/" &&
+            pathname != "/login" &&
+            pathname != "/login/2FA" ? (
+              <SocketContextProvider>{children}</SocketContextProvider>
+            ) : (
+              children
+            )}
+          </div>
         )}
       </body>
     </html>
