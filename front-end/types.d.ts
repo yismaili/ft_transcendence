@@ -54,14 +54,7 @@ type allMessages = {
   dateToSend: string;
   id: number;
   message: string;
-  user: {
-    email: string;
-    firstName: string;
-    id: number;
-    lastName: string;
-    picture: string;
-    username: string;
-  };
+  user: User_Friend;
 };
 
 type GroupInput = {
