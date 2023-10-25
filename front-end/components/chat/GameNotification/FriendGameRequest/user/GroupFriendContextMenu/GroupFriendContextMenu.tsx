@@ -19,10 +19,13 @@ export default function GroupFriendContextMenu({
   const router = useRouter();
 
   const handleAccept = () => {
-    gameSocket.emit("acceptrequest", { username: Data.response.user.username, roomName: Data.response.roomName});
-    socket.emit("updateUI", {
-      message: `game ${user.username} ${Data.response.user.username}`,
+    gameSocket.emit("acceptrequest", {
+      username: Data.response.user.username,
+      userCompetitor: user.username,
     });
+    // socket.emit("updateUI", {
+    //   message: `game ${user.username} ${Data.response.user.username}`,
+    // });
     router.push(
       `/users/${Data.response.user.username}/${user.username}-vs-${Data.response.user.username}`
     );
@@ -30,7 +33,10 @@ export default function GroupFriendContextMenu({
   };
 
   const handleReject = () => {
-    gameSocket.emit("cancelGame", { cancel: true });
+    gameSocket.emit("rejectrequest", {
+      username: Data.response.user.username,
+      userCompetitor: user.username,
+    });
     setOpen((prev: boolean) => !prev);
   };
 

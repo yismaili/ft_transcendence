@@ -75,18 +75,16 @@ export default function Chat() {
           fetching();
           setUserFriend(undefined);
         }
-      } else if (messaged.split(" ")[0] === "game") {
-        if (messaged.split(" ")[1] === Data.response.user.username) {
-          console.log('chat', socket);
-          console.log('game', gameSocket);
-          console.log('online', onlineSocket);
-          router.push(
-            `/users/${Data.response.user.username}/${
-              Data.response.user.username
-            }-vs-${messaged.split(" ")[2]}`
-          );
-        }
       }
+      //else if (messaged.split(" ")[0] === "game") {
+      //   if (messaged.split(" ")[1] === Data.response.user.username) {
+      //     router.push(
+      //       `/users/${Data.response.user.username}/${
+      //         Data.response.user.username
+      //       }-vs-${messaged.split(" ")[2]}`
+      //     );
+      //   }
+      // }
 
       socket.emit(
         "chatRoomOfUser",
@@ -96,6 +94,15 @@ export default function Chat() {
         (response: AllRooms[]) => {
           setAllRooms(response);
         }
+      );
+    });
+
+    gameSocket.on("acceptrequest", (response: any) => {
+      console.log("accept request", response);
+      router.push(
+        `/users/${Data.response.user.username}/${
+          Data.response.user.username
+        }-vs-undefined`
       );
     });
 
