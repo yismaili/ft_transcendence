@@ -38,8 +38,8 @@
   font-family: "Inter";
   font-size: clamp(0.7rem, 2vw, 1.5rem);
   padding: 0.8rem;
-  padding-bottom: 1.8rem;
-  padding-top: 2rem;
+  padding-bottom: .8rem;
+  padding-top: 1.2rem;
   line-height: 2rem;
   border-radius: 18px;
 }
