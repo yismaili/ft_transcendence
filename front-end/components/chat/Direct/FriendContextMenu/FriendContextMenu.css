@@ -1,0 +1,63 @@
+.backDrop___ {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.context {
+  position: fixed;
+  z-index: 2;
+  background-color: #292944;
+  color: #fffade;
+  border-radius: 16px;
+}
+
+.context__menu {
+  list-style-type: none;
+  font-size: 1.5rem;
+}
+
+.context__menu__opt {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 1.5rem;
+  margin: 0 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.context__menu__opt p {
+  color: #fffade;
+}
+
+.borders {
+  border-top-style: solid;
+  border-bottom-style: solid;
+  border-color: #c0b7b7;
+  border-width: 1px;
+}
+
+.context__menu__opt__icon {
+  display: inline-block;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 1rem;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.Battle {
+  background-image: url("/img/chat/battle.png");
+}
+
+.Profile {
+  background-image: url("/img/chat/profile.png");
+}
+
+.Block {
+  background-image: url("/img/chat/block.png");
+}
