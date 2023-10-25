@@ -34,13 +34,13 @@ export default function FriendContextMenu({
 
   const handlePlay = () => {
     gameSocket.emit(
-      "createGameFriend",
+      "inviteFriend",
       {
         username: Data.response.user.username,
         friendUsername: friendData.username,
       },
       (response: any) => {
-        console.log("createGame res :", response);
+        console.log("inviteFriend res :", response);
       }
     );
   };
