@@ -100,15 +100,13 @@ export default function Chat() {
       );
     });
 
-    gameSocket.on("acceptrequest", (response: any) => {
-      console.log("accept request", response);
+    gameSocket.on("acceptrequest", (response: { sender: User_Friend }) => {
       router.push(
-        `/users/${Data.response.user.username}/${Data.response.user.username}-vs-undefined`
+        `/users/${Data.response.user.username}/${Data.response.user.username}-vs-${response.sender.username}`
       );
     });
 
     gameSocket.on("inviteFriend", (response: gameRequest) => {
-      console.log("new invire for game in chat: ", response);
       if (!game.length) setGame([response]);
       else
         game.map((request) => {
