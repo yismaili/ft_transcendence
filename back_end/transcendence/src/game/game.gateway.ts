@@ -13,7 +13,6 @@ export class GameGateway {
   }
 
   handleConnection(client: Socket) {
-
     const jwtSecret = 'secrete';
     const token = client.handshake.headers.authorization;;
     if (!token) {
@@ -28,8 +27,8 @@ export class GameGateway {
   }
 
   @SubscribeMessage('createGame')
-  create(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() playerId: Socket) {
-    return this.gameService.createGameRandom(createGameDto, playerId, this.server);
+  create(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
+    return this.gameService.createGameRandom(createGameDto, soketId, this.server);
   }
 
   @SubscribeMessage('inviteFriend')
