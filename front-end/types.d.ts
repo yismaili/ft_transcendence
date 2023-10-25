@@ -124,6 +124,12 @@ type FriendRequest = {
   user: User_Friend;
 };
 
+type FriendRequest2 = {
+  id: number;
+  status: string;
+  friend: User_Friend;
+};
+
 type gameRequest = {
   roomName: string;
   sender: User_Friend;
