@@ -74,7 +74,7 @@ export default function UserProfile({ params }: { params: { user: string } }) {
           <div className="play">
             {owner && (
               <Link
-                href={`/users/${user.data.username}/game`}
+                href={`/users/${user.data.username}/randomGame`}
                 className="play__btn"
               >
                 PLAY

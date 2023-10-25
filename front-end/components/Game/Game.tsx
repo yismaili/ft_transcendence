@@ -2,7 +2,7 @@ import "./Game.css";
 import { useEffect, useState } from "react";
 import { useSocketGameContext } from "@/contexts/socket-game-context";
 
-export default function Game() {
+export default function Game({ params }: { params: { game: string } }) {
   const { socket, Data } = useSocketGameContext();
 
   class Canvas {
@@ -303,12 +303,12 @@ export default function Game() {
 
     start() {
       // if (!this.isRunning) {
-        // this.isRunning = true;
-        // this.intervalId = setInterval(() => {
-          this.update();
-          this.draw();
-          console.log("this.draw();")
-        // }, 1000 / 60); // 100 frames per second
+      // this.isRunning = true;
+      // this.intervalId = setInterval(() => {
+      this.update();
+      this.draw();
+      // console.log("this.draw();");
+      // }, 1000 / 60); // 100 frames per second
       // }
     }
     joinGame() {
@@ -329,16 +329,19 @@ export default function Game() {
   }
 
   useEffect(() => {
-
     const pongGame = new PongGame();
     function call() {
-      console.log("HRER");
-      pongGame.start()
+      // console.log("HRER");
+      pongGame.start();
       window.requestAnimationFrame(call);
     }
-    socket.emit("createGame", { username: Data.response.user.username });
+    console.log('test', params.game);
+    
+    if (params.game === "randomGame")
+      socket.emit("createGame", { username: Data.response.user.username });
+
     window.requestAnimationFrame(call);
-    console.log("test");
+    // console.log("test");
   }, []);
 
   return (
