@@ -40,7 +40,7 @@ export default function FriendContextMenu({
         friendUsername: friendData.username,
       },
       (response: any) => {
-        console.log("inviteFriend res :", response);
+        console.log("createGame res :", response);
       }
     );
   };
