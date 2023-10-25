@@ -155,7 +155,7 @@ export class GameService {
       const [rootUser, friendUser] = this.players.get(roomName);
       await this.setStatusOfUser(playerId, rootUser);
       await this.setStatusOfUser(playerId, friendUser);
-      console.log(rootUser,friendUser)
+
       // Emit the initial player information to clients
       server.to(roomName).emit('players', {
         rootUser,
@@ -189,7 +189,6 @@ export class GameService {
           rightPlayerScore: pongGame.getrRightPlayerScore(),
         };
         server.to(roomName).emit('updateGame', gameData);
-    
         if (!pongGame.getStatus()) {
 
           // clean up and add result to db
@@ -281,7 +280,13 @@ export class GameService {
        if (!user || !competitor){
         throw new Error("User not found!");
        }
-       
+       for (const [room, sockets] of this.isconnected) {
+        if (room === competitor.username) {
+          for(const socket of sockets){
+            console.log(socket.id);
+          }
+        }
+      }
       let roomName = `room_${user.username}_${competitor.username}`;
 
       if (!this.players.get(roomName)){
@@ -311,7 +316,7 @@ export class GameService {
       }
 
       if (this.players.get(roomName).length === 2){
-        server.to(competitorRoom).emit('acceptrequest');
+        server.to(competitorRoom).emit('acceptrequest',{sender: user});
         this.startGame(roomName, playerId, server);
       }
 
@@ -337,7 +342,7 @@ export class GameService {
            }
          }
 
-        server.to(competitorRoom).emit('rejectrequest');
+        server.to(competitorRoom).emit('rejectrequest',{sender: user});
        }
  
        }catch(error){
