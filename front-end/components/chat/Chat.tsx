@@ -3,6 +3,7 @@ import FriendManagement from "./FriendManagement/FriendManagement";
 import GameNotification from "./GameNotification/GameNotification";
 import NewGroupSetting from "./NewGroupSetting/NewGroupSetting";
 import { useSocketContext } from "@/contexts/socket-context";
+import User from "./GameNotificationTmp/GameNotificationTmp";
 import { motion, AnimatePresence } from "framer-motion";
 import Notification from "./Notification/Notification";
 import SlideButton from "./SlideButton/SlideButton";
@@ -130,7 +131,7 @@ export default function Chat() {
         }
         return prevGame; // No change if the array is empty
       });
-    }, 15000); // 10 seconds in milliseconds
+    }, 3500); // 10 seconds in milliseconds
 
     // Clear the timeout to prevent it from running if the component unmounts
     return () => clearTimeout(timeout);
@@ -267,38 +268,58 @@ export default function Chat() {
             choseChat={setRoom}
           />
           <ul>
-            {isGroup
-              ? allRooms &&
-                allRooms.map((room) => {
+            <AnimatePresence>
+              {isGroup
+                ? allRooms &&
+                  allRooms.map((room) => {
+                    return (
+                      <motion.li
+                        key={room.id}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                      >
+                        <Group room={room} choseChat={setRoom} />
+                      </motion.li>
+                    );
+                  })
+                : friends.data.map((friend) => {
+                    return (
+                      <motion.li
+                        key={friend.id}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                      >
+                        {user?.data.username == friend.user.username ? (
+                          <Direct
+                            data={friend.friend}
+                            choseChat={setUserFriend}
+                          />
+                        ) : (
+                          <Direct
+                            data={friend.user}
+                            choseChat={setUserFriend}
+                          />
+                        )}
+                      </motion.li>
+                    );
+                  })}
+              {!isGroup &&
+                blocked &&
+                blocked.map((user) => {
                   return (
-                    <li key={room.id}>
-                      <Group room={room} choseChat={setRoom} />
-                    </li>
-                  );
-                })
-              : friends.data.map((friend) => {
-                  return (
-                    <li key={friend.id}>
-                      {user?.data.username == friend.user.username ? (
-                        <Direct
-                          data={friend.friend}
-                          choseChat={setUserFriend}
-                        />
-                      ) : (
-                        <Direct data={friend.user} choseChat={setUserFriend} />
-                      )}
-                    </li>
+                    <motion.li
+                      key={user.id}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                    >
+                      <Blocked data={user.friend} />
+                    </motion.li>
                   );
                 })}
-            {!isGroup &&
-              blocked &&
-              blocked.map((user) => {
-                return (
-                  <li key={user.id}>
-                    <Blocked data={user.friend} />
-                  </li>
-                );
-              })}
+            </AnimatePresence>
           </ul>
           <ul id={Style.notification}>
             <AnimatePresence>
@@ -312,6 +333,20 @@ export default function Chat() {
                       key={message.id}
                     >
                       <Notification message={message} />
+                    </motion.li>
+                  );
+                })}
+              {game &&
+                game.map((request) => {
+                  return (
+                    <motion.li
+                      key={request.sender.id}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className={Style.gameNotif}
+                    >
+                      <User user={request.sender} />
                     </motion.li>
                   );
                 })}
