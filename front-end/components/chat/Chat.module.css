@@ -54,8 +54,14 @@
 
 .left ul {
   overflow: auto;
-  /* height: auto; */
-  height: 77%;
+  height: 60%;
+}
+
+#notification {
+  overflow: auto;
+  /* background-color: #c1b8ed; */
+  height: 16%;
+  border-top: 3px solid #54527d;
 }
 
 /* /////////////      right      ////////////// */
