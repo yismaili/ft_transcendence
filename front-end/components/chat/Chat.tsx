@@ -97,8 +97,6 @@ export default function Chat() {
       );
     });
 
-    console.log("socket chat", gameSocket);
-
     gameSocket.on("acceptrequest", (response: any) => {
       console.log("accept request", response);
       router.push(
