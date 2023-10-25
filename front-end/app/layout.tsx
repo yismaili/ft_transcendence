@@ -1,20 +1,8 @@
-"use client";
-import { usePathname } from "next/navigation";
-import SocketContextProvider from "@/contexts/socket-context";
-import { useEffect, useState } from "react";
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [test, setTest] = useState(false);
-  const pathname = usePathname();
-
-  useEffect(() => {
-    setTest(true);
-  }, []);
-
   return (
     <html lang="en">
       <head>
@@ -30,19 +18,7 @@ export default function RootLayout({
         ></link>
         {/* <meta content='IE=Edge;chrome=35+' https-equiv='X-UA-Compatible'/> */}
       </head>
-      <body>
-        {test && (
-          <div>
-            {pathname != "/" &&
-            pathname != "/login" &&
-            pathname != "/login/2FA" ? (
-              <SocketContextProvider>{children}</SocketContextProvider>
-            ) : (
-              children
-            )}
-          </div>
-        )}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
