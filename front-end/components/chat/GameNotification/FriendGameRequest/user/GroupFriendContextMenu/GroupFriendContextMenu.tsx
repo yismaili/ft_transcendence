@@ -19,7 +19,7 @@ export default function GroupFriendContextMenu({
   const router = useRouter();
 
   const handleAccept = () => {
-    gameSocket.emit("responseFromFriend", { responseFromFriend: true });
+    gameSocket.emit("acceptrequest", { username: Data.response.user.username, roomName: Data.response.roomName});
     socket.emit("updateUI", {
       message: `game ${user.username} ${Data.response.user.username}`,
     });

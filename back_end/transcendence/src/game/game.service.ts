@@ -13,11 +13,12 @@ import { UpdateResultDto } from './dto/update-result.dto';
 import { Socket, Server} from 'socket.io';
 import { SetHistoryDto } from './dto/set-history.dto';
 import { verify } from 'jsonwebtoken';
+import { error } from 'console';
+import { AcceptRequestDto } from './dto/accept-request.dto';
 
 @Injectable()
 export class GameService {
   players: Map<string, string[]> = new Map<string, string[]>();
-  rooms: Map<string, string[]> = new Map<string, string[]>();
   playWithFriend: Map<string, string[]> = new Map<string, string[]>();
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
@@ -62,7 +63,6 @@ export class GameService {
           if (!roomName) {
             roomName = user.username;
           }
-
           await playerId.join(roomName);
     
           if (!this.players.has(roomName)) {
@@ -186,12 +186,12 @@ export class GameService {
           leftPlayerScore: pongGame.getlLeftPlayerScore(),
           rightPlayerScore: pongGame.getrRightPlayerScore(),
         };
-        
+console.log(pongGame.getBallX())
         server.to(roomName).emit('updateGame', gameData);
     
         if (!pongGame.getStatus()) {
+
           // clean up and add result to db
-  
           const history: SetHistoryDto = {
             resulteOfCompetitor: gameData.leftPlayerScore,
             resulteOfUser: gameData.rightPlayerScore,
@@ -255,31 +255,30 @@ export class GameService {
         const user = await this.userRepository.findOne({
           where: { username: createGameDto.username },
         });
-    
+    console.log(user);
         const competitor = await this.userRepository.findOne({
           where: { username: createGameDto.friendUsername },
         });
-    
+    console.log(competitor);
         if (!user || !competitor) {
           throw new Error('User or competitor not found');
         }
     
-        let roomName;
+        // let roomName;
     
-        // check for an existing room
-        for (const [name, playWithFriend] of this.players) {
-          if (playWithFriend.length < 2) {
-            roomName = name;
-            break;
-          }
-        }
+        // // check for an existing room
+        // for (const [name, playWithFriend] of this.players) {
+        //   if (playWithFriend.length < 2) {
+        //     roomName = name;
+        //     break;
+        //   }
+        // }
     
-        if (!roomName) {
-          roomName = `room_${user.username}_${competitor.username}`;
-        }
-    
+        // if (!roomName) {
+        //   roomName = `room_${user.username}_${competitor.username}`;
+        // }
+        // playerId.join(roomName);
         // competitor joins the room
-        // const competitorRoom = this.findCompetitorRoom(competitor.username);
         let competitorRoom = competitor.username;
         for (const [room, sockets] of this.isconnected) {
           if (room === competitor.username) {
@@ -288,38 +287,70 @@ export class GameService {
             }
           }
         }
-        //playerId.join(competitorRoom);
         // emit an invitation to the competitor
-        server.to(competitorRoom).emit('inviteFriend', { sender: user, roomName });
+        server.to(competitorRoom).emit('inviteFriend', { sender: user, receiver: competitor});
+    //console.log(roomName);
+        // // Listen for the response from the friend
+        // const responseListener = (response: { responseFromFriend: boolean }) => {
+        //   if (response.responseFromFriend === true) {
+        //     this.players.get(roomName).push(competitor.username);
+            
+        //   }
+        //   playerId.removeListener('responseFromFriend', responseListener);
     
-        // Listen for the response from the friend
-        const responseListener = (response: { responseFromFriend: boolean }) => {
-          if (response.responseFromFriend === true) {
-            this.players.get(roomName).push(competitor.username);
-          }
-          playerId.removeListener('responseFromFriend', responseListener);
+        //   // Check if there are now 2 players in the room
+        //   if (this.players.get(roomName).length === 2) {
+        //     console.log(roomName);
+        //     this.startGame(roomName, playerId, server);
+        //   }
+        // };
     
-          // Check if there are now 2 players in the room
-          if (this.players.get(roomName).length === 2) {
-            this.startGame(roomName, playerId, server);
-          }
-        };
-    
-        playerId.on('responseFromFriend', responseListener);
+        // playerId.on('responseFromFriend', responseListener);
       } catch (error) {
-        console.error('Error in matchingFriends:', error);
+        console.error('Error in matching friends:', error);
       }
     }
     
-    
-    // Helper function to find the socket associated with a competitor
-    private findCompetitorRoom(username: string): string | undefined {
+    async acceptRequest(acceptRequestDto: AcceptRequestDto, playerId: Socket, server: Server) :Promise<any>{
+      try{
+       const user = await this.userRepository.findOne({where:{username: acceptRequestDto.username}});
+       const competitor = await this.userRepository.findOne({where:{username: acceptRequestDto.userCompetitor}})
+       if (!user || !competitor){
+        throw new Error("User not found!");
+       }
+       
+      let roomName = `room_${user.username}_${competitor.username}`;
+
+      if (!this.players.get(roomName)){
+        this.players.set(roomName, []);
+      }
+      
+      this.players.get(roomName).push(user.username);
+      this.players.get(roomName).push(competitor.username);
+      // competitor and user joins the room
       for (const [room, sockets] of this.isconnected) {
-        if (room === username) {
-          return room;
+        if (room === competitor.username) {
+          for(const socket of sockets){
+            socket.join(roomName);
+          }
         }
       }
-      return undefined;
+
+      for (const [room, sockets] of this.isconnected) {
+        if (room === user.username) {
+          for(const socket of sockets){
+            socket.join(roomName);
+          }
+        }
+      }
+
+      if (this.players.get(roomName).length === 2){
+        this.startGame(roomName, playerId, server);
+      }
+
+      }catch(error){
+        throw new Error('Unable to accept the request.')
+      }
     }
     
     async addHistory(addhistory: SetHistoryDto): Promise<any> {
