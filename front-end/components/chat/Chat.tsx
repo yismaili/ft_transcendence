@@ -98,6 +98,8 @@ export default function Chat() {
         }
       );
     });
+    console.log('im here');
+    
 
     gameSocket.on("inviteFriend", (response: gameRequest) => {
       console.log("new invire for game in chat: ", response);
