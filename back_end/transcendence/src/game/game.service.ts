@@ -297,6 +297,7 @@ export class GameService {
         if (room === competitor.username) {
           for(const socket of sockets){
             socket.join(roomName);
+            socket.join(competitorRoom);
           }
         }
       }
@@ -305,7 +306,6 @@ export class GameService {
         if (room === user.username) {
           for(const socket of sockets){
             socket.join(roomName);
-            socket.join(competitorRoom);
           }
         }
       }

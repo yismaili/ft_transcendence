@@ -33,7 +33,7 @@ export class GameGateway {
     return this.gameService.createGameRandom(createGameDto, playerId, this.server);
   }
 
-  @SubscribeMessage('createGameFriend')
+  @SubscribeMessage('inviteFriend')
   createGameFriend(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
     return this.gameService.matchingFriends(createGameDto, soketId, this.server);
   }
