@@ -155,7 +155,6 @@ export class GameService {
       const [rootUser, friendUser] = this.players.get(roomName);
       await this.setStatusOfUser(playerId, rootUser);
       await this.setStatusOfUser(playerId, friendUser);
-
       // Emit the initial player information to clients
       server.to(roomName).emit('players', {
         rootUser,
@@ -256,8 +255,7 @@ export class GameService {
         const competitor = await this.userRepository.findOne({where: { username: createGameDto.friendUsername }});
         if (!user || !competitor) {
           throw new Error('User or competitor not found');
-        }
-    
+        } 
         let competitorRoom = competitor.username;
         for (const [room, sockets] of this.isconnected) {
           if (room === competitor.username) {
@@ -280,13 +278,6 @@ export class GameService {
        if (!user || !competitor){
         throw new Error("User not found!");
        }
-       for (const [room, sockets] of this.isconnected) {
-        if (room === competitor.username) {
-          for(const socket of sockets){
-            console.log(socket.id);
-          }
-        }
-      }
       let roomName = `room_${user.username}_${competitor.username}`;
 
       if (!this.players.get(roomName)){
@@ -621,7 +612,7 @@ async handleConnection(socketId: Socket, username:string) {
     if (!this.isconnected.has(username)) {
       this.isconnected.set(username,[]);
     }
-
+    console.log(socketId.id)
     this.isconnected.get(username).push(socketId);
     socketId.on('disconnect', async () => {
       if (this.isconnected.has(username)) {
