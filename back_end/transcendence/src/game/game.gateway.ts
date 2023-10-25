@@ -38,9 +38,9 @@ export class GameGateway {
     return this.gameService.matchingFriends(createGameDto, soketId, this.server);
   }
 
-  @SubscribeMessage('acceptrequest')
-  test(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
+  @SubscribeMessage('rejectrequest')
+  rejectrequest(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
     acceptRequestDto.userCompetitor = 'yismaili';
-   return this.gameService.acceptRequest(acceptRequestDto, soketId, this.server);
+   return this.gameService.rejectrequest(acceptRequestDto, soketId, this.server);
   }
 }
