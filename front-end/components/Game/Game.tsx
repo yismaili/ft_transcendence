@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSocketContext } from "@/contexts/socket-context";
 
 export default function Game({ params }: { params: { game: string } }) {
-  const { socket, Data, onlineSocket, gameSocket} = useSocketContext();
+  const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
 
   class Canvas {
     private canvas: HTMLCanvasElement;
@@ -272,7 +272,7 @@ export default function Game({ params }: { params: { game: string } }) {
           leftPlayerScore: number;
           rightPlayerScore: number;
         }) => {
-          console.log("7na west updateGame:", response);
+          // console.log("7na west updateGame:", response);
           this.ballX = response.ballX;
           this.ballY = response.ballY;
           this.leftPaddle = response.leftPaddle;
@@ -335,10 +335,9 @@ export default function Game({ params }: { params: { game: string } }) {
       pongGame.start();
       window.requestAnimationFrame(call);
     }
-    console.log('socket game :', gameSocket);
-    
+
     if (params.game === "randomGame")
-    gameSocket.emit("createGame", { username: Data.response.user.username });
+      gameSocket.emit("createGame", { username: Data.response.user.username });
 
     window.requestAnimationFrame(call);
     // console.log("test");

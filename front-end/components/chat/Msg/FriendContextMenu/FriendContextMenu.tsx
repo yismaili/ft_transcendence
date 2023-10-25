@@ -43,6 +43,7 @@ export default function FriendContextMenu({
         console.log("inviteFriend res :", response);
       }
     );
+    setMenuOpen((prev: boolean) => !prev);
   };
 
   return (

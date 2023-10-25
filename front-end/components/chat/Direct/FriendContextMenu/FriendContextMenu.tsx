@@ -42,7 +42,8 @@ export default function FriendContextMenu({
       (response: any) => {
         console.log("createGame res :", response);
       }
-    );
+      );
+      setMenuOpen((prev: boolean) => !prev);
   };
 
   return (
