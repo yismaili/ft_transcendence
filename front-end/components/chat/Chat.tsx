@@ -3,8 +3,11 @@ import FriendManagement from "./FriendManagement/FriendManagement";
 import GameNotification from "./GameNotification/GameNotification";
 import NewGroupSetting from "./NewGroupSetting/NewGroupSetting";
 import { useSocketContext } from "@/contexts/socket-context";
+import User from "./GameNotificationTmp/GameNotificationTmp";
+import { motion, AnimatePresence } from "framer-motion";
+import Notification from "./Notification/Notification";
 import SlideButton from "./SlideButton/SlideButton";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import GroupMsg from "./GroupMsg/GroupMsg";
 import Blocked from "./Blocked/Blocked";
@@ -25,9 +28,18 @@ export default function Chat() {
   const [room, setRoom] = useState<AllRooms>();
   const [game, setGame] = useState<gameRequest[]>([]);
   const [blocked, setBlocked] = useState<FriendRequest2[]>([]);
+  const [notification, setNotification] = useState<allMessages[]>([]);
+  const [newMessage, setNewMessage] = useState<allMessages[]>([]);
   const router = useRouter();
 
   useEffect(() => {
+    socket.on("message", (message: allMessages[]) => {
+      setNewMessage((prevMessages) => [...prevMessages, message[0]]);
+      if (message[0].user.username != Data.response.user.username) {
+        setNotification((prev: allMessages[]) => [...prev, message[0]]);
+      }
+    });
+
     socket.on("updateUI", (messaged: string) => {
       console.log(messaged);
 
@@ -76,15 +88,6 @@ export default function Chat() {
           setUserFriend(undefined);
         }
       }
-      //else if (messaged.split(" ")[0] === "game") {
-      //   if (messaged.split(" ")[1] === Data.response.user.username) {
-      //     router.push(
-      //       `/users/${Data.response.user.username}/${
-      //         Data.response.user.username
-      //       }-vs-${messaged.split(" ")[2]}`
-      //     );
-      //   }
-      // }
 
       socket.emit(
         "chatRoomOfUser",
@@ -97,15 +100,13 @@ export default function Chat() {
       );
     });
 
-    gameSocket.on("acceptrequest", (response: any) => {
-      console.log("accept request", response);
+    gameSocket.on("acceptrequest", (response: { sender: User_Friend }) => {
       router.push(
-        `/users/${Data.response.user.username}/${Data.response.user.username}-vs-undefined`
+        `/users/${Data.response.user.username}/${Data.response.user.username}-vs-${response.sender.username}`
       );
     });
 
     gameSocket.on("inviteFriend", (response: gameRequest) => {
-      console.log("new invire for game in chat: ", response);
       if (!game.length) setGame([response]);
       else
         game.map((request) => {
@@ -128,11 +129,28 @@ export default function Chat() {
         }
         return prevGame; // No change if the array is empty
       });
-    }, 15000); // 10 seconds in milliseconds
+    }, 3500); // 10 seconds in milliseconds
 
     // Clear the timeout to prevent it from running if the component unmounts
     return () => clearTimeout(timeout);
   }, [game]);
+
+  useEffect(() => {
+    // Use a setTimeout to remove the first element after 10 seconds
+    const timeout = setTimeout(() => {
+      setNotification((prevNotification) => {
+        if (prevNotification.length > 0) {
+          const updatedGame = [...prevNotification];
+          updatedGame.splice(0, 1); // Remove the first element
+          return updatedGame;
+        }
+        return prevNotification; // No change if the array is empty
+      });
+    }, 1500); // 10 seconds in milliseconds
+
+    // Clear the timeout to prevent it from running if the component unmounts
+    return () => clearTimeout(timeout);
+  }, [notification]);
 
   useEffect(() => {
     socket.emit(
@@ -248,38 +266,89 @@ export default function Chat() {
             choseChat={setRoom}
           />
           <ul>
-            {isGroup
-              ? allRooms &&
-                allRooms.map((room) => {
+            <AnimatePresence>
+              {isGroup
+                ? allRooms &&
+                  allRooms.map((room) => {
+                    return (
+                      <motion.li
+                        key={room.id}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                      >
+                        <Group room={room} choseChat={setRoom} />
+                      </motion.li>
+                    );
+                  })
+                : friends.data.map((friend) => {
+                    return (
+                      <motion.li
+                        key={friend.id}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                      >
+                        {user?.data.username == friend.user.username ? (
+                          <Direct
+                            data={friend.friend}
+                            choseChat={setUserFriend}
+                          />
+                        ) : (
+                          <Direct
+                            data={friend.user}
+                            choseChat={setUserFriend}
+                          />
+                        )}
+                      </motion.li>
+                    );
+                  })}
+              {!isGroup &&
+                blocked &&
+                blocked.map((user) => {
                   return (
-                    <li key={room.id}>
-                      <Group room={room} choseChat={setRoom} />
-                    </li>
-                  );
-                })
-              : friends.data.map((friend) => {
-                  return (
-                    <li key={friend.id}>
-                      {user?.data.username == friend.user.username ? (
-                        <Direct
-                          data={friend.friend}
-                          choseChat={setUserFriend}
-                        />
-                      ) : (
-                        <Direct data={friend.user} choseChat={setUserFriend} />
-                      )}
-                    </li>
+                    <motion.li
+                      key={user.id}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                    >
+                      <Blocked data={user.friend} />
+                    </motion.li>
                   );
                 })}
-            {!isGroup &&
-              blocked &&
-              blocked.map((user) => {
-                return (
-                  <li key={user.id}>
-                    <Blocked data={user.friend} />
-                  </li>
-                );
-              })}
+            </AnimatePresence>
+          </ul>
+          <ul id={Style.notification}>
+            <AnimatePresence>
+              {notification &&
+                notification.map((message) => {
+                  return (
+                    <motion.li
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      key={message.id}
+                    >
+                      <Notification message={message} />
+                    </motion.li>
+                  );
+                })}
+              {game &&
+                game.map((request) => {
+                  return (
+                    <motion.li
+                      key={request.sender.id}
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className={Style.gameNotif}
+                    >
+                      <User user={request.sender} />
+                    </motion.li>
+                  );
+                })}
+            </AnimatePresence>
           </ul>
           {isGroup ? (
             <NewGroupSetting setGroupInput={setGroupInput} />
@@ -290,7 +359,11 @@ export default function Chat() {
         </div>
         <div className={Style.right} key={!isGroup ? userFriend?.id : room?.id}>
           {userFriend && !isGroup && (
-            <Msg friendData={userFriend} myData={user} />
+            <Msg
+              friendData={userFriend}
+              myData={user}
+              newMessage={newMessage}
+            />
           )}
           {isGroup && room && <GroupMsg groupInput={groupInput} room={room} />}
         </div>
