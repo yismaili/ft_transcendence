@@ -97,12 +97,12 @@ export default function Chat() {
       );
     });
 
+    console.log("socket chat", gameSocket);
+
     gameSocket.on("acceptrequest", (response: any) => {
       console.log("accept request", response);
       router.push(
-        `/users/${Data.response.user.username}/${
-          Data.response.user.username
-        }-vs-undefined`
+        `/users/${Data.response.user.username}/${Data.response.user.username}-vs-undefined`
       );
     });
 
