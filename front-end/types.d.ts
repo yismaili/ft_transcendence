@@ -131,6 +131,6 @@ type FriendRequest2 = {
 };
 
 type gameRequest = {
-  roomName: string;
+  receiver: string;
   sender: User_Friend;
 };
