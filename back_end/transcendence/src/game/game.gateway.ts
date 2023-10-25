@@ -40,13 +40,11 @@ export class GameGateway {
 
   @SubscribeMessage('acceptrequest')
   acceptreques(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
-    acceptRequestDto.userCompetitor = 'yismaili';
    return this.gameService.acceptRequest(acceptRequestDto, soketId, this.server);
   }
   
   @SubscribeMessage('rejectrequest')
   rejectrequest(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
-    acceptRequestDto.userCompetitor = 'yismaili';
    return this.gameService.rejectrequest(acceptRequestDto, soketId, this.server);
   }
 }
