@@ -324,7 +324,7 @@ export default function Game({ params }: { params: { game: string } }) {
 
     acceptRequest() {
       const res = true;
-      this.socket.emit("responseFromFriend", res);
+      this.socket.emit("acceptrequest", res);
     }
   }
 
