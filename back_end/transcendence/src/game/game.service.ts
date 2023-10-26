@@ -13,9 +13,7 @@ import { UpdateResultDto } from './dto/update-result.dto';
 import { Socket, Server} from 'socket.io';
 import { SetHistoryDto } from './dto/set-history.dto';
 import { verify } from 'jsonwebtoken';
-import { error } from 'console';
 import { AcceptRequestDto } from './dto/accept-request.dto';
-import { ChatRoomUser } from 'src/typeorm/entities/chat-room-users.entity';
 
 @Injectable()
 export class GameService {
@@ -48,7 +46,7 @@ export class GameService {
             break;
           }
         }
-    
+
         if (roomName && this.players.get(roomName).length >= 2) {
           await playerId.join(roomName);
         } else {
@@ -612,7 +610,6 @@ async handleConnection(socketId: Socket, username:string) {
     if (!this.isconnected.has(username)) {
       this.isconnected.set(username,[]);
     }
-    console.log(socketId.id)
     this.isconnected.get(username).push(socketId);
     socketId.on('disconnect', async () => {
       if (this.isconnected.has(username)) {

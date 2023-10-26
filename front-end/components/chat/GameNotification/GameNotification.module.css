@@ -2,13 +2,13 @@
   width: 2.6rem;
   height: 2.6rem;
   margin-left: 0.8rem;
-  background-image: url("/img/chat/add.png");
+  background-image: url("/img/chat/battle.png");
   background-repeat: no-repeat;
   background-size: contain;
   cursor: pointer;
   position: absolute;
-  bottom: 2%;
-    left: 24%;
+  bottom: 1%;
+  left: 24%;
 }
 
 .backDrop {
