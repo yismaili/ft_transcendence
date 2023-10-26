@@ -48,7 +48,7 @@ export class GameGateway {
 
   @SubscribeMessage('refreshGame')
   refreshGame(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
-   //return this.gameService.refreshGame()
+    return this.gameService.refreshGame(soketId);
   }
 
 }

@@ -14,6 +14,7 @@ import { Socket, Server} from 'socket.io';
 import { SetHistoryDto } from './dto/set-history.dto';
 import { verify } from 'jsonwebtoken';
 import { AcceptRequestDto } from './dto/accept-request.dto';
+import { join } from 'path';
 
 @Injectable()
 export class GameService {
@@ -639,6 +640,38 @@ async setStatusOfUser(socketId: Socket, username:string) {
       await this.userRepository.save(user);
     });
   } catch (error) {
+    socketId.emit('error', 'Authentication failed');
+    socketId.disconnect(true);
+  }
+}
+
+async refreshGame(socketId: Socket){
+  try{
+    const jwtSecret = 'secrete';
+    const token = socketId.handshake.headers.authorization;
+    if (!token) {
+      socketId.emit('error', 'Authorization token missing');
+      socketId.disconnect(true);
+      return;
+    }
+    let decodedToken = verify(token, jwtSecret);
+    const username = decodedToken['username'];
+    let roomName = '';
+    for (const [name, players] of this.players) {
+      if (players.includes(username)) {
+        roomName = name;
+        break;
+      }
+    }
+    for (const [room, sockets] of this.isconnected) {
+      if (room === username) {
+        for(const socket of sockets){
+          socket.join(roomName);
+        }
+      }
+    }
+
+  }catch (error) {
     socketId.emit('error', 'Authentication failed');
     socketId.disconnect(true);
   }
