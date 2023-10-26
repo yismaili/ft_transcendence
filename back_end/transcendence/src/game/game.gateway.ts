@@ -28,15 +28,14 @@ export class GameGateway {
 
   @SubscribeMessage('createGame')
   create(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
-    console.log(soketId.id)
     return this.gameService.createGameRandom(createGameDto, soketId, this.server);
   }
-
+  
   @SubscribeMessage('inviteFriend')
   createGameFriend(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
     return this.gameService.matchingFriends(createGameDto, soketId, this.server);
   }
-
+  
   @SubscribeMessage('acceptrequest')
   acceptreques(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
    return this.gameService.acceptRequest(acceptRequestDto, soketId, this.server);
@@ -44,11 +43,13 @@ export class GameGateway {
   
   @SubscribeMessage('rejectrequest')
   rejectrequest(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
-   return this.gameService.rejectrequest(acceptRequestDto, soketId, this.server);
+    return this.gameService.rejectrequest(acceptRequestDto, soketId, this.server);
   }
 
   @SubscribeMessage('gameTest')
   gameTest(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
+    
+    console.log(soketId.id)
    console.log('test');
   }
 
