@@ -9,18 +9,20 @@ import { useSocketContext } from "@/contexts/socket-context";
 type props = {
   friendData: User_Friend;
   myData: User;
+  newMessage: allMessages[];
 };
 
-export default function Msg({ friendData, myData }: props) {
+export default function Msg({ friendData, myData, newMessage }: props) {
   const { socket } = useSocketContext();
   const [allMessages, setAllMessages] = useState<allMessages[]>();
-  const [newMessage, setNewMessage] = useState<allMessages[]>([]);
+  // const [newMessage, setNewMessage] = useState<allMessages[]>([]);
   const ref = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    socket.on("message", (message: allMessages[]) => {
-      setNewMessage((prevMessages) => [...prevMessages, message[0]]);
-    });
+    // socket.on("message", (message: allMessages[]) => {
+    //   setNewMessage((prevMessages) => [...prevMessages, message[0]]);
+    //   setNotification((prev: allMessages[]) => [...prev, message[0]]);
+    // });
 
     socket.emit(
       "findAllChat",
