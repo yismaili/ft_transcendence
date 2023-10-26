@@ -13,9 +13,7 @@ import { UpdateResultDto } from './dto/update-result.dto';
 import { Socket, Server} from 'socket.io';
 import { SetHistoryDto } from './dto/set-history.dto';
 import { verify } from 'jsonwebtoken';
-import { error } from 'console';
 import { AcceptRequestDto } from './dto/accept-request.dto';
-import { ChatRoomUser } from 'src/typeorm/entities/chat-room-users.entity';
 
 @Injectable()
 export class GameService {
@@ -48,7 +46,7 @@ export class GameService {
             break;
           }
         }
-    
+
         if (roomName && this.players.get(roomName).length >= 2) {
           await playerId.join(roomName);
         } else {
@@ -155,7 +153,6 @@ export class GameService {
       const [rootUser, friendUser] = this.players.get(roomName);
       await this.setStatusOfUser(playerId, rootUser);
       await this.setStatusOfUser(playerId, friendUser);
-
       const user = await this.userRepository.findOne({where: {username: rootUser}});
       const userFriend = await this.userRepository.findOne({where: {username: friendUser}});
       // Emit the initial player information to clients
@@ -258,8 +255,7 @@ export class GameService {
         const competitor = await this.userRepository.findOne({where: { username: createGameDto.friendUsername }});
         if (!user || !competitor) {
           throw new Error('User or competitor not found');
-        }
-    
+        } 
         let competitorRoom = competitor.username;
         for (const [room, sockets] of this.isconnected) {
           if (room === competitor.username) {
@@ -282,13 +278,6 @@ export class GameService {
        if (!user || !competitor){
         throw new Error("User not found!");
        }
-       for (const [room, sockets] of this.isconnected) {
-        if (room === competitor.username) {
-          for(const socket of sockets){
-            console.log(socket.id);
-          }
-        }
-      }
       let roomName = `room_${user.username}_${competitor.username}`;
 
       if (!this.players.get(roomName)){
@@ -623,7 +612,6 @@ async handleConnection(socketId: Socket, username:string) {
     if (!this.isconnected.has(username)) {
       this.isconnected.set(username,[]);
     }
-
     this.isconnected.get(username).push(socketId);
     socketId.on('disconnect', async () => {
       if (this.isconnected.has(username)) {
