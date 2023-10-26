@@ -153,10 +153,12 @@ export class GameService {
       const [rootUser, friendUser] = this.players.get(roomName);
       await this.setStatusOfUser(playerId, rootUser);
       await this.setStatusOfUser(playerId, friendUser);
+      const user = await this.userRepository.findOne({where: {username: rootUser}});
+      const userFriend = await this.userRepository.findOne({where: {username: friendUser}});
       // Emit the initial player information to clients
       server.to(roomName).emit('players', {
-        rootUser,
-        friendUser
+        user,
+        userFriend,
       });
     
       await this.waitMinute();
