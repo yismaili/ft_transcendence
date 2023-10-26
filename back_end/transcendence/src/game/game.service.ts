@@ -187,6 +187,7 @@ export class GameService {
         };
         server.to(roomName).emit('updateGame', gameData);
         if (!pongGame.getStatus()) {
+          server.to(roomName).emit('gameOver', {gameOver: true});
 
           // clean up and add result to db
           const history: SetHistoryDto = {
@@ -692,11 +693,11 @@ class PongGame {
     this.isRunning = false;
   }
 
-  /**
-   * Update the game state including paddle movement, ball position, collisions, and scoring.
-   */
+  
+   // Update the game state including paddle movement, ball position, collisions, and scoring.
+   
   async updateGame() {
-      // Paddle movement 
+    // Paddle movement 
     if (this.upPressed && this.rightPaddle > 0) {
       this.rightPaddle -= this.paddleSpeed;
     } else if (this.downPressed && this.rightPaddle < this.canvasHeight - this.paddleHeight) {
@@ -716,11 +717,11 @@ class PongGame {
       this.leftPaddle -= this.paddleSpeed;
     }
 
-    // if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
-    //   this.rightPaddle += this.paddleSpeed;
-    // } else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
-    //   this.rightPaddle -= this.paddleSpeed;
-    // }
+    if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
+      this.rightPaddle += this.paddleSpeed;
+    } else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
+      this.rightPaddle -= this.paddleSpeed;
+    }
 
     // Update ball position
     this.ballX += this.ballSpeedX;
