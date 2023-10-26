@@ -72,9 +72,13 @@ export default function UserProfile({ params }: { params: { user: string } }) {
           {user && <Analytics user={user} />}
           <History__Achievements />
           <div className="play">
-            {owner && (
+            {owner ? (
+              <Link href={`/users/${Data.response.user.username}/gameMap`} className="play__btn">
+                PLAY
+              </Link>
+            ) : (
               <Link
-                href={`/users/${user.data.username}/randomGame`}
+                href={`/users/${Data.response.user.username}/gameMap?type=invite-${user.data.username}`}
                 className="play__btn"
               >
                 PLAY

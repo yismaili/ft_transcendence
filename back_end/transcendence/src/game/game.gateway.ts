@@ -46,11 +46,9 @@ export class GameGateway {
     return this.gameService.rejectrequest(acceptRequestDto, soketId, this.server);
   }
 
-  @SubscribeMessage('gameTest')
-  gameTest(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
-    
-    console.log(soketId.id)
-   console.log('test');
+  @SubscribeMessage('refreshGame')
+  refreshGame(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
+   //return this.gameService.refreshGame()
   }
 
 }

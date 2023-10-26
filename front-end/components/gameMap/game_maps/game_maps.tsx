@@ -1,26 +1,65 @@
 "use client";
-import { url } from "inspector";
 import "./game_maps.css";
 import "@/global_css/utilityClasses.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useSocketContext } from "@/contexts/socket-context";
+import MatchMaking from "@/components/MatchMaking/MatchMaking";
 
 export default function GameMaps() {
-  const [Images, setImage] = useState({
-    leftImage: "/img/oceanMap.png",
-    centerImage: "/img/footballMap.png",
-    rightImage: "/img/spaceMap.png",
-  });
-  
+  const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
+  const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("FOOT GROUND");
-  
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [Images, setImage] = useState({
+    leftImage: "/img/gameMap/oceanMap.png",
+    centerImage: "/img/gameMap/footballMap.png",
+    rightImage: "/img/gameMap/spaceMap.png",
+  });
   const [color, setColor] = useState({
     leftColor: "#2D44B4",
     centerColor: "#A1CA53",
     rightColor: "#4C2DA4",
   });
+  const [data, setData] = useState<any>();
+
+  const type = searchParams.get("type");
+
+  useEffect(() => {
+    gameSocket.on("players", (response: any) => {
+      setData(response);
+    });
+
+    if (data)
+      setTimeout(() => {
+        router.push(`game?map=${title.split(" ")[0]}`);
+      }, 3000);
+  }, [data]);
 
   const joinGame = () => {
+    setOpen(true);
+    if (type && type.split("-")[0] === "invite")
+      gameSocket.emit("inviteFriend", {
+        username: Data.response.user.username,
+        friendUsername: type.split("-")[1],
+      });
+    else if (type && type.split("-")[0] === "accept") {
+      gameSocket.emit("acceptrequest", {
+        username: Data.response.user.username,
+        userCompetitor: type.split("-")[1],
+      });
+      setTimeout(() => {
+        router.push(`game?map=${title.split(" ")[0]}`);
+      }, 3000);
+    } else
+      gameSocket.emit("createGame", { username: Data.response.user.username });
 
+    gameSocket.on("acceptrequest", (response: { sender: User_Friend }) => {
+      setTimeout(() => {
+        router.push(`game?map=${title.split(" ")[0]}`);
+      }, 3000);
+    });
   };
 
   function swap(position: string) {
@@ -35,9 +74,9 @@ export default function GameMaps() {
         centerColor: color.leftColor,
         rightColor: color.rightColor,
       });
-      if (Images.leftImage == "/img/oceanMap.png") {
+      if (Images.leftImage == "/img/gameMap/oceanMap.png") {
         setTitle("BEACH GROUND");
-      } else if (Images.leftImage == "/img/footballMap.png") {
+      } else if (Images.leftImage == "/img/gameMap/footballMap.png") {
         setTitle("FOOT GROUND");
       } else {
         setTitle("SPACE GROUND");
@@ -53,9 +92,9 @@ export default function GameMaps() {
         centerColor: color.rightColor,
         rightColor: color.centerColor,
       });
-      if (Images.rightImage == "/img/oceanMap.png") {
+      if (Images.rightImage == "/img/gameMap/oceanMap.png") {
         setTitle("BEACH GROUND");
-      } else if (Images.rightImage == "/img/footballMap.png") {
+      } else if (Images.rightImage == "/img/fgameMap/ootballMap.png") {
         setTitle("FOOT GROUND");
       } else {
         setTitle("SPACE GROUND");
@@ -79,7 +118,7 @@ export default function GameMaps() {
           <div
             key={Math.random()}
             className=" Game__maps__center cursor"
-            onClick={() => {joinGame}}
+            onClick={joinGame}
           >
             {/* hna l function dial selection dial lmap*/}
             <span
@@ -96,7 +135,10 @@ export default function GameMaps() {
             style={{ backgroundImage: `url(${Images.rightImage})` }}
             onClick={() => swap("right")}
           ></span>
-          <span className="rightSwipe bg__image__util" onClick={() => swap("right")}></span>
+          <span
+            className="rightSwipe bg__image__util"
+            onClick={() => swap("right")}
+          ></span>
         </div>
       </div>
       <div className="Game__mapName">
@@ -124,6 +166,7 @@ export default function GameMaps() {
           ></div>
         </div>
       </div>
+      {open && <MatchMaking setOpen={setOpen} data={data} setData={setData} />}
     </>
   );
 }

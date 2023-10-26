@@ -1,4 +1,5 @@
 import { useSocketContext } from "@/contexts/socket-context";
+import { useRouter } from "next/navigation";
 import "./FriendContextMenu.css";
 import Link from "next/link";
 
@@ -14,6 +15,7 @@ export default function FriendContextMenu({
   friendData,
 }: props) {
   const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
+  const router = useRouter();
 
   const handleBlock = async () => {
     const res = await fetch(
@@ -33,17 +35,7 @@ export default function FriendContextMenu({
   };
 
   const handlePlay = () => {
-    gameSocket.emit(
-      "inviteFriend",
-      {
-        username: Data.response.user.username,
-        friendUsername: friendData.username,
-      },
-      (response: any) => {
-        console.log("createGame res :", response);
-      }
-      );
-      setMenuOpen((prev: boolean) => !prev);
+    router.push(`gameMap?type=invite-${friendData.username}`);
   };
 
   return (
