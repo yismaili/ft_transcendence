@@ -54,8 +54,27 @@
 
 .left ul {
   overflow: auto;
-  /* height: auto; */
-  height: 77%;
+  height: 60%;
+}
+
+#notification {
+  overflow: auto;
+  /* background-color: #c1b8ed; */
+  height: 16%;
+  border-top: 3px solid #54527d;
+}
+
+.gameNotif {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fdfdfd1a;
+  width: 90%;
+  height: 2.5rem;
+  margin: 0 auto;
+  margin-top: 0.8rem;
+  border-radius: 13px;
+  cursor: pointer;
 }
 
 /* /////////////      right      ////////////// */

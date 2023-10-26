@@ -3,6 +3,7 @@ import { GameService } from './game.service';
 import { Socket, Server} from 'socket.io';
 import { CreateGameDto } from './dto/create-game.dto';
 import { verify } from 'jsonwebtoken';
+import { AcceptRequestDto } from './dto/accept-request.dto';
 
 @WebSocketGateway({ cors: { origin: '*' }, namespace: 'game' })
 export class GameGateway {
@@ -11,15 +12,10 @@ export class GameGateway {
   constructor(private readonly gameService: GameService) {
   }
 
-  // handleConnection(socket: Socket): void {
-  //   this.gameService.addUserWithSocketId(socket);
-  // }
-
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: Socket) {
 
     const jwtSecret = 'secrete';
-    const token = client.handshake.headers.authorization;
-
+    const token = client.handshake.headers.authorization;;
     if (!token) {
       client.emit('error', 'Authorization token missing');
       client.disconnect(true);
@@ -28,35 +24,26 @@ export class GameGateway {
 
     let decodedToken = verify(token, jwtSecret);
     const username = decodedToken['username'];
-     // this.gameService.addUserWithSocketId(username, client);
-      this.gameService.handleConnection(client, username);
+    this.gameService.handleConnection(client, username);
   }
-
-  // handleDisconnect(client: Socket) {
-
-  //   const jwtSecret = 'secrete';
-  //   const token = client.handshake.headers.authorization;
-  //   this.gameService.handleConnection(client, username);
-
-  //   if (!token) {
-  //     client.emit('error', 'Authorization token missing');
-  //     client.disconnect(true);
-  //     return;
-  //   }
-
-  //   let decodedToken = verify(token, jwtSecret);
-  //   const username = decodedToken['username'];
-  //    // this.gameService.addUserWithSocketId(username, client);
-  // }
-  
 
   @SubscribeMessage('createGame')
   create(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() playerId: Socket) {
     return this.gameService.createGameRandom(createGameDto, playerId, this.server);
   }
 
-  @SubscribeMessage('createGameFriend')
+  @SubscribeMessage('inviteFriend')
   createGameFriend(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
     return this.gameService.matchingFriends(createGameDto, soketId, this.server);
+  }
+
+  @SubscribeMessage('acceptrequest')
+  acceptreques(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
+   return this.gameService.acceptRequest(acceptRequestDto, soketId, this.server);
+  }
+  
+  @SubscribeMessage('rejectrequest')
+  rejectrequest(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
+   return this.gameService.rejectrequest(acceptRequestDto, soketId, this.server);
   }
 }

@@ -7,8 +7,10 @@ import DefError from "./error";
 
 export default function Home() {
   const [section, setSection] = useState(0);
+  const [test, setTest] = useState(false);
 
   useEffect(() => {
+    setTest(true);
     window.addEventListener(
       "wheel",
       function (e) {
@@ -19,9 +21,11 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="container">
-      <Nav num={section} seter={setSection} />
-      <Main />
-    </div>
+    test && (
+      <div className="container">
+        <Nav num={section} seter={setSection} />
+        <Main />
+      </div>
+    )
   );
 }

@@ -4,6 +4,7 @@ import { Link as Scroll_link } from "react-scroll";
 import Link from "next/link";
 import Style from "./Nav.module.css";
 import { useState } from "react";
+import Cookies from "cookies-ts";
 
 interface navState {
   num: number;
@@ -11,6 +12,8 @@ interface navState {
 }
 export default function Nav(prop: navState) {
   const [phoneNav, setPhoneNav] = useState(false);
+  const cookies = new Cookies();
+  const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
 
   return (
     <>
@@ -66,7 +69,7 @@ export default function Nav(prop: navState) {
             faq
             {prop.num == 2 && <div className={Style.bar}></div>}
           </Scroll_link>
-          <Link href="/login" style={{ cursor: "pointer" }}>
+          <Link href={Data ? `/users/${Data.response.user.username}` : `/login`} style={{ cursor: "pointer" }}>
             Sign up
           </Link>
         </div>
@@ -114,7 +117,10 @@ export default function Nav(prop: navState) {
             >
               faq
             </Scroll_link>
-            <Link href="/login" style={{ cursor: "pointer" }}>
+            <Link
+              href={Data ? `/users/${Data.response.user.username}` : `/login`}
+              style={{ cursor: "pointer" }}
+            >
               Sign up
             </Link>
           </div>

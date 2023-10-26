@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 import { useSocketContext } from "@/contexts/socket-context";
 
 export default function UserProfile({ params }: { params: { user: string } }) {
-  const { socket, Data } = useSocketContext();
+  const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
   let [user, setUser] = useState<User>();
   let [owner, setOwner] = useState(true);
   let [path, setPath] = useState("");
@@ -28,6 +28,13 @@ export default function UserProfile({ params }: { params: { user: string } }) {
       const cookie = JSON.parse(Data);
       setPath(cookie.response.user.username);
       if (cookie.response.user.username == params.user) {
+        gameSocket.on(
+          "inviteFriend",
+          (response: { usernam: string; roomName: string }) => {
+            console.log("new invire for game in profile:", response);
+          }
+        );
+
         const fetching = async () => {
           const res = await fetch("http://localhost:3000/api/home");
           const user = await res.json();
@@ -66,7 +73,10 @@ export default function UserProfile({ params }: { params: { user: string } }) {
           <History__Achievements />
           <div className="play">
             {owner && (
-              <Link href={`/users/${user.data.username}/game`} className="play__btn">
+              <Link
+                href={`/users/${user.data.username}/randomGame`}
+                className="play__btn"
+              >
                 PLAY
               </Link>
             )}
