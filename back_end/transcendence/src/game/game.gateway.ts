@@ -13,7 +13,6 @@ export class GameGateway {
   }
 
   handleConnection(client: Socket) {
-
     const jwtSecret = 'secrete';
     const token = client.handshake.headers.authorization;;
     if (!token) {
@@ -28,8 +27,9 @@ export class GameGateway {
   }
 
   @SubscribeMessage('createGame')
-  create(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() playerId: Socket) {
-    return this.gameService.createGameRandom(createGameDto, playerId, this.server);
+  create(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
+    console.log(soketId.id)
+    return this.gameService.createGameRandom(createGameDto, soketId, this.server);
   }
 
   @SubscribeMessage('inviteFriend')
@@ -46,4 +46,10 @@ export class GameGateway {
   rejectrequest(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
    return this.gameService.rejectrequest(acceptRequestDto, soketId, this.server);
   }
+
+  @SubscribeMessage('gameTest')
+  gameTest(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
+   console.log('test');
+  }
+
 }

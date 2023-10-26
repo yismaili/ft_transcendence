@@ -151,10 +151,10 @@ export default function Game() {
     public socket: any;
     private username: HTMLInputElement | null;
     private friendUsername: HTMLInputElement | null;
-    private JoinBtn: HTMLElement | null;
+    //private JoinBtn: HTMLElement | null;
     private GameId: number;
     private intervalId: NodeJS.Timeout | null;
-    private ntvBtn: HTMLElement | null;
+    //private ntvBtn: HTMLElement | null;
 
     constructor() {
       this.canvas = new Canvas();
@@ -206,8 +206,8 @@ export default function Game() {
         this.canvas.getHeight()
       );
       this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
-      this.JoinBtn = document.getElementById("joinGame-btn");
-      this.ntvBtn = document.getElementById("ntv-btn");
+      // this.JoinBtn = document.getElementById("joinGame-btn");
+      // this.ntvBtn = document.getElementById("ntv-btn");
       // Add keyboard event listeners
       document.addEventListener("keydown", this.keyDownHandler.bind(this));
       document.addEventListener("keyup", this.keyUpHandler.bind(this));
@@ -258,8 +258,8 @@ export default function Game() {
     }
 
     update() {
-      // clean canvas
-      this.canvas.clearCanvas();
+      //clean canvas
+      //this.canvas.clearCanvas();
       gameSocket.emit("updateGame", {
         sPressed: this.sPressed,
         wPressed: this.wPressed,
