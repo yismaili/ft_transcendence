@@ -34,9 +34,11 @@ export default function Chat() {
 
   useEffect(() => {
     socket.on("message", (message: allMessages[]) => {
-      setNewMessage((prevMessages) => [...prevMessages, message[0]]);
-      if (message[0].user.username != Data.response.user.username) {
-        setNotification((prev: allMessages[]) => [...prev, message[0]]);
+      if (message[0]) {
+        setNewMessage((prevMessages) => [...prevMessages, message[0]]);
+        if (message[0].user.username != Data.response.user.username) {
+          setNotification((prev: allMessages[]) => [...prev, message[0]]);
+        }
       }
     });
 
