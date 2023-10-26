@@ -1,9 +1,14 @@
 import "./Game.css";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { useSocketContext } from "@/contexts/socket-context";
 
-export default function Game({ params }: { params: { game: string } }) {
+export default function Game() {
   const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
+  const searchParams = useSearchParams();
+
+  const type = searchParams.get("map");
+  // console.log("game type is: ", type);
 
   class Canvas {
     private canvas: HTMLCanvasElement;
@@ -336,8 +341,10 @@ export default function Game({ params }: { params: { game: string } }) {
       window.requestAnimationFrame(call);
     }
 
-    if (params.game === "randomGame")
-      gameSocket.emit("createGame", { username: Data.response.user.username });
+    gameSocket.emit("test");
+    gameSocket.on("gameOver", (response: any) => {
+      console.log("gameOver res:", response);
+    });
 
     window.requestAnimationFrame(call);
     // console.log("test");
