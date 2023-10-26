@@ -1,9 +1,9 @@
 import "./Game.css";
 import { useEffect, useState } from "react";
-import { useSocketGameContext } from "@/contexts/socket-game-context";
+import { useSocketContext } from "@/contexts/socket-context";
 
-export default function Game() {
-  const { socket, Data } = useSocketGameContext();
+export default function Game({ params }: { params: { game: string } }) {
+  const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
 
   class Canvas {
     private canvas: HTMLCanvasElement;
@@ -210,13 +210,13 @@ export default function Game() {
       this.friendUsername = document.getElementById(
         "friendUsername"
       ) as HTMLInputElement;
-      if (this.JoinBtn) {
-        this.JoinBtn.addEventListener("click", this.joinGame.bind(this));
-        // this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
-      }
-      if (this.ntvBtn) {
-        this.ntvBtn.addEventListener("click", this.acceptRequest.bind(this));
-      }
+      // if (this.JoinBtn) {
+      //   this.JoinBtn.addEventListener("click", this.joinGame.bind(this));
+      //   // this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
+      // }
+      // if (this.ntvBtn) {
+      //   this.ntvBtn.addEventListener("click", this.acceptRequest.bind(this));
+      // }
     }
 
     private keyDownHandler(e: KeyboardEvent) {
@@ -255,14 +255,14 @@ export default function Game() {
     update() {
       // clean canvas
       this.canvas.clearCanvas();
-      socket.emit("updateGame", {
+      gameSocket.emit("updateGame", {
         sPressed: this.sPressed,
         wPressed: this.wPressed,
         upPressed: this.upPressed,
         downPressed: this.downPressed,
       });
 
-      socket.on(
+      gameSocket.on(
         "updateGame",
         (response: {
           ballX: number;
@@ -303,42 +303,44 @@ export default function Game() {
 
     start() {
       // if (!this.isRunning) {
-        // this.isRunning = true;
-        // this.intervalId = setInterval(() => {
-          this.update();
-          this.draw();
-          console.log("this.draw();")
-        // }, 1000 / 60); // 100 frames per second
+      // this.isRunning = true;
+      // this.intervalId = setInterval(() => {
+      this.update();
+      this.draw();
+      // console.log("this.draw();");
+      // }, 1000 / 60); // 100 frames per second
       // }
     }
-    joinGame() {
-      this.socket.emit("createGame", { username: this.username?.value });
-    }
+    // joinGame() {
+    //   this.gameSocket.emit("createGame", { username: this.username?.value });
+    // }
 
-    joinGameFriend() {
-      this.socket.emit("createGameFriend", {
-        username: this.username?.value,
-        friendUsername: this.friendUsername?.value,
-      });
-    }
+    // joinGameFriend() {
+    //   this.gameSocket.emit("createGameFriend", {
+    //     username: this.username?.value,
+    //     friendUsername: this.friendUsername?.value,
+    //   });
+    // }
 
-    acceptRequest() {
-      const res = true;
-      this.socket.emit("responseFromFriend", res);
-    }
+    // acceptRequest() {
+    //   const res = true;
+    //   this.socket.emit("acceptrequest", res);
+    // }
   }
 
   useEffect(() => {
-
     const pongGame = new PongGame();
     function call() {
-      console.log("HRER");
-      pongGame.start()
+      // console.log("HRER");
+      pongGame.start();
       window.requestAnimationFrame(call);
     }
-    socket.emit("createGame", { username: Data.response.user.username });
+
+    if (params.game === "randomGame")
+      gameSocket.emit("createGame", { username: Data.response.user.username });
+
     window.requestAnimationFrame(call);
-    console.log("test");
+    // console.log("test");
   }, []);
 
   return (

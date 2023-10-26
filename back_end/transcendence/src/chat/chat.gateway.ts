@@ -16,9 +16,10 @@ import { LeaveChatRoomDto } from './dto/leave-ChatRoom.dto';
 import { JoinRoom } from './dto/join-room.dto';
 import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
 import { updateChatRoom } from './dto/update-chat-room.dto';
-import { UploadedFile} from '@nestjs/common';
+import { UploadedFile, UseGuards} from '@nestjs/common';
 import { UpdateUIDto } from './dto/update-UI.dto';
 import { verify } from 'jsonwebtoken';
+
 
 
 @WebSocketGateway({ cors: { origin: '*' }, namespace: 'chat'}) // Allow all origins; adjust as needed
@@ -42,22 +43,6 @@ export class ChatGateway {
     this.chatService.addUserWithSocketId(username, client);
   }
 
-  // handleDisconnect(client: Socket) {
-
-  //   const jwtSecret = 'secrete';
-  //   const token = client.handshake.headers.authorization;
-
-  //   if (!token) {
-  //     client.emit('error', 'Authorization token missing');
-  //     client.disconnect(true);
-  //     return;
-  //   }
-
-  //   let decodedToken = verify(token, jwtSecret);
-  //   const username = decodedToken['username'];
-  //   this.chatService.addUserWithSocketId(username, client);
-  // }
-  
   // @UseGuards(JwtAuthGuard, JwtStrategy)
   @SubscribeMessage('createChat')
   async createChat(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket){

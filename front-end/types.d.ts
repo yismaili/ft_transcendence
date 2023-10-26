@@ -46,6 +46,7 @@ type User_Friend = {
   picture: string;
   status: string;
   twoFactorAuthSecret: string;
+  uniquename: string;
   username: string;
 };
 
@@ -53,14 +54,7 @@ type allMessages = {
   dateToSend: string;
   id: number;
   message: string;
-  user: {
-    email: string;
-    firstName: string;
-    id: number;
-    lastName: string;
-    picture: string;
-    username: string;
-  };
+  user: User_Friend;
 };
 
 type GroupInput = {
@@ -121,4 +115,15 @@ type FriendRequest = {
   id: number;
   status: string;
   user: User_Friend;
+};
+
+type FriendRequest2 = {
+  id: number;
+  status: string;
+  friend: User_Friend;
+};
+
+type gameRequest = {
+  receiver: User_Friend;
+  sender: User_Friend;
 };
