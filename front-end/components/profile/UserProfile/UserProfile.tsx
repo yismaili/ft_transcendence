@@ -51,6 +51,7 @@ export default function UserProfile({ params }: { params: { user: string } }) {
             body: params.user,
           });
           const users = await res.json();
+          console.log("friend data:",users);
           if (users.data) {
             setUser(users);
             setFound(true);

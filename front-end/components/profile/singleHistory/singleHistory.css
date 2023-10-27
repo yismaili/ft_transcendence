@@ -1,0 +1,40 @@
+.singleHistory__container{
+    height: 20%;
+    min-height: 48px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+.singleHistory__userImg__username{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: white;
+    flex: 0.3
+}
+.singleHistory__userImg{
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+.singleHistory__score{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    color:white
+}
+
+.singleHistory__userImg__username{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: white;
+    flex: 0.3
+}
