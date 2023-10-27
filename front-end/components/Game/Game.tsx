@@ -1,14 +1,22 @@
-import "./Game.css";
+import Style from "./Game.module.css";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSocketContext } from "@/contexts/socket-context";
+import ReactPlayer from "react-player";
 
 export default function Game() {
   const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
+  const [winner, setWinner] = useState(undefined);
+  const [map, setMap] = useState("");
   const searchParams = useSearchParams();
+  const router = useRouter();
 
-  const type = searchParams.get("map");
-  // console.log("game type is: ", type);
+  useEffect(() => {
+    const type = searchParams.get("map");
+    if (searchParams.get("map") === "SPACE") setMap("/img/game/SPACE.png");
+    else if (searchParams.get("map") === "BEACH") setMap("/img/game/SPACE.png");
+    else setMap("/img/gameMap/defaultMap.png");
+  }, []);
 
   class Canvas {
     private canvas: HTMLCanvasElement;
@@ -332,7 +340,7 @@ export default function Game() {
     //   this.socket.emit("acceptrequest", res);
     // }
   }
-  
+
   useEffect(() => {
     const pongGame = new PongGame();
     function call() {
@@ -340,9 +348,10 @@ export default function Game() {
       pongGame.start();
       window.requestAnimationFrame(call);
     }
-    
+
     gameSocket.emit("refreshGame");
-    gameSocket.on("gameOver", (response: any) => {
+    gameSocket.on("gameOver", (response: { gameOver: boolean }) => {
+      // router.push(`/users/${Data.response.user.username}`);
       console.log("gameOver res:", response);
     });
 
@@ -351,8 +360,47 @@ export default function Game() {
   }, []);
 
   return (
-    <div className="Game___container">
-      <canvas id="canvas"></canvas>
+    <div className={`${Style.Game___container} container`}>
+      {winner && (
+        <div className={Style.video}>
+          <ReactPlayer
+            url={`${
+              winner === Data.response.user.username
+                ? "/img/game/winner.mp3"
+                : "/img/game/lost.mp3"
+            }`}
+            playing={winner ? true : false} // Set to true if you want the audio to auto-play
+            controls={false} // Show player controls (play, pause, volume, etc.)
+          />
+        </div>
+      )}
+      {winner &&
+        (winner === Data.response.user.username ? (
+          <p className={Style.win}>You win</p>
+        ) : (
+          <p className={Style.lost}>You lost</p>
+        ))}
+      <button
+        className={Style.homeBtn}
+        onClick={() => router.push(`/users/${Data.response.user.username}`)}
+      >
+        back to home
+      </button>
+      <button
+        className={Style.mapsBtn}
+        onClick={() =>
+          router.push(`/users/${Data.response.user.username}/gameMap`)
+        }
+      >
+        back to maps
+      </button>
+      <canvas
+        id="canvas"
+        className={Style.Canvas}
+        style={{
+          backgroundImage: `url(${map})`,
+        }}
+      ></canvas>
     </div>
   );
 }

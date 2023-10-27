@@ -9,12 +9,12 @@ import MatchMaking from "@/components/MatchMaking/MatchMaking";
 export default function GameMaps() {
   const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
   const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState("FOOT GROUND");
+  const [title, setTitle] = useState("DEFAULT GROUND");
   const searchParams = useSearchParams();
   const router = useRouter();
   const [Images, setImage] = useState({
     leftImage: "/img/gameMap/oceanMap.png",
-    centerImage: "/img/gameMap/footballMap.png",
+    centerImage: "/img/gameMap/defaultMap.png",
     rightImage: "/img/gameMap/spaceMap.png",
   });
   const [color, setColor] = useState({
@@ -76,8 +76,8 @@ export default function GameMaps() {
       });
       if (Images.leftImage == "/img/gameMap/oceanMap.png") {
         setTitle("BEACH GROUND");
-      } else if (Images.leftImage == "/img/gameMap/footballMap.png") {
-        setTitle("FOOT GROUND");
+      } else if (Images.leftImage == "/img/gameMap/defaultMap.png") {
+        setTitle("DEFAULT GROUND");
       } else {
         setTitle("SPACE GROUND");
       }
@@ -94,8 +94,8 @@ export default function GameMaps() {
       });
       if (Images.rightImage == "/img/gameMap/oceanMap.png") {
         setTitle("BEACH GROUND");
-      } else if (Images.rightImage == "/img/fgameMap/ootballMap.png") {
-        setTitle("FOOT GROUND");
+      } else if (Images.rightImage == "/img/fgameMap/defaultMap.png") {
+        setTitle("DEFAULT GROUND");
       } else {
         setTitle("SPACE GROUND");
       }

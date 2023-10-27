@@ -1,0 +1,80 @@
+.Game___container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: #1f1f31;
+}
+
+.Canvas {
+  background: #000;
+}
+
+.video {
+  display: none;
+}
+
+.Game___container button {
+  width: clamp(6rem, 11vw, 12rem);
+  height: 3rem;
+  margin-right: 2vw;
+  text-decoration: none;
+  /* padding: 0.75rem 3rem; */
+  color: white;
+  font-size: clamp(1rem, 1.5vw, 1.8rem);
+  background-color: #1bcaa1;
+  /* margin: 0 auto; */
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.homeBtn {
+  position: absolute;
+  bottom: 5%;
+  left: 35%;
+  transform: translate(-50%);
+}
+
+.mapsBtn {
+  position: absolute;
+  bottom: 5%;
+  left: 65%;
+  transform: translate(-50%);
+}
+
+.win {
+  position: absolute;
+  top: 8%;
+  left: 48.5%;
+  transform: translate(-50%);
+  font-family: "probert";
+  color: #37eeb1;
+  font-weight: bold;
+  font-size: clamp(1rem, 6vw, 5rem);
+  letter-spacing: 0.2rem;
+  margin-left: 0.75rem;
+}
+
+.lost {
+  position: absolute;
+  top: 8%;
+  left: 48.5%;
+  transform: translate(-50%);
+  font-family: "probert";
+  color: #EA5A5A;
+  font-weight: bold;
+  font-size: clamp(1rem, 6vw, 5rem);
+  letter-spacing: 0.2rem;
+  margin-left: 0.75rem;
+}
+
+@media (max-width: 850px) {
+  .Canvas {
+    width: 90%;
+    min-width: 62.8%;
+    height: 70vw;
+    max-height: 62.8%;
+  }
+}
