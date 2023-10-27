@@ -4,14 +4,16 @@ import { Socket, Server} from 'socket.io';
 import { CreateGameDto } from './dto/create-game.dto';
 import { verify } from 'jsonwebtoken';
 import { AcceptRequestDto } from './dto/accept-request.dto';
+import { PongGame } from './pong-game/pong-game';
+import { UpdateGameDto } from './dto/update-game.dto';
+import { SetHistoryDto } from './dto/set-history.dto';
 
 @WebSocketGateway({ cors: { origin: '*' }, namespace: 'game' })
 export class GameGateway {
   @WebSocketServer()
   server: Server;
-  constructor(private readonly gameService: GameService) {
+  constructor(private readonly gameService: GameService,private readonly pongGame: PongGame) {
   }
-
   handleConnection(client: Socket) {
     const jwtSecret = 'secrete';
     const token = client.handshake.headers.authorization;;
@@ -28,7 +30,7 @@ export class GameGateway {
 
   @SubscribeMessage('createGame')
   create(@MessageBody() createGameDto: CreateGameDto, @ConnectedSocket() soketId: Socket) {
-    return this.gameService.createGameRandom(createGameDto, soketId, this.server);
+    return this.gameService.createGameRandom(createGameDto, soketId, this.server, this.pongGame);
   }
   
   @SubscribeMessage('inviteFriend')
@@ -38,7 +40,7 @@ export class GameGateway {
   
   @SubscribeMessage('acceptrequest')
   acceptreques(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
-   return this.gameService.acceptRequest(acceptRequestDto, soketId, this.server);
+   return this.gameService.acceptRequest(acceptRequestDto, soketId, this.server, this.pongGame);
   }
   
   @SubscribeMessage('rejectrequest')
@@ -47,8 +49,27 @@ export class GameGateway {
   }
 
   @SubscribeMessage('refreshGame')
-  refreshGame(@MessageBody() acceptRequestDto: AcceptRequestDto, @ConnectedSocket() soketId: Socket) {
+  refreshGame(soketId: Socket) {
     return this.gameService.refreshGame(soketId);
+  }
+
+  @SubscribeMessage('updateGame')
+  updateGame(@MessageBody() updateGameDto: UpdateGameDto,soketId: Socket) {
+      this.pongGame.setDownPressed(updateGameDto.downPressed);
+      this.pongGame.setUpPressed(updateGameDto.upPressed);
+      this.pongGame.setWPressed(updateGameDto.wPressed);
+      this.pongGame.setSPressed(updateGameDto.sPressed);
+
+     
+      const gameData = {
+        ballX: this.pongGame.getBallX(),
+        ballY: this.pongGame.getBallY(),
+        leftPaddle: this.pongGame.getLeftPaddle(),
+        rightPaddle: this.pongGame.getRightPaddle(),
+        leftPlayerScore: this.pongGame.getlLeftPlayerScore(),
+        rightPlayerScore: this.pongGame.getrRightPlayerScore(),
+      };
+      this.server.emit('GameUpdated', gameData);
   }
 
 }

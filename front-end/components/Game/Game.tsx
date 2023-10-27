@@ -268,7 +268,7 @@ export default function Game() {
       });
 
       gameSocket.on(
-        "updateGame",
+        "GameUpdated",
         (response: {
           ballX: number;
           ballY: number;
@@ -341,7 +341,7 @@ export default function Game() {
       window.requestAnimationFrame(call);
     }
     
-    gameSocket.emit("refreshGame");
+    //gameSocket.emit("refreshGame");
     gameSocket.on("gameOver", (response: any) => {
       console.log("gameOver res:", response);
     });
