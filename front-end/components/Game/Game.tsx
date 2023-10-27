@@ -234,9 +234,9 @@ export default function Game() {
 
     private keyUpHandler(e: KeyboardEvent) {
       if (e.key === "ArrowUp")
-      gameSocket.emit("updateGameUp", {isup: false, username: Data.response.user.username});
+          gameSocket.emit("updateGameUp", {isup: false, username: Data.response.user.username});
       if (e.key === "ArrowDown")
-      gameSocket.emit("updateGameDown", {isdown: false, username: Data.response.user.username});
+          gameSocket.emit("updateGameDown", {isdown: false, username: Data.response.user.username});
     }
 
     draw() {
