@@ -13,9 +13,8 @@ import { UpdateResultDto } from './dto/update-result.dto';
 import { Socket, Server} from 'socket.io';
 import { SetHistoryDto } from './dto/set-history.dto';
 import { verify } from 'jsonwebtoken';
-import { error } from 'console';
 import { AcceptRequestDto } from './dto/accept-request.dto';
-import { ChatRoomUser } from 'src/typeorm/entities/chat-room-users.entity';
+import { join } from 'path';
 
 @Injectable()
 export class GameService {
@@ -48,7 +47,7 @@ export class GameService {
             break;
           }
         }
-    
+
         if (roomName && this.players.get(roomName).length >= 2) {
           await playerId.join(roomName);
         } else {
@@ -155,11 +154,12 @@ export class GameService {
       const [rootUser, friendUser] = this.players.get(roomName);
       await this.setStatusOfUser(playerId, rootUser);
       await this.setStatusOfUser(playerId, friendUser);
-
+      const user = await this.userRepository.findOne({where: {username: rootUser}});
+      const userFriend = await this.userRepository.findOne({where: {username: friendUser}});
       // Emit the initial player information to clients
       server.to(roomName).emit('players', {
-        rootUser,
-        friendUser
+        user,
+        userFriend,
       });
     
       await this.waitMinute();
@@ -190,6 +190,7 @@ export class GameService {
         };
         server.to(roomName).emit('updateGame', gameData);
         if (!pongGame.getStatus()) {
+          server.to(roomName).emit('gameOver', {gameOver: true});
 
           // clean up and add result to db
           const history: SetHistoryDto = {
@@ -256,8 +257,7 @@ export class GameService {
         const competitor = await this.userRepository.findOne({where: { username: createGameDto.friendUsername }});
         if (!user || !competitor) {
           throw new Error('User or competitor not found');
-        }
-    
+        } 
         let competitorRoom = competitor.username;
         for (const [room, sockets] of this.isconnected) {
           if (room === competitor.username) {
@@ -280,13 +280,6 @@ export class GameService {
        if (!user || !competitor){
         throw new Error("User not found!");
        }
-       for (const [room, sockets] of this.isconnected) {
-        if (room === competitor.username) {
-          for(const socket of sockets){
-            console.log(socket.id);
-          }
-        }
-      }
       let roomName = `room_${user.username}_${competitor.username}`;
 
       if (!this.players.get(roomName)){
@@ -621,7 +614,6 @@ async handleConnection(socketId: Socket, username:string) {
     if (!this.isconnected.has(username)) {
       this.isconnected.set(username,[]);
     }
-
     this.isconnected.get(username).push(socketId);
     socketId.on('disconnect', async () => {
       if (this.isconnected.has(username)) {
@@ -648,6 +640,38 @@ async setStatusOfUser(socketId: Socket, username:string) {
       await this.userRepository.save(user);
     });
   } catch (error) {
+    socketId.emit('error', 'Authentication failed');
+    socketId.disconnect(true);
+  }
+}
+
+async refreshGame(socketId: Socket){
+  try{
+    const jwtSecret = 'secrete';
+    const token = socketId.handshake.headers.authorization;
+    if (!token) {
+      socketId.emit('error', 'Authorization token missing');
+      socketId.disconnect(true);
+      return;
+    }
+    let decodedToken = verify(token, jwtSecret);
+    const username = decodedToken['username'];
+    let roomName = '';
+    for (const [name, players] of this.players) {
+      if (players.includes(username)) {
+        roomName = name;
+        break;
+      }
+    }
+    for (const [room, sockets] of this.isconnected) {
+      if (room === username) {
+        for(const socket of sockets){
+          socket.join(roomName);
+        }
+      }
+    }
+
+  }catch (error) {
     socketId.emit('error', 'Authentication failed');
     socketId.disconnect(true);
   }
@@ -704,11 +728,11 @@ class PongGame {
     this.isRunning = false;
   }
 
-  /**
-   * Update the game state including paddle movement, ball position, collisions, and scoring.
-   */
+  
+   // Update the game state including paddle movement, ball position, collisions, and scoring.
+   
   async updateGame() {
-      // Paddle movement 
+    // Paddle movement 
     if (this.upPressed && this.rightPaddle > 0) {
       this.rightPaddle -= this.paddleSpeed;
     } else if (this.downPressed && this.rightPaddle < this.canvasHeight - this.paddleHeight) {
