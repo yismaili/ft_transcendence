@@ -39,7 +39,6 @@ export default function GameMaps() {
 
   const joinGame = () => {
     setOpen(true);
-    gameSocket.emit("refreshGame");
     if (type && type.split("-")[0] === "invite")
       gameSocket.emit("inviteFriend", {
         username: Data.response.user.username,
