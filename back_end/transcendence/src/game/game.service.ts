@@ -179,7 +179,11 @@ export class GameService {
         };
         server.to(roomName).emit('GameUpdated', gameData);
         if (!pongGame.getStatus()) {
-          server.to(roomName).emit('gameOver', {gameOver: true});
+          if (pongGame.winnerPlayer === 'left'){
+            server.to(roomName).emit('gameOver', {gameOver: true, winner: user, loser: userFriend});
+          }else{
+            server.to(roomName).emit('gameOver', {gameOver: true, winner: userFriend, loser: user});
+          }
 
          // clean up and add result to db
           const history: SetHistoryDto = {
