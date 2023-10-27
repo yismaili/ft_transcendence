@@ -30,6 +30,7 @@ export default function Chat() {
   const [blocked, setBlocked] = useState<FriendRequest2[]>([]);
   const [notification, setNotification] = useState<allMessages[]>([]);
   const [newMessage, setNewMessage] = useState<allMessages[]>([]);
+  const [Opt, setOpt] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -235,11 +236,6 @@ export default function Chat() {
         </header>
         <div className={Style.subContainer}>
           <div className={Style.left}>
-            <SlideButton
-              func={turnSwitch}
-              resetChat={setUserFriend}
-              choseChat={setRoom}
-            />
             {/* {isGroup ? <Group /> : <Direct />} */}
           </div>
           <div className={Style.right}></div>
@@ -261,103 +257,112 @@ export default function Chat() {
         </Link>
       </header>
       <div className={Style.subContainer}>
-        <div className={Style.left}>
-          <SlideButton
-            func={turnSwitch}
-            resetChat={setUserFriend}
-            choseChat={setRoom}
-          />
-          <ul>
-            <AnimatePresence>
-              {isGroup
-                ? allRooms &&
-                  allRooms.map((room) => {
+        <div className={`${Style.left} ${Opt && Style.leftLarge}`}>
+          <div className={`${Style.leftOpt} ${Opt && Style.leftOptLarge}`}>
+            <span
+              className={`${Style.chatArrow} ${Opt && Style.chatArrowLarge}`}
+              onClick={() => setOpt(!Opt)}
+            ></span>
+          </div>
+          <div
+            className={`${Style.leftElements} ${
+              Opt && Style.leftElementsLarge
+            }`}
+          >
+            <SlideButton
+              func={turnSwitch}
+              resetChat={setUserFriend}
+              choseChat={setRoom}
+            />
+            <ul>
+              <AnimatePresence>
+                {isGroup
+                  ? allRooms &&
+                    allRooms.map((room) => {
+                      return (
+                        <li key={room.id}>
+                          <Group room={room} choseChat={setRoom} left={setOpt}/>
+                        </li>
+                      );
+                    })
+                  : friends.data.map((friend) => {
+                      return (
+                        <li key={friend.id}>
+                          {user?.data.username == friend.user.username ? (
+                            <Direct
+                              data={friend.friend}
+                              choseChat={setUserFriend}
+                              left={setOpt}
+                            />
+                          ) : (
+                            <Direct
+                              data={friend.user}
+                              choseChat={setUserFriend}
+                              left={setOpt}
+                            />
+                          )}
+                        </li>
+                      );
+                    })}
+                {!isGroup &&
+                  blocked &&
+                  blocked.map((user) => {
                     return (
                       <motion.li
-                        key={room.id}
+                        key={user.id}
                         initial={{ opacity: 0, y: -10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                       >
-                        <Group room={room} choseChat={setRoom} />
-                      </motion.li>
-                    );
-                  })
-                : friends.data.map((friend) => {
-                    return (
-                      <motion.li
-                        key={friend.id}
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                      >
-                        {user?.data.username == friend.user.username ? (
-                          <Direct
-                            data={friend.friend}
-                            choseChat={setUserFriend}
-                          />
-                        ) : (
-                          <Direct
-                            data={friend.user}
-                            choseChat={setUserFriend}
-                          />
-                        )}
+                        <Blocked data={user.friend} />
                       </motion.li>
                     );
                   })}
-              {!isGroup &&
-                blocked &&
-                blocked.map((user) => {
-                  return (
-                    <motion.li
-                      key={user.id}
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                    >
-                      <Blocked data={user.friend} />
-                    </motion.li>
-                  );
-                })}
-            </AnimatePresence>
-          </ul>
-          <ul id={Style.notification}>
-            <AnimatePresence>
-              {notification &&
-                notification.map((message) => {
-                  return (
-                    <motion.li
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      key={message.id}
-                    >
-                      <Notification message={message} />
-                    </motion.li>
-                  );
-                })}
-              {game &&
-                game.map((request) => {
-                  return (
-                    <motion.li
-                      key={request.sender.id}
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      className={Style.gameNotif}
-                    >
-                      <User user={request.sender} />
-                    </motion.li>
-                  );
-                })}
-            </AnimatePresence>
-          </ul>
-          {isGroup ? (
-            <NewGroupSetting setGroupInput={setGroupInput} />
-          ) : (
-            <FriendManagement setGroupInput={setGroupInput} friends={friends} />
-          )}
-          {game && <GameNotification data={game} />}
+              </AnimatePresence>
+            </ul>
+            <ul id={Style.notification}>
+              <AnimatePresence>
+                {notification &&
+                  notification.map((message) => {
+                    return (
+                      <motion.li
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        key={message.id}
+                      >
+                        <Notification message={message} />
+                      </motion.li>
+                    );
+                  })}
+                {game &&
+                  game.map((request) => {
+                    return (
+                      <motion.li
+                        key={request.sender.id}
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className={Style.gameNotif}
+                      >
+                        <User user={request.sender} />
+                      </motion.li>
+                    );
+                  })}
+              </AnimatePresence>
+            </ul>
+            <div className={Style.leftbtns}>
+              {isGroup ? (
+                <NewGroupSetting setGroupInput={setGroupInput} />
+              ) : (
+                <FriendManagement
+                  setGroupInput={setGroupInput}
+                  friends={friends}
+                />
+              )}
+              {game && <GameNotification data={game} />}
+            </div>
+          </div>
         </div>
         <div className={Style.right} key={!isGroup ? userFriend?.id : room?.id}>
           {userFriend && !isGroup && (
@@ -367,7 +372,7 @@ export default function Chat() {
               newMessage={newMessage}
             />
           )}
-          {isGroup && room && <GroupMsg groupInput={groupInput} room={room} />}
+          {isGroup && room && <GroupMsg groupInput={groupInput} room={room}/>}
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto;
-  margin-top: 5vh;
+  margin-top: 1.5rem;
   margin-bottom: 3vh;
   border-radius: 20px;
   position: relative;
@@ -41,4 +41,35 @@
 
 .On {
   color: #FFFADE;
+}
+
+@media (max-width: 1536px) {
+
+}
+
+/* xl */
+@media (max-width: 1280px) {
+
+}
+
+/* lg */
+@media (max-width: 1024px) {
+
+}
+
+/* md */
+@media (max-width: 768px) {
+  .slideBtn{
+    margin-top: 0;
+  }
+}
+
+/* sm */
+@media (max-width: 640px) {
+
+}
+
+/* xs */
+@media (max-width: 475px) {
+
 }

@@ -9,7 +9,7 @@
 }
 
 .backDrop {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -20,7 +20,7 @@
 }
 
 .popUpContainer {
-  position: absolute;
+  position: fixed;
   margin: auto;
   top: 10%;
   left: 10%;
