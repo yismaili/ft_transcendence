@@ -35,9 +35,11 @@ export default function Chat() {
 
   useEffect(() => {
     socket.on("message", (message: allMessages[]) => {
-      setNewMessage((prevMessages) => [...prevMessages, message[0]]);
-      if (message[0].user.username != Data.response.user.username) {
-        setNotification((prev: allMessages[]) => [...prev, message[0]]);
+      if (message[0]) {
+        setNewMessage((prevMessages) => [...prevMessages, message[0]]);
+        if (message[0].user.username != Data.response.user.username) {
+          setNotification((prev: allMessages[]) => [...prev, message[0]]);
+        }
       }
     });
 
@@ -101,11 +103,11 @@ export default function Chat() {
       );
     });
 
-    gameSocket.on("acceptrequest", (response: { sender: User_Friend }) => {
-      router.push(
-        `/users/${Data.response.user.username}/${Data.response.user.username}-vs-${response.sender.username}`
-      );
-    });
+    // gameSocket.on("acceptrequest", (response: { sender: User_Friend }) => {
+    //   router.push(
+    //     `/users/${Data.response.user.username}/${Data.response.user.username}-vs-${response.sender.username}`
+    //   );
+    // });
 
     gameSocket.on("inviteFriend", (response: gameRequest) => {
       if (!game.length) setGame([response]);
