@@ -120,10 +120,23 @@ export class PongGame {
       this.player = 'left player';
       this.resetGame();
       this.isGameOver();
+      this.ballX = this.canvasWidth / 2;
+      this.ballY = this.canvasHeight / 2;
+      this.leftPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
+      this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
+      this.leftPlayerScore = 0;
+      this.rightPlayerScore = 0;
+
     } else if (this.rightPlayerScore === 20) {
       this.player = 'right player';
       this.resetGame();
       this.isGameOver();
+      this.ballX = this.canvasWidth / 2;
+      this.ballY = this.canvasHeight / 2;
+      this.leftPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
+      this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
+      this.leftPlayerScore = 0;
+      this.rightPlayerScore = 0;
     }
 
   }

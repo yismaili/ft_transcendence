@@ -112,9 +112,7 @@ export class GameService {
        
       client.leave(roomName);
       if (this.players.has(roomName)) {
-        console.log(roomName);
         this.players.delete(roomName);
-        console.log(this.players.get(roomName));
       }
     }
 
