@@ -9,9 +9,9 @@ export class UserStatusGateway {
   @WebSocketServer() server: Server;
   constructor(private readonly chatService: ChatService, private userService: UserService) {}
 
-  handleConnection(client: Socket, ...args: any[]) {
+  handleConnection(client: Socket) {
 
-    const jwtSecret = 'secrete';
+    const jwtSecret = process.env.JWT_SECRET;
     const token = client.handshake.headers.authorization;
 
     if (!token) {
@@ -27,7 +27,7 @@ export class UserStatusGateway {
 
   handleDisconnect(client: Socket) {
 
-    const jwtSecret = 'secrete';
+    const jwtSecret = process.env.JWT_SECRET;
     const token = client.handshake.headers.authorization;
 
     if (!token) {

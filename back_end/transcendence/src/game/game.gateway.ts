@@ -5,8 +5,6 @@ import { CreateGameDto } from './dto/create-game.dto';
 import { verify } from 'jsonwebtoken';
 import { AcceptRequestDto } from './dto/accept-request.dto';
 import { PongGame } from './pong-game/pong-game';
-import { UpdateGameDto } from './dto/update-game.dto';
-import { SetHistoryDto } from './dto/set-history.dto';
 
 @WebSocketGateway({ cors: { origin: '*' }, namespace: 'game' })
 export class GameGateway {
@@ -15,7 +13,7 @@ export class GameGateway {
   constructor(private readonly gameService: GameService,private readonly pongGame: PongGame) {
   }
   handleConnection(client: Socket) {
-    const jwtSecret = 'secrete';
+    const jwtSecret = process.env.JWT_SECRET;
     const token = client.handshake.headers.authorization;;
     if (!token) {
       client.emit('error', 'Authorization token missing');

@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common'; // NestJS common utilities and decorators.
+import { Module } from '@nestjs/common'; // NestJS common utilities and decorators.
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm'; 
@@ -27,11 +27,11 @@ import { UserStatusModule } from './user-status/user-status.module';
   imports: [ //import the TypeOrmModule and configure it for connecting to a PostgreSQL database.
     TypeOrmModule.forRoot({ // NestJS module for integrating with TypeORM, an Object-Relational Mapping (ORM) library
       type: 'postgres',
-      host: 'postgres',
+      host: process.env.HOST,
       port: 5432,
-      username: 'postgres',
-      password: 'pass1337',
-      database: 'transcendence',
+      username: process.env.USERNAME,
+      password: process.env.PASSWORD,
+      database: process.env.DATABASE,
       entities: [User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUser, Message, Chat],
       autoLoadEntities: true, // automatically load entity files
       synchronize: true, // automatically synchronize the database schema with the entities. // Set to false in production
