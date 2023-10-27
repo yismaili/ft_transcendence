@@ -29,7 +29,7 @@
 .container input::-webkit-input-placeholder {
   color: whitesmoke;
   font-weight: 700;
-  font-size: clamp(0.6rem, 1.6vw, 1.1rem);
+  font-size: clamp(0.8rem, 1.6vw, 1.1rem);
 }
 
 .container input:focus {
