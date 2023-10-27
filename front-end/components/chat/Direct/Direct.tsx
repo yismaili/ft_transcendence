@@ -6,15 +6,17 @@ import FriendContextMenu from "./FriendContextMenu/FriendContextMenu";
 type props = {
   data: User_Friend;
   choseChat: Function;
+  left: Function;
 };
 
-export default function Direct({ data, choseChat }: props) {
+export default function Direct({ data, choseChat, left }: props) {
   const { socket, Data } = useSocketContext();
   const [status, setStatus] = useState(data.status);
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
   const choseConversation = () => {
+    left(false);
     choseChat(data);
   };
 
@@ -38,19 +40,21 @@ export default function Direct({ data, choseChat }: props) {
 
   return (
     <>
-      <div className={Style.container} onClick={choseConversation}>
-        <div className={Style.imgContainer}>
-          <div
-            className={Style.avatar}
-            style={{ backgroundImage: `url("${data.picture}")` }}
-          ></div>
-          <div
-            className={`${Style.onlineStatus} ${
-              status === "online" && Style.On
-            }`}
-          ></div>
+      <div className={Style.container}>
+        <div className={Style.datacontainer} onClick={choseConversation}>
+          <div className={Style.imgContainer}>
+            <div
+              className={Style.avatar}
+              style={{ backgroundImage: `url("${data.picture}")` }}
+            ></div>
+            <div
+              className={`${Style.onlineStatus} ${
+                status === "online" && Style.On
+              }`}
+            ></div>
+          </div>
+          <p className={Style.name}>{data.username}</p>
         </div>
-        <p className={Style.name}>{data.username}</p>
         <div className={Style.icon} onClick={handleContextMenu} />
       </div>
       {isMenuOpen && (

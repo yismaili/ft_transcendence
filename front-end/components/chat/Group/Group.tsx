@@ -7,9 +7,10 @@ import AllGroupUsers from "./AllGroupUsers/AllGroupUsers";
 type props = {
   room: AllRooms;
   choseChat: Function;
+  left: Function;
 };
 
-export default function Group({ room, choseChat }: props) {
+export default function Group({ room, choseChat, left }: props) {
   const [isOpen, setOpen] = useState(false);
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -21,23 +22,31 @@ export default function Group({ room, choseChat }: props) {
     const x = e.clientX;
     const y = e.clientY;
 
+    console.log('x:', x);
+    console.log('y:', y);
+    
+
     setMenuPosition({ x, y });
   };
 
   return (
     <>
-      <div
-        className={Style.container}
-        onClick={() => choseChat(room)}
-        onContextMenu={handleContextMenu}
-      >
-        <div className={Style.imgContainer}>
-          <div
-            className={Style.avatar}
-            style={{ backgroundImage: `url("${room.chatRooms.picture}")` }}
-          ></div>
+      <div className={Style.container} onContextMenu={handleContextMenu}>
+        <div
+          className={Style.test}
+          onClick={() => {
+            choseChat(room);
+            left(false);
+          }}
+        >
+          <div className={Style.imgContainer}>
+            <div
+              className={Style.avatar}
+              style={{ backgroundImage: `url("${room.chatRooms.picture}")` }}
+            ></div>
+          </div>
+          <p className={Style.name}>{room.chatRooms.name}</p>
         </div>
-        <p className={Style.name}>{room.chatRooms.name}</p>
         <div className={Style.icon} onClick={() => setOpen((prev) => !prev)} />
       </div>
       {isOpen && room.statusPermissions === "admin" && (
