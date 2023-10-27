@@ -79,7 +79,7 @@ export default function GameMaps() {
           <div
             key={Math.random()}
             className=" Game__maps__center cursor"
-            onClick={() => {joinGame}}
+            onClick={joinGame}
           >
             {/* hna l function dial selection dial lmap*/}
             <span

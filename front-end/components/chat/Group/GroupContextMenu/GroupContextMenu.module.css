@@ -8,7 +8,7 @@
 }
 
 .context{
-  position: absolute;
+  position: fixed;
   z-index: 4;
   background-color: #292944;
   color: #FFFADE;

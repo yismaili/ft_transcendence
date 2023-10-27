@@ -87,10 +87,11 @@
 #create_group {
   position: absolute;
   left: 50%;
-  bottom: clamp(7rem, 7vw, 6rem);
+  bottom: 10%;
   transform: translate(-50%);
   background-color: #36ab4b;
   border-radius: 20px;
   padding: 0.3em 2em;
-  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-size: 1.4rem;
 }
+
