@@ -209,6 +209,7 @@ export default function Game() {
       this.JoinBtn = document.getElementById("joinGame-btn");
       this.ntvBtn = document.getElementById("ntv-btn");
       // Add keyboard event listeners
+
       document.addEventListener("keydown", this.keyDownHandler.bind(this));
       document.addEventListener("keyup", this.keyUpHandler.bind(this));
       this.username = document.getElementById("username") as HTMLInputElement;
@@ -225,27 +226,17 @@ export default function Game() {
     }
 
     private keyDownHandler(e: KeyboardEvent) {
-      if (e.key === "ArrowUp") {
-        this.upPressed = true;
-      } else if (e.key === "ArrowDown") {
-        this.downPressed = true;
-      } else if (e.key === "w") {
-        this.wPressed = true;
-      } else if (e.key === "s") {
-        this.sPressed = true;
-      }
+      if (e.key === "ArrowUp")
+        gameSocket.emit("updateGameUp", {isup: true, username: Data.response.user.username});
+      if (e.key === "ArrowDown")
+        gameSocket.emit("updateGameDown", {isdown: true, username: Data.response.user.username});
     }
 
     private keyUpHandler(e: KeyboardEvent) {
-      if (e.key === "ArrowUp") {
-        this.upPressed = false;
-      } else if (e.key === "ArrowDown") {
-        this.downPressed = false;
-      } else if (e.key === "w") {
-        this.wPressed = false;
-      } else if (e.key === "s") {
-        this.sPressed = false;
-      }
+      if (e.key === "ArrowUp")
+      gameSocket.emit("updateGameUp", {isup: false, username: Data.response.user.username});
+      if (e.key === "ArrowDown")
+      gameSocket.emit("updateGameDown", {isdown: false, username: Data.response.user.username});
     }
 
     draw() {
@@ -260,12 +251,12 @@ export default function Game() {
     update() {
       // clean canvas
       this.canvas.clearCanvas();
-      gameSocket.emit("updateGame", {
-        sPressed: this.sPressed,
-        wPressed: this.wPressed,
-        upPressed: this.upPressed,
-        downPressed: this.downPressed,
-      });
+      // gameSocket.emit("updateGame", {
+      //   sPressed: this.sPressed,
+      //   wPressed: this.wPressed,
+      //   upPressed: this.upPressed,
+      //   downPressed: this.downPressed,
+      // });
 
       gameSocket.on(
         "GameUpdated",
@@ -341,7 +332,7 @@ export default function Game() {
       window.requestAnimationFrame(call);
     }
     
-    //gameSocket.emit("refreshGame");
+    gameSocket.emit("refreshGame");
     gameSocket.on("gameOver", (response: any) => {
       console.log("gameOver res:", response);
     });
