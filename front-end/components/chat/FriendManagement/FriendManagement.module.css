@@ -1,17 +1,17 @@
 .container {
   width: 2.6rem;
   height: 2.6rem;
-  margin-left: 0.8rem;
   background-image: url("/img/chat/add.png");
   background-repeat: no-repeat;
   background-size: contain;
   cursor: pointer;
   position: absolute;
-  bottom: 1%;
+  left: 5%;
+  bottom: 0;
 }
 
 .backDrop {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -22,12 +22,12 @@
 }
 
 .popUpContainer {
-  position: absolute;
+  position: fixed;
   margin: auto;
   top: 10%;
   left: 10%;
   width: 80%;
-  height: 80%;
+  height: 60%;
   background-color: #292944;
   z-index: 100;
   border-radius: 60px;
@@ -40,22 +40,9 @@
   background-image: url("/img/chat/close.png");
   background-repeat: no-repeat;
   background-size: contain;
-  width: 2rem;
-  height: 2rem;
+  width: 1.5rem;
+  height: 1.5rem;
   cursor: pointer;
-}
-
-.avatar {
-  /* position: relative;
-  left: 50%;
-  top: 16%;
-  transform: translate(-50%, -50%);
-  background-image: url("/img/home/avatar.png");
-  background-repeat: no-repeat;
-  background-size: contain;
-  clip-path: circle(36.5% at 50% 30%); */
-  width: clamp(1rem, 20%, 13rem);
-  height: clamp(1rem, 27%, 13rem);
 }
 
 .changeImg {
@@ -72,9 +59,8 @@
 
 .main {
   width: 94%;
-  height: 60%;
-  margin: 1rem 3%;
-  margin-top: 4%;
+  height: 90%;
+  margin: 3rem 3%;
   border-radius: 60px;
 	background-color: #1D1D2D;
 }
@@ -114,4 +100,38 @@
 .OnRight {
   background-color: #ffffff1a;
   border-radius: 0 60px 0 0;
+}
+
+@media (max-width: 1536px) {
+
+}
+
+/* xl */
+@media (max-width: 1280px) {
+
+}
+
+/* lg */
+@media (max-width: 1024px) {
+
+}
+
+/* md */
+@media (max-width: 768px) {
+
+}
+@media (max-height: 768px) {
+  .popUpContainer {
+    height: 80%;
+
+  }
+}
+/* sm */
+@media (max-width: 640px) {
+
+}
+
+/* xs */
+@media (max-width: 475px) {
+
 }

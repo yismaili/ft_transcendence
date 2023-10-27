@@ -36,7 +36,7 @@ export default function NewGroupSetting({ setGroupInput, friends }: props) {
                   }`}
                   onClick={() => setgroupSetting(true)}
                 >
-                  <p>Add Frienad</p>
+                  <p>Add Friend</p>
                 </div>
                 <div
                   className={`${Style.usersBtn} ${
