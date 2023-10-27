@@ -6,7 +6,7 @@ import ReactPlayer from "react-player";
 
 export default function Game() {
   const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
-  const [winner, setWinner] = useState(undefined);
+  const [winner, setWinner] = useState("");
   const [map, setMap] = useState("");
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -14,7 +14,7 @@ export default function Game() {
   useEffect(() => {
     const type = searchParams.get("map");
     if (searchParams.get("map") === "SPACE") setMap("/img/game/SPACE.png");
-    else if (searchParams.get("map") === "BEACH") setMap("/img/game/SPACE.png");
+    else if (searchParams.get("map") === "BEACH") setMap("/img/game/BEACH.png");
     else setMap("/img/gameMap/defaultMap.png");
   }, []);
 
@@ -235,16 +235,28 @@ export default function Game() {
 
     private keyDownHandler(e: KeyboardEvent) {
       if (e.key === "ArrowUp")
-        gameSocket.emit("updateGameUp", {isup: true, username: Data.response.user.username});
+        gameSocket.emit("updateGameUp", {
+          isup: true,
+          username: Data.response.user.username,
+        });
       if (e.key === "ArrowDown")
-        gameSocket.emit("updateGameDown", {isdown: true, username: Data.response.user.username});
+        gameSocket.emit("updateGameDown", {
+          isdown: true,
+          username: Data.response.user.username,
+        });
     }
 
     private keyUpHandler(e: KeyboardEvent) {
       if (e.key === "ArrowUp")
-          gameSocket.emit("updateGameUp", {isup: false, username: Data.response.user.username});
+        gameSocket.emit("updateGameUp", {
+          isup: false,
+          username: Data.response.user.username,
+        });
       if (e.key === "ArrowDown")
-          gameSocket.emit("updateGameDown", {isdown: false, username: Data.response.user.username});
+        gameSocket.emit("updateGameDown", {
+          isdown: false,
+          username: Data.response.user.username,
+        });
     }
 
     draw() {
@@ -341,10 +353,13 @@ export default function Game() {
     }
 
     gameSocket.emit("refreshGame");
-    gameSocket.on("gameOver", (response: { gameOver: boolean }) => {
-      // router.push(`/users/${Data.response.user.username}`);
-      console.log("gameOver res:", response);
-    });
+    gameSocket.on(
+      "gameOver",
+      (response: { gameOver: boolean; winner: User_Friend }) => {
+        setWinner(response.winner.username);
+        console.log("gameOver res:", response);
+      }
+    );
 
     window.requestAnimationFrame(call);
     // console.log("test");
