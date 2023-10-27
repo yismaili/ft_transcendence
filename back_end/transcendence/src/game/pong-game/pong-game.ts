@@ -17,7 +17,7 @@ export class PongGame {
   private sPressed: boolean;
   private ballY: number;
   private ballX: number;
-  private player: string;
+  public winnerPlayer: string;
   private intervalId: NodeJS.Timeout | null;
   private isRunning: boolean;
 
@@ -35,7 +35,7 @@ export class PongGame {
     this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
     this.leftPlayerScore = 0;
     this.rightPlayerScore = 0;
-    this.player = '';
+    this.winnerPlayer = null;
     this.ballX = this.canvasWidth / 2;
     this.ballY = this.canvasHeight / 2;
     this.upPressed = false;
@@ -117,7 +117,7 @@ export class PongGame {
     }
 
     if (this.leftPlayerScore === 20) {
-      this.player = 'left player';
+      this.winnerPlayer = 'left';
       this.resetGame();
       this.isGameOver();
       this.ballX = this.canvasWidth / 2;
@@ -128,7 +128,7 @@ export class PongGame {
       this.rightPlayerScore = 0;
 
     } else if (this.rightPlayerScore === 20) {
-      this.player = 'right player';
+      this.winnerPlayer = 'right';
       this.resetGame();
       this.isGameOver();
       this.ballX = this.canvasWidth / 2;
