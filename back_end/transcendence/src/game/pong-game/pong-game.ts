@@ -1,5 +1,5 @@
 export class PongGame {
-    private canvasWidth: number;
+  private canvasWidth: number;
   private canvasHeight: number;
   private paddleWidth: number;
   private paddleHeight: number;
@@ -27,7 +27,7 @@ export class PongGame {
     this.canvasHeight = 600;
     this.paddleWidth = 10;
     this.paddleHeight = 80;
-    this.paddleSpeed = 10;
+    this.paddleSpeed = 15;
     this.ballRadius = 10;
     this.ballSpeedX = 10;
     this.ballSpeedY = 10;
@@ -45,9 +45,6 @@ export class PongGame {
     this.intervalId = null;
     this.isRunning = false;
   }
-
-  
-   // Update the game state including paddle movement, ball position, collisions, and scoring.
    
   async updateGame() {
     // Paddle movement 
@@ -62,21 +59,6 @@ export class PongGame {
     } else if (this.sPressed && this.leftPaddle < this.canvasHeight - this.paddleHeight) {
       this.leftPaddle += this.paddleSpeed;
     }
-
-    // this.upPressed = false;
-    // this.downPressed = false;
-  //  // Calculate automatic paddle movement
-  //   if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
-  //     this.leftPaddle += this.paddleSpeed;
-  //   } else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
-  //     this.leftPaddle -= this.paddleSpeed;
-  //   }
-
-  //   if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
-  //     this.rightPaddle += this.paddleSpeed;
-  //   } else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
-  //     this.rightPaddle -= this.paddleSpeed;
-  //   }
 
     // Update ball position
     this.ballX += this.ballSpeedX;

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GoogleStrategy } from './strategy/google.strategy';
 import { ConfigService } from '@nestjs/config';
@@ -31,7 +31,7 @@ import { ChatService } from 'src/chat/chat.service';
     PassportModule.register({ defaultStrategy: '42' }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     //NestJS module for handling JSON Web Tokens (JWT) and token-based authentication
-    JwtModule.register({ secret: 'secrete', signOptions: { expiresIn: '1h' } }),
+    JwtModule.register({ secret: process.env.JWT_SECRET, signOptions: { expiresIn: '1h' } }),
   ], // makes the User entity available for use within the AuthModule
   controllers: [AuthController],// The controllers property
   providers: [AuthService, GoogleStrategy, ConfigService, IntraStrategy, JwtAuthGuard, Repository, UserService, ChatService]

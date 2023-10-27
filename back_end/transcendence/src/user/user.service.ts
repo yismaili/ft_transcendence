@@ -13,7 +13,6 @@ import { Relation } from 'src/typeorm/entities/Relation.entity';
 import { User } from 'src/typeorm/entities/User.entity';
 import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import {Not, Repository } from 'typeorm';
-import axios from 'axios';
 import {v2 as cloudinary} from 'cloudinary';
 
 import * as fs from 'fs'
@@ -47,23 +46,6 @@ async findProfileByUsername(userName: string): Promise<any> {
   }
 }
 
-async uploadImage(imageData: Buffer) {
-  try {
-    const response = await axios.post('https://api.imgbb.com/1/upload?key=3abb50958940a0dfbde0d032e1fb5573', {
-
-      image: imageData.toString('base64'),
-    },
-   { headers:{
-     'Content-Type': 'multipart/form-data',
-      
-    }});
-    const imageUrl = response.data.data.url;
-    return imageUrl;
-  } catch (error) {
-    throw error.message;
-  }
-}
-
 async uploadImageToCould(fileUrl: string): Promise<any> {
 
   cloudinary.config({
@@ -91,9 +73,6 @@ async updateProfileByUsername(userName: string, userData, imageData): Promise<IA
       throw new Error('User not found');
     }
 
-    // const response = await this.uploadImage(fs.readFileSync(imageData.path)); 
-    // const imageUrl = response;
-
     const ret = await this.uploadImageToCould(imageData.path) ;
 
     existingUser.firstName = userData.firstName;
@@ -102,9 +81,7 @@ async updateProfileByUsername(userName: string, userData, imageData): Promise<IA
     existingUser.picture = ret.url;
 
     const updatedUser = await this.userRepository.save(existingUser);
-    const token = sign({ ...updatedUser }, 'secrete');
-    // const savedUser = await this.userRepository.save(existingUser);
-    // const token = sign({ username: savedUser.username }, 'secrete');
+    const token = sign({ ...updatedUser }, process.env.JWT_SECRET);
     return { token, user: updatedUser, success: true};
   } catch (error) {
     throw new Error('Failed to update profile: ' + error);

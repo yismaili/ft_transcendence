@@ -1,8 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 
-const userPresence = new Map<string, boolean>(); // Map<userId, isOnline>
-
 @Controller()// decorator to define controller class 
 export class AppController {
   userRepository: any;

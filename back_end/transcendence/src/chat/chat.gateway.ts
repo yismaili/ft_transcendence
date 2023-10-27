@@ -29,7 +29,7 @@ export class ChatGateway {
 
   handleConnection(client: Socket) {
 
-    const jwtSecret = 'secrete';
+    const jwtSecret = process.env.JWT_SECRET;
     const token = client.handshake.headers.authorization;
 
     if (!token) {
