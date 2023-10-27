@@ -1,18 +1,17 @@
 .container {
   width: 2.6rem;
   height: 2.6rem;
-  margin-left: 0.8rem;
   background-image: url("/img/chat/battle.png");
   background-repeat: no-repeat;
   background-size: contain;
   cursor: pointer;
   position: absolute;
-  bottom: 1%;
-  left: 24%;
+  right: 5%;
+  bottom: 0%;
 }
 
 .backDrop {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -23,7 +22,7 @@
 }
 
 .popUpContainer {
-  position: absolute;
+  position: fixed;
   margin: auto;
   top: 10%;
   left: 10%;
