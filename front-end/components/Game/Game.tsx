@@ -1,14 +1,22 @@
-import "./Game.css";
+import Style from "./Game.module.css";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSocketContext } from "@/contexts/socket-context";
+import ReactPlayer from "react-player";
 
 export default function Game() {
   const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
+  const [winner, setWinner] = useState("");
+  const [map, setMap] = useState("");
   const searchParams = useSearchParams();
+  const router = useRouter();
 
-  const type = searchParams.get("map");
-  // console.log("game type is: ", type);
+  useEffect(() => {
+    const type = searchParams.get("map");
+    if (searchParams.get("map") === "SPACE") setMap("/img/game/SPACE.png");
+    else if (searchParams.get("map") === "BEACH") setMap("/img/game/BEACH.png");
+    else setMap("/img/gameMap/defaultMap.png");
+  }, []);
 
   class Canvas {
     private canvas: HTMLCanvasElement;
@@ -209,6 +217,7 @@ export default function Game() {
       this.JoinBtn = document.getElementById("joinGame-btn");
       this.ntvBtn = document.getElementById("ntv-btn");
       // Add keyboard event listeners
+
       document.addEventListener("keydown", this.keyDownHandler.bind(this));
       document.addEventListener("keyup", this.keyUpHandler.bind(this));
       this.username = document.getElementById("username") as HTMLInputElement;
@@ -225,27 +234,29 @@ export default function Game() {
     }
 
     private keyDownHandler(e: KeyboardEvent) {
-      if (e.key === "ArrowUp") {
-        this.upPressed = true;
-      } else if (e.key === "ArrowDown") {
-        this.downPressed = true;
-      } else if (e.key === "w") {
-        this.wPressed = true;
-      } else if (e.key === "s") {
-        this.sPressed = true;
-      }
+      if (e.key === "ArrowUp")
+        gameSocket.emit("updateGameUp", {
+          isup: true,
+          username: Data.response.user.username,
+        });
+      if (e.key === "ArrowDown")
+        gameSocket.emit("updateGameDown", {
+          isdown: true,
+          username: Data.response.user.username,
+        });
     }
 
     private keyUpHandler(e: KeyboardEvent) {
-      if (e.key === "ArrowUp") {
-        this.upPressed = false;
-      } else if (e.key === "ArrowDown") {
-        this.downPressed = false;
-      } else if (e.key === "w") {
-        this.wPressed = false;
-      } else if (e.key === "s") {
-        this.sPressed = false;
-      }
+      if (e.key === "ArrowUp")
+        gameSocket.emit("updateGameUp", {
+          isup: false,
+          username: Data.response.user.username,
+        });
+      if (e.key === "ArrowDown")
+        gameSocket.emit("updateGameDown", {
+          isdown: false,
+          username: Data.response.user.username,
+        });
     }
 
     draw() {
@@ -260,15 +271,15 @@ export default function Game() {
     update() {
       // clean canvas
       this.canvas.clearCanvas();
-      gameSocket.emit("updateGame", {
-        sPressed: this.sPressed,
-        wPressed: this.wPressed,
-        upPressed: this.upPressed,
-        downPressed: this.downPressed,
-      });
+      // gameSocket.emit("updateGame", {
+      //   sPressed: this.sPressed,
+      //   wPressed: this.wPressed,
+      //   upPressed: this.upPressed,
+      //   downPressed: this.downPressed,
+      // });
 
       gameSocket.on(
-        "updateGame",
+        "GameUpdated",
         (response: {
           ballX: number;
           ballY: number;
@@ -332,7 +343,7 @@ export default function Game() {
     //   this.socket.emit("acceptrequest", res);
     // }
   }
-  
+
   useEffect(() => {
     const pongGame = new PongGame();
     function call() {
@@ -340,19 +351,62 @@ export default function Game() {
       pongGame.start();
       window.requestAnimationFrame(call);
     }
-    
+
     gameSocket.emit("refreshGame");
-    gameSocket.on("gameOver", (response: any) => {
-      console.log("gameOver res:", response);
-    });
+    gameSocket.on(
+      "gameOver",
+      (response: { gameOver: boolean; winner: User_Friend }) => {
+        setWinner(response.winner.username);
+        console.log("gameOver res:", response);
+      }
+    );
 
     window.requestAnimationFrame(call);
     // console.log("test");
   }, []);
 
   return (
-    <div className="Game___container">
-      <canvas id="canvas"></canvas>
+    <div className={`${Style.Game___container} container`}>
+      {winner && (
+        <div className={Style.video}>
+          <ReactPlayer
+            url={`${
+              winner === Data.response.user.username
+                ? "/img/game/winner.mp3"
+                : "/img/game/lost.mp3"
+            }`}
+            playing={winner ? true : false} // Set to true if you want the audio to auto-play
+            controls={false} // Show player controls (play, pause, volume, etc.)
+          />
+        </div>
+      )}
+      {winner &&
+        (winner === Data.response.user.username ? (
+          <p className={Style.win}>You win</p>
+        ) : (
+          <p className={Style.lost}>You lost</p>
+        ))}
+      <button
+        className={Style.homeBtn}
+        onClick={() => router.push(`/users/${Data.response.user.username}`)}
+      >
+        back to home
+      </button>
+      <button
+        className={Style.mapsBtn}
+        onClick={() =>
+          router.push(`/users/${Data.response.user.username}/gameMap`)
+        }
+      >
+        back to maps
+      </button>
+      <canvas
+        id="canvas"
+        className={Style.Canvas}
+        style={{
+          backgroundImage: `url(${map})`,
+        }}
+      ></canvas>
     </div>
   );
 }
