@@ -53,23 +53,42 @@ export class GameGateway {
     return this.gameService.refreshGame(soketId);
   }
 
-  @SubscribeMessage('updateGame')
-  updateGame(@MessageBody() updateGameDto: UpdateGameDto,soketId: Socket) {
-      this.pongGame.setDownPressed(updateGameDto.downPressed);
-      this.pongGame.setUpPressed(updateGameDto.upPressed);
-      this.pongGame.setWPressed(updateGameDto.wPressed);
-      this.pongGame.setSPressed(updateGameDto.sPressed);
-
-     
-      const gameData = {
-        ballX: this.pongGame.getBallX(),
-        ballY: this.pongGame.getBallY(),
-        leftPaddle: this.pongGame.getLeftPaddle(),
-        rightPaddle: this.pongGame.getRightPaddle(),
-        leftPlayerScore: this.pongGame.getlLeftPlayerScore(),
-        rightPlayerScore: this.pongGame.getrRightPlayerScore(),
-      };
-      this.server.emit('GameUpdated', gameData);
+  @SubscribeMessage('updateGameUp')
+  updateGameUp(@MessageBody() data, soketId: Socket) {
+    let roomName = null;
+    for (const [name, players] of this.gameService.players) {
+      if (players.includes(data.username)) {
+        roomName = name;
+        break;
+      }
+    }
+    if (roomName != null){
+      if (this.gameService.players.get(roomName)[0] === data.username){
+        this.pongGame.setUpPressed(data.isup);
+      }
+      else{
+        this.pongGame.setWPressed(data.isup);
+      }
+    }
   }
 
+  @SubscribeMessage('updateGameDown')
+  updateGameDown(@MessageBody() data,soketId: Socket,) {
+
+    let roomName = null;
+    for (const [name, players] of this.gameService.players) {
+      if (players.includes(data.username)) {
+        roomName = name;
+        break;
+      }
+    }
+    if (roomName != null){
+      if (this.gameService.players.get(roomName)[0] === data.username){
+        this.pongGame.setDownPressed(data.isdown);
+      }
+      else{
+        this.pongGame.setSPressed(data.isdown);
+      }
+    }
+  }
 }

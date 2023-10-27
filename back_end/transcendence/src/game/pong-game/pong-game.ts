@@ -63,18 +63,20 @@ export class PongGame {
       this.leftPaddle += this.paddleSpeed;
     }
 
-    // // Calculate automatic paddle movement
-    // if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
-    //   this.leftPaddle += this.paddleSpeed;
-    // } else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
-    //   this.leftPaddle -= this.paddleSpeed;
-    // }
+    // this.upPressed = false;
+    // this.downPressed = false;
+  //  // Calculate automatic paddle movement
+  //   if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
+  //     this.leftPaddle += this.paddleSpeed;
+  //   } else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
+  //     this.leftPaddle -= this.paddleSpeed;
+  //   }
 
-    // if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
-    //   this.rightPaddle += this.paddleSpeed;
-    // } else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
-    //   this.rightPaddle -= this.paddleSpeed;
-    // }
+  //   if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
+  //     this.rightPaddle += this.paddleSpeed;
+  //   } else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
+  //     this.rightPaddle -= this.paddleSpeed;
+  //   }
 
     // Update ball position
     this.ballX += this.ballSpeedX;

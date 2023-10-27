@@ -112,7 +112,9 @@ export class GameService {
        
       client.leave(roomName);
       if (this.players.has(roomName)) {
+        console.log(roomName);
         this.players.delete(roomName);
+        console.log(this.players.get(roomName));
       }
     }
 
@@ -165,50 +167,35 @@ export class GameService {
       await this.waitMinute();
     
       // Create a PongGame instance and start the game
-      pongGame.start();
-    
-      // playerId.on('updateGame', async (data) => {
-      //   const userev = await this.getUser(playerId);
-      //  if (data.downPressed == true || data.upPressed == true || data.wPressed == true || data.sPressed == true){
-      //   console.log(userev);
-      //  }
-      //  //if (userev === rootUser) {
-      //     pongGame.setDownPressed(data.downPressed);
-      //     pongGame.setUpPressed(data.upPressed);
-      // // } else if (userev === friendUser) {
-      //     pongGame.setWPressed(data.wPressed);
-      //     pongGame.setSPressed(data.sPressed);
-      //  //  }
-      // });
+       pongGame.start();
       
       // send game state updates to clients
-      // const intervalId = setInterval(async () => {
-      //   const gameData = {
-      //     ballX: pongGame.getBallX(),
-      //     ballY: pongGame.getBallY(),
-      //     leftPaddle: pongGame.getLeftPaddle(),
-      //     rightPaddle: pongGame.getRightPaddle(),
-      //     leftPlayerScore: pongGame.getlLeftPlayerScore(),
-      //     rightPlayerScore: pongGame.getrRightPlayerScore(),
-      //   };
-      //   server.to(roomName).emit('GameUpdated', gameData);
+      const intervalId = setInterval(async () => {
+        const gameData = {
+          ballX: pongGame.getBallX(),
+          ballY: pongGame.getBallY(),
+          leftPaddle: pongGame.getLeftPaddle(),
+          rightPaddle: pongGame.getRightPaddle(),
+          leftPlayerScore: pongGame.getlLeftPlayerScore(),
+          rightPlayerScore: pongGame.getrRightPlayerScore(),
+        };
+        server.to(roomName).emit('GameUpdated', gameData);
         if (!pongGame.getStatus()) {
           server.to(roomName).emit('gameOver', {gameOver: true});
 
-          // clean up and add result to db
-          // const history: SetHistoryDto = {
-          //   resulteOfCompetitor: gameData.leftPlayerScore,
-          //   resulteOfUser: gameData.rightPlayerScore,
-          //   username: rootUser,
-          //   userCompetitor: friendUser,
-          // };
+         // clean up and add result to db
+          const history: SetHistoryDto = {
+            resulteOfCompetitor: gameData.leftPlayerScore,
+            resulteOfUser: gameData.rightPlayerScore,
+            username: rootUser,
+            userCompetitor: friendUser
+          };
 
-          // this.addHistory(history);
-    
           this.handleLeaveRoom(playerId, roomName);
-      //     clearInterval(intervalId);
+          this.addHistory(history);
+          clearInterval(intervalId);
        }
-      // }, 1000 / 60);
+      }, 1000 / 60);
     }
 
     
@@ -659,20 +646,22 @@ async refreshGame(socketId: Socket){
     }
     let decodedToken = verify(token, jwtSecret);
     const username = decodedToken['username'];
-    let roomName = '';
+    let roomName = null;
     for (const [name, players] of this.players) {
       if (players.includes(username)) {
         roomName = name;
         break;
       }
     }
-    for (const [room, sockets] of this.isconnected) {
-      if (room === username) {
-        for(const socket of sockets){
-          socket.join(roomName);
+    // if (roomName === null){
+      for (const [room, sockets] of this.isconnected) {
+        if (room === username) {
+          for(const socket of sockets){
+            socket.join(roomName);
+          }
         }
       }
-    }
+    // }
 
   }catch (error) {
     socketId.emit('error', 'Authentication failed');
