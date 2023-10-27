@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateGameDto } from './dto/create-game.dto';
-import { UpdateGameDto, UpdateGameRetDto } from './dto/update-game.dto';
 import { User } from 'src/typeorm/entities/User.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
@@ -14,7 +13,8 @@ import { Socket, Server} from 'socket.io';
 import { SetHistoryDto } from './dto/set-history.dto';
 import { verify } from 'jsonwebtoken';
 import { AcceptRequestDto } from './dto/accept-request.dto';
-import { join } from 'path';
+import { PongGame } from './pong-game/pong-game';
+
 
 @Injectable()
 export class GameService {
@@ -29,7 +29,7 @@ export class GameService {
     @InjectRepository(ChatRoom)private chatRepository: Repository<ChatRoom>,
     ) {}
 
-    async createGameRandom(createGameDto: CreateGameDto, playerId: Socket, server: Server): Promise<void> {
+    async createGameRandom(createGameDto: CreateGameDto, playerId: Socket, server: Server,  pongGame: PongGame): Promise<void> {
       try {
         // Find the user in the database
         const user = await this.userRepository.findOne({
@@ -78,7 +78,7 @@ export class GameService {
             await this.handleLeaveRoom(playerId, roomName);
           }
           else{
-            await this.startGame(roomName, playerId, server);
+            await this.startGame(roomName, playerId, server, pongGame);
           }
         } else {
           playerId.on('cancelGame', async () => {
@@ -150,7 +150,7 @@ export class GameService {
       });
     }
 
-    async startGame(roomName: string, playerId: Socket, server: Server): Promise<void> {
+    async startGame(roomName: string, playerId: Socket, server: Server, pongGame: PongGame): Promise<void> {
       const [rootUser, friendUser] = this.players.get(roomName);
       await this.setStatusOfUser(playerId, rootUser);
       await this.setStatusOfUser(playerId, friendUser);
@@ -165,47 +165,50 @@ export class GameService {
       await this.waitMinute();
     
       // Create a PongGame instance and start the game
-      const pongGame = new PongGame();
       pongGame.start();
     
-      playerId.on('updateGame', async (data) => {
-       //if (await this.getUser(playerId) === rootUser) {
-          pongGame.setDownPressed(data.downPressed);
-          pongGame.setUpPressed(data.upPressed);
-       //} else if (await this.getUser(playerId) === friendUser) {
-          pongGame.setWPressed(data.wPressed);
-          pongGame.setSPressed(data.sPressed);
-    //   }
-      });
+      // playerId.on('updateGame', async (data) => {
+      //   const userev = await this.getUser(playerId);
+      //  if (data.downPressed == true || data.upPressed == true || data.wPressed == true || data.sPressed == true){
+      //   console.log(userev);
+      //  }
+      //  //if (userev === rootUser) {
+      //     pongGame.setDownPressed(data.downPressed);
+      //     pongGame.setUpPressed(data.upPressed);
+      // // } else if (userev === friendUser) {
+      //     pongGame.setWPressed(data.wPressed);
+      //     pongGame.setSPressed(data.sPressed);
+      //  //  }
+      // });
       
       // send game state updates to clients
-      const intervalId = setInterval(async () => {
-        const gameData = {
-          ballX: pongGame.getBallX(),
-          ballY: pongGame.getBallY(),
-          leftPaddle: pongGame.getLeftPaddle(),
-          rightPaddle: pongGame.getRightPaddle(),
-          leftPlayerScore: pongGame.getlLeftPlayerScore(),
-          rightPlayerScore: pongGame.getrRightPlayerScore(),
-        };
-        server.to(roomName).emit('updateGame', gameData);
+      // const intervalId = setInterval(async () => {
+      //   const gameData = {
+      //     ballX: pongGame.getBallX(),
+      //     ballY: pongGame.getBallY(),
+      //     leftPaddle: pongGame.getLeftPaddle(),
+      //     rightPaddle: pongGame.getRightPaddle(),
+      //     leftPlayerScore: pongGame.getlLeftPlayerScore(),
+      //     rightPlayerScore: pongGame.getrRightPlayerScore(),
+      //   };
+      //   server.to(roomName).emit('GameUpdated', gameData);
         if (!pongGame.getStatus()) {
           server.to(roomName).emit('gameOver', {gameOver: true});
 
           // clean up and add result to db
-          const history: SetHistoryDto = {
-            resulteOfCompetitor: gameData.leftPlayerScore,
-            resulteOfUser: gameData.rightPlayerScore,
-            username: rootUser,
-            userCompetitor: friendUser,
-          };
+          // const history: SetHistoryDto = {
+          //   resulteOfCompetitor: gameData.leftPlayerScore,
+          //   resulteOfUser: gameData.rightPlayerScore,
+          //   username: rootUser,
+          //   userCompetitor: friendUser,
+          // };
 
-          this.addHistory(history);
+          // this.addHistory(history);
     
           this.handleLeaveRoom(playerId, roomName);
-          clearInterval(intervalId);
-        }
-      }, 1000 / 60);
+      //     clearInterval(intervalId);
+       }
+      // }, 1000 / 60);
     }
 
     
@@ -273,7 +276,7 @@ export class GameService {
       }
     }
     
-    async acceptRequest(acceptRequestDto: AcceptRequestDto, playerId: Socket, server: Server) :Promise<any>{
+    async acceptRequest(acceptRequestDto: AcceptRequestDto, playerId: Socket, server: Server,  pongGame: PongGame) :Promise<any>{
       try{
        const user = await this.userRepository.findOne({where:{username: acceptRequestDto.username}});
        const competitor = await this.userRepository.findOne({where:{username: acceptRequestDto.userCompetitor}})
@@ -310,7 +313,7 @@ export class GameService {
 
       if (this.players.get(roomName).length === 2){
         server.to(competitorRoom).emit('acceptrequest',{sender: user});
-        this.startGame(roomName, playerId, server);
+        this.startGame(roomName, playerId, server, pongGame);
       }
 
       }catch(error){
@@ -679,203 +682,3 @@ async refreshGame(socketId: Socket){
 
 isconnected: Map<string, Socket[]> = new Map<string, Socket[]>();
 }
-
-class PongGame {
-  private canvasWidth: number;
-  private canvasHeight: number;
-  private paddleWidth: number;
-  private paddleHeight: number;
-  private paddleSpeed: number;
-  private ballRadius: number;
-  private ballSpeedX: number;
-  private ballSpeedY: number;
-  private leftPaddle: number;
-  private rightPaddle: number;
-  private leftPlayerScore: number;
-  private rightPlayerScore: number;
-  private upPressed: boolean;
-  private downPressed: boolean;
-  private wPressed: boolean;
-  private sPressed: boolean;
-  private ballY: number;
-  private ballX: number;
-  private player: string;
-  private intervalId: NodeJS.Timeout | null;
-  private isRunning: boolean;
-
-  constructor() {
-    // Initialize game properties
-    this.canvasWidth = 800;
-    this.canvasHeight = 600;
-    this.paddleWidth = 10;
-    this.paddleHeight = 80;
-    this.paddleSpeed = 10;
-    this.ballRadius = 10;
-    this.ballSpeedX = 10;
-    this.ballSpeedY = 10;
-    this.leftPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
-    this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
-    this.leftPlayerScore = 0;
-    this.rightPlayerScore = 0;
-    this.player = '';
-    this.ballX = this.canvasWidth / 2;
-    this.ballY = this.canvasHeight / 2;
-    this.upPressed = false;
-    this.downPressed = false;
-    this.wPressed = false;
-    this.sPressed = false;
-    this.intervalId = null;
-    this.isRunning = false;
-  }
-
-  
-   // Update the game state including paddle movement, ball position, collisions, and scoring.
-   
-  async updateGame() {
-    // Paddle movement 
-    if (this.upPressed && this.rightPaddle > 0) {
-      this.rightPaddle -= this.paddleSpeed;
-    } else if (this.downPressed && this.rightPaddle < this.canvasHeight - this.paddleHeight) {
-      this.rightPaddle += this.paddleSpeed;
-    }
-
-    if (this.wPressed && this.leftPaddle > 0) {
-      this.leftPaddle -= this.paddleSpeed;
-    } else if (this.sPressed && this.leftPaddle < this.canvasHeight - this.paddleHeight) {
-      this.leftPaddle += this.paddleSpeed;
-    }
-
-    // Calculate automatic paddle movement
-    if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
-      this.leftPaddle += this.paddleSpeed;
-    } else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
-      this.leftPaddle -= this.paddleSpeed;
-    }
-
-    // if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
-    //   this.rightPaddle += this.paddleSpeed;
-    // } else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
-    //   this.rightPaddle -= this.paddleSpeed;
-    // }
-
-    // Update ball position
-    this.ballX += this.ballSpeedX;
-    this.ballY += this.ballSpeedY;
-
-    // Handle ball collisions with top and bottom walls
-    if (this.ballY - this.ballRadius < 0 || this.ballY + this.ballRadius > this.canvasHeight) {
-      // Reverse the vertical direction of the ball when it hits the top or bottom
-      this.ballSpeedY *= -1;
-    }
-
-    // Handle ball collisions with paddles
-    if (
-      this.ballY > this.leftPaddle - this.ballRadius &&
-      this.ballY < this.leftPaddle + this.paddleHeight + this.ballRadius &&
-      this.ballX - this.ballRadius < this.paddleWidth
-    ) {
-      // Reverse the horizontal direction of the ball when it hits the left paddle
-      this.ballSpeedX *= -1;
-    }
-
-    if (
-      this.ballY > this.rightPaddle - this.ballRadius &&
-      this.ballY < this.rightPaddle + this.paddleHeight + this.ballRadius &&
-      this.ballX + this.ballRadius > this.canvasWidth - this.paddleWidth
-    ) {
-      // Reverse the horizontal direction of the ball when it hits the right paddle
-      this.ballSpeedX *= -1;
-    }
-
-    // Handle scoring and winning conditions
-    if (this.ballX < 0) {
-      this.rightPlayerScore++;
-      this.resetGame();
-    } else if (this.ballX > this.canvasWidth) {
-      this.leftPlayerScore++;
-      this.resetGame();
-    }
-
-    if (this.leftPlayerScore === 5) {
-      this.player = 'left player';
-      this.resetGame();
-      this.isGameOver();
-    } else if (this.rightPlayerScore === 5) {
-      this.player = 'right player';
-      this.resetGame();
-      this.isGameOver();
-    }
-
-  }
-
-  resetGame() {
-    this.ballX = this.canvasWidth / 2;
-    this.ballY = this.canvasHeight / 2;
-    this.ballSpeedX = -this.ballSpeedX;
-    this.ballSpeedY = Math.random() * 10 - 10;
-  }
-
-  getBallX(): number {
-    return this.ballX;
-  }
-
-  getBallY(): number {
-    return this.ballY;
-  }
-
-  getLeftPaddle(): number {
-    return this.leftPaddle;
-  }
-
-  getRightPaddle(): number {
-    return this.rightPaddle;
-  }
-
-  setUpPressed(up: boolean) {
-    this.upPressed = up;
-  }
-
-  setDownPressed(down: boolean) {
-    this.downPressed = down;
-  }
-
-  setWPressed(w: boolean) {
-    this.wPressed = w;
-  }
-
-  setSPressed(s: boolean) {
-    this.sPressed = s;
-  }
-
-  getlLeftPlayerScore(): number {
-    return this.leftPlayerScore;
-  }
-
-  getrRightPlayerScore(): number {
-    return this.rightPlayerScore;
-  }
-
-  getStatus(): boolean {
-    return this.isRunning;
-  }
-
-  start() {
-    if (!this.isRunning) {
-      this.isRunning = true;
-      this.intervalId = setInterval(() => {
-        this.updateGame();
-      }, 1000 / 60);
-    }
-  }
-
-  isGameOver(): boolean {
-    if (this.isRunning) {
-      clearInterval(this.intervalId);
-      this.isRunning = false;
-      return true;
-    }
-    return false;
-  }
-}
-
-
