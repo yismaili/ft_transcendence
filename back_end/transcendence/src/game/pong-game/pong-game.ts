@@ -29,8 +29,8 @@ export class PongGame {
     this.paddleHeight = 80;
     this.paddleSpeed = 15;
     this.ballRadius = 10;
-    this.ballSpeedX = 10;
-    this.ballSpeedY = 10;
+    this.ballSpeedX = 1.5;
+    this.ballSpeedY = 1.5;
     this.leftPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
     this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
     this.leftPlayerScore = 0;
@@ -64,14 +64,33 @@ export class PongGame {
     this.ballX += this.ballSpeedX;
     this.ballY += this.ballSpeedY;
 
+    //  // Calculate automatic paddle movement
+      if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
+        this.leftPaddle += this.paddleSpeed;
+      } else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
+        this.leftPaddle -= this.paddleSpeed;
+      }
+
+      // if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
+      //   this.rightPaddle += this.paddleSpeed;
+      // } else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
+      //   this.rightPaddle -= this.paddleSpeed;
+      // }
+
     // Handle ball collisions with top and bottom walls
     if (this.ballY - this.ballRadius < 0 || this.ballY + this.ballRadius > this.canvasHeight) {
       // Reverse the vertical direction of the ball when it hits the top or bottom
       this.ballSpeedY *= -1;
     }
 
+    if(((this.ballY + this.ballRadius) > this.leftPaddle  && (this.ballX - this.ballRadius) < this.paddleWidth && (this.ballY < this.leftPaddle)) 
+          || ((this.ballY - this.ballRadius) < (this.leftPaddle + this.paddleHeight)  && (this.ballX - this.ballRadius) < this.paddleWidth && (this.ballY > (this.leftPaddle + this.paddleHeight))))
+        {
+        this.ballSpeedX *= -1;
+        this.ballSpeedY *= -1;
+      }
     // Handle ball collisions with paddles
-    if (
+    else if (
       this.ballY > this.leftPaddle - this.ballRadius &&
       this.ballY < this.leftPaddle + this.paddleHeight + this.ballRadius &&
       this.ballX - this.ballRadius < this.paddleWidth
@@ -80,7 +99,13 @@ export class PongGame {
       this.ballSpeedX *= -1;
     }
 
-    if (
+    if(((this.ballY + this.ballRadius) > this.rightPaddle  && (this.ballX + this.ballRadius) > (this.canvasWidth - this.paddleWidth) && (this.ballY < this.rightPaddle)) 
+    || ((this.ballY - this.ballRadius) < (this.rightPaddle + this.paddleHeight)  && (this.ballX + this.ballRadius) > (this.canvasWidth - this.paddleWidth) && (this.ballY > (this.rightPaddle + this.paddleHeight))))
+    {
+      this.ballSpeedX *= -1;
+      this.ballSpeedY *= -1;
+    }
+    else if (
       this.ballY > this.rightPaddle - this.ballRadius &&
       this.ballY < this.rightPaddle + this.paddleHeight + this.ballRadius &&
       this.ballX + this.ballRadius > this.canvasWidth - this.paddleWidth
@@ -89,11 +114,12 @@ export class PongGame {
       this.ballSpeedX *= -1;
     }
 
+
     // Handle scoring and winning conditions
-    if (this.ballX < 0) {
+    if (this.ballX <= 0) {
       this.rightPlayerScore++;
       this.resetGame();
-    } else if (this.ballX > this.canvasWidth) {
+    } else if (this.ballX >= this.canvasWidth) {
       this.leftPlayerScore++;
       this.resetGame();
     }
@@ -106,8 +132,6 @@ export class PongGame {
       this.ballY = this.canvasHeight / 2;
       this.leftPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
       this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
-      // this.leftPlayerScore = 0;
-      // this.rightPlayerScore = 0;
 
     } else if (this.rightPlayerScore === 5) {
       this.winnerPlayer = 'right';
@@ -117,8 +141,6 @@ export class PongGame {
       this.ballY = this.canvasHeight / 2;
       this.leftPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
       this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
-        // this.leftPlayerScore = 0;
-        // this.rightPlayerScore = 0;
     }
 
   }
@@ -126,8 +148,8 @@ export class PongGame {
   resetGame() {
     this.ballX = this.canvasWidth / 2;
     this.ballY = this.canvasHeight / 2;
-    this.ballSpeedX = -this.ballSpeedX;
-    this.ballSpeedY = Math.random() * 10 - 10;
+    this.ballSpeedX = - this.ballSpeedX;
+    this.ballSpeedY = Math.random() * 2 + this.ballSpeedY;
   }
 
   getBallX(): number {
