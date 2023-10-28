@@ -2,14 +2,18 @@
 import Achievements from "@/components/profile/achievements/achievements";
 import History from "@/components/profile/history/history";
 import "./achievement__history.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function History__Achievements() {
+interface name{
+  ownerName: string;
+}
+export default function History__Achievements(prop : name) {
   const [achivment, setAchivement] = useState(true);
+
   return (
     <div className="achievements__history">
       <Achievements isDisplay={achivment} />
-      <History isDisplay={achivment} />
+      <History isDisplay={achivment} ownerName={prop.ownerName}/>
       <span
         className="achievements__history__Scroll"
         onClick={() => setAchivement((prev) => !prev)}
