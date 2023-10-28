@@ -185,6 +185,7 @@ export class ChatService {
       
         const newChatRoomUser = this.chatRoomUserRepository.create({
             statusPermissions: 'admin',
+            owner: true,
             statusUser: 'member',
             user: user,
             chatRooms: chatRoom
