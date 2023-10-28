@@ -1,40 +1,99 @@
-.singleHistory__container{
-    height: 20%;
-    min-height: 48px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
+.singleHistory__container {
+  height: 20%;
+  min-height: 48px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
 }
-.singleHistory__userImg__username{
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: white;
-    flex: 0.3
+.singleHistory__userImg__username {
+  margin: 0 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: white;
+  flex: 0.3;
 }
-.singleHistory__userImg{
-    display: inline-block;
-    width: 48px;
-    height: 48px;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-}
-
-.singleHistory__score{
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 2rem;
-    color:white
+.singleHistory__userImg {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
 }
 
-.singleHistory__userImg__username{
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: white;
-    flex: 0.3
+.singleHistory__score {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+  color: white;
 }
+
+.singleHistory__userImg__username {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: white;
+  flex: 0.3;
+}
+
+.rightHistory {
+  justify-content: flex-end;
+}
+
+@media (max-width: 1536px) {
+}
+
+/* xl */
+@media (max-width: 1280px) {
+}
+
+/* lg */
+@media (max-width: 1024px) {
+  .singleHistory__score {
+    font-size: 1.8rem;
+  }
+  .singleHistory__userImg__username {
+    margin: 0 0.5rem;
+    gap: 0.5rem;
+    flex: 0.3;
+  }
+  .singleHistory__username {
+    font-size: 0.8rem;
+  }
+}
+
+/* md */
+@media (max-width: 768px) {
+  .singleHistory__username {
+    font-size: 1rem;
+  }
+  .singleHistory__score {
+    font-size: 1.5rem;
+  }
+}
+
+/* sm */
+@media (max-width: 640px) {
+  .singleHistory__username {
+    font-size: 0.8rem;
+  }
+}
+
+  /* xs */
+  @media (max-width: 475px) {
+  .singleHistory__userImg {
+    width: 32px;
+    height: 32px;
+  }
+  .singleHistory__username {
+    font-size: 0.6rem;
+  }
+  .singleHistory__score {
+    font-size: 1.2rem;
+  }
+}
+
