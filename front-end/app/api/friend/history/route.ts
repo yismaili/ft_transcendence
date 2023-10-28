@@ -19,7 +19,6 @@ export async function POST(request: NextRequest) {
     );
 
     const data = await res.json();
-    console.log("srv data", data);
     if(data[0])
       return NextResponse.json({ data });
   }

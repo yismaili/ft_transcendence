@@ -36,20 +36,21 @@ export default function ChangeGroupInput({ setOpen, room, picture }: props) {
     status: string | null,
     password: string | null
   ) => {
-    // console.log("name:", name, "status:", status, "password:", password);
     if (!status) status = room.chatRooms.status;
-    console.log("room to change:", room);
-    console.log("new name:", name);
-
+    // console.log("room to change:", room);
+    // console.log("new name:", name);
+    
     if (picture == undefined) picture = null;
+    
+    // console.log("picture:", picture);
+    
+    // console.log("name:", name, "status:", status, "password:", password);
 
-    console.log("picture:", picture);
-    console.log();
-
+    
     socket.emit(
       "updateChatRoomInfo",
       {
-        RoomId: room.chatRooms.RoomId,
+        roomId: room.chatRooms.RoomId,
         username: Data.response.user.username,
         chatRoomName: name,
         status: status,
@@ -74,8 +75,8 @@ export default function ChangeGroupInput({ setOpen, room, picture }: props) {
         updateData(name, null, null);
       }
     } else {
-      const secure = formData.get("secure")?.toString();
-      if (secure === "protected") {
+      const secure = formData.get("password")?.toString();
+      if (formData.get("secure")?.toString() === "protected" && secure) {
         updateData(newName, "protected", secure);
       } else {
         updateData(newName, "private", null);
@@ -89,18 +90,10 @@ export default function ChangeGroupInput({ setOpen, room, picture }: props) {
   };
 
   const handleRemove = () => {
-    console.log(Data.response.user.username);
-
-    socket.emit(
-      "deleteChatRoom",
-      {
-        username: Data.response.user.username,
-        chatRoomName: room.chatRooms.RoomId,
-      },
-      (response: any) => {
-        console.log("remove", response);
-      }
-    );
+    socket.emit("deleteChatRoom", {
+      username: Data.response.user.username,
+      chatRoomName: room.chatRooms.RoomId,
+    });
   };
 
   return (

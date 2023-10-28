@@ -50,12 +50,13 @@
 }
 
 .icon {
-  background-image: url("/img/chat/icon.png");
+  background-image: url("/img/chat/unBan.png");
   background-repeat: no-repeat;
   background-size: contain;
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 5%;
+  z-index: 5;
 }
 
 .On {
