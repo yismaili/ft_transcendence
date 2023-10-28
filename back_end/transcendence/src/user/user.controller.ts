@@ -4,12 +4,9 @@ import { AchievementDto } from 'src/auth/dtos/achievement.dto';
 import { HistoryDto } from 'src/auth/dtos/history.dto';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
 import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
-import { RelationDto } from 'src/auth/dtos/relation.dto';
-import { updateProfileDto } from 'src/auth/dtos/updateProfile.dto';
-import { IAuthenticate } from './utils/types';
+import { RelationDto } from 'src/auth/dtos/relation.dto';;
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerOptions } from './multer.config';
-import { Response } from 'express';
 
 
 @Controller('users')
@@ -37,16 +34,12 @@ export class UserController {
     @Param('username') username: string,
     @Body() userData,
     @UploadedFile() imageData,
-   // @Res() res: Response
     ): Promise<any> {
     const authorization = req.user;
     if (authorization.username === username) {
         if (!imageData) {
         throw new Error('No image file provided.');
         }
-        // const response = await this.userService.updateProfileByUsername(username, userData, imageData);
-        // res.cookie('userData', response);
-        // return response;
         return await this.userService.updateProfileByUsername(username, userData, imageData);
     } else {
         throw new ForbiddenException();

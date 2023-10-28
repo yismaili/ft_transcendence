@@ -28,9 +28,7 @@ import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from 'src/auth/auth.service';
 import { Socket, Server } from 'socket.io';
-import { verify } from 'jsonwebtoken';
 import { updateChatRoom } from './dto/update-chat-room.dto';
-import axios from 'axios';
 import * as fs from 'fs'
 const path = require('path');
 import {v2 as cloudinary} from 'cloudinary';
@@ -122,23 +120,6 @@ export class ChatService {
     return roomName;
   }
 
-  async uploadImage(imageData: Buffer) {
-    try {
-      const response = await axios.post('https://api.imgbb.com/1/upload?key=570c815470c9530dc529ad2d1b48814d', {
-  
-        image: imageData.toString('base64'),
-      },
-     { headers:{
-       'Content-Type': 'multipart/form-data',
-      }});
-      const imageUrl = response.data.data.url;
-      return imageUrl;
-    } catch (error) {
-      throw error.message;
-    }
-  }
-  
-
   async createChatRoom(createChatRoomDto: CreateChatRoomDto): Promise<any> {
 
     try {
@@ -171,7 +152,7 @@ export class ChatService {
         if (ischatRoomExist){
           throw new Error('his chat room exist');
         }
-          let file_path = 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697945199/Daco_261299_d6ycty.png';
+          let file_path = process.env.DEFAULTIMAGECHATROOM;
           if (createChatRoomDto.picture != null){
           const imageBuffer = createChatRoomDto.picture;
           const filePath = './uploads';
@@ -441,7 +422,6 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
         id: 'ASC',
       },
     });
-    //console.log(chatRoomConversation);
     return chatRoomConversation;
   }
 
@@ -990,7 +970,6 @@ try{
   if (!chatRoom) {
     throw new Error('chat room not found');
   }
-  const chatRoomId = chatRoom.id;
   
   const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
     where: {
@@ -1255,40 +1234,6 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
   }
 }
 
-// handleng connection
-//  async handleConnection(socket: Socket) {
-//     try {
-
-//       const jwtSecret = 'secrete';
-//       const token = socket.handshake.headers.authorization;
-
-//       if (!token) {
-//         socket.emit('error', 'Authorization token missing');
-//         socket.disconnect(true);
-//         return;
-//       }
-
-//       let decodedToken = verify(token, jwtSecret);
-//       const clientId = socket.id;
-//       const username = decodedToken['username'];
-
-//       const user = await this.userRepository.findOne({
-//         where: {username: username}
-//       });
-//       // user.status = 'online';
-
-//       // this.connectedClients.set(clientId, { socket, username });
-//       await this.userRepository.save(user);
-//       socket.on('disconnect', async () => {
-//         // user.status = 'offline';
-//         // await this.userRepository.save(user);
-//         this.connectedClients.delete(clientId);
-//       });
-//     } catch (error) {
-//       socket.emit('error', 'Authentication failed');
-//       socket.disconnect(true);
-//     }
-//   }
 
 async addUserWithSocketId(username: string ,clientId: Socket) {
     try {
@@ -1307,61 +1252,6 @@ async addUserWithSocketId(username: string ,clientId: Socket) {
       throw error;
     }
   }
-
-// async addUserWithSocketId(clientId: Socket) {
-//   try {
-//     const jwtSecret = 'secrete';
-//     // Extract the JWT token
-//     const token = clientId.handshake.headers.authorization;
-
-//     if (!token) {
-//       clientId.emit('error', 'Authorization token missing');
-//       clientId.disconnect(true);
-//       return;
-//     }
-//     // Verify the JWT token using the secret
-//     let decodedToken;
-//     try {
-//       decodedToken = verify(token, jwtSecret);
-//     } catch (error) {
-//       clientId.emit('error', 'Invalid authorization token');
-//       clientId.disconnect(true);
-//       return;
-//     }
-
-//     const username = decodedToken['username'];
-//     const user = await this.userRepository.findOne({
-//       where: { username: username }
-//     });
-
-//     if (!user) {
-//       clientId.emit('error', 'User does not exist');
-//       clientId.disconnect(true);
-//       return;
-//     }
-//     // Join the user to a room based on their username
-//     if (!this.isconnected.has(username)) {
-//       this.isconnected.set(username,[]);
-//     }
-//     this.isconnected.get(username).push(clientId);
-
-    // for (const [key, value] of this.isconnected) {
-    //     console.log(username);
-    //   for (const socket of value) {
-    //      console.log(socket.id);
-    //   }
-    // }
-    
-//     // Handle user disconnection and remove them from the map
-//     clientId.on('disconnect', () => {
-//       if (this.isconnected.has(username)) {
-//         this.isconnected.delete(username);
-//       }
-//     });
-//   } catch (error) {
-//     throw error;
-//   }
-// }
 
 async gitAllUsers():Promise<any>{
   try{

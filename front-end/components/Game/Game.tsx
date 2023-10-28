@@ -143,57 +143,25 @@ export default function Game() {
     private score: Score;
     private ballX: number;
     private ballY: number;
-    private ballSpeedX: number;
-    private ballSpeedY: number;
     private paddleHeight: number;
     private ballRadius: number;
-    private paddleSpeed: number;
-    private upPressed: boolean;
-    private downPressed: boolean;
-    private wPressed: boolean;
-    private sPressed: boolean;
+    
     private leftPaddle: number;
     private rightPaddle: number;
     private paddleWidth: number;
-    private player: string;
-    private isRunning: boolean;
+    
     public socket: any;
-    private username: HTMLInputElement | null;
-    private friendUsername: HTMLInputElement | null;
-    private JoinBtn: HTMLElement | null;
-    private GameId: number;
-    private intervalId: NodeJS.Timeout | null;
-    private ntvBtn: HTMLElement | null;
+   
 
     constructor() {
       this.canvas = new Canvas();
-
-      // Establish a socket.io connection
-      // this.socket = io("http://localhost:3001", {
-      //   extraHeaders: {
-      //     Authorization: Data.response.token,
-      //   },
-      // });
-
       this.ballX = this.canvas.getWidth() / 2;
       this.ballY = this.canvas.getHeight() / 2;
-
-      this.ballSpeedX = 10;
-      this.ballSpeedY = 10;
       this.ballRadius = 10;
-      this.player = "";
       this.paddleHeight = 100;
       this.paddleWidth = 10;
-      this.paddleSpeed = 10;
       this.leftPlayerScore = 0;
       this.rightPlayerScore = 0;
-      this.upPressed = false;
-      this.downPressed = false;
-      this.wPressed = false;
-      this.sPressed = false;
-      this.isRunning = false;
-      this.GameId = 0;
-      this.intervalId = null;
       // init
       this.leftPaddle = this.canvas.getHeight() / 2 - this.paddleHeight / 2;
       this.rightPaddle = this.canvas.getHeight() / 2 - this.paddleHeight / 2;
@@ -215,23 +183,10 @@ export default function Game() {
         this.canvas.getHeight()
       );
       this.score = new Score(this.leftPlayerScore, this.rightPlayerScore);
-      this.JoinBtn = document.getElementById("joinGame-btn");
-      this.ntvBtn = document.getElementById("ntv-btn");
       // Add keyboard event listeners
 
       document.addEventListener("keydown", this.keyDownHandler.bind(this));
       document.addEventListener("keyup", this.keyUpHandler.bind(this));
-      this.username = document.getElementById("username") as HTMLInputElement;
-      this.friendUsername = document.getElementById(
-        "friendUsername"
-      ) as HTMLInputElement;
-      // if (this.JoinBtn) {
-      //   this.JoinBtn.addEventListener("click", this.joinGame.bind(this));
-      //   // this.JoinBtn.addEventListener('click', this.joinGameFriend.bind(this));
-      // }
-      // if (this.ntvBtn) {
-      //   this.ntvBtn.addEventListener("click", this.acceptRequest.bind(this));
-      // }
     }
 
     private keyDownHandler(e: KeyboardEvent) {
@@ -272,12 +227,6 @@ export default function Game() {
     update() {
       // clean canvas
       this.canvas.clearCanvas();
-      // gameSocket.emit("updateGame", {
-      //   sPressed: this.sPressed,
-      //   wPressed: this.wPressed,
-      //   upPressed: this.upPressed,
-      //   downPressed: this.downPressed,
-      // });
 
       gameSocket.on(
         "GameUpdated",
@@ -289,7 +238,6 @@ export default function Game() {
           leftPlayerScore: number;
           rightPlayerScore: number;
         }) => {
-          // console.log("7na west updateGame:", response);
           this.ballX = response.ballX;
           this.ballY = response.ballY;
           this.leftPaddle = response.leftPaddle;
@@ -319,36 +267,14 @@ export default function Game() {
     }
 
     start() {
-      // if (!this.isRunning) {
-      // this.isRunning = true;
-      // this.intervalId = setInterval(() => {
       this.update();
       this.draw();
-      // console.log("this.draw();");
-      // }, 1000 / 60); // 100 frames per second
-      // }
     }
-    // joinGame() {
-    //   this.gameSocket.emit("createGame", { username: this.username?.value });
-    // }
-
-    // joinGameFriend() {
-    //   this.gameSocket.emit("createGameFriend", {
-    //     username: this.username?.value,
-    //     friendUsername: this.friendUsername?.value,
-    //   });
-    // }
-
-    // acceptRequest() {
-    //   const res = true;
-    //   this.socket.emit("acceptrequest", res);
-    // }
   }
 
   useEffect(() => {
     const pongGame = new PongGame();
     function call() {
-      // console.log("HRER");
       pongGame.start();
       window.requestAnimationFrame(call);
     }
@@ -360,7 +286,6 @@ export default function Game() {
     });
 
     window.requestAnimationFrame(call);
-    // console.log("test");
   }, []);
 
   return (
