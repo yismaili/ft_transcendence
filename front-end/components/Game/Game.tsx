@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSocketContext } from "@/contexts/socket-context";
 import ReactPlayer from "react-player";
+import Winners from "./Winners/Winners";
 
 export default function Game() {
   const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
-  const [winner, setWinner] = useState("");
+  const [gameOver, setGameOver] = useState<gameOver>();
   const [map, setMap] = useState("");
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -279,59 +280,68 @@ export default function Game() {
     }
 
     gameSocket.emit("refreshGame");
-    gameSocket.on(
-      "gameOver",
-      (response: { gameOver: boolean; winner: User_Friend }) => {
-        setWinner(response.winner.username);
-        console.log("gameOver res:", response);
-      }
-    );
+    gameSocket.on("gameOver", (response: gameOver) => {
+      setGameOver(response);
+      console.log("gameOver res:", response);
+    });
 
     window.requestAnimationFrame(call);
   }, []);
 
   return (
-    <div className={`${Style.Game___container} container`}>
-      {winner && (
-        <div className={Style.video}>
-          <ReactPlayer
-            url={`${
-              winner === Data.response.user.username
-                ? "/img/game/winner.mp3"
-                : "/img/game/lost.mp3"
-            }`}
-            playing={winner ? true : false} // Set to true if you want the audio to auto-play
-            controls={false} // Show player controls (play, pause, volume, etc.)
-          />
-        </div>
-      )}
-      {winner &&
-        (winner === Data.response.user.username ? (
-          <p className={Style.win}>You win</p>
-        ) : (
-          <p className={Style.lost}>You lost</p>
-        ))}
-      <button
-        className={Style.homeBtn}
-        onClick={() => router.push(`/users/${Data.response.user.username}`)}
-      >
-        back to home
-      </button>
-      <button
-        className={Style.mapsBtn}
-        onClick={() =>
-          router.push(`/users/${Data.response.user.username}/gameMap`)
-        }
-      >
-        back to maps
-      </button>
-      <canvas
-        id="canvas"
-        className={Style.Canvas}
-        style={{
-          backgroundImage: `url(${map})`,
-        }}
-      ></canvas>
-    </div>
+    <>
+      <div className={`${Style.Game___container} container`}>
+        {gameOver && (
+          <div className={Style.video}>
+            <ReactPlayer
+              url={`${
+                gameOver.winner.username === Data.response.user.username
+                  ? "/img/game/winner.mp3"
+                  : "/img/game/lost.mp3"
+              }`}
+              playing={gameOver ? true : false} // Set to true if you want the audio to auto-play
+              controls={false} // Show player controls (play, pause, volume, etc.)
+            />
+          </div>
+        )}
+        {gameOver &&
+          (gameOver.winner.username === Data.response.user.username ? (
+            <p className={Style.win}>You win</p>
+          ) : (
+            <p className={Style.lost}>You lost</p>
+          ))}
+
+        {gameOver && (
+          <>
+            <button
+              className={Style.homeBtn}
+              onClick={() =>
+                router.push(`/users/${Data.response.user.username}`)
+              }
+            >
+              back to home
+            </button>
+            <button
+              className={Style.mapsBtn}
+              onClick={() =>
+                router.push(`/users/${Data.response.user.username}/gameMap`)
+              }
+            >
+              play Again
+            </button>
+          </>
+        )}
+        {!gameOver && (
+          <canvas
+            id="canvas"
+            className={Style.Canvas}
+            style={{
+              backgroundImage: `url(${map})`,
+            }}
+          ></canvas>
+        )}
+        {gameOver && <Winners setGameOver={setGameOver} gameOver={gameOver} />}
+      </div>
+    </>
   );
 }

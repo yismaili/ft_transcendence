@@ -162,7 +162,6 @@ async searchToFrindByUsername(username: string, secondUsername: string){
     if (!user || !secondUser){
       throw new Error("User not found");
     }
-
     const relation = await this.relationRepository.findOne({
         where: [
           { friend: { id: user.id }, user: { id: secondUser.id }, status: 'friends'},
@@ -174,6 +173,29 @@ async searchToFrindByUsername(username: string, secondUsername: string){
       throw new Error("you don't have access to user");
     }
     return secondUser;
+  } catch (error) {
+    throw new Error(`Error fetching user profile`);
+  }
+}
+
+async historyFriend(username: string, secondUsername: string){
+  try {
+    const user = await this.userRepository.findOne({
+      where: {username: username}
+    });
+    
+    const secondUser = await this.userRepository.findOne({
+      where: {username: secondUsername}
+    });
+
+    if (!user || !secondUser){
+      throw new Error("User not found");
+    }
+    const history = await this.historyRepository.find({
+    where: { user: { id: user.id }},
+      relations: ['user', 'userCompetitor']
+     });
+    return history;
   } catch (error) {
     throw new Error(`Error fetching user profile`);
   }
@@ -661,9 +683,8 @@ async setUserstatus(username:string, status:string) {
     if (!user){
       throw new Error('User not exist');
     }
-
     user.status = status;
-    await this.userRepository.save(user);
+    return await this.userRepository.save(user);
   } catch (error) {
     throw new Error('failed');
   }

@@ -51,6 +51,7 @@ export default function UserProfile({ params }: { params: { user: string } }) {
             body: params.user,
           });
           const users = await res.json();
+          console.log("friend data:",users);
           if (users.data) {
             setUser(users);
             setFound(true);
@@ -70,7 +71,7 @@ export default function UserProfile({ params }: { params: { user: string } }) {
         <div className="profile__section">
           <ProfilePic user={user} param={owner} />
           {user && <Analytics user={user} />}
-          <History__Achievements />
+          <History__Achievements ownerName={params.user}/>
           <div className="play">
             {owner ? (
               <Link href={`/users/${Data.response.user.username}/gameMap`} className="play__btn">
