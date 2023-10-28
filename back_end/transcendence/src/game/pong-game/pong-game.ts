@@ -1,5 +1,5 @@
 export class PongGame {
-    private canvasWidth: number;
+  private canvasWidth: number;
   private canvasHeight: number;
   private paddleWidth: number;
   private paddleHeight: number;
@@ -9,8 +9,8 @@ export class PongGame {
   private ballSpeedY: number;
   private leftPaddle: number;
   private rightPaddle: number;
-  private leftPlayerScore: number;
-  private rightPlayerScore: number;
+  public leftPlayerScore: number;
+  public rightPlayerScore: number;
   private upPressed: boolean;
   private downPressed: boolean;
   private wPressed: boolean;
@@ -45,9 +45,6 @@ export class PongGame {
     this.intervalId = null;
     this.isRunning = false;
   }
-
-  
-   // Update the game state including paddle movement, ball position, collisions, and scoring.
    
   async updateGame() {
     // Paddle movement 
@@ -63,24 +60,22 @@ export class PongGame {
       this.leftPaddle += this.paddleSpeed;
     }
 
-    // this.upPressed = false;
-    // this.downPressed = false;
-  //  // Calculate automatic paddle movement
-  //   if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
-  //     this.leftPaddle += this.paddleSpeed;
-  //   } else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
-  //     this.leftPaddle -= this.paddleSpeed;
-  //   }
-
-  //   if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
-  //     this.rightPaddle += this.paddleSpeed;
-  //   } else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
-  //     this.rightPaddle -= this.paddleSpeed;
-  //   }
-
     // Update ball position
     this.ballX += this.ballSpeedX;
     this.ballY += this.ballSpeedY;
+
+    //  // Calculate automatic paddle movement
+      if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
+        this.leftPaddle += this.paddleSpeed;
+      } else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
+        this.leftPaddle -= this.paddleSpeed;
+      }
+
+      // if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
+      //   this.rightPaddle += this.paddleSpeed;
+      // } else if (this.ballY < this.rightPaddle + this.paddleHeight / 2) {
+      //   this.rightPaddle -= this.paddleSpeed;
+      // }
 
     // Handle ball collisions with top and bottom walls
     if (this.ballY - this.ballRadius < 0 || this.ballY + this.ballRadius > this.canvasHeight) {
@@ -88,8 +83,14 @@ export class PongGame {
       this.ballSpeedY *= -1;
     }
 
+    if(((this.ballY + this.ballRadius) > this.leftPaddle  && (this.ballX - this.ballRadius) < this.paddleWidth && (this.ballY < this.leftPaddle)) 
+          || ((this.ballY - this.ballRadius) < (this.leftPaddle + this.paddleHeight)  && (this.ballX - this.ballRadius) < this.paddleWidth && (this.ballY > (this.leftPaddle + this.paddleHeight))))
+        {
+        this.ballSpeedX *= -1;
+        this.ballSpeedY *= -1;
+      }
     // Handle ball collisions with paddles
-    if (
+    else if (
       this.ballY > this.leftPaddle - this.ballRadius &&
       this.ballY < this.leftPaddle + this.paddleHeight + this.ballRadius &&
       this.ballX - this.ballRadius < this.paddleWidth
@@ -98,7 +99,13 @@ export class PongGame {
       this.ballSpeedX *= -1;
     }
 
-    if (
+    if(((this.ballY + this.ballRadius) > this.rightPaddle  && (this.ballX + this.ballRadius) > (this.canvasWidth - this.paddleWidth) && (this.ballY < this.rightPaddle)) 
+    || ((this.ballY - this.ballRadius) < (this.rightPaddle + this.paddleHeight)  && (this.ballX + this.ballRadius) > (this.canvasWidth - this.paddleWidth) && (this.ballY > (this.rightPaddle + this.paddleHeight))))
+    {
+      this.ballSpeedX *= -1;
+      this.ballSpeedY *= -1;
+    }
+    else if (
       this.ballY > this.rightPaddle - this.ballRadius &&
       this.ballY < this.rightPaddle + this.paddleHeight + this.ballRadius &&
       this.ballX + this.ballRadius > this.canvasWidth - this.paddleWidth
@@ -107,16 +114,17 @@ export class PongGame {
       this.ballSpeedX *= -1;
     }
 
+
     // Handle scoring and winning conditions
-    if (this.ballX < 0) {
+    if (this.ballX <= 0) {
       this.rightPlayerScore++;
       this.resetGame();
-    } else if (this.ballX > this.canvasWidth) {
+    } else if (this.ballX >= this.canvasWidth) {
       this.leftPlayerScore++;
       this.resetGame();
     }
 
-    if (this.leftPlayerScore === 20) {
+    if (this.leftPlayerScore === 5) {
       this.winnerPlayer = 'left';
       this.resetGame();
       this.isGameOver();
@@ -124,10 +132,8 @@ export class PongGame {
       this.ballY = this.canvasHeight / 2;
       this.leftPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
       this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
-      this.leftPlayerScore = 0;
-      this.rightPlayerScore = 0;
 
-    } else if (this.rightPlayerScore === 20) {
+    } else if (this.rightPlayerScore === 5) {
       this.winnerPlayer = 'right';
       this.resetGame();
       this.isGameOver();
@@ -135,8 +141,6 @@ export class PongGame {
       this.ballY = this.canvasHeight / 2;
       this.leftPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
       this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
-      this.leftPlayerScore = 0;
-      this.rightPlayerScore = 0;
     }
 
   }
@@ -144,8 +148,8 @@ export class PongGame {
   resetGame() {
     this.ballX = this.canvasWidth / 2;
     this.ballY = this.canvasHeight / 2;
-    this.ballSpeedX = -this.ballSpeedX;
-    this.ballSpeedY = Math.random() * 10 - 10;
+    this.ballSpeedX = - this.ballSpeedX;
+    this.ballSpeedY = Math.random() * 2 + this.ballSpeedY;
   }
 
   getBallX(): number {

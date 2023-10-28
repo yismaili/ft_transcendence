@@ -19,7 +19,6 @@ import { PongGame } from './pong-game/pong-game';
 @Injectable()
 export class GameService {
   players: Map<string, string[]> = new Map<string, string[]>();
-  playWithFriend: Map<string, string[]> = new Map<string, string[]>();
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
     @InjectRepository(Profile)private profileRepository: Repository<Profile>,
@@ -161,12 +160,10 @@ export class GameService {
         user,
         userFriend,
       });
-    
+
       await this.waitMinute();
-    
       // Create a PongGame instance and start the game
        pongGame.start();
-      
       // send game state updates to clients
       const intervalId = setInterval(async () => {
         const gameData = {
@@ -177,12 +174,23 @@ export class GameService {
           leftPlayerScore: pongGame.getlLeftPlayerScore(),
           rightPlayerScore: pongGame.getrRightPlayerScore(),
         };
+
         server.to(roomName).emit('GameUpdated', gameData);
         if (!pongGame.getStatus()) {
-          if (pongGame.winnerPlayer === 'left'){
-            server.to(roomName).emit('gameOver', {gameOver: true, winner: user, loser: userFriend});
-          }else{
-            server.to(roomName).emit('gameOver', {gameOver: true, winner: userFriend, loser: user});
+          if (pongGame.winnerPlayer === 'right'){
+            server.to(roomName).emit('gameOver', {
+              gameOver: true, winner: user, loser: userFriend, 
+              winnerScore: pongGame.getrRightPlayerScore(),
+              loserScore: pongGame.getlLeftPlayerScore(),
+            });
+          }
+          if (pongGame.winnerPlayer === 'left')
+          {
+            server.to(roomName).emit('gameOver', {
+              gameOver: true, winner: userFriend,loser: user, 
+              winnerScore: pongGame.getlLeftPlayerScore(),
+              loserScore: pongGame.getrRightPlayerScore(),
+            });
           }
 
          // clean up and add result to db
@@ -195,6 +203,8 @@ export class GameService {
 
           this.handleLeaveRoom(playerId, roomName);
           this.addHistory(history);
+         pongGame.leftPlayerScore = 0;
+         pongGame.rightPlayerScore = 0;
           clearInterval(intervalId);
        }
       }, 1000 / 60);
@@ -203,7 +213,7 @@ export class GameService {
     
    async getUser(client: Socket){
 
-      const jwtSecret = 'secrete';
+      const jwtSecret = process.env.JWT_SECRET;
       const token = client.handshake.headers.authorization;
   
       if (!token) {
@@ -368,6 +378,7 @@ export class GameService {
           this.updateLevel(competitor.username);
           this.updateScore(competitor.username);
         }
+        return
       } catch (error) {
         throw new Error('Failed to add history: ' + error.message);
       }
@@ -639,7 +650,7 @@ async setStatusOfUser(socketId: Socket, username:string) {
 
 async refreshGame(socketId: Socket){
   try{
-    const jwtSecret = 'secrete';
+    const jwtSecret = process.env.JWT_SECRET;
     const token = socketId.handshake.headers.authorization;
     if (!token) {
       socketId.emit('error', 'Authorization token missing');
@@ -655,7 +666,6 @@ async refreshGame(socketId: Socket){
         break;
       }
     }
-    // if (roomName === null){
       for (const [room, sockets] of this.isconnected) {
         if (room === username) {
           for(const socket of sockets){
@@ -663,7 +673,6 @@ async refreshGame(socketId: Socket){
           }
         }
       }
-    // }
 
   }catch (error) {
     socketId.emit('error', 'Authentication failed');
