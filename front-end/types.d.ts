@@ -136,13 +136,14 @@ type FriendRequest = {
   id: number;
   status: string;
   user: User_Friend;
-};
-
-type FriendRequest2 = {
-  id: number;
-  status: string;
   friend: User_Friend;
 };
+
+// type FriendRequest2 = {
+//   id: number;
+//   status: string;
+//   friend: User_Friend;
+// };
 
 type gameRequest = {
   receiver: User_Friend;

@@ -89,18 +89,10 @@ export default function ChangeGroupInput({ setOpen, room, picture }: props) {
   };
 
   const handleRemove = () => {
-    console.log(Data.response.user.username);
-
-    socket.emit(
-      "deleteChatRoom",
-      {
-        username: Data.response.user.username,
-        chatRoomName: room.chatRooms.RoomId,
-      },
-      (response: any) => {
-        console.log("remove", response);
-      }
-    );
+    socket.emit("deleteChatRoom", {
+      username: Data.response.user.username,
+      chatRoomName: room.chatRooms.RoomId,
+    });
   };
 
   return (

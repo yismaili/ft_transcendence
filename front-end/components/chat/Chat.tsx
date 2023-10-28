@@ -27,7 +27,7 @@ export default function Chat() {
   const [allRooms, setAllRooms] = useState<AllRooms[]>();
   const [room, setRoom] = useState<AllRooms>();
   const [game, setGame] = useState<gameRequest[]>([]);
-  const [blocked, setBlocked] = useState<FriendRequest2[]>([]);
+  const [blocked, setBlocked] = useState<FriendRequest[]>([]);
   const [notification, setNotification] = useState<allMessages[]>([]);
   const [newMessage, setNewMessage] = useState<allMessages[]>([]);
   const [Opt, setOpt] = useState(false);
@@ -90,6 +90,8 @@ export default function Chat() {
           fetching();
           setUserFriend(undefined);
         }
+      } else if (messaged.split(" ")[0] === "unBlock") {
+        if (messaged.split(" ")[1] === Data.response.user.username) fetching();
       }
 
       socket.emit(
@@ -102,12 +104,6 @@ export default function Chat() {
         }
       );
     });
-
-    // gameSocket.on("acceptrequest", (response: { sender: User_Friend }) => {
-    //   router.push(
-    //     `/users/${Data.response.user.username}/${Data.response.user.username}-vs-${response.sender.username}`
-    //   );
-    // });
 
     gameSocket.on("inviteFriend", (response: gameRequest) => {
       if (!game.length) setGame([response]);
@@ -281,7 +277,11 @@ export default function Chat() {
                     allRooms.map((room) => {
                       return (
                         <li key={room.id}>
-                          <Group room={room} choseChat={setRoom} left={setOpt}/>
+                          <Group
+                            room={room}
+                            choseChat={setRoom}
+                            left={setOpt}
+                          />
                         </li>
                       );
                     })
@@ -314,7 +314,11 @@ export default function Chat() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                       >
-                        <Blocked data={user.friend} />
+                        {user.user.username === Data.response.user.username ? (
+                          <Blocked data={user.friend} />
+                        ) : (
+                          <Blocked data={user.user} />
+                        )}
                       </motion.li>
                     );
                   })}
@@ -372,7 +376,9 @@ export default function Chat() {
               newMessage={newMessage}
             />
           )}
-          {isGroup && room && <GroupMsg groupInput={groupInput} room={room}/>}
+          {isGroup && room && (
+            <GroupMsg groupInput={groupInput} room={room} blocked={blocked} />
+          )}
         </div>
       </div>
     </div>

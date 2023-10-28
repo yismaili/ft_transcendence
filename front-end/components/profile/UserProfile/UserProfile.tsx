@@ -28,13 +28,6 @@ export default function UserProfile({ params }: { params: { user: string } }) {
       const cookie = JSON.parse(Data);
       setPath(cookie.response.user.username);
       if (cookie.response.user.username == params.user) {
-        gameSocket.on(
-          "inviteFriend",
-          (response: { usernam: string; roomName: string }) => {
-            console.log("new invire for game in profile:", response);
-          }
-        );
-
         const fetching = async () => {
           const res = await fetch("http://localhost:3000/api/home");
           const user = await res.json();
