@@ -9,8 +9,8 @@ export class PongGame {
   private ballSpeedY: number;
   private leftPaddle: number;
   private rightPaddle: number;
-  private leftPlayerScore: number;
-  private rightPlayerScore: number;
+  public leftPlayerScore: number;
+  public rightPlayerScore: number;
   private upPressed: boolean;
   private downPressed: boolean;
   private wPressed: boolean;
@@ -116,7 +116,7 @@ export class PongGame {
       this.resetGame();
     }
 
-    if (this.leftPlayerScore === 20) {
+    if (this.leftPlayerScore === 5) {
       this.winnerPlayer = 'left';
       this.resetGame();
       this.isGameOver();
@@ -124,10 +124,10 @@ export class PongGame {
       this.ballY = this.canvasHeight / 2;
       this.leftPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
       this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
-      this.leftPlayerScore = 0;
-      this.rightPlayerScore = 0;
+      // this.leftPlayerScore = 0;
+      // this.rightPlayerScore = 0;
 
-    } else if (this.rightPlayerScore === 20) {
+    } else if (this.rightPlayerScore === 5) {
       this.winnerPlayer = 'right';
       this.resetGame();
       this.isGameOver();
@@ -135,8 +135,8 @@ export class PongGame {
       this.ballY = this.canvasHeight / 2;
       this.leftPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
       this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
-      this.leftPlayerScore = 0;
-      this.rightPlayerScore = 0;
+        // this.leftPlayerScore = 0;
+        // this.rightPlayerScore = 0;
     }
 
   }

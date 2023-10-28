@@ -148,3 +148,11 @@ type gameRequest = {
   receiver: User_Friend;
   sender: User_Friend;
 };
+
+type gameOver = {
+  gameOver: boolean;
+  loser: User_Friend;
+  loserScore: number;
+  winner: User_Friend;
+  winnerScore: number;
+};
