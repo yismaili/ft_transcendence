@@ -40,12 +40,12 @@ export default function ChangeGroupInput({ setOpen, room, picture }: props) {
     if (!status) status = room.chatRooms.status;
     console.log("room to change:", room);
     console.log("new name:", name);
-    
-    if (picture == undefined) picture = null
-    
+
+    if (picture == undefined) picture = null;
+
     console.log("picture:", picture);
     console.log();
-    
+
     socket.emit(
       "updateChatRoomInfo",
       {

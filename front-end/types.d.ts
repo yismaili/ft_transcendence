@@ -104,6 +104,7 @@ type AllRooms = {
   id: number;
   statusPermissions: string;
   statusUser: string;
+  owner: boolean;
   time: any;
 };
 
@@ -118,6 +119,7 @@ type allGroupUsers = {
   id: number;
   statusPermissions: string;
   statusUser: string;
+  owner: boolean;
   time: any;
   user: User_Friend;
 };
@@ -147,4 +149,12 @@ type FriendRequest2 = {
 type gameRequest = {
   receiver: User_Friend;
   sender: User_Friend;
+};
+
+type gameOver = {
+  gameOver: boolean;
+  loser: User_Friend;
+  loserScore: number;
+  winner: User_Friend;
+  winnerScore: number;
 };
