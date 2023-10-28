@@ -22,14 +22,13 @@ export default function Auth({ Sign_in_up }: Props) {
         const mycookie = cookies.get("userData");
 
         if (mycookie) {
+          let filler:string = mycookie;
           clearInterval(interval);
-          console.log("before:",mycookie);
-          let cookie = mycookie.replace("j:","");
-          console.log("after:",cookie);
+          let cookie = filler.replace("j:","");
+          console.clear();
           let cookieval = JSON.parse(cookie);
           cookies.set("userData", cookie);
           auth_window?.close();
-          console.log("test", cookieval.response.user.status);
           if(!cookieval.response.user.status)
           {
             router.push(`http://localhost:3000/users/${cookieval.response.user.username}/Parameters`);
@@ -40,7 +39,7 @@ export default function Auth({ Sign_in_up }: Props) {
             router.push(
               `http://localhost:3000/users/${cookieval.response.user.username}`
             );
-         // console.clear();
+         console.clear();
         }
       }, 1000);
     }
