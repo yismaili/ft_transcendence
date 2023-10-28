@@ -27,10 +27,10 @@ export class PongGame {
     this.canvasHeight = 600;
     this.paddleWidth = 10;
     this.paddleHeight = 80;
-    this.paddleSpeed = 15;
+    this.paddleSpeed = 10;
     this.ballRadius = 10;
-    this.ballSpeedX = 1.5;
-    this.ballSpeedY = 1.5;
+    this.ballSpeedX = 10;
+    this.ballSpeedY = 10;
     this.leftPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
     this.rightPaddle = this.canvasHeight / 2 - this.paddleHeight / 2;
     this.leftPlayerScore = 0;
