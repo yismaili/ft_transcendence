@@ -22,7 +22,7 @@ import { verify } from 'jsonwebtoken';
 
 
 
-@WebSocketGateway({ cors: { origin: '*' }, namespace: 'chat'}) // Allow all origins; adjust as needed
+@WebSocketGateway({ cors: { origin: '*' }, namespace: 'chat'})
 export class ChatGateway {
   @WebSocketServer() server: Server;
   constructor(private readonly chatService: ChatService) {}

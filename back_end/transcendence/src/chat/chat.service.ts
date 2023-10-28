@@ -29,7 +29,6 @@ import * as bcrypt from 'bcrypt';
 import { AuthService } from 'src/auth/auth.service';
 import { Socket, Server } from 'socket.io';
 import { updateChatRoom } from './dto/update-chat-room.dto';
-import axios from 'axios';
 import * as fs from 'fs'
 const path = require('path');
 import {v2 as cloudinary} from 'cloudinary';
