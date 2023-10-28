@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UsingJoinColumnIsNotAllowedError } from 'typeorm';
+import { Repository  } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 import { User } from 'src/typeorm/entities/User.entity';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
@@ -24,18 +24,6 @@ import { TwoFactorAuthenticationCodeDto } from './dtos/TwoFactorAuthenticationCo
       @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
       private userService: UserService
       ) {}
-      
-async findAll() {
-  const users =  this.userRepository.find({
-   relations: ['profile', 
-    'userRelations', 
-    'friendRelations', 
-    'achievements', 
-    'histories'
-  ]
-  });
- return users;
-}
 
 generateRandom(length: number): string {
 
@@ -83,7 +71,7 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
     if (existingUser.isTwoFactorAuthEnabled === true){
         return {user: existingUser, success: true};
     }
-    const token = sign({ ...existingUser }, 'secrete');
+    const token = sign({ ...existingUser }, process.env.JWT_SECRET);
       return { token, user: existingUser, success: true};
     } else {
 
@@ -122,7 +110,7 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
         newUser.profile = newProfile;
       }
     const savedUser = await this.userRepository.save(newUser);
-    const token = sign({ ...savedUser }, 'secrete');
+    const token = sign({ ...savedUser }, process.env.JWT_SECRET);
     return { token, user: savedUser, success: true};
   }
 }
@@ -176,7 +164,7 @@ async findUserById(user: Partial<User>): Promise<Partial<any>> {
     try {
       const user = await this.userRepository.findOne({ where: { username: username }});
       if (user) {
-        const token = sign({ ...user }, 'secrete');
+        const token = sign({ ...user }, process.env.JWT_SECRET);
         return { token, user: user, success: true};
       } 
       else {
@@ -188,5 +176,3 @@ async findUserById(user: Partial<User>): Promise<Partial<any>> {
   }
 
 }
-
-
