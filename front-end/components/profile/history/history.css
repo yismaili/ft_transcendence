@@ -5,6 +5,7 @@
     width: 55%;
     background-color: #292944;
     border-radius: 16px;
+    overflow: auto;
 }
 
 .history__title{
