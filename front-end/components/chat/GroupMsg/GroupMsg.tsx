@@ -9,9 +9,10 @@ import { useSocketContext } from "@/contexts/socket-context";
 type props = {
   groupInput: GroupInput | undefined;
   room: AllRooms;
+  blocked: FriendRequest[];
 };
 
-export default function GroupMsg({ groupInput, room }: props) {
+export default function GroupMsg({ groupInput, room, blocked }: props) {
   const { socket, Data } = useSocketContext();
   const [allMessages, setAllMessages] = useState<allGroupMessages[]>();
   const [newMessage, setNewMessage] = useState<allGroupMessages[]>([]);
@@ -43,8 +44,21 @@ export default function GroupMsg({ groupInput, room }: props) {
             chatRoomName: room.chatRooms.RoomId,
           },
           (response: allGroupUsers[]) => {
-            setAllGroupUsers(response);
-            response.map((user) => {
+            const allBlockedUsers = blocked.map((user) => {
+              if (user.user.username === Data.response.user.username)
+                return user.friend.username;
+              else return user.user.username;
+            });
+
+            const allFiltredUsers = response.filter(
+              (user) => !allBlockedUsers.includes(user.user.username)
+            );
+            setAllGroupUsers(
+              response.filter(
+                (user) => !allBlockedUsers.includes(user.user.username)
+              )
+            );
+            allFiltredUsers.map((user) => {
               if (message.user.username === user.user.username) {
                 setNewMessage((prevMessages) => [...prevMessages, message]);
               }
@@ -71,8 +85,7 @@ export default function GroupMsg({ groupInput, room }: props) {
           username: Data.response.user.username,
           chatRoomName: room.chatRooms.RoomId,
         },
-        (response: allGroupMessages[]) => {
-          setAllMessages(response);
+        (messages: allGroupMessages[]) => {
           socket.emit(
             "getAllUserOfChatRoom",
             {
@@ -80,7 +93,22 @@ export default function GroupMsg({ groupInput, room }: props) {
               chatRoomName: room.chatRooms.RoomId,
             },
             (response: allGroupUsers[]) => {
-              setAllGroupUsers(response);
+              const allBlockedUsers = blocked.map((user) => {
+                if (user.user.username === Data.response.user.username)
+                  return user.friend.username;
+                else return user.user.username;
+              });
+
+              setAllMessages(
+                messages.filter(
+                  (msg) => !allBlockedUsers.includes(msg.user.username)
+                )
+              );
+              setAllGroupUsers(
+                response.filter(
+                  (user) => !allBlockedUsers.includes(user.user.username)
+                )
+              );
             }
           );
         }

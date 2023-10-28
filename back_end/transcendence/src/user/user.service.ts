@@ -404,10 +404,11 @@ async findAllBlockedOfUser(username: string): Promise<RelationDto[]> {
 
   try {
     const userBlocked = await this.relationRepository.find({
-      where: [{ user: { username }, status: 'blocked' , FromUser: username}],
-      relations: ['friend']
+      where: [{ user: { username }, status: 'blocked' , FromUser: username},
+              { friend: { username }, status: 'blocked' , FromUser: username}
+    ],
+      relations: ['friend', 'user']
     });
-
     if (!userBlocked) {
       throw new Error('relations not found');
     }

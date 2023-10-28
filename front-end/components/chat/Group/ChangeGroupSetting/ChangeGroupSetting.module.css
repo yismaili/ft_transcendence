@@ -70,7 +70,7 @@
 .main {
   position: relative;
   width: 94%;
-  height: 60%;
+  height: clamp(10rem, 60%, 19rem);
   margin: 1rem 3%;
   margin-top: 4%;
   border-radius: 60px;
