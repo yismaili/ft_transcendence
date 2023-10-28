@@ -378,6 +378,7 @@ export class GameService {
           this.updateLevel(competitor.username);
           this.updateScore(competitor.username);
         }
+        return
       } catch (error) {
         throw new Error('Failed to add history: ' + error.message);
       }

@@ -104,6 +104,7 @@ type AllRooms = {
   id: number;
   statusPermissions: string;
   statusUser: string;
+  owner: boolean;
   time: any;
 };
 
@@ -118,6 +119,7 @@ type allGroupUsers = {
   id: number;
   statusPermissions: string;
   statusUser: string;
+  owner: boolean;
   time: any;
   user: User_Friend;
 };
