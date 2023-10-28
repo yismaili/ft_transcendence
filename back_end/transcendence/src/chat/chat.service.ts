@@ -606,7 +606,7 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
   });
 
   if (!adminUserChatRoom) {
-    throw new Error('You are not an admin to ban users');
+    throw new Error('You are not an owner or admin to ban users');
   }
 
   // Check if the target user is an admin
@@ -624,8 +624,8 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
     },
   });
 
-  if (isNotAdmin) {
-    throw new Error('You cannot ban an admin user');
+  if (isNotAdmin && adminUserChatRoom.owner === false) {
+    throw new Error('You cannot ban an admin or owner user');
   }
 
   // Ban the user
@@ -685,7 +685,7 @@ async kickUser(kickUserDto: KickUserDto) {
     },
   });
 
-  if (isNotAdmin) {
+  if (isNotAdmin  && adminUserChatRoom.owner === false) {
     throw new Error('You cannot kick an admin user');
   }
 
@@ -769,7 +769,7 @@ async muteUser(muteUserDto: MuteUserDto) {
     },
   });
 
-  if (isBanned) {
+  if (isBanned  &&  adminUserChatRoom.owner === false) {
     throw new Error('You are not allowed here; you are banned or not a member.');
   }
 
@@ -976,6 +976,7 @@ try{
     where: {
       user: { id: user.id },
       statusPermissions: 'admin',
+      owner: true,
       chatRooms: { RoomId: deleteChatRoomDto.chatRoomName },
     },
   });
@@ -1180,6 +1181,7 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
       where: {
         user: { id: user.id },
         statusPermissions: 'admin',
+        owner: true,
         chatRooms: {id: chatRoomInfo.id},
       },
     });
