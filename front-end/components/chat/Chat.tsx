@@ -34,6 +34,11 @@ export default function Chat() {
   const router = useRouter();
 
   useEffect(() => {
+    socket.on("deleteChatRoom", (response: boolean) => {
+      console.log('im deleted', response);
+      
+    })
+
     socket.on("message", (message: allMessages[]) => {
       if (message[0]) {
         setNewMessage((prevMessages) => [...prevMessages, message[0]]);

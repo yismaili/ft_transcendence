@@ -953,7 +953,7 @@ async leaveChatRoom (leaveChatRoomDto: LeaveChatRoomDto) : Promise<any>{
   }
 }
 
-async deleteChatRoom (deleteChatRoomDto: LeaveChatRoomDto) : Promise<any>{
+async deleteChatRoom (deleteChatRoomDto: LeaveChatRoomDto, server: Server) : Promise<any>{
 try{
   const user = await this.userRepository.findOne({
     where: { username: deleteChatRoomDto.username },
@@ -1000,9 +1000,25 @@ try{
     const usersOfChatRoom =  await this.chatRoomUserRepository.find({
       where: {chatRooms: {RoomId: deleteChatRoomDto.chatRoomName}}
     });
+    let roomName = `RoomDel ${chatRoom.RoomId}`
+    const roomInfo: UsersOfChatRoom = {
+      username: user.username,
+      chatRoomName:deleteChatRoomDto.chatRoomName,
+    };
+    const chatRoomUsers = await this.getAllUserOfChatRoom(roomInfo);
     await this.messageRepository.remove(messages);
     await this.chatRoomUserRepository.remove(usersOfChatRoom);
-   await this.chatRoomRepository.delete(chatRoom.id);
+    await this.chatRoomRepository.delete(chatRoom.id);
+    
+    for (const chatRoomUser of chatRoomUsers) {
+      const username = chatRoomUser.user.username;
+      console.log(username);
+      for (const socket of this.isconnected.get(username) || []) {
+        await socket.join(roomName);
+        console.log(socket.id);
+      }
+    }
+    server.to(roomName).emit('deleteChatRoom',{delete: true});
   }catch (error) {
     console.error('Error while deleting chat room:', error);
     throw new Error('Error to delete this chat room');
