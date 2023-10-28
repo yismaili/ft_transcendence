@@ -13,3 +13,8 @@
     font-size: 2rem;
     padding: 1rem 0;
 }
+.history__list
+{
+    width: 100%;
+    height: calc(100% - 4rem);
+}

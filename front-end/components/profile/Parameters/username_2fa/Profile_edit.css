@@ -21,7 +21,7 @@
 
 .input__username{
     font-family: probert;
-    /* background-color: ; */
+    max-width: 10ch;
 }
 
 .edit__btn{
