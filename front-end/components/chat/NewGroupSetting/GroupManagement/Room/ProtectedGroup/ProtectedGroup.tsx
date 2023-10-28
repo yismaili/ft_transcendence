@@ -28,6 +28,9 @@ export default function ProtectedGroup({ room, setOpen }: props) {
         }
       );
     }
+    socket.emit("updateUI", {
+      message: `joinChatRoom ${Data.response.user.username}`,
+    });
     setIsRightPassword(true);
   };
 

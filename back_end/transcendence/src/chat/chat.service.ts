@@ -1012,10 +1012,8 @@ try{
     
     for (const chatRoomUser of chatRoomUsers) {
       const username = chatRoomUser.user.username;
-      console.log(username);
       for (const socket of this.isconnected.get(username) || []) {
         await socket.join(roomName);
-        console.log(socket.id);
       }
     }
     server.to(roomName).emit('deleteChatRoom',{delete: true});
@@ -1177,7 +1175,7 @@ async getAllUserOfChatRoom(usersOfChatRoom: UsersOfChatRoom) : Promise<any>{
   return (chatRoomUser);
 }
 
-async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
+async updateChatRoomInfo(updateChatRoomInf: updateChatRoom, server: Server) : Promise<any>{
   try{
     const user = await this.userRepository.findOne({
       where: {username: updateChatRoomInf.username}
@@ -1202,22 +1200,22 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
       },
     });
     if (!adminUserChatRoom){
-      throw new Error("User not admin update this chat room");
+      throw new Error("User not admin to update this chat room");
     }
-    
+    console.log()
     let hash = chatRoomInfo.password;
     let file_path = chatRoomInfo.picture;
     let chatRoomName = chatRoomInfo.picture
     let chatRoomStatus = updateChatRoomInf.status;
-
+    
     if (updateChatRoomInf.status != null){
-        chatRoomStatus = updateChatRoomInf.status;
+      chatRoomStatus = updateChatRoomInf.status;
     }
-
+    
     if (updateChatRoomInf.chatRoomName != null){
       chatRoomName = updateChatRoomInf.chatRoomName;
     }
-
+    
     if (updateChatRoomInf.password != null){
       const saltOrRounds = 10
       hash = await bcrypt.hash(updateChatRoomInf.password, saltOrRounds);
@@ -1239,12 +1237,28 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
       const ret = await this.uploadImageToCould(fullFilePath);
       file_path = ret.url;
     }
-    
+
+    let roomName = `RoomDel ${chatRoomInfo.RoomId}`
+    const roomInfo: UsersOfChatRoom = {
+      username: user.username,
+      chatRoomName: updateChatRoomInf.roomId,
+    };
+    const chatRoomUsers = await this.getAllUserOfChatRoom(roomInfo);
+
     chatRoomInfo.name = chatRoomName,
     chatRoomInfo.status = chatRoomStatus,
     chatRoomInfo.password = hash,
     chatRoomInfo.picture = file_path
     const saveChatRoomUP = await this.chatRoomRepository.save(chatRoomInfo);
+
+    for (const chatRoomUser of chatRoomUsers) {
+      const username = chatRoomUser.user.username;
+      for (const socket of this.isconnected.get(username) || []) {
+        await socket.join(roomName);
+      }
+    }
+    
+    server.to(roomName).emit('updateChatRoomInfo',{update: true});
     return saveChatRoomUP;
 
   }catch(error) {
