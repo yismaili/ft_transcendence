@@ -79,6 +79,19 @@ export class UserController {
     }
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
+    @Get('profile/:username/historyFriend/:secondUsername')
+    async historyFriend(@Req() req, @Param('username') username: string, @Param('secondUsername') secondUsername: string): Promise<any>{
+        const authorization = req.user;
+        if (authorization.username == username){
+            return this.userService.historyFriend(username, secondUsername); 
+        }
+        else{
+            throw new ForbiddenException();
+        }
+    }
+
+
+    @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username/searchTouser/:secondUsername')
     async searchToUserByUsername(@Req() req, @Param('username') username: string, @Param('secondUsername') secondUsername: string): Promise<any>{
         const authorization = req.user;
