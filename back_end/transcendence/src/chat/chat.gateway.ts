@@ -19,6 +19,8 @@ import { updateChatRoom } from './dto/update-chat-room.dto';
 import { UploadedFile, UseGuards} from '@nestjs/common';
 import { UpdateUIDto } from './dto/update-UI.dto';
 import { verify } from 'jsonwebtoken';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 
 
 
@@ -43,7 +45,7 @@ export class ChatGateway {
     this.chatService.addUserWithSocketId(username, client);
   }
 
-  // @UseGuards(JwtAuthGuard, JwtStrategy)
+  //@UseGuards(JwtAuthGuard, JwtStrategy)
   @SubscribeMessage('createChat')
   async createChat(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket){
     return await this.chatService.createChatDirect(createChatDto, client, this.server);
@@ -149,7 +151,7 @@ export class ChatGateway {
 
   @SubscribeMessage('deleteChatRoom')
   async deleteChatRoom(@MessageBody() deleteChatRoomDto: LeaveChatRoomDto) {
-    return await this.chatService.deleteChatRoom(deleteChatRoomDto);
+    return await this.chatService.deleteChatRoom(deleteChatRoomDto, this.server);
   }
 
   @SubscribeMessage('istyping')
