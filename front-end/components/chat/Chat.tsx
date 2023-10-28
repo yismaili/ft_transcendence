@@ -35,13 +35,28 @@ export default function Chat() {
 
   useEffect(() => {
     socket.on("deleteChatRoom", (response: boolean) => {
-      console.log('im deleted', response);
       setRoom(undefined);
-      fetching();
+      socket.emit(
+        "chatRoomOfUser",
+        {
+          username: Data.response.user.username,
+        },
+        (response: AllRooms[]) => {
+          setAllRooms(response);
+        }
+      );
     });
 
     socket.on("updateChatRoomInfo", (response: boolean) => {
-      console.log('im deleted', response);
+      socket.emit(
+        "chatRoomOfUser",
+        {
+          username: Data.response.user.username,
+        },
+        (response: AllRooms[]) => {
+          setAllRooms(response);
+        }
+      );
       setRoom(undefined);
     });
 
