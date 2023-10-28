@@ -16,6 +16,27 @@ type User = {
     status: string;
   };
 };
+type history = {
+  date: string;
+  id: 1;
+  resulteOfCompetitor: 5;
+  resulteOfUser: number;
+  user: Player;
+  userCompetitor: Player;
+};
+
+type Player = {
+  email: string;
+  firstName: string;
+  id: number;
+  isTwoFactorAuthEnabled: false;
+  lastName: string;
+  picture: string;
+  status: string;
+  twoFactorAuthSecret: string;
+  uniquename: string;
+  username: string;
+}
 
 type Profile = {
   id: string;
