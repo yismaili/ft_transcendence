@@ -179,10 +179,20 @@ export class GameService {
         };
         server.to(roomName).emit('GameUpdated', gameData);
         if (!pongGame.getStatus()) {
-          if (pongGame.winnerPlayer === 'left'){
-            server.to(roomName).emit('gameOver', {gameOver: true, winner: user, loser: userFriend});
-          }else{
-            server.to(roomName).emit('gameOver', {gameOver: true, winner: userFriend, loser: user});
+          if (pongGame.winnerPlayer === 'right'){
+            server.to(roomName).emit('gameOver', {
+              gameOver: true, winner: user, loser: userFriend, 
+              winnerScore: pongGame.getrRightPlayerScore(),
+              loserScore: pongGame.getlLeftPlayerScore(),
+            });
+          }
+          if (pongGame.winnerPlayer === 'left')
+          {
+            server.to(roomName).emit('gameOver', {
+              gameOver: true, winner: userFriend,loser: user, 
+              winnerScore: pongGame.getlLeftPlayerScore(),
+              loserScore: pongGame.getrRightPlayerScore(),
+            });
           }
 
          // clean up and add result to db
@@ -195,6 +205,8 @@ export class GameService {
 
           this.handleLeaveRoom(playerId, roomName);
           this.addHistory(history);
+         pongGame.leftPlayerScore = 0;
+         pongGame.rightPlayerScore = 0;
           clearInterval(intervalId);
        }
       }, 1000 / 60);

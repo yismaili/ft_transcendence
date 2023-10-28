@@ -19,7 +19,7 @@ export default function GameMaps() {
   });
   const [color, setColor] = useState({
     leftColor: "#2D44B4",
-    centerColor: "#A1CA53",
+    centerColor: "#000000",
     rightColor: "#4C2DA4",
   });
   const [data, setData] = useState<any>();
