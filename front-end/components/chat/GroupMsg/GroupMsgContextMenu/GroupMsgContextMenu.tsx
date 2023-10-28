@@ -38,8 +38,8 @@ export default function GroupMsgContextMenu({
 
   const ban = () => {
     if (
-      kicker?.statusPermissions === "admin" &&
-      getKicked?.statusPermissions === "member"
+      (kicker?.statusPermissions === "admin" &&
+      getKicked?.statusPermissions === "member") || kicker?.owner
     ) {
       if (isBaned) {
         socket.emit(
@@ -81,8 +81,8 @@ export default function GroupMsgContextMenu({
 
   const kick = () => {
     if (
-      kicker?.statusPermissions === "admin" &&
-      getKicked?.statusPermissions === "member"
+      (kicker?.statusPermissions === "admin" &&
+      getKicked?.statusPermissions === "member") || kicker?.owner
     ) {
       socket.emit(
         "kickUser",
@@ -104,8 +104,8 @@ export default function GroupMsgContextMenu({
   useEffect(() => {
     if (
       timeToMute &&
-      kicker?.statusPermissions === "admin" &&
-      getKicked?.statusPermissions === "member"
+      (kicker?.statusPermissions === "admin" &&
+      getKicked?.statusPermissions === "member")  || kicker?.owner
     ) {
       socket.emit(
         "muteUser",
@@ -130,8 +130,8 @@ export default function GroupMsgContextMenu({
 
   const promote = () => {
     if (
-      kicker?.statusPermissions === "admin" &&
-      getKicked?.statusPermissions === "member"
+      (kicker?.statusPermissions === "admin" &&
+      getKicked?.statusPermissions === "member") || kicker?.owner
     ) {
       socket.emit(
         "changePermission",
@@ -155,8 +155,8 @@ export default function GroupMsgContextMenu({
   const handleContextMenu = (e: React.MouseEvent<HTMLLIElement>) => {
     e.preventDefault();
     if (
-      kicker?.statusPermissions === "admin" &&
-      getKicked?.statusPermissions === "member"
+      (kicker?.statusPermissions === "admin" &&
+      getKicked?.statusPermissions === "member") || kicker?.owner 
     ) {
       setIsTimeToMuteOpen((prev) => !prev);
     }
@@ -165,15 +165,6 @@ export default function GroupMsgContextMenu({
     const y = e.clientY;
 
     setTimeMenuPosition({ x, y });
-  };
-
-  const block = () => {
-    if (
-      kicker?.statusPermissions === "admin" &&
-      getKicked?.statusPermissions === "member"
-    ) {
-      socket.emit("");
-    }
   };
 
   return (
@@ -189,8 +180,8 @@ export default function GroupMsgContextMenu({
         <menu className={Style.context__menu}>
           <li
             className={`${Style.context__menu__opt} ${
-              (kicker?.statusPermissions !== "admin" ||
-                getKicked?.statusPermissions === "admin") &&
+              ((kicker?.statusPermissions !== "admin" ||
+                getKicked?.statusPermissions === "admin") && !kicker?.owner ) &&
               Style.hide
             }`}
             onClick={kick}
@@ -199,8 +190,8 @@ export default function GroupMsgContextMenu({
           </li>
           <li
             className={`${Style.context__menu__opt} ${
-              (kicker?.statusPermissions !== "admin" ||
-                getKicked?.statusPermissions === "admin") &&
+              ((kicker?.statusPermissions !== "admin" ||
+                getKicked?.statusPermissions === "admin") && !kicker?.owner ) &&
               Style.hide
             } ${Style.borders}`}
             onClick={handleContextMenu}
@@ -209,8 +200,8 @@ export default function GroupMsgContextMenu({
           </li>
           <li
             className={`${Style.context__menu__opt} ${
-              (kicker?.statusPermissions !== "admin" ||
-                getKicked?.statusPermissions === "admin") &&
+              ((kicker?.statusPermissions !== "admin" ||
+                getKicked?.statusPermissions === "admin") && !kicker?.owner ) &&
               Style.hide
             } ${Style.borders}`}
             onClick={ban}
@@ -219,8 +210,8 @@ export default function GroupMsgContextMenu({
           </li>
           <li
             className={`${Style.context__menu__opt} ${Style.borders} ${
-              (kicker?.statusPermissions !== "admin" ||
-                getKicked?.statusPermissions === "admin") &&
+              ((kicker?.statusPermissions !== "admin" ||
+                getKicked?.statusPermissions === "admin") && !kicker?.owner ) &&
               Style.hide
             }`}
             onClick={promote}
