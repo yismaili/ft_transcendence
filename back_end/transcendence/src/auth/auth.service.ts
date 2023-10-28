@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository  } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 import { User } from 'src/typeorm/entities/User.entity';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
@@ -24,18 +24,6 @@ import { TwoFactorAuthenticationCodeDto } from './dtos/TwoFactorAuthenticationCo
       @InjectRepository(Achievement)private achievementRepository: Repository<Achievement>,
       private userService: UserService
       ) {}
-      
-  // async findAll() {
-  //   const users =  this.userRepository.find({
-  //   relations: ['profile', 
-  //     'userRelations', 
-  //     'friendRelations', 
-  //     'achievements', 
-  //     'histories'
-  //   ]
-  //   });
-  // return users;
-  // }
 
 generateRandom(length: number): string {
 
@@ -188,5 +176,3 @@ async findUserById(user: Partial<User>): Promise<Partial<any>> {
   }
 
 }
-
-
