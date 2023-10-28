@@ -40,18 +40,17 @@ function Auth_2fa() {
       );
 
       let val = await turnOn.text();
-      console.log('test45:', val);
-      if (val != "\"false\"") {
+      console.log("test45:", val);
+      if (val != '"false"') {
         cookie.set("userData", val);
         router.push(
           `http://localhost:3000/users/${data.response.user.username}`
         );
-      }
-      else{
-        setWarning(1)
+      } else {
+        setWarning(1);
         setTimeout(() => {
-            setWarning(0);
-          }, 5000);
+          setWarning(0);
+        }, 5000);
       }
     }
   };
@@ -134,7 +133,7 @@ function Auth_2fa() {
             </div>
             <button className="auth__2fa__form__btn">confirm</button>
           </form>
-          {warning === 1 && <p style={{color: "red"}}>Wrong 2FA Code</p>}
+          {warning === 1 && <p style={{ color: "red" }}>Wrong 2FA Code</p>}
         </div>
       </main>
     </>

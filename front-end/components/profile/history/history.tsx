@@ -48,6 +48,7 @@ function History({ isDisplay, ownerName }: props) {
         }`}
       >
         <h3 className="history__title">history</h3>
+        <div className="history__list">
         {hist && hist.map((pastGame) => {
             if(pastGame.user.username == ownerName)
               return <SingleHistory Player1={pastGame.user} Player2={pastGame.userCompetitor} Player1Score={pastGame.resulteOfUser} Player2Score={pastGame.resulteOfCompetitor}/>;
@@ -55,6 +56,7 @@ function History({ isDisplay, ownerName }: props) {
               return <SingleHistory Player2={pastGame.user} Player1={pastGame.userCompetitor} Player2Score={pastGame.resulteOfUser} Player1Score={pastGame.resulteOfCompetitor}/>;
 
         })}
+        </div>
       </div>
     );
   }
