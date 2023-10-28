@@ -1,20 +1,28 @@
-.history{
-    text-align: center;
-    margin: 1rem 0;
-    height: 95%;
-    width: 55%;
-    background-color: #292944;
-    border-radius: 16px;
-    overflow: auto;
+.history {
+  text-align: center;
+  margin: 1rem 0;
+  height: 95%;
+  width: 55%;
+  background-color: #292944;
+  border-radius: 16px;
+  overflow: auto;
 }
 
-.history__title{
-    color: #C1B8ED;
-    font-size: 2rem;
-    padding: 1rem 0;
+.history__title {
+  color: #c1b8ed;
+  font-size: 2rem;
+  padding: 1rem 0;
 }
-.history__list
-{
-    width: 100%;
-    height: calc(100% - 4rem);
+.history__list {
+  width: 100%;
+  height: calc(100% - 4rem);
+}
+.singleHistory__container {
+  height: 20%;
+  min-height: 48px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
 }

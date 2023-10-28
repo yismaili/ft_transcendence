@@ -12,34 +12,25 @@ import ProfileHeader from "@/components/profile/profile_header/profile_header";
 import History__Achievements from "@/components/profile/achievement__history/achievement__history";
 import { useState, useEffect } from "react";
 import { useSocketContext } from "@/contexts/socket-context";
+import { useRouter } from "next/navigation";
 
 export default function UserProfile({ params }: { params: { user: string } }) {
-  const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
+  const { socket, Data } = useSocketContext();
   let [user, setUser] = useState<User>();
   let [owner, setOwner] = useState(true);
   let [path, setPath] = useState("");
-  let [found, setFound] = useState(true);
-
+  const router = useRouter();
   useEffect(() => {
     const cookieStore = new cookies();
-    const Data = JSON.stringify(cookieStore.get("userData"));
     if (Data) {
       socket.emit("updateUI", { message: `status online` });
-      const cookie = JSON.parse(Data);
-      setPath(cookie.response.user.username);
-      if (cookie.response.user.username == params.user) {
-        gameSocket.on(
-          "inviteFriend",
-          (response: { usernam: string; roomName: string }) => {
-            console.log("new invire for game in profile:", response);
-          }
-        );
+      setPath(Data.response.user.username);
+      if (Data.response.user.username == params.user) {
 
         const fetching = async () => {
           const res = await fetch("http://localhost:3000/api/home");
           const user = await res.json();
           setUser(user);
-          setFound(true);
           setOwner(true);
         };
 
@@ -54,9 +45,10 @@ export default function UserProfile({ params }: { params: { user: string } }) {
           console.log("friend data:",users);
           if (users.data) {
             setUser(users);
-            setFound(true);
             setOwner(false);
-          } else setFound(false);
+          } else {
+            router.push(`http://localhost:3000/users/${Data.response.user.username}`)
+          }
         };
 
         fetching();
@@ -64,14 +56,14 @@ export default function UserProfile({ params }: { params: { user: string } }) {
     }
   }, []);
 
-  if (user && found) {
+  if (user) {
     return (
       <div className="container">
         <ProfileHeader path={path} user={user} />
         <div className="profile__section">
           <ProfilePic user={user} param={owner} />
           {user && <Analytics user={user} />}
-          <History__Achievements ownerName={params.user}/>
+          <History__Achievements ownerName={params.user} user={user}/>
           <div className="play">
             {owner ? (
               <Link href={`/users/${Data.response.user.username}/gameMap`} className="play__btn">
@@ -90,4 +82,5 @@ export default function UserProfile({ params }: { params: { user: string } }) {
       </div>
     );
   }
+    
 }

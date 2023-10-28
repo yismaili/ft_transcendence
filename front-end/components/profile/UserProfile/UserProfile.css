@@ -38,10 +38,15 @@
   .profile__section {
     height: calc(100dvh - 60px);
   }
+  .play__btn {
+    padding: 0.75rem 2rem;
+    font-size: 1.5rem;
+  }
 }
 
 /* sm */
 @media (max-width: 640px) {
+
 }
 
 /* xs */
