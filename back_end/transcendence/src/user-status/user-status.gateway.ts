@@ -22,7 +22,7 @@ export class UserStatusGateway {
 
     let decodedToken = verify(token, jwtSecret);
     const username = decodedToken['username'];
-    this.userService.setUserstatus(username, 'online');
+    return this.userService.setUserstatus(username, 'online');
   }
 
   handleDisconnect(client: Socket) {
@@ -38,6 +38,6 @@ export class UserStatusGateway {
 
     let decodedToken = verify(token, jwtSecret);
     const username = decodedToken['username'];
-    this.userService.setUserstatus(username, 'offline');
+    return this.userService.setUserstatus(username, 'offline');
   }
 }

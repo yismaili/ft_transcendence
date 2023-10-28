@@ -36,13 +36,13 @@
 
 .closeImg {
   position: absolute;
-  right: 1.5rem;
-  top: 1.5rem;
+  right: 2rem;
+  top: 2rem;
   background-image: url("/img/chat/close.png");
   background-repeat: no-repeat;
   background-size: contain;
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 2rem;
+  height: 2rem;
   cursor: pointer;
 }
 
@@ -116,4 +116,78 @@
 .OnRight {
   background-color: #ffffff1a;
   border-radius: 0 60px 0 0;
+}
+
+@media (max-width: 1536px) {
+
+}
+
+/* xl */
+@media (max-width: 1280px) {
+
+}
+
+/* lg */
+@media (max-width: 1024px) {
+
+}
+
+/* md */
+@media (max-width: 768px) {
+  .avatar {
+    width: 160px;
+    height: 160px;
+    margin-bottom: 2rem;
+  }
+  .closeImg {
+    position: absolute;
+    right: 6%;
+    top: 4%;
+
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+  .groupBtn p,
+.usersBtn p {
+  font-family: "Inter";
+  font-size: 1.2rem
+}
+}
+
+/* sm */
+@media (max-width: 640px) {
+  .avatar {
+    width: 150px;
+    height: 150px;
+  }
+  .groupBtn p,
+.usersBtn p {
+  font-family: "Inter";
+  font-size: 1rem
+}
+}
+
+/* xs */
+@media (max-width: 475px) {
+  .avatar {
+    width: 140px;
+    height: 140px;
+  }
+  .popUpContainer {
+    left: 5%;
+    width: 90%;
+    height: 60%;
+  }
+  .groupBtn p,
+.usersBtn p {
+  font-family: "Inter";
+  font-size: 0.9rem
+}
+}
+
+@media (max-height: 768px) {
+  .popUpContainer {
+    top: 10%;
+    height: 80%;
+  }
 }
