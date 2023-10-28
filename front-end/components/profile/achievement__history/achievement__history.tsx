@@ -4,22 +4,16 @@ import History from "@/components/profile/history/history";
 import "./achievement__history.css";
 import { useEffect, useState } from "react";
 
-export default function History__Achievements() {
+interface name{
+  ownerName: string;
+}
+export default function History__Achievements(prop : name) {
   const [achivment, setAchivement] = useState(true);
-  
-  useEffect(() => {
-    const fetching = async () => {
-      const res = await fetch("http://localhost:3000/api/home/history");
-      const history = await res.json();
-      console.log("history:",history.data[0]);
-    }
-    fetching();
-  });
 
   return (
     <div className="achievements__history">
       <Achievements isDisplay={achivment} />
-      <History isDisplay={achivment} />
+      <History isDisplay={achivment} ownerName={prop.ownerName}/>
       <span
         className="achievements__history__Scroll"
         onClick={() => setAchivement((prev) => !prev)}
