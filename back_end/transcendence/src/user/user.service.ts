@@ -3,9 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { sign } from 'jsonwebtoken';
 import { AchievementDto } from 'src/auth/dtos/achievement.dto';
 import { HistoryDto } from 'src/auth/dtos/history.dto';
-import { OutcomeDto } from 'src/auth/dtos/outcome.dto';
 import { RelationDto } from 'src/auth/dtos/relation.dto';
-import { updateProfileDto } from 'src/auth/dtos/updateProfile.dto';
 import { Achievement } from 'src/typeorm/entities/Achievement.entity';
 import { HistoryEntity } from 'src/typeorm/entities/History.entity';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
@@ -15,7 +13,6 @@ import { ChatRoom } from 'src/typeorm/entities/chat-room.entity';
 import {Not, Repository } from 'typeorm';
 import {v2 as cloudinary} from 'cloudinary';
 
-import * as fs from 'fs'
 import { IAuthenticate } from './utils/types';
 
 @Injectable()

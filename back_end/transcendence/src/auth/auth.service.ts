@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UsingJoinColumnIsNotAllowedError } from 'typeorm';
+import { Repository } from 'typeorm';
 import { sign } from 'jsonwebtoken';
 import { User } from 'src/typeorm/entities/User.entity';
 import { Profile } from 'src/typeorm/entities/Profile.entity';
