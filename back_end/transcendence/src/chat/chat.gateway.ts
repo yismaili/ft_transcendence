@@ -176,7 +176,7 @@ export class ChatGateway {
 
   @SubscribeMessage('updateChatRoomInfo')
   async updateChatRoomInf(@MessageBody() usersOfChatRoom:updateChatRoom ) {
-    return await this.chatService.updateChatRoomInfo(usersOfChatRoom);
+    return await this.chatService.updateChatRoomInfo(usersOfChatRoom, this.server);
   }
 
   @SubscribeMessage('gitAllUsers')

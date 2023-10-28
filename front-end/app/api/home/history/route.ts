@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       }
     );
     const data = await res.json();
-    console.log("history :",data);
+    // console.log("history :",data);
     return NextResponse.json({ data });
   }
 
