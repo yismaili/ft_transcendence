@@ -13,6 +13,10 @@ export class ChatRoomUser {
   @Column()
   statusPermissions: string;
 
+  @Column({ default: false })
+  owner: boolean;
+
+
   @Column({ nullable: true })
   statusUser: string;
 

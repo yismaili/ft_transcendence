@@ -3,6 +3,7 @@ import Style from "./Group.module.css";
 import GroupContextMenu from "./GroupContextMenu/GroupContextMenu";
 import ChangeGroupSetting from "./ChangeGroupSetting/ChangeGroupSetting";
 import AllGroupUsers from "./AllGroupUsers/AllGroupUsers";
+import AllGroupUsersAdmin from "./AllGroupUsersAdmin/AllGroupUsersAdmin";
 
 type props = {
   room: AllRooms;
@@ -49,8 +50,11 @@ export default function Group({ room, choseChat, left }: props) {
         </div>
         <div className={Style.icon} onClick={() => setOpen((prev) => !prev)} />
       </div>
-      {isOpen && room.statusPermissions === "admin" && (
+      {isOpen && room.statusPermissions === "admin" && room.owner && (
         <ChangeGroupSetting setOpen={setOpen} room={room} />
+      )}
+      {isOpen && room.statusPermissions === "admin" && !room.owner && (
+        <AllGroupUsersAdmin setOpen={setOpen} room={room} />
       )}
       {isOpen && room.statusPermissions !== "admin" && (
         <AllGroupUsers setOpen={setOpen} room={room} />

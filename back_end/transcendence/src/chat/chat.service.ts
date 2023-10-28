@@ -28,9 +28,7 @@ import { UsersOfChatRoom } from './dto/users-of-chatRoom.dto';
 import * as bcrypt from 'bcrypt';
 import { AuthService } from 'src/auth/auth.service';
 import { Socket, Server } from 'socket.io';
-import { verify } from 'jsonwebtoken';
 import { updateChatRoom } from './dto/update-chat-room.dto';
-import axios from 'axios';
 import * as fs from 'fs'
 const path = require('path');
 import {v2 as cloudinary} from 'cloudinary';
@@ -122,23 +120,6 @@ export class ChatService {
     return roomName;
   }
 
-  async uploadImage(imageData: Buffer) {
-    try {
-      const response = await axios.post('https://api.imgbb.com/1/upload?key=570c815470c9530dc529ad2d1b48814d', {
-  
-        image: imageData.toString('base64'),
-      },
-     { headers:{
-       'Content-Type': 'multipart/form-data',
-      }});
-      const imageUrl = response.data.data.url;
-      return imageUrl;
-    } catch (error) {
-      throw error.message;
-    }
-  }
-  
-
   async createChatRoom(createChatRoomDto: CreateChatRoomDto): Promise<any> {
 
     try {
@@ -171,7 +152,7 @@ export class ChatService {
         if (ischatRoomExist){
           throw new Error('his chat room exist');
         }
-          let file_path = 'https://res.cloudinary.com/doymqpyfk/image/upload/v1697945199/Daco_261299_d6ycty.png';
+          let file_path = process.env.DEFAULTIMAGECHATROOM;
           if (createChatRoomDto.picture != null){
           const imageBuffer = createChatRoomDto.picture;
           const filePath = './uploads';
@@ -204,6 +185,7 @@ export class ChatService {
       
         const newChatRoomUser = this.chatRoomUserRepository.create({
             statusPermissions: 'admin',
+            owner: true,
             statusUser: 'member',
             user: user,
             chatRooms: chatRoom
@@ -441,7 +423,6 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
         id: 'ASC',
       },
     });
-    //console.log(chatRoomConversation);
     return chatRoomConversation;
   }
 
@@ -625,7 +606,7 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
   });
 
   if (!adminUserChatRoom) {
-    throw new Error('You are not an admin to ban users');
+    throw new Error('You are not an owner or admin to ban users');
   }
 
   // Check if the target user is an admin
@@ -643,8 +624,8 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
     },
   });
 
-  if (isNotAdmin) {
-    throw new Error('You cannot ban an admin user');
+  if (isNotAdmin && adminUserChatRoom.owner === false) {
+    throw new Error('You cannot ban an admin or owner user');
   }
 
   // Ban the user
@@ -704,7 +685,7 @@ async kickUser(kickUserDto: KickUserDto) {
     },
   });
 
-  if (isNotAdmin) {
+  if (isNotAdmin  && adminUserChatRoom.owner === false) {
     throw new Error('You cannot kick an admin user');
   }
 
@@ -788,7 +769,7 @@ async muteUser(muteUserDto: MuteUserDto) {
     },
   });
 
-  if (isBanned) {
+  if (isBanned  &&  adminUserChatRoom.owner === false) {
     throw new Error('You are not allowed here; you are banned or not a member.');
   }
 
@@ -972,7 +953,7 @@ async leaveChatRoom (leaveChatRoomDto: LeaveChatRoomDto) : Promise<any>{
   }
 }
 
-async deleteChatRoom (deleteChatRoomDto: LeaveChatRoomDto) : Promise<any>{
+async deleteChatRoom (deleteChatRoomDto: LeaveChatRoomDto, server: Server) : Promise<any>{
 try{
   const user = await this.userRepository.findOne({
     where: { username: deleteChatRoomDto.username },
@@ -990,12 +971,12 @@ try{
   if (!chatRoom) {
     throw new Error('chat room not found');
   }
-  const chatRoomId = chatRoom.id;
   
   const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
     where: {
       user: { id: user.id },
       statusPermissions: 'admin',
+      owner: true,
       chatRooms: { RoomId: deleteChatRoomDto.chatRoomName },
     },
   });
@@ -1019,9 +1000,23 @@ try{
     const usersOfChatRoom =  await this.chatRoomUserRepository.find({
       where: {chatRooms: {RoomId: deleteChatRoomDto.chatRoomName}}
     });
+    let roomName = `RoomDel ${chatRoom.RoomId}`
+    const roomInfo: UsersOfChatRoom = {
+      username: user.username,
+      chatRoomName:deleteChatRoomDto.chatRoomName,
+    };
+    const chatRoomUsers = await this.getAllUserOfChatRoom(roomInfo);
     await this.messageRepository.remove(messages);
     await this.chatRoomUserRepository.remove(usersOfChatRoom);
-   await this.chatRoomRepository.delete(chatRoom.id);
+    await this.chatRoomRepository.delete(chatRoom.id);
+    
+    for (const chatRoomUser of chatRoomUsers) {
+      const username = chatRoomUser.user.username;
+      for (const socket of this.isconnected.get(username) || []) {
+        await socket.join(roomName);
+      }
+    }
+    server.to(roomName).emit('deleteChatRoom',{delete: true});
   }catch (error) {
     console.error('Error while deleting chat room:', error);
     throw new Error('Error to delete this chat room');
@@ -1180,7 +1175,7 @@ async getAllUserOfChatRoom(usersOfChatRoom: UsersOfChatRoom) : Promise<any>{
   return (chatRoomUser);
 }
 
-async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
+async updateChatRoomInfo(updateChatRoomInf: updateChatRoom, server: Server) : Promise<any>{
   try{
     const user = await this.userRepository.findOne({
       where: {username: updateChatRoomInf.username}
@@ -1200,26 +1195,27 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
       where: {
         user: { id: user.id },
         statusPermissions: 'admin',
+        owner: true,
         chatRooms: {id: chatRoomInfo.id},
       },
     });
     if (!adminUserChatRoom){
-      throw new Error("User not admin update this chat room");
+      throw new Error("User not admin to update this chat room");
     }
-    
+    console.log()
     let hash = chatRoomInfo.password;
     let file_path = chatRoomInfo.picture;
     let chatRoomName = chatRoomInfo.picture
     let chatRoomStatus = updateChatRoomInf.status;
-
+    
     if (updateChatRoomInf.status != null){
-        chatRoomStatus = updateChatRoomInf.status;
+      chatRoomStatus = updateChatRoomInf.status;
     }
-
+    
     if (updateChatRoomInf.chatRoomName != null){
       chatRoomName = updateChatRoomInf.chatRoomName;
     }
-
+    
     if (updateChatRoomInf.password != null){
       const saltOrRounds = 10
       hash = await bcrypt.hash(updateChatRoomInf.password, saltOrRounds);
@@ -1241,12 +1237,28 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
       const ret = await this.uploadImageToCould(fullFilePath);
       file_path = ret.url;
     }
-    
+
+    let roomName = `RoomDel ${chatRoomInfo.RoomId}`
+    const roomInfo: UsersOfChatRoom = {
+      username: user.username,
+      chatRoomName: updateChatRoomInf.roomId,
+    };
+    const chatRoomUsers = await this.getAllUserOfChatRoom(roomInfo);
+
     chatRoomInfo.name = chatRoomName,
     chatRoomInfo.status = chatRoomStatus,
     chatRoomInfo.password = hash,
     chatRoomInfo.picture = file_path
     const saveChatRoomUP = await this.chatRoomRepository.save(chatRoomInfo);
+
+    for (const chatRoomUser of chatRoomUsers) {
+      const username = chatRoomUser.user.username;
+      for (const socket of this.isconnected.get(username) || []) {
+        await socket.join(roomName);
+      }
+    }
+    
+    server.to(roomName).emit('updateChatRoomInfo',{update: true});
     return saveChatRoomUP;
 
   }catch(error) {
@@ -1255,40 +1267,6 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom) : Promise<any>{
   }
 }
 
-// handleng connection
-//  async handleConnection(socket: Socket) {
-//     try {
-
-//       const jwtSecret = 'secrete';
-//       const token = socket.handshake.headers.authorization;
-
-//       if (!token) {
-//         socket.emit('error', 'Authorization token missing');
-//         socket.disconnect(true);
-//         return;
-//       }
-
-//       let decodedToken = verify(token, jwtSecret);
-//       const clientId = socket.id;
-//       const username = decodedToken['username'];
-
-//       const user = await this.userRepository.findOne({
-//         where: {username: username}
-//       });
-//       // user.status = 'online';
-
-//       // this.connectedClients.set(clientId, { socket, username });
-//       await this.userRepository.save(user);
-//       socket.on('disconnect', async () => {
-//         // user.status = 'offline';
-//         // await this.userRepository.save(user);
-//         this.connectedClients.delete(clientId);
-//       });
-//     } catch (error) {
-//       socket.emit('error', 'Authentication failed');
-//       socket.disconnect(true);
-//     }
-//   }
 
 async addUserWithSocketId(username: string ,clientId: Socket) {
     try {
@@ -1307,61 +1285,6 @@ async addUserWithSocketId(username: string ,clientId: Socket) {
       throw error;
     }
   }
-
-// async addUserWithSocketId(clientId: Socket) {
-//   try {
-//     const jwtSecret = 'secrete';
-//     // Extract the JWT token
-//     const token = clientId.handshake.headers.authorization;
-
-//     if (!token) {
-//       clientId.emit('error', 'Authorization token missing');
-//       clientId.disconnect(true);
-//       return;
-//     }
-//     // Verify the JWT token using the secret
-//     let decodedToken;
-//     try {
-//       decodedToken = verify(token, jwtSecret);
-//     } catch (error) {
-//       clientId.emit('error', 'Invalid authorization token');
-//       clientId.disconnect(true);
-//       return;
-//     }
-
-//     const username = decodedToken['username'];
-//     const user = await this.userRepository.findOne({
-//       where: { username: username }
-//     });
-
-//     if (!user) {
-//       clientId.emit('error', 'User does not exist');
-//       clientId.disconnect(true);
-//       return;
-//     }
-//     // Join the user to a room based on their username
-//     if (!this.isconnected.has(username)) {
-//       this.isconnected.set(username,[]);
-//     }
-//     this.isconnected.get(username).push(clientId);
-
-    // for (const [key, value] of this.isconnected) {
-    //     console.log(username);
-    //   for (const socket of value) {
-    //      console.log(socket.id);
-    //   }
-    // }
-    
-//     // Handle user disconnection and remove them from the map
-//     clientId.on('disconnect', () => {
-//       if (this.isconnected.has(username)) {
-//         this.isconnected.delete(username);
-//       }
-//     });
-//   } catch (error) {
-//     throw error;
-//   }
-// }
 
 async gitAllUsers():Promise<any>{
   try{
