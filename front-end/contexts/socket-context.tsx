@@ -2,6 +2,7 @@
 import React, { createContext, useState, useContext } from "react";
 import Cookies from "cookies-ts";
 import io from "socket.io-client";
+import { useRouter } from "next/navigation";
 
 const socketContext = createContext<any>(null);
 
@@ -45,8 +46,12 @@ export default function SocketContextProvider({
 }
 
 export function useSocketContext() {
+  const router = useRouter();
+  const cookies = new Cookies();
   const context = useContext(socketContext);
-  if (!context)
-    throw Error("useSocketContext must be used within a SocketContext");
+  if (!context) {
+    cookies.remove("userData");
+    router.push("http://localhost:3000/login");
+  }
   return context;
 }
