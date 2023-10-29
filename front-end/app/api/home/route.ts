@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   const mycookie = request.cookies.get("userData");
@@ -16,9 +17,8 @@ export async function GET(request: NextRequest) {
     );
 
     const data = await res.json();
-    // console.log(Data);
-    return NextResponse.json({ data });
+    return NextResponse.json({data});
   }
 
-  return NextResponse.json({});
+  return NextResponse.json(mycookie);
 }

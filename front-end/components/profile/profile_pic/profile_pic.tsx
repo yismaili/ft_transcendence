@@ -9,7 +9,8 @@ interface nums {
   param: boolean;
 }
 
-function ProfilePic(props: nums) {  
+function ProfilePic(props: nums) {
+  console.log("tacos:",props.user)
   return (
     <div className="profile">
       <div className="profile__pic__level">
