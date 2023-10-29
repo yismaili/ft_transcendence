@@ -47,7 +47,6 @@ export class ChatService {
     @InjectRepository(ChatRoomUser)private chatRoomUserRepository: Repository<ChatRoomUser>,
     private readonly authService: AuthService,
   ) {}
-  clientToUser = {};
   rooms: Map<string, Socket[]> = new Map<string, Socket[]>();
 
   async createChatDirect(createChatDto, clientId, server) : Promise<any>{
@@ -510,30 +509,6 @@ async sendMessage(sendMessageToChatRoom: SendMessageToChatRoom, clientId: Socket
     return upadteMessage;
   }
   
-
-
-  async identify(username: string, secondUsername: string,  clientId: string){
-    const user = await this.userRepository.findOne({
-      where:{
-        username: username,
-      },
-    });
-
-    const secondUser = await this.userRepository.findOne({
-      where:{
-        username: secondUsername,
-      },
-    });
-
-    if (user && secondUser){
-      this.clientToUser[clientId] = user;
-      return Object.values(this.clientToUser);
-    }
-    else {
-      throw new NotFoundException(`User with username '${username}' not found`);
-    }
-  }
-
   async getClientName(username: string): Promise<string | null> {
     try {
       const client = await this.userRepository.findOne({
