@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "qrcode": "^1.5.3",
-    "typescript": "^5.2.2"
-  },
-  "devDependencies": {
-    "@types/qrcode": "^1.5.2"
-  }
-}

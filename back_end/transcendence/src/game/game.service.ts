@@ -201,11 +201,11 @@ export class GameService {
             userCompetitor: friendUser
           };
 
-          this.handleLeaveRoom(playerId, roomName);
-          this.addHistory(history);
-         pongGame.leftPlayerScore = 0;
-         pongGame.rightPlayerScore = 0;
-          clearInterval(intervalId);
+        this.handleLeaveRoom(playerId, roomName);
+        this.addHistory(history);
+        pongGame.leftPlayerScore = 0;
+        pongGame.rightPlayerScore = 0;
+        clearInterval(intervalId);
        }
       }, 1000 / 60);
     }
@@ -363,21 +363,23 @@ export class GameService {
          resulteOfUser: addhistory.resulteOfUser,
          resulteOfCompetitor: addhistory.resulteOfCompetitor,
         });
-         await this.historyRepository.save(newHistory);
+
+        await this.historyRepository.save(newHistory);
         if (addhistory.resulteOfUser > addhistory.resulteOfCompetitor){
           this.updateWin(user.username);
           this.updateLos(competitor.username);
           this.updateXp(user.username);
           this.updateLevel(user.username);
-          this.updateScore(user.username);
         }
         else{
           this.updateWin(competitor.username);
           this.updateLos(user.username);
           this.updateXp(competitor.username);
           this.updateLevel(competitor.username);
-          this.updateScore(competitor.username);
         }
+        
+        this.updateScore(competitor.username);
+        this.updateScore(user.username);
         return
       } catch (error) {
         throw new Error('Failed to add history: ' + error.message);
@@ -399,9 +401,8 @@ export class GameService {
         if (!profile) {
           throw new Error('profile does not exist');
         }
-        let countWin = profile.win;
+        let countWin = profile.win  || 0;
         countWin++;
-        // console.log(countWin);
         profile.win = countWin;
         return await this.profileRepository.save(profile);
       } catch(error){
@@ -424,7 +425,7 @@ export class GameService {
         if (!profile) {
           throw new Error('profile does not exist');
         }
-        let countLos = profile.los;
+        let countLos = profile.los || 0;
         countLos++;
         profile.los = countLos;
         return await this.profileRepository.save(profile);
@@ -448,11 +449,13 @@ export class GameService {
         if (!profile) {
           throw new Error('profile does not exist');
         }
-        let xp = profile.xp;
-        const win = profile.win;
-        if (win % 2 == 0){
+        const winCount = profile.win || 0;
+        let xp = profile.xp || 0;
+    
+        if (winCount % 2 === 0) {
           xp += 2;
         }
+    
         profile.xp = xp;
         return await this.profileRepository.save(profile);
       } catch(error){
@@ -472,23 +475,20 @@ export class GameService {
         const profile = await this.profileRepository.findOne({
           where:{user:{id: user.id}}
         });
+
         if (!profile) {
           throw new Error('profile does not exist');
         }
-        let score = profile.score;
-        const win = profile.win;
-        if (score != 0 && win % 2 == 0){
-          score *= 3;
-        }else{
-          score += 1;
-        }
-        profile.score = score;
+
+       let score = profile.score || 0;
+       score++;
+       profile.score = score;
         return await this.profileRepository.save(profile);
       } catch(error){
         throw new Error('Failed to update profile: '+ error.message);
       }
     }
-
+    
     async updateLevel(username: string): Promise<any>{
       try{
         const user = await this.userRepository.findOne({
@@ -504,11 +504,11 @@ export class GameService {
         if (!profile) {
           throw new Error('profile does not exist');
         }
-        let level = profile.level;
-        const win = profile.win;
-        if ( level != 0 && win % 2 == 0){
+        let level = profile.level || 0;
+        const winCount = profile.win || 0;
+        if (winCount % 2 === 0) {
           level *= 2;
-        }else {
+        } else {
           level += 1;
         }
         profile.level = level;
@@ -516,41 +516,6 @@ export class GameService {
       } catch(error){
         throw new Error('Failed to update profile: '+ error.message);
       }
-    }
-    
-    async createGameF1riend(createGameDto: CreateGameDto): Promise<any> {
-        try {
-          const user = await this.userRepository.findOne({
-            where: { username: createGameDto.username }
-          });
-          const friend = await this.userRepository.findOne({
-            where: { username: createGameDto.friendUsername }
-          });
-      
-          if (!user || !friend) {
-            throw new Error('User does not exist');
-          }
-      
-          const existingRequest = await this.historyRepository.findOne({
-            where: { user: {id: user.id} }
-          });
-      
-          if (existingRequest) {
-            throw new Error('A request has already been sent');
-          }
-      
-          const createHistory = this.historyRepository.create({
-            user: user,
-            userCompetitor: friend,
-            resulteOfCompetitor: 0,
-            resulteOfUser: 0,
-          });
-      
-          const savedHistory = await this.historyRepository.save(createHistory);
-          return savedHistory;
-        } catch (error) {
-          throw error;
-        }
     }
       
     async getGameRequest(createGameDto: CreateGameDto):Promise<any> {
