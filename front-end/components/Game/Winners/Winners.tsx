@@ -21,7 +21,7 @@ export default function Winners({ setGameOver, gameOver }: props) {
   // };
 
   return (
-    <div className={Style.backdrop}>
+    // <div className={Style.backdrop}>
       <div className={Style.middleSection}>
         <div className={Style.userVSfriend}>
           <div className={Style.image}>
@@ -34,26 +34,12 @@ export default function Winners({ setGameOver, gameOver }: props) {
                 style={{ backgroundImage: `url('/img/game/crown.png'})` }}
               />
             </span>
-            {/* <span className={Style.profile__level}>16</span> */}
             <span className={Style.name}>{gameOver.winner.uniquename}</span>
           </div>
           <div className={Style.userVSfriend__info}>
-            {/* <div className={Style.waiting}> */}
-            {/* <span className={Style.waiting__msg}>{`${
-                Data.response.user.username === gameOver.winner.username
-                  ? "You win"
-                  : "You lost"
-              }`}</span> */}
-            {/* <span className={Style.waiting__icon}></span> */}
-            {/* </div> */}
             <span
               className={Style.VS}
             >{`${gameOver.winnerScore} : ${gameOver.loserScore}`}</span>
-            {/* {!data && (
-              <button className={Style.cancel__btn} onClick={handleCancel}>
-                cancel
-              </button>
-            )} */}
           </div>
           <div className={Style.image}>
             <span
@@ -61,13 +47,11 @@ export default function Winners({ setGameOver, gameOver }: props) {
               style={{
                 backgroundImage: `url(${gameOver.loser.picture})`,
               }}
-            >
-              {/* <span className={Style.profile__level}>16</span> */}
-            </span>
+            ></span>
             <span className={Style.name}>{gameOver.loser.username}</span>
           </div>
         </div>
       </div>
-    </div>
+    // </div>
   );
 }

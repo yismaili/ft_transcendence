@@ -105,7 +105,7 @@ export default function GroupMsgContextMenu({
     if (
       timeToMute &&
       (kicker?.statusPermissions === "admin" &&
-      getKicked?.statusPermissions === "member")  || kicker?.owner
+      getKicked?.statusPermissions === "member")  || (timeToMute &&kicker?.owner)
     ) {
       socket.emit(
         "muteUser",
