@@ -20,7 +20,6 @@ import { UploadedFile, UseGuards} from '@nestjs/common';
 import { UpdateUIDto } from './dto/update-UI.dto';
 import { verify } from 'jsonwebtoken';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
-import { JwtStrategy } from 'src/auth/strategy/jwt.strategy';
 
 
 
@@ -45,7 +44,7 @@ export class ChatGateway {
     this.chatService.addUserWithSocketId(username, client);
   }
 
-  //@UseGuards(JwtAuthGuard, JwtStrategy)
+  @UseGuards(JwtAuthGuard)
   @SubscribeMessage('createChat')
   async createChat(@MessageBody() createChatDto: MessageChatDto, @ConnectedSocket() client: Socket){
     return await this.chatService.createChatDirect(createChatDto, client, this.server);
