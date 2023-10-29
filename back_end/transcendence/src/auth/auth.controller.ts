@@ -71,12 +71,6 @@ export class AuthController {
     return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  profile(@Req() req, @Res() res){
-      return(res.status(HttpStatus.OK).json(req.user));
-  }
- 
   @Post('2fa/generate')
   @UseGuards(JwtAuthGuard)
   async register(@Req() req: any) {
