@@ -19,7 +19,7 @@ export default function PicEdit(props: nums) {
       form.append("lastName", props.user.data.lastName);
       form.append("firstName", props.user.data.firstName);
       form.append("image", img[0]);
-      console.log("test", form);
+      // console.log("test", form);
       const fetching = await fetch(
         "http://localhost:3000/api/updateProfile/avatar",
         {
@@ -28,7 +28,7 @@ export default function PicEdit(props: nums) {
         }
       );
       let res = await fetching.text();
-      console.log(res);
+      // console.log(res);
       if(res == "\"done\"")
         props.update(true);
       // else

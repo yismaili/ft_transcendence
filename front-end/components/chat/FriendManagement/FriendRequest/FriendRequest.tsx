@@ -19,7 +19,7 @@ export default function FriendRequest({ setOpen, friends }: props) {
 
   useEffect(() => {
     socket.on("updateUI", (messaged: string) => {
-      console.log(messaged);
+      // console.log(messaged);
 
       if (messaged.split(" ")[0] === "sendRequest") {
         if (messaged.split(" ")[1] === Data.response.user.username) {
@@ -30,7 +30,7 @@ export default function FriendRequest({ setOpen, friends }: props) {
 
     const getAllRequests = async () => {
       const res = await fetch(
-        `http://localhost:3001/users/profile/${Data.response.user.username}/requests`,
+        `http://${process.env.NEXT_PUBLIC_HOST_PORT}/users/profile/${Data.response.user.username}/requests`,
         {
           cache: "no-cache",
           headers: { authorization: `Bearer ${Data.response.token}` },

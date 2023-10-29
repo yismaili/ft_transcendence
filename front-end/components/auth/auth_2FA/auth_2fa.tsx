@@ -40,7 +40,7 @@ function Auth_2fa() {
       );
 
       let val = await turnOn.text();
-      console.log("test45:", val);
+      // console.log("test45:", val);
       if (val != '"false"') {
         cookie.set("userData", val);
         router.push(

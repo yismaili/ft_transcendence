@@ -145,7 +145,7 @@ export default function GroupMsgContextMenu({
           userGetBan: friendData.username,
         },
         (response: any) => {
-          console.log("promote", response);
+          // console.log("promote", response);
           if (response.message === "User unbanned successfully") {
             socket.emit("updateUI", {
               message: `changePermission ${friendData.username} ${Data.response.user.username}`,

@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     const token = Data?.response?.token;
 
     const res = await fetch(
-      `http://localhost:3001/users/profile/${Data.response.user.username}/searchTouser/${req}`,
+      `http://${process.env.NEXT_PUBLIC_HOST_PORT}/users/profile/${Data.response.user.username}/searchTouser/${req}`,
       {
         method:"GET",
         cache: "no-cache",

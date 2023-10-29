@@ -6,7 +6,7 @@ export  async function POST(req:NextRequest) {
     const res = JSON.stringify(await req.json());
 
     const data = await fetch(
-      `http://localhost:3001/auth/2fa/authenticate`,
+      `http://${process.env.NEXT_PUBLIC_HOST_PORT}/auth/2fa/authenticate`,
       {
         method: "POST",
         headers: {

@@ -18,14 +18,13 @@ function History({ isDisplay, ownerName }: props) {
   useEffect(() => {
     const fetching = async () => {
       if (ownerName == Data.response.user.username) {
-        console.log("ana wst l owner");
         const res = await fetch("http://localhost:3000/api/home/history");
         const val = await res.json();
         if (val) {
           sethistory(val.data);
         }
       } else {
-        console.log("ana wst l friend");
+        // console.log("ana wst l friend");
         const res = await fetch("http://localhost:3000/api/friend/history", {
           method: "POST",
           body: ownerName,
