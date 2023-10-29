@@ -154,7 +154,7 @@ export default function Chat() {
         }
         return prevGame; // No change if the array is empty
       });
-    }, 3500); // 10 seconds in milliseconds
+    }, 10000); // 10 seconds in milliseconds
 
     // Clear the timeout to prevent it from running if the component unmounts
     return () => clearTimeout(timeout);
