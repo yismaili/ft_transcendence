@@ -731,7 +731,7 @@ async muteUser(muteUserDto: MuteUserDto) {
     },
   });
 
-  if (isNotAdmin) {
+  if (isNotAdmin && adminUserChatRoom.owner === false) {
     throw new Error('You cannot mute an admin user');
   }
 

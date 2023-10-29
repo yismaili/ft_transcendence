@@ -144,6 +144,8 @@ export default function ChangeGroupInput({ setOpen, room, picture }: props) {
                 placeholder="********"
                 className={Style.active}
                 required
+                pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+                title="Minimum eight characters, at least one letter and one number"
               />
             </div>
           )}

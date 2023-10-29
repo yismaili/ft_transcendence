@@ -53,7 +53,7 @@ export default function Direct({ data, choseChat, left }: props) {
               }`}
             ></div>
           </div>
-          <p className={Style.name}>{data.username}</p>
+          <p className={Style.name}>{data.uniquename}</p>
         </div>
         <div className={Style.icon} onClick={handleContextMenu} />
       </div>
