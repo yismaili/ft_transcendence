@@ -112,6 +112,18 @@
     background-color: white;
 }
 
+.back__btn{
+    position: absolute;
+    top: 1rem;
+    left:1rem;
+    display: flex;
+    align-items: center;
+    font-family: probert;
+    font-size: 1rem;
+    color: white;
+    z-index: 100;
+}
+
 @keyframes fadeIn {
     from {opacity: 0;}
     to {opacity: 1;}

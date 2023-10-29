@@ -70,7 +70,7 @@ export default function Chat() {
     });
 
     socket.on("updateUI", (messaged: string) => {
-      console.log(messaged);
+      // console.log(messaged);
 
       if (messaged.split(" ")[0] === "kickUser") {
         if (messaged.split(" ")[1] === Data.response.user.username) {
@@ -224,7 +224,7 @@ export default function Chat() {
     setUser(user);
 
     const resBlocked = await fetch(
-      `http://localhost:3001/users/profile/${Data.response.user.username}/blocked`,
+      `http://${process.env.NEXT_PUBLIC_HOST_PORT}/users/profile/${Data.response.user.username}/blocked`,
       {
         cache: "no-cache",
         headers: { authorization: `Bearer ${Data.response.token}` },
@@ -244,7 +244,7 @@ export default function Chat() {
     JSON.stringify(user).length <= 2
   )
     return (
-      <div className={Style.container}>
+      <div className={`${Style.container} container`}>
         <header className={Style.header}>
           <div className={Style.chatRoomBtn}>
             <p>Loading ...</p>
@@ -266,7 +266,7 @@ export default function Chat() {
     );
 
   return (
-    <div className={Style.container}>
+    <div className={`${Style.container} container`}>
       <header className={Style.header}>
         <div className={Style.chatRoomBtn}>
           <p>chat room</p>

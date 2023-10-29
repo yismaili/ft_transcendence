@@ -11,7 +11,7 @@ export default function Blocked({ data }: props) {
 
   const handleUnBlock = async () => {
     const res = await fetch(
-      `http://localhost:3001/users/profile/${Data.response.user.username}/unblock/${data.username}`,
+      `http://${process.env.NEXT_PUBLIC_HOST_PORT}/users/profile/${Data.response.user.username}/unblock/${data.username}`,
       {
         method: "PUT",
         cache: "no-cache",

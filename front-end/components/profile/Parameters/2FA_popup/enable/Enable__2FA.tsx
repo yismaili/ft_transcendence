@@ -29,7 +29,7 @@ export default function Enable2FAPopUP(prop: twofa) {
         }
       );
       const res = await turnOn.text();
-      console.log(res);
+      // console.log(res);
       if (res == '"done"') {
         prop.state(0);
         prop.update(true);
