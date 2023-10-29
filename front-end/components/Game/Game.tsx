@@ -145,13 +145,12 @@ export default function Game() {
     private ballY: number;
     private paddleHeight: number;
     private ballRadius: number;
-    
+
     private leftPaddle: number;
     private rightPaddle: number;
     private paddleWidth: number;
-    
+
     public socket: any;
-   
 
     constructor() {
       this.canvas = new Canvas();
@@ -340,7 +339,7 @@ export default function Game() {
             }}
           ></canvas>
         )}
-        {gameOver && <Winners setGameOver={setGameOver} gameOver={gameOver} />}
+        {gameOver && <Winners gameOver={gameOver} />}
       </div>
     </>
   );
