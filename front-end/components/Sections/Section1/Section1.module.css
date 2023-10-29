@@ -51,6 +51,8 @@
   background: #ffd699;
   border: none;
   box-shadow: 0px 4px 4px 0px #00000040;
+  cursor: pointer;
+  user-select: none;
 }
 
 .MainImg {

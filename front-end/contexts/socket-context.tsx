@@ -54,8 +54,12 @@ export default function SocketContextProvider({
 }
 
 export function useSocketContext() {
+  const router = useRouter();
+  const cookies = new Cookies();
   const context = useContext(socketContext);
-  if (!context)
-    throw Error("useSocketContext must be used within a SocketContext");
+  if (!context) {
+    throw Error("error in context");
+  }
+
   return context;
 }

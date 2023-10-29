@@ -9,7 +9,7 @@ type props = {
 
 function Achievements({ isDisplay, user }: props) {
   const { Data } = useSocketContext();
-  console.log(Data);
+  // console.log(Data);
   return (
     <div
       className={`achievements ${

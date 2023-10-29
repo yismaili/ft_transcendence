@@ -7,10 +7,10 @@ export  async function POST(req:NextRequest) {
     const res = JSON.stringify({code : await req.json()});
 
     if (token) {
-        console.log(res);
+        // console.log(res);
         const cookieObject = JSON.parse(token.value);
         const data = await fetch(
-          `http://localhost:3001/auth/2fa/turn-off`,
+          `http://${process.env.NEXT_PUBLIC_HOST_PORT}/auth/2fa/turn-off`,
           {
             method: "POST",
             headers: {
@@ -21,7 +21,7 @@ export  async function POST(req:NextRequest) {
           }
         );
         const test = await data.text();
-        console.log("test005 :",test);
+        // console.log("test005 :",test);
         if(test.length != 0)
           return NextResponse.json("false");
         else

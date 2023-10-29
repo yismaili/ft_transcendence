@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
 
     // console.log("its me", data.response.user.username);
     const res = await fetch(
-      `http://localhost:3001/users/profile/${Data.response.user.username}/friends`,
+      `http://${process.env.NEXT_PUBLIC_HOST_PORT}/users/profile/${Data.response.user.username}/friends`,
       {
         cache: "no-cache",
         headers: { authorization: `Bearer ${token}` },
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
   if (token) {
     const cookieObject = JSON.parse(token.value);
     const data = await fetch(
-      `http://localhost:3001/users/profile/${cookieObject.response.user.username}/sendRequest/${res}`,
+      `http://${process.env.NEXT_PUBLIC_HOST_PORT}/users/profile/${cookieObject.response.user.username}/sendRequest/${res}`,
       {
         method: "POST",
         headers: {

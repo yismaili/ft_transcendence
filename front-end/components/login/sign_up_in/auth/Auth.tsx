@@ -49,7 +49,7 @@ export default function Auth({ Sign_in_up }: Props) {
     <>
       <div
         className={Style.googleBtn}
-        onClick={() => handleAuth("http://localhost:3001/auth/google/callback")}
+        onClick={() => handleAuth(`http://${process.env.NEXT_PUBLIC_HOST_PORT}/auth/google/callback`)}
       >
         <div className={Style.googleImg}></div>
         <p>{Sign_in_up} with google</p>
@@ -61,7 +61,7 @@ export default function Auth({ Sign_in_up }: Props) {
       </div>
       <div
         className={Style.intraBtn}
-        onClick={() => handleAuth("http://localhost:3001/auth/intra/callback")}
+        onClick={() => handleAuth(`http://${process.env.NEXT_PUBLIC_HOST_PORT}/auth/intra/callback`)}
       >
         <div className={Style.intraImg}></div>
         <p>{Sign_in_up} with intra</p>
