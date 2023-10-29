@@ -1,4 +1,5 @@
-import { SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { ForbiddenException } from '@nestjs/common';
+import { WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { verify } from 'jsonwebtoken';
 import { Socket, Server } from 'socket.io';
 import { ChatService } from 'src/chat/chat.service';
@@ -10,34 +11,48 @@ export class UserStatusGateway {
   constructor(private readonly chatService: ChatService, private userService: UserService) {}
 
   handleConnection(client: Socket) {
-
-    const jwtSecret = process.env.JWT_SECRET;
-    const token = client.handshake.headers.authorization;
-
-    if (!token) {
-      client.emit('error', 'Authorization token missing');
-      client.disconnect(true);
-      return;
+    try {
+      const jwtSecret = process.env.JWT_SECRET;
+      const token = client.handshake.headers.authorization;
+    
+      if (!token) {
+        client.emit('error', 'Authorization token missing');
+        client.disconnect(true);
+        return;
+      }
+    
+      const decodedToken = verify(token, jwtSecret);
+      if (!decodedToken) {
+        client.emit('error', 'Invalid or expired token');
+        client.disconnect(true);
+        return;
+      }
+    
+      const username = decodedToken['username'];
+      return this.userService.setUserstatus(username, 'online');
+    } catch (error) {
+      console.error('Error during connection handling:', error);
+      throw new ForbiddenException();
     }
-
-    let decodedToken = verify(token, jwtSecret);
-    const username = decodedToken['username'];
-    return this.userService.setUserstatus(username, 'online');
+    
   }
 
   handleDisconnect(client: Socket) {
-
-    const jwtSecret = process.env.JWT_SECRET;
-    const token = client.handshake.headers.authorization;
-
-    if (!token) {
-      client.emit('error', 'Authorization token missing');
-      client.disconnect(true);
-      return;
+    try{
+      const jwtSecret = process.env.JWT_SECRET;
+      const token = client.handshake.headers.authorization;
+  
+      if (!token) {
+        client.emit('error', 'Authorization token missing');
+        client.disconnect(true);
+        return;
+      }
+  
+      let decodedToken = verify(token, jwtSecret);
+      const username = decodedToken['username'];
+      return this.userService.setUserstatus(username, 'offline');
+    }catch(error){
+      throw new ForbiddenException();
     }
-
-    let decodedToken = verify(token, jwtSecret);
-    const username = decodedToken['username'];
-    return this.userService.setUserstatus(username, 'offline');
   }
 }

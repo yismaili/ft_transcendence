@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { sign } from 'jsonwebtoken';
 import { AchievementDto } from 'src/auth/dtos/achievement.dto';
@@ -675,20 +675,23 @@ async turnOffTwoFactorAuthentication(username: string){
   }
 }
 // handleng connection
-async setUserstatus(username:string, status:string) {
+async setUserstatus(username: string, status: string): Promise<any> {
   try {
     const user = await this.userRepository.findOne({
-      where: {username: username}
+      where: { username: username }
     });
-
-    if (!user){
-      throw new Error('User not exist');
+    if (!user) {
+      return;
     }
+
     user.status = status;
-    return await this.userRepository.save(user);
+    const updatedUser = await this.userRepository.save(user);
+
+    return updatedUser;
   } catch (error) {
-    throw new Error('failed');
+    return;
   }
 }
+
 }
 
