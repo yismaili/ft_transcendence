@@ -6,9 +6,7 @@
     user-select: none;
     cursor: pointer;
     font-family: "probert";
-    
     font-size: clamp(1rem, 3vw, 3.5rem);
-    
   }
   
   .app__header__chat {
@@ -19,7 +17,6 @@
     width: 50%;
     height: 100%;
     background-color: #262643;
-    
     color: #c1b8ed;
   }
   
@@ -64,5 +61,8 @@
 
 /* xs */
 @media (max-width: 475px) {
-
+  .app__header{
+    height: 50px;
+    font-size: 1.5rem;
+}
 }
