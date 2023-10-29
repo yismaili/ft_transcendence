@@ -11,9 +11,7 @@ import { multerOptions } from './multer.config';
 
 @Controller('users')
 export class UserController {
-    constructor(private userService: UserService)
-    {}
-
+    constructor(private userService: UserService){}
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username')
     async getDetailsProfile(@Req() req, @Param('username') username: string): Promise<any> {
@@ -82,7 +80,6 @@ export class UserController {
             throw new ForbiddenException();
         }
     }
-
 
     @UseGuards(JwtAuthGuard, JwtStrategy)
     @Get('profile/:username/searchTouser/:secondUsername')
