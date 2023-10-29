@@ -244,7 +244,7 @@ export default function Chat() {
     JSON.stringify(user).length <= 2
   )
     return (
-      <div className={Style.container}>
+      <div className={`${Style.container} container`}>
         <header className={Style.header}>
           <div className={Style.chatRoomBtn}>
             <p>Loading ...</p>
@@ -266,7 +266,7 @@ export default function Chat() {
     );
 
   return (
-    <div className={Style.container}>
+    <div className={`${Style.container} container`}>
       <header className={Style.header}>
         <div className={Style.chatRoomBtn}>
           <p>chat room</p>
