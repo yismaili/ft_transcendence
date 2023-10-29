@@ -4,8 +4,11 @@
   margin: 0 auto 0.5rem;
   justify-content: space-between;
   height: 55%;
+  max-height: 55%;
   position: relative;
   font-family: probert;
+  min-height: 400px;
+  overflow: hidden;
 }
 
 .achievements__history__Scroll {
@@ -17,7 +20,7 @@
   background-size: contain;
   position: absolute;
   top: 50%;
-  left: 102%;
+  right: 3%;
   transform: translateY(-50%);
   display: none;
 }
@@ -37,19 +40,22 @@
 @media (max-width: 768px) {
   .achievements__history__Scroll {
     display: block;
+
+
   }
   .achievements__history {
-    width: 80%;
+    width: 100%;
     height: 45%;
+    min-height: 200px;
   }
   .history {
-    width: 100%;
+    width: 80%;
     position: absolute;
     left: 768px;
   }
   .achievements {
     position: absolute;
-    width: 100%;
+    width: 80%;
     left: 768px;
   }
 
@@ -62,12 +68,12 @@
   }
 
   .show__history {
-    left: 0px;
+    left: 10%;
     animation: fromLeft 1s;
   }
 
   .show__Achievement {
-    left: 0px;
+    left: 10%;
     animation: fromRight 1s;
   }
 
@@ -97,20 +103,20 @@
 
 @keyframes fromLeft {
     from {left: 120%;}
-    to {left: 0%;}
+    to {left: 10%;}
 }
 
 @keyframes fromRight {
     from {left: -120%;}
-    to {left: 0%;}
+    to {left: 10%;}
 }
 
 @keyframes moveOutLeft {
-    from {left: 0%;}
+    from {left: 10%;}
     to {left: -120%;}
 }
 
 @keyframes moveOutRight {
-    from {left: 0%;}
+    from {left: 10%;}
     to {left: 120%;}
 }
