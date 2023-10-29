@@ -1,7 +1,10 @@
+import { IsString } from "class-validator";
 
 export class MessageChatDto {
-    id: number;
+    @IsString()
     message: string;
+    @IsString()
     user: string;
+    @IsString()
     secondUser: string;
 }
