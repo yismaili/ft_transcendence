@@ -22,24 +22,24 @@ export default function Auth({ Sign_in_up }: Props) {
         const mycookie = cookies.get("userData");
 
         if (mycookie) {
-          let filler:string = mycookie;
+          let filler: string = mycookie;
           clearInterval(interval);
-          let cookie = filler.replace("j:","");
+          let cookie = filler.replace("j:", "");
           console.clear();
           let cookieval = JSON.parse(cookie);
           cookies.set("userData", cookie);
           auth_window?.close();
-          if(!cookieval.response.user.status)
-          {
-            router.push(`http://localhost:3000/users/${cookieval.response.user.username}/Parameters`);
-          }
-          else if (cookieval.response.user.isTwoFactorAuthEnabled)
+          if (!cookieval.response.user.status) {
+            router.push(
+              `http://localhost:3000/users/${cookieval.response.user.username}/Parameters`
+            );
+          } else if (cookieval.response.user.isTwoFactorAuthEnabled)
             router.push("http://localhost:3000/login/2FA");
           else
             router.push(
               `http://localhost:3000/users/${cookieval.response.user.username}`
             );
-         console.clear();
+          console.clear();
         }
       }, 1000);
     }
@@ -49,7 +49,7 @@ export default function Auth({ Sign_in_up }: Props) {
     <>
       <div
         className={Style.googleBtn}
-        onClick={() => handleAuth(`http://${process.env.NEXT_PUBLIC_HOST_PORT}/auth/google/callback`)}
+        onClick={() => handleAuth(`http://localhost:3001/auth/google/callback`)}
       >
         <div className={Style.googleImg}></div>
         <p>{Sign_in_up} with google</p>
@@ -61,7 +61,7 @@ export default function Auth({ Sign_in_up }: Props) {
       </div>
       <div
         className={Style.intraBtn}
-        onClick={() => handleAuth(`http://${process.env.NEXT_PUBLIC_HOST_PORT}/auth/intra/callback`)}
+        onClick={() => handleAuth(`http://localhost:3001/auth/intra/callback`)}
       >
         <div className={Style.intraImg}></div>
         <p>{Sign_in_up} with intra</p>

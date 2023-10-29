@@ -26,7 +26,7 @@ services:
       - app-net
 
   backend:
-    build: ./backend_tools
+    build: ./back_end/backend_tools
     container_name: backend
     env_file:
       - .env
@@ -38,18 +38,18 @@ services:
     networks:
       - app-net
 
-  # frontend:
-  #   build: ./frontend_tools
-  #   container_name: frontend
-  #   restart: always
-  #   depends_on:
-  #     - backend
-  #   ports:
-  #     - "5000:5000"
-  #   volumes:
-  #     - frontend-src:/app
-  #   networks:
-  #     - app-net
+  frontend:
+    build: ./back_end/frontend_tools
+    container_name: frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - frontend-src:/app
+    networks:
+      - app-net
 
 volumes:
   backend-src:
@@ -71,7 +71,7 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: ${HOME}/Desktop/ft_transcendence//tempefrontend/chat
+      device: ${HOME}/Desktop/ft_transcendence/front-end
 
 networks:
   app-net:
