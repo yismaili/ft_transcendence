@@ -20,7 +20,6 @@ export default function UserProfile({ params }: { params: { user: string } }) {
   let [owner, setOwner] = useState(true);
   let [path, setPath] = useState("");
   const router = useRouter();
-  console.log('data', Data);
   
   useEffect(() => {
     const cookieStore = new cookies();
