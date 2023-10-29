@@ -31,7 +31,7 @@ export default function User({
           className={Style.avatar}
           style={{ backgroundImage: `url(${user.picture})` }}
         />
-        <p className={Style.name}>{user.username}</p>
+        <p className={Style.name}>{user.uniquename}</p>
       </div>
       <div className={Style.icon} onClick={handleContextMenu} />
       {isMenuOpen && (

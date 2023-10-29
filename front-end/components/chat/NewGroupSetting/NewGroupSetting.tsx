@@ -24,35 +24,6 @@ export default function NewGroupSetting({ setGroupInput }: props) {
     }
   };
 
-  // async function pathToBlob(path: string): Promise<File | null> {
-  //   try {
-  //     // Fetch the image
-  //     const response = await fetch(path);
-  //     const blob = await response.blob();
-
-  //     // Create a File from the Blob
-  //     const fileName = path.split("/").pop() || "image.jpg"; // Provide a default name
-  //     const file = new File([blob], fileName, { type: blob.type });
-
-  //     return file;
-  //   } catch (error) {
-  //     console.error("Error converting image:", error);
-  //     return null;
-  //   }
-  // }
-
-  // // Usage
-  // const imagePath = "/img/home/avatar.png";
-
-  //   pathToBlob(imagePath).then((file) => {
-  //     if (file) {
-  //       console.log("tttt");
-
-  //       setDefaultImage(file);
-  //       // Now you have the image as a File
-  //     }
-  //   });
-
   const closePopUp = () => setOpen(!isOpen);
 
   useEffect(() => {

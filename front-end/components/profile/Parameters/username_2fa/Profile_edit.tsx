@@ -4,6 +4,7 @@ import "@/global_css/utilityClasses.css";
 import "./Profile_edit.css";
 import Enable2FAPopUP from "@/components/profile/Parameters/2FA_popup/enable/Enable__2FA.jsx";
 import { useState } from "react";
+import Cookies from "cookies-ts";
 
 interface nums {
   user: User;
@@ -14,6 +15,7 @@ interface nums {
 
 export default function ProfileEdit(props: nums) {
   const [warning, setWarning] = useState(0);
+  const cookies = new Cookies();
 
   const editUsername = async (formData: FormData) => {
     if (formData.get("username")) {
@@ -27,8 +29,17 @@ export default function ProfileEdit(props: nums) {
         }
       );
       const val = await sending.json();
-      if (val == "done") props.update(true);
-      else {
+      if (val == "done") {
+        console.log("cook", cookies.get("userData"));
+        const cookie = cookies.get("userData");
+        if (cookie) {
+          var data = JSON.parse(JSON.stringify(cookie));
+          data.response.user.uniquename = username;
+          cookies.set("userData", data);
+        }
+
+        props.update(true);
+      } else {
         setWarning(1);
         setTimeout(() => {
           setWarning(0);
@@ -89,7 +100,11 @@ export default function ProfileEdit(props: nums) {
             )}
           </select>
         </div>
-        <input type="submit" value={props.user.data.isTwoFactorAuthEnabled ? "disable" : "enable"} className="edit__btn" />
+        <input
+          type="submit"
+          value={props.user.data.isTwoFactorAuthEnabled ? "disable" : "enable"}
+          className="edit__btn"
+        />
       </form>
     </>
   );

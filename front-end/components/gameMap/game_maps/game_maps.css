@@ -124,6 +124,15 @@
     z-index: 100;
 }
 
+.back__arrow{
+    background-image: url("/img/util/arrow.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    display: inline-block;
+    width: 48px;
+    height: 32px;
+}
+
 @keyframes fadeIn {
     from {opacity: 0;}
     to {opacity: 1;}
