@@ -35,7 +35,7 @@ export default function Winners({ gameOver }: props) {
               backgroundImage: `url(${gameOver.loser.picture})`,
             }}
           ></span>
-          <span className={Style.name}>{gameOver.loser.username}</span>
+          <span className={Style.name}>{gameOver.loser.uniquename}</span>
         </div>
       </div>
     </div>

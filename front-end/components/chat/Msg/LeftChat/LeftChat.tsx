@@ -34,7 +34,7 @@ export default function LeftChat({
             className={Style.img}
             style={{ backgroundImage: `url(${friendData.picture})` }}
           ></div>
-          <p className={Style.name}>{friendData.username}</p>
+          <p className={Style.name}>{friendData.uniquename}</p>
           <p className={Style.msg}>{oldMessage.message}</p>
           <p className={Style.time}>{oldMessage.dateToSend}</p>
         </div>
@@ -55,7 +55,7 @@ export default function LeftChat({
             className={Style.img}
             style={{ backgroundImage: `url(${friendData.picture})` }}
           ></div>
-          <p className={Style.name}>{friendData.username}</p>
+          <p className={Style.name}>{friendData.uniquename}</p>
           <p className={Style.msg}>{newMessage.message}</p>
           <p className={Style.time}>{newMessage.dateToSend}</p>
         </div>

@@ -35,7 +35,7 @@ export default function Blocked({ data }: props) {
         <div className={Style.onlineStatus} />
       </div>
       <div className={Style.blure} />
-      <p className={Style.name}>{data.username}</p>
+      <p className={Style.name}>{data.uniquename}</p>
       <div className={Style.icon} onClick={handleUnBlock} />
     </div>
   );

@@ -30,7 +30,7 @@ export default function MatchMaking({ setOpen, data, setData }: props) {
             >
               {/* <span className={Style.profile__level}>16</span> */}
             </span>
-            <span className={Style.name}>{Data.response.user.username}</span>
+            <span className={Style.name}>{Data.response.user.uniquename}</span>
           </div>
           <div className={Style.userVSfriend__info}>
             <div className={Style.waiting}>
@@ -62,8 +62,8 @@ export default function MatchMaking({ setOpen, data, setData }: props) {
             <span className={Style.name}>
               {data
                 ? data.user.username === Data.response.user.username
-                  ? data.userFriend.username
-                  : data.user.username
+                  ? data.userFriend.uniquename
+                  : data.user.uniquename
                 : "waiting"}
             </span>
           </div>

@@ -79,6 +79,8 @@ export default function NewGroupInput({
               name="password"
               placeholder="********"
               required
+              pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+              title="Minimum eight characters, at least one letter and one number"
             />
           </div>
         )}

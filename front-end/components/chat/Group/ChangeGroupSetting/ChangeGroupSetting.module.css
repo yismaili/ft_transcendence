@@ -25,7 +25,7 @@
   top: 10%;
   left: 10%;
   width: 80%;
-  height: 60%;
+  height: 75%;
   background-color: #292944;
   z-index: 100;
   border-radius: 60px;
@@ -70,7 +70,7 @@
 .main {
   position: relative;
   width: 94%;
-  height: clamp(10rem, 60%, 19rem);
+  height: clamp(10rem, 80%, 26rem);
   margin: 1rem 3%;
   margin-top: 4%;
   border-radius: 60px;
