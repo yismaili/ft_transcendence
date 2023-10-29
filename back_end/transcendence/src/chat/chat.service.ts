@@ -1202,7 +1202,7 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom, server: Server) : Pr
     if (!adminUserChatRoom){
       throw new Error("User not admin to update this chat room");
     }
-    console.log()
+
     let hash = chatRoomInfo.password;
     let file_path = chatRoomInfo.picture;
     let chatRoomName = chatRoomInfo.picture

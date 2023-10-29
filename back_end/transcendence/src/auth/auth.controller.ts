@@ -1,6 +1,5 @@
 import {Body, Controller,
     Get,
-    HttpCode,
     HttpStatus, 
     Post, 
     Req, 
@@ -9,23 +8,21 @@ import {Body, Controller,
     UseGuards
    } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { GoogleGuard } from './guard/google.guard';
-import { IntraGuard } from './guard/intra.guard';
+import { AuthGoogleGuard } from './guard/google.guard';
+import { AuthIntraGuard } from './guard/intra.guard';
 import { JwtAuthGuard } from './guard/jwt.guard';
-import { JwtStrategy } from './strategy/jwt.strategy';
 import { User } from 'src/typeorm/entities/User.entity';
 import { UserService } from 'src/user/user.service';
 import { TwoFactorAuthenticationCodeDto } from './dtos/TwoFactorAuthenticationCode.dto';
 import { WebSocketServer } from '@nestjs/websockets';
-import { Socket, Server } from 'socket.io';
-import { ChatService } from 'src/chat/chat.service';
+import { Server } from 'socket.io';
 import { Response } from 'express';
 
 
 @Controller('auth')
 export class AuthController {
   @WebSocketServer() server: Server;
-    constructor(private readonly authService: AuthService,  private userService: UserService, private chatService: ChatService) {} //we used this constructor for 'Dependency Injection'
+    constructor(private readonly authService: AuthService,  private userService: UserService) {} //we used this constructor for 'Dependency Injection'
 
   response: any;
   @Get('home')
@@ -34,7 +31,7 @@ export class AuthController {
     return res.status(HttpStatus.OK).json(this.response);
   }
 
-  @UseGuards(GoogleGuard)
+  @UseGuards(AuthGoogleGuard)
   @Get('google/callback')
   async googleAuthRedirect( @Req() req: any, @Res() res: Response){
 
@@ -54,7 +51,7 @@ export class AuthController {
   
   }
 
-  @UseGuards(IntraGuard)
+  @UseGuards(AuthIntraGuard)
   @Get('intra/callback')
   async intraAuthRedirect( @Req() req: any, @Res() res: Response,){
 
@@ -74,14 +71,14 @@ export class AuthController {
     return res.status(HttpStatus.UNAUTHORIZED).json({ message: 'Authentication failed' });
   }
 
-  @UseGuards(JwtAuthGuard, JwtStrategy)
+  @UseGuards(JwtAuthGuard)
   @Get('profile')
   profile(@Req() req, @Res() res){
       return(res.status(HttpStatus.OK).json(req.user));
   }
  
   @Post('2fa/generate')
-  @UseGuards(JwtAuthGuard, JwtStrategy)
+  @UseGuards(JwtAuthGuard)
   async register(@Req() req: any) {
       const { otpauthUrl } = await this.authService.generateTwoFactorAuthSecret(req.user);
       return this.authService.generateQrCodeDataURL(otpauthUrl);

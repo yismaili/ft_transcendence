@@ -24,16 +24,13 @@ import { ChatService } from 'src/chat/chat.service';
 
 //responsible for defining the components related to authentication and user management
 @Module({
-  // forFeature() method is used to specify which entities 
   imports: [
-    JwtModule,
     TypeOrmModule.forFeature([User, Profile, Relation, Achievement, HistoryEntity, ChatRoom, ChatRoomUser, Message, Chat]), 
-    PassportModule.register({ defaultStrategy: '42' }),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
-    //NestJS module for handling JSON Web Tokens (JWT) and token-based authentication
-    JwtModule.register({ secret: process.env.JWT_SECRET, signOptions: { expiresIn: '1h' } }),
-  ], // makes the User entity available for use within the AuthModule
-  controllers: [AuthController],// The controllers property
+    PassportModule.register(GoogleStrategy),
+    PassportModule.register(IntraStrategy),
+    JwtModule.register({ secret: process.env.JWT_SECRET, signOptions: { expiresIn: '48h' } }),
+  ],
+  controllers: [AuthController],
   providers: [AuthService, GoogleStrategy, ConfigService, IntraStrategy, JwtAuthGuard, Repository, UserService, ChatService]
-}) // decorator is define a module 
+})
 export class AuthModule {}
