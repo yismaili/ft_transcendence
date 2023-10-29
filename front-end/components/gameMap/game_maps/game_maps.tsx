@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useSocketContext } from "@/contexts/socket-context";
 import MatchMaking from "@/components/MatchMaking/MatchMaking";
+import Link from "next/link";
 
 export default function GameMaps() {
   const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
@@ -104,6 +105,11 @@ export default function GameMaps() {
 
   return (
     <>
+      <Link href={`/users/${Data.response.user.username}`}>
+        <div className="back__btn">
+          <span className="back__arrow"></span> <span>back to Profile</span>
+        </div>
+      </Link>
       <div className="Game__maps">
         <div className="Game__maps__centering">
           <span

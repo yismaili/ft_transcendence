@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
 
     // console.log("its me", data.response.user.username);
     const res = await fetch(
-      `http://localhost:3001/users/profile/${Data.response.user.username}/history`,
+      `http://${process.env.NEXT_PUBLIC_HOST_PORT}/users/profile/${Data.response.user.username}/history`,
       {
         cache: "no-cache",
         headers: { authorization: `Bearer ${token}` },

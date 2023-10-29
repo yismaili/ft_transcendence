@@ -50,8 +50,8 @@ export function useSocketContext() {
   const cookies = new Cookies();
   const context = useContext(socketContext);
   if (!context) {
-    cookies.remove("userData");
-    router.push("http://localhost:3000/login");
+    throw Error("error in context");
   }
+
   return context;
 }

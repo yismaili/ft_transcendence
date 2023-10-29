@@ -18,7 +18,7 @@ export default function ProfileEdit(props: nums) {
   const editUsername = async (formData: FormData) => {
     if (formData.get("username")) {
       const username = formData.get("username");
-      console.log("test01:", username);
+      // console.log("test01:", username);
       const sending = await fetch(
         "http://localhost:3000/api/updateProfile/username",
         {
@@ -39,7 +39,7 @@ export default function ProfileEdit(props: nums) {
 
   const managing_2fa = async (formData: FormData) => {
     if (formData.get("2fa")?.toString() == "enable") {
-      console.log("test002");
+      // console.log("test002");
       const generating = await fetch(
         "http://localhost:3000/api/updateProfile/2fa/generating",
         {

@@ -7,10 +7,10 @@ export async function POST(request: NextRequest) {
   if (mycookie) {
     const Data = JSON.parse(mycookie!.value);
     const token = Data?.response?.token;
-    console.log("srv friend name", req);
+    // console.log("srv friend name", req);
 
     const res = await fetch(
-      `http://localhost:3001/users/profile/${Data.response.user.username}/historyFriend/${req}`,
+      `http://${process.env.NEXT_PUBLIC_HOST_PORT}/users/profile/${Data.response.user.username}/historyFriend/${req}`,
       {
         method:"GET",
         cache: "no-cache",

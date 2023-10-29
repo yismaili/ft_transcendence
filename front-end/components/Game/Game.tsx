@@ -281,7 +281,7 @@ export default function Game() {
     gameSocket.emit("refreshGame");
     gameSocket.on("gameOver", (response: gameOver) => {
       setGameOver(response);
-      console.log("gameOver res:", response);
+      // console.log("gameOver res:", response);
     });
 
     window.requestAnimationFrame(call);

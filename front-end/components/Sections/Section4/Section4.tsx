@@ -40,7 +40,7 @@ export default function Section3() {
   }, []);
 
   const swapTitles = (title: string) => {
-    console.log("pos", pos, "title :", title);
+    // console.log("pos", pos, "title :", title);
     if (title == "first") {
       if (pos.firstTitlePos == "left") {
         if (pos.secondTitlePos == "center")

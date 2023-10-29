@@ -23,10 +23,6 @@ export default function Group({ room, choseChat, left }: props) {
     const x = e.clientX;
     const y = e.clientY;
 
-    console.log('x:', x);
-    console.log('y:', y);
-    
-
     setMenuPosition({ x, y });
   };
 
