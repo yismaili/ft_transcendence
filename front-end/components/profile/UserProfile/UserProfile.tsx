@@ -19,6 +19,7 @@ export default function UserProfile({ params }: { params: { user: string } }) {
   let [user, setUser] = useState<User>();
   let [owner, setOwner] = useState(true);
   let [path, setPath] = useState("");
+  let [found, setfound] = useState(false);
   const router = useRouter();
   
   useEffect(() => {
@@ -31,8 +32,10 @@ export default function UserProfile({ params }: { params: { user: string } }) {
         const fetching = async () => {
           const res = await fetch("http://localhost:3000/api/home");
           const user = await res.json();
+          console.log("mn wra matfetchit:",user);
           setUser(user);
           setOwner(true);
+          setfound(true);
         };
 
         fetching();
@@ -47,8 +50,10 @@ export default function UserProfile({ params }: { params: { user: string } }) {
           if (users.data) {
             setUser(users);
             setOwner(false);
+            setfound(true);
           } else {
-            router.push(`http://localhost:3000/users/${Data.response.user.username}`)
+            setfound(false);
+            router.push(`http://localhost:3000/users/${Data.response.user.username}`);
           }
         };
 
@@ -57,7 +62,8 @@ export default function UserProfile({ params }: { params: { user: string } }) {
     }
   }, []);
 
-  if (user) {
+  if (user && found) {
+    console.log("test456:",user, "found", found);
     return (
       <div className="container">
         <ProfileHeader path={path} user={user} />
