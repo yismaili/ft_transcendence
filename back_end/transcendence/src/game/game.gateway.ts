@@ -27,7 +27,7 @@ export class GameGateway {
       const username = decodedToken['username'];
       this.gameService.handleConnection(client, username);
     }catch(error){
-      throw new ForbiddenException();
+      return ;
     }
   }
 

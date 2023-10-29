@@ -42,7 +42,7 @@ export class ChatGateway {
       const username = decodedToken['username'];
       this.chatService.addUserWithSocketId(username, client);
     }catch(error){
-      throw new ForbiddenException();
+      return ;
     }
   }
 

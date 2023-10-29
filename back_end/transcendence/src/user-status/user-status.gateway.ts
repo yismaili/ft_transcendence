@@ -31,8 +31,7 @@ export class UserStatusGateway {
       const username = decodedToken['username'];
       return this.userService.setUserstatus(username, 'online');
     } catch (error) {
-      console.error('Error during connection handling:', error);
-      throw new ForbiddenException();
+      return ;
     }
     
   }
@@ -52,7 +51,7 @@ export class UserStatusGateway {
       const username = decodedToken['username'];
       return this.userService.setUserstatus(username, 'offline');
     }catch(error){
-      throw new ForbiddenException();
+     return;
     }
   }
 }
