@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "cookies-ts";
 import "@/components/Error/Error.css"
 
-export default function Error() {
+export default function Errorsecond() {
   const router = useRouter();
   const cookies = new Cookies();
   return (

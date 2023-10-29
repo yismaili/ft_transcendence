@@ -12,7 +12,8 @@ export default function SocketContextProvider({
 }) {
   const cookies = new Cookies();
   const Data = JSON.parse(JSON.stringify(cookies.get("userData")));
-
+  if(Data)
+  {
   const [socket] = useState(
     io("0.0.0.0:3001/chat", {
       extraHeaders: {
@@ -42,6 +43,7 @@ export default function SocketContextProvider({
       {children}
     </socketContext.Provider>
   );
+}
 }
 
 export function useSocketContext() {

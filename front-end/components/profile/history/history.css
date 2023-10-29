@@ -5,7 +5,6 @@
   width: 55%;
   background-color: #292944;
   border-radius: 16px;
-  overflow: auto;
 }
 
 .history__title {
@@ -16,6 +15,7 @@
 .history__list {
   width: 100%;
   height: calc(100% - 4rem);
+  overflow: auto;
 }
 .singleHistory__container {
   height: 20%;
