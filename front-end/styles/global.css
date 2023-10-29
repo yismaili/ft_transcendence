@@ -144,9 +144,9 @@ a {
   margin: 0 auto;
 }
 
-/* body::-webkit-scrollbar {
+body::-webkit-scrollbar {
   display: none;
-} */
+}
 
 /* nextjs-portal {
   display: none;
