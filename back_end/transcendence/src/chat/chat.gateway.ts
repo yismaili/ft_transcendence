@@ -213,7 +213,7 @@ export class ChatGateway {
   @SubscribeMessage('leaveChatRoom')
   async leaveChatRoom(@MessageBody() leaveChatRoomDto: LeaveChatRoomDto) {
     try{
-      return await this.chatService.leaveChatRoom(leaveChatRoomDto);
+      return await this.chatService.leaveChatRoom(leaveChatRoomDto, this.server);
     }catch(error){
       throw new ForbiddenException();
     }

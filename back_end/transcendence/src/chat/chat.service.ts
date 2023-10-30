@@ -32,6 +32,7 @@ import { updateChatRoom } from './dto/update-chat-room.dto';
 import * as fs from 'fs'
 const path = require('path');
 import {v2 as cloudinary} from 'cloudinary';
+import { get } from 'http';
 
 @Injectable()
 export class ChatService {
@@ -890,7 +891,7 @@ async changePermissionToUser (changePermissionToUserDto: BanUserDto): Promise<an
     }
 }
 
-async leaveChatRoom (leaveChatRoomDto: LeaveChatRoomDto) : Promise<any>{
+async leaveChatRoom (leaveChatRoomDto: LeaveChatRoomDto,  server: Server) : Promise<any>{
 
   const isAdmin = await this.userRepository.findOne({
     where: { username: leaveChatRoomDto.username },
@@ -901,17 +902,6 @@ async leaveChatRoom (leaveChatRoomDto: LeaveChatRoomDto) : Promise<any>{
           RoomId : leaveChatRoomDto.chatRoomName,
     }
   });
-  // const adminUserChatRoom = await this.chatRoomUserRepository.findOne({
-  //   where: {
-  //     user: { id: isAdmin.id },
-  //     statusPermissions: 'admin',
-  //     chatRooms: {id: chatRoom.id},
-  //   },
-  // });
-
-  // if (adminUserChatRoom) {
-  //   throw new Error('you have not leave this chat room!');
-  // }
 
   const chatRoomUser = await this.chatRoomUserRepository.findOne({
     where: {
@@ -919,10 +909,35 @@ async leaveChatRoom (leaveChatRoomDto: LeaveChatRoomDto) : Promise<any>{
       chatRooms: {id: chatRoom.id},
     },
   });
-
+  
   if (chatRoomUser) {
     await this.chatRoomUserRepository.delete(chatRoomUser.id);
-    return { message: 'User kicked successfully' };
+      const getUser = await this.chatRoomUserRepository.findOne({
+        where: {
+          chatRooms: {id: chatRoom.id},
+          statusPermissions: 'admin'
+        }
+      });
+    if (getUser){
+      getUser.owner = true;
+      await this.chatRoomUserRepository.save(getUser);
+    }
+    else{
+      const getUser = await this.chatRoomUserRepository.findOne({
+        where: {
+          chatRooms: {id: chatRoom.id},
+        }
+      });
+      if (getUser){
+        getUser.statusPermissions = 'admin';
+        getUser.owner = true;
+        await this.chatRoomUserRepository.save(getUser);
+      }
+      else{
+        return;
+      }
+    }
+    return { message: 'User leaved successfully' };
   } else {
     return { message: 'User not found in the chat room' };
   }
