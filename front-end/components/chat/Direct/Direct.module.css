@@ -13,7 +13,7 @@
   cursor: pointer;
 }
 
-.datacontainer{
+.datacontainer {
   width: 100%;
   height: 100%;
   display: flex;
@@ -66,4 +66,8 @@
 
 .On {
   background-color: #1bdb1b;
+}
+
+.inGame {
+  background-color: #110bc5;
 }
