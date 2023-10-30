@@ -27,7 +27,7 @@ export default function UserProfile({ params }: { params: { user: string } }) {
     if (Data) {
       socket.emit("updateUI", { message: `status online` });
       setPath(Data.response.user.username);
-      if (Data.response.user.username.replace(" ","") == params.user.replace("%20","")) {
+      if (Data.response.user.username == params.user) {
         const fetching = async () => {
           const res = await fetch("http://localhost:3000/api/home");
           const user = await res.json();
