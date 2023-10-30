@@ -11,7 +11,7 @@ export default function Blocked({ data }: props) {
 
   const handleUnBlock = async () => {
     const res = await fetch(
-      `http://backend:3001/users/profile/${Data.response.user.username}/unblock/${data.username}`,
+      `backend:3001/users/profile/${Data.response.user.username}/unblock/${data.username}`,
       {
         method: "PUT",
         cache: "no-cache",

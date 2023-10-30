@@ -636,9 +636,9 @@ async setTwoFactorAuthenticationSecret(secret: string, username: string) {
     if (user) {
       user.twoFactorAuthSecret = secret;
       await this.userRepository.save(user);
-      console.log('Two-factor authentication secret set successfully.');
+      //console.log('Two-factor authentication secret set successfully.');
     } else {
-      console.log('User not found.');
+      //console.log('User not found.');
     }
   } catch (error) {
     throw new Error('Error setting two-factor authentication secret');

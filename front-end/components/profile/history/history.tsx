@@ -20,6 +20,7 @@ function History({ isDisplay, ownerName }: props) {
       if (ownerName == Data.response.user.username) {
         const res = await fetch("http://localhost:3000/api/home/history");
         const val = await res.json();
+       // console.log("history after fetching", val);
         if (val) {
           sethistory(val.data);
         }
@@ -46,7 +47,9 @@ function History({ isDisplay, ownerName }: props) {
       <div className="history__list">
         {hist &&
           hist.map((pastGame, index) => {
-            if (pastGame.user.username == ownerName)
+            //console.log("pastgame:",pastGame.user.username);
+            //console.log("ownerName:",ownerName);
+            if (pastGame.user.username.replace(" ","") == ownerName.replace("%20",""))
               return (
                 <div
                   className="singleHistory__container"

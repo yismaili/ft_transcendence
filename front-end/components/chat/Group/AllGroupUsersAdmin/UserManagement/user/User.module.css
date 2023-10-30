@@ -1,21 +1,22 @@
 .firstChild {
   display: flex;
   align-items: center;
+  width: 50%;
 }
 
 .avatar {
-  background-image: url("/img/home/avatar.png");
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: cover;
+  background-position: center;
   clip-path: circle(48% at 50% 50%);
-  width: 2rem;
-  height: 2rem;
+  width: 3rem;
+  height: 3rem;
   margin-left: 0.5rem;
 }
 
 .name {
   color: #f2f3f5;
-  font-size: clamp(0.5rem, 1.5vw, 1rem);
+  font-size: clamp(0.7rem, 1.5vw, 1rem);
   font-family: "probert";
   letter-spacing: 0.15rem;
   font-weight: 700;
@@ -30,3 +31,33 @@
   height: 1rem;
   margin-right: 5%;
 }
+
+@media (max-width: 1536px) {
+
+}
+  
+  /* xl */
+@media (max-width: 1280px) {
+
+}
+  
+  /* lg */
+@media (max-width: 1024px) {
+
+}
+  
+  /* md */
+@media (max-width: 768px) {
+
+}
+  
+  /* sm */
+  @media (max-width: 640px) {
+
+  }
+  
+  /* xs */
+  @media (max-width: 475px) {
+
+
+  }

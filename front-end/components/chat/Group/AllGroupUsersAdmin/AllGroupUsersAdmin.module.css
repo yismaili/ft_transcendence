@@ -9,7 +9,7 @@
 }
 
 .backDrop {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -20,7 +20,7 @@
 }
 
 .popUpContainer {
-  position: absolute;
+  position: fixed;
   margin: auto;
   top: 10%;
   left: 10%;
@@ -41,18 +41,19 @@
   width: 2rem;
   height: 2rem;
   cursor: pointer;
+  z-index: 10;
 }
 
 .avatar {
   position: relative;
   left: 50%;
-  top: 16%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   background-image: url("/img/home/avatar.png");
   background-repeat: no-repeat;
   background-size: contain;
-  width: clamp(1rem, 20%, 13rem);
-  height: clamp(1rem, 27%, 13rem);
+  width: 240px;
+  height: 240px;
+  margin: 1rem;
 }
 
 .changeImg {
@@ -67,10 +68,10 @@
 }
 
 .main {
-  width: 94%;
+  position: relative;
+  width: 90%;
   height: 60%;
-  margin: 1rem 3%;
-  margin-top: 4%;
+  margin: auto;
   border-radius: 60px;
 	background-color: #1D1D2D;
 }
@@ -109,3 +110,43 @@
   background-color: #ffffff1a;
   border-radius: 0 60px 0 0;
 }
+
+@media (max-width: 1536px) {
+
+}
+  
+  /* xl */
+@media (max-width: 1280px) {
+
+}
+  
+  /* lg */
+@media (max-width: 1024px) {
+
+}
+  
+  /* md */
+@media (max-width: 768px) {
+  .avatar {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    background-image: url("/img/home/avatar.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 160px;
+    height: 160px;
+    margin: 1rem;
+  }
+}
+  
+  /* sm */
+  @media (max-width: 640px) {
+
+  }
+  
+  /* xs */
+  @media (max-width: 475px) {
+
+
+  }

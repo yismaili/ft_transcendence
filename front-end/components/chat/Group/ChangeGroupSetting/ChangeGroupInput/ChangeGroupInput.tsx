@@ -58,7 +58,7 @@ export default function ChangeGroupInput({ setOpen, room, picture }: props) {
         picture: picture,
       },
       (response: any) => {
-        console.log("res", response);
+       // console.log("res", response);
       }
     );
   };

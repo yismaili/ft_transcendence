@@ -19,7 +19,7 @@ export default function FriendContextMenu({
 
   const handleBlock = async () => {
     const res = await fetch(
-      `http://backend:3001/users/profile/${Data.response.user.username}/block/${friendData.username}`,
+      `backend:3001/users/profile/${Data.response.user.username}/block/${friendData.username}`,
       {
         method: "PUT",
         cache: "no-cache",
