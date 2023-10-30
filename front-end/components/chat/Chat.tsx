@@ -120,16 +120,19 @@ export default function Chat() {
         if (messaged.split(" ")[1] === Data.response.user.username) fetching();
       }
 
-      socket.emit(
-        "chatRoomOfUser",
-        {
-          username: Data.response.user.username,
-        },
-        (response: AllRooms[]) => {
-          console.log('ress', response);
-          setAllRooms(response);
-        }
-      );
+      setTimeout(() => {
+        socket.emit(
+          "chatRoomOfUser",
+          {
+            username: Data.response.user.username,
+          },
+          (response: AllRooms[]) => {
+            //console.log("res", response);
+
+            setAllRooms(response);
+          }
+        );
+      }, 500);
     });
 
     gameSocket.on("inviteFriend", (response: gameRequest) => {
@@ -224,13 +227,7 @@ export default function Chat() {
     const user = await resUser.json();
     setUser(user);
 
-    const resBlocked = await fetch(
-      `http://backend:3001/users/profile/${Data.response.user.username}/blocked`,
-      {
-        cache: "no-cache",
-        headers: { authorization: `Bearer ${Data.response.token}` },
-      }
-    );
+    const resBlocked = await fetch(`http://localhost:3000/api/chat/blocked`);
     const blocked = await resBlocked.json();
     setBlocked(blocked);
   };

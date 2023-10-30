@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+export const dynamic = 'force-dynamic'
 
 export async function PUT(req: NextRequest) {
   const cookieStore = cookies();
@@ -8,7 +9,7 @@ export async function PUT(req: NextRequest) {
   // console.log("test res:",res);
   if (token) {
     const cookieObject = JSON.parse(token.value);
-    console.log("token", cookieObject.response.token);
+    //console.log("token", cookieObject.response.token);
     const data = await fetch(
       `http://backend:3001/users/profile/${cookieObject.response.user.username}/updateProfile`,
       {
