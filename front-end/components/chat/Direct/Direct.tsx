@@ -49,7 +49,8 @@ export default function Direct({ data, choseChat, left }: props) {
             ></div>
             <div
               className={`${Style.onlineStatus} ${
-                status === "online" ? Style.On : Style.inGame
+                (status === "online" && Style.On) ||
+                (status === "inGame" && Style.inGame)
               }`}
             ></div>
           </div>
