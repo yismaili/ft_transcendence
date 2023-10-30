@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "@/global_css/resets.css";
 import Style from "./MatchMaking.module.css";
 import { useSocketContext } from "@/contexts/socket-context";
@@ -12,6 +12,16 @@ type props = {
 
 export default function MatchMaking({ setOpen, data, setData }: props) {
   const { socket, Data, onlineSocket, gameSocket } = useSocketContext();
+
+  useEffect(() => {
+    socket.on("updateUI", (messaged: string) => {
+      if (messaged.split(" ")[0] === "rejectrequest") {
+        if (messaged.split(" ")[1] === Data.response.user.username) {
+          handleCancel();
+        }
+      }
+    });
+  }, []);
 
   const handleCancel = () => {
     gameSocket.emit("cancelGame");
