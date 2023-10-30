@@ -10,14 +10,10 @@ export default function Blocked({ data }: props) {
   const { socket, Data } = useSocketContext();
 
   const handleUnBlock = async () => {
-    const res = await fetch(
-      `backend:3001/users/profile/${Data.response.user.username}/unblock/${data.username}`,
-      {
-        method: "PUT",
-        cache: "no-cache",
-        headers: { authorization: `Bearer ${Data.response.token}` },
-      }
-    );
+    const res = await fetch(`http://localhost:3000/api/chat/unblock`, {
+      method: "POST",
+      body: data.username,
+    });
     // const data = await res.json();
 
     socket.emit("updateUI", {

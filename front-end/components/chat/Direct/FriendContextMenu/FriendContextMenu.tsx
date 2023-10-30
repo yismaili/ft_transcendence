@@ -19,11 +19,10 @@ export default function FriendContextMenu({
 
   const handleBlock = async () => {
     const res = await fetch(
-      `backend:3001/users/profile/${Data.response.user.username}/block/${friendData.username}`,
+      `http://localhost:3000/api/chat/block`,
       {
-        method: "PUT",
-        cache: "no-cache",
-        headers: { authorization: `Bearer ${Data.response.token}` },
+        method: "POST",
+        body: friendData.username,
       }
     );
     // const data = await res.json();
