@@ -30,7 +30,7 @@ export default function ProfileEdit(props: nums) {
       );
       const val = await sending.json();
       if (val == "done") {
-        console.log("cook", cookies.get("userData"));
+        //console.log("cook", cookies.get("userData"));
         const cookie = cookies.get("userData");
         if (cookie) {
           var data = JSON.parse(JSON.stringify(cookie));
