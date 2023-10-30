@@ -225,7 +225,7 @@ export default function Chat() {
     setUser(user);
 
     const resBlocked = await fetch(
-      `http://${process.env.NEXT_PUBLIC_HOST_PORT}/users/profile/${Data.response.user.username}/blocked`,
+      `http://backend:3001/users/profile/${Data.response.user.username}/blocked`,
       {
         cache: "no-cache",
         headers: { authorization: `Bearer ${Data.response.token}` },

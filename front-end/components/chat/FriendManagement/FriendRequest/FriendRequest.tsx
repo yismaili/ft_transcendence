@@ -30,7 +30,7 @@ export default function FriendRequest({ setOpen, friends }: props) {
 
     const getAllRequests = async () => {
       const res = await fetch(
-        `http://${process.env.NEXT_PUBLIC_HOST_PORT}/users/profile/${Data.response.user.username}/requests`,
+        `http://backend:3001/users/profile/${Data.response.user.username}/requests`,
         {
           cache: "no-cache",
           headers: { authorization: `Bearer ${Data.response.token}` },
