@@ -29,9 +29,7 @@ export default function Chat() {
   const [game, setGame] = useState<gameRequest[]>([]);
   const [blocked, setBlocked] = useState<FriendRequest[]>([]);
   const [notification, setNotification] = useState<allMessages[]>([]);
-  const [newMessage, setNewMessage] = useState<allMessages[]>([]);
   const [Opt, setOpt] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     socket.on("deleteChatRoom", (response: boolean) => {
@@ -62,7 +60,7 @@ export default function Chat() {
 
     socket.on("message", (message: allMessages[]) => {
       if (message[0]) {
-        setNewMessage((prevMessages) => [...prevMessages, message[0]]);
+        // setNewMessage((prevMessages) => [...prevMessages, message[0]]);
         if (message[0].user.username != Data.response.user.username) {
           setNotification((prev: allMessages[]) => [...prev, message[0]]);
         }
@@ -397,7 +395,6 @@ export default function Chat() {
             <Msg
               friendData={userFriend}
               myData={user}
-              newMessage={newMessage}
             />
           )}
           {isGroup && room && (
