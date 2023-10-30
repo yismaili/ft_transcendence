@@ -43,6 +43,7 @@
   width: 2rem;
   height: 2rem;
   cursor: pointer;
+  z-index: 10;
 }
 
 .avatar {
@@ -71,10 +72,11 @@
 }
 
 .main {
-  width: 94%;
-  height: 94%;
-  margin: 1rem 3%;
-  margin-top: 4%;
+  position: relative;
+  width: 90%;
+  height: 90%;
+  margin: auto;
+  top: 4%;
   border-radius: 60px;
   background-color: #1d1d2d;
 }

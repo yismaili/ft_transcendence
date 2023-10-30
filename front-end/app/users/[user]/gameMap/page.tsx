@@ -1,6 +1,6 @@
 import GameMaps from "@/components/gameMap/game_maps/game_maps";
 import "@/global_css/utilityClasses.css";
-// import "@/components/gameMap/page.css";
+import "@/components/gameMap/page.css";
 import "@/styles/global.css";
 
 export default function Game() {

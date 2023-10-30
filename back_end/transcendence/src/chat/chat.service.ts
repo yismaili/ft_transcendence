@@ -1205,7 +1205,7 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom, server: Server) : Pr
       try {
         // Write the image buffer to the specified file path
         fs.writeFileSync(fullFilePath, imageBuffer);
-        console.log('Image saved successfully');
+        //console.log('Image saved successfully');
       } catch (error) {
         throw new Error('Error saving the image');
       }
@@ -1237,7 +1237,7 @@ async updateChatRoomInfo(updateChatRoomInf: updateChatRoom, server: Server) : Pr
     return saveChatRoomUP;
 
   }catch(error) {
-    console.log(error);
+    //console.log(error);
     throw new Error ('Error to update chat room');
   }
 }
