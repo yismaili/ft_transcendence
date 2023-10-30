@@ -68,7 +68,7 @@ export default function Chat() {
     });
 
     socket.on("updateUI", (messaged: string) => {
-      console.log(messaged);
+      // console.log(messaged);
 
       if (messaged.split(" ")[0] === "kickUser") {
         if (messaged.split(" ")[1] === Data.response.user.username) {

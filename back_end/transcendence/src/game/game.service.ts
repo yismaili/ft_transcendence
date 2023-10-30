@@ -177,6 +177,7 @@ export class GameService {
 
         server.to(roomName).emit('GameUpdated', gameData);
         if (!pongGame.getStatus()) {
+          clearInterval(intervalId);
           if (pongGame.winnerPlayer === 'right'){
             server.to(roomName).emit('gameOver', {
               gameOver: true, winner: user, loser: userFriend, 
@@ -201,11 +202,10 @@ export class GameService {
             userCompetitor: friendUser
           };
 
-        this.handleLeaveRoom(playerId, roomName);
-        this.addHistory(history);
+        await this.handleLeaveRoom(playerId, roomName);
+        await this.addHistory(history);
         pongGame.leftPlayerScore = 0;
         pongGame.rightPlayerScore = 0;
-        clearInterval(intervalId);
        }
       }, 1000 / 60);
     }
@@ -366,20 +366,20 @@ export class GameService {
 
         await this.historyRepository.save(newHistory);
         if (addhistory.resulteOfUser > addhistory.resulteOfCompetitor){
-          this.updateWin(user.username);
-          this.updateLos(competitor.username);
-          this.updateXp(user.username);
-          this.updateLevel(user.username);
+         await this.updateWin(user.username);
+         await this.updateLos(competitor.username);
+         await this.updateXp(user.username);
+         await this.updateLevel(user.username);
         }
         else{
-          this.updateWin(competitor.username);
-          this.updateLos(user.username);
-          this.updateXp(competitor.username);
-          this.updateLevel(competitor.username);
+         await this.updateWin(competitor.username);
+         await this.updateLos(user.username);
+         await this.updateXp(competitor.username);
+         await this.updateLevel(competitor.username);
         }
         
-        this.updateScore(competitor.username);
-        this.updateScore(user.username);
+       await this.updateScore(competitor.username);
+       await this.updateScore(user.username);
         return
       } catch (error) {
         throw new Error('Failed to add history: ' + error.message);
@@ -391,6 +391,7 @@ export class GameService {
         const user = await this.userRepository.findOne({
           where: {username: username}
         });
+   
         if (!user) {
           throw new Error('User does not exist');
         }
@@ -398,10 +399,12 @@ export class GameService {
         const profile = await this.profileRepository.findOne({
           where:{user:{id: user.id}}
         });
+   
         if (!profile) {
           throw new Error('profile does not exist');
         }
-        let countWin = profile.win  || 0;
+        let countWin = profile.win;
+       
         countWin++;
         profile.win = countWin;
         return await this.profileRepository.save(profile);
@@ -425,7 +428,7 @@ export class GameService {
         if (!profile) {
           throw new Error('profile does not exist');
         }
-        let countLos = profile.los || 0;
+        let countLos = profile.los;
         countLos++;
         profile.los = countLos;
         return await this.profileRepository.save(profile);
@@ -449,8 +452,8 @@ export class GameService {
         if (!profile) {
           throw new Error('profile does not exist');
         }
-        const winCount = profile.win || 0;
-        let xp = profile.xp || 0;
+        const winCount = profile.win;
+        let xp = profile.xp;
     
         if (winCount % 2 === 0) {
           xp += 2;
@@ -480,7 +483,7 @@ export class GameService {
           throw new Error('profile does not exist');
         }
 
-       let score = profile.score || 0;
+       let score = profile.score;
        score++;
        profile.score = score;
         return await this.profileRepository.save(profile);
@@ -504,8 +507,8 @@ export class GameService {
         if (!profile) {
           throw new Error('profile does not exist');
         }
-        let level = profile.level || 0;
-        const winCount = profile.win || 0;
+        let level = profile.level;
+        const winCount = profile.win;
         if (winCount % 2 === 0) {
           level *= 2;
         } else {
