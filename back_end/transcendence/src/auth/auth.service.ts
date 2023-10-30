@@ -75,15 +75,15 @@ async googleAuthenticate(userDetails: Partial<UserDto>): Promise<any> {
       return { token, user: existingUser, success: true};
     } else {
 
-    let newUsername = firstName[0] + lastName;
+    let newUsername = this.generateRandom(8);
     const existingUsername = await this.userRepository.findOne({
        where: {
         username: newUsername,
       },
     });
     if (existingUsername){
-      const randomString = this.generateRandom(2);
-      newUsername = randomString + lastName; // Change variable name to 'newUsername'
+      const randomString = this.generateRandom(13);
+      newUsername = randomString; // Change variable name to 'newUsername'
     }
     picture = await this.randomAvatar();
     username = newUsername;
