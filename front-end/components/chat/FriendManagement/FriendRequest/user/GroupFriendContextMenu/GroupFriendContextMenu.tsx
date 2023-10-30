@@ -17,15 +17,12 @@ export default function GroupFriendContextMenu({
   const { socket, Data } = useSocketContext();
 
   const handleAccept = async () => {
-    const res = await fetch(
-      `backend:3001/users/profile/${Data.response.user.username}/acceptRequest/${user.username}`,
-      {
-        method: "PUT",
-        headers: { authorization: `Bearer ${Data.response.token}` },
-      }
-    );
+    const res = await fetch(`http://localhost:3000/api/chat/acceptRequest`, {
+      method: "POST",
+      body: user.username,
+    });
 
-    const data = await res.json();
+    // const data = await res.json();
 
     socket.emit("updateUI", {
       message: `changeFriend ${Data.response.user.username} ${user.username}`,
@@ -35,14 +32,11 @@ export default function GroupFriendContextMenu({
   };
 
   const handleReject = async () => {
-    const res = await fetch(
-      `backend:3001/users/profile/${Data.response.user.username}/rejectRequest/${user.username}`,
-      {
-        method: "DELETE",
-        headers: { authorization: `Bearer ${Data.response.token}` },
-      }
-    );
-    const data = await res.json();
+    const res = await fetch(`http://localhost:3000/api/chat/rejectRequest`, {
+      method: "POST",
+      body: user.username,
+    });
+    // const data = await res.json();
 
     setOpen((prev: boolean) => !prev);
   };

@@ -1,12 +1,28 @@
 "use client";
 import "@/global_css/resets.css";
 import Style from "./Winners.module.css";
+import { useSocketContext } from "@/contexts/socket-context";
+import { useEffect } from "react";
+import io from "socket.io-client";
 
 type props = {
   gameOver: gameOver;
 };
 
 export default function Winners({ gameOver }: props) {
+  const { socket, Data, onlineSocket, gameSocket, setGameSocket } =
+    useSocketContext();
+
+  useEffect(() => {
+    gameSocket.disconnect();
+    setGameSocket(
+      io("0.0.0.0:3001/game", {
+        extraHeaders: {
+          Authorization: Data.response.token,
+        },
+      })
+    );
+  }, []);
 
   return (
     <div className={Style.middleSection}>
