@@ -17,10 +17,9 @@ function History({ isDisplay, ownerName }: props) {
 
   useEffect(() => {
     const fetching = async () => {
-      if (ownerName == Data.response.user.username) {
+      if (ownerName.replace("%20","") == Data.response.user.username.replace(" ","")) {
         const res = await fetch("http://localhost:3000/api/home/history");
         const val = await res.json();
-       // console.log("history after fetching", val);
         if (val) {
           sethistory(val.data);
         }

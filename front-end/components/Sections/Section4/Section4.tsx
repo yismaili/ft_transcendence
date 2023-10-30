@@ -248,7 +248,7 @@ export default function Section3() {
           }`}
             onClick={() => swapTitles("third")}
           >
-            <h3>how to eat tacos ?</h3>
+            <h3>how to enable 2fa ?</h3>
           </div>
         </div>
       </div>
@@ -264,14 +264,14 @@ export default function Section3() {
           <Div
             leftImg="/img/section4/rocket.png"
             rightImg="/img/section4/prize.png"
-            text="use the arrow keys or mouse to move the paddle up and down and redirect the ball "
+            text="go to the + button in direct chat and add you friend using his username"
           />
         )}
         {pos.thirdTitlePos == "center" && (
           <Div
             leftImg="/img/section4/wtfBro.png"
             rightImg="/img/section4/gay.png"
-            text="use the arrow keys or mouse to move the paddle up and down and redirect the ball "
+            text="go to account parametters slect enable and scan the qr code"
           />
         )}
       </div>
