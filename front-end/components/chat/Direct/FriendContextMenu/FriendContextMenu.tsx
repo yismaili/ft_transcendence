@@ -18,13 +18,10 @@ export default function FriendContextMenu({
   const router = useRouter();
 
   const handleBlock = async () => {
-    const res = await fetch(
-      `http://localhost:3000/api/chat/block`,
-      {
-        method: "POST",
-        body: friendData.username,
-      }
-    );
+    const res = await fetch(`http://localhost:3000/api/chat/block`, {
+      method: "POST",
+      body: friendData.username,
+    });
     // const data = await res.json();
 
     socket.emit("updateUI", {
