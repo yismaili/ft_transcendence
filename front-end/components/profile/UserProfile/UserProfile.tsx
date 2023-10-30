@@ -27,12 +27,11 @@ export default function UserProfile({ params }: { params: { user: string } }) {
     if (Data) {
       socket.emit("updateUI", { message: `status online` });
       setPath(Data.response.user.username);
-      if (Data.response.user.username == params.user) {
-
+      if (Data.response.user.username.replace(" ","") == params.user.replace("%20","")) {
         const fetching = async () => {
           const res = await fetch("http://localhost:3000/api/home");
           const user = await res.json();
-          console.log("mn wra matfetchit:",user);
+          //console.log("mn wra matfetchit:",user);
           setUser(user);
           setOwner(true);
           setfound(true);
@@ -63,7 +62,6 @@ export default function UserProfile({ params }: { params: { user: string } }) {
   }, []);
 
   if (user && found) {
-    console.log("test456:",user, "found", found);
     return (
       <div className="container">
         <ProfileHeader path={path} user={user} />

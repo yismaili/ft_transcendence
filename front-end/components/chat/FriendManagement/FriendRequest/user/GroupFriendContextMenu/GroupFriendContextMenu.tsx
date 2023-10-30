@@ -18,7 +18,7 @@ export default function GroupFriendContextMenu({
 
   const handleAccept = async () => {
     const res = await fetch(
-      `http://backend:3001/users/profile/${Data.response.user.username}/acceptRequest/${user.username}`,
+      `backend:3001/users/profile/${Data.response.user.username}/acceptRequest/${user.username}`,
       {
         method: "PUT",
         headers: { authorization: `Bearer ${Data.response.token}` },
@@ -36,7 +36,7 @@ export default function GroupFriendContextMenu({
 
   const handleReject = async () => {
     const res = await fetch(
-      `http://backend:3001/users/profile/${Data.response.user.username}/rejectRequest/${user.username}`,
+      `backend:3001/users/profile/${Data.response.user.username}/rejectRequest/${user.username}`,
       {
         method: "DELETE",
         headers: { authorization: `Bearer ${Data.response.token}` },
