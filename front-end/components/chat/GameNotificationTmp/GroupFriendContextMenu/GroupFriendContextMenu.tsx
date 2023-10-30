@@ -25,6 +25,8 @@ export default function GroupFriendContextMenu({
       username: Data.response.user.username,
       userCompetitor: user.username,
     });
+    socket.emit("updateUI", { message: `rejectrequest ${user.username}` });
+    setMenuOpen((prev: boolean) => !prev);
   };
 
   return (

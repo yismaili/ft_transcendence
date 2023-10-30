@@ -126,6 +126,7 @@ export default function Chat() {
           username: Data.response.user.username,
         },
         (response: AllRooms[]) => {
+          console.log('ress', response);
           setAllRooms(response);
         }
       );
