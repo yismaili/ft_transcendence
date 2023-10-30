@@ -65,11 +65,11 @@ export class PongGame {
     this.ballY += this.ballSpeedY;
 
     //  // Calculate automatic paddle movement
-      if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
-        this.leftPaddle += this.paddleSpeed;
-      } else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
-        this.leftPaddle -= this.paddleSpeed;
-      }
+      // if (this.ballY > this.leftPaddle + this.paddleHeight / 2) {
+      //   this.leftPaddle += this.paddleSpeed;
+      // } else if (this.ballY < this.leftPaddle + this.paddleHeight / 2) {
+      //   this.leftPaddle -= this.paddleSpeed;
+      // }
 
       // if (this.ballY > this.rightPaddle + this.paddleHeight / 2) {
       //   this.rightPaddle += this.paddleSpeed;

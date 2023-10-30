@@ -10,7 +10,7 @@ interface nums {
 }
 
 function ProfilePic(props: nums) {
-  // console.log("tacos:",props.user)
+  //console.log("tacos:",props.user)
   return (
     <div className="profile">
       <div className="profile__pic__level">

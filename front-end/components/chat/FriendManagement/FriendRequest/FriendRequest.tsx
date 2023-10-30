@@ -29,13 +29,7 @@ export default function FriendRequest({ setOpen, friends }: props) {
     });
 
     const getAllRequests = async () => {
-      const res = await fetch(
-        `http://backend:3001/users/profile/${Data.response.user.username}/requests`,
-        {
-          cache: "no-cache",
-          headers: { authorization: `Bearer ${Data.response.token}` },
-        }
-      );
+      const res = await fetch(`http://localhost:3000/api/chat/request`);
       const data = await res.json();
       setAllRequests(data);
       setSwap(data);

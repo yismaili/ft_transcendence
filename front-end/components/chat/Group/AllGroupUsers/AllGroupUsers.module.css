@@ -9,7 +9,7 @@
 }
 
 .backDrop {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -20,7 +20,7 @@
 }
 
 .popUpContainer {
-  position: absolute;
+  position: fixed;
   margin: auto;
   top: 10%;
   left: 10%;
@@ -109,3 +109,36 @@
   background-color: #ffffff1a;
   border-radius: 0 60px 0 0;
 }
+
+@media (max-width: 1536px) {
+
+}
+  
+  /* xl */
+@media (max-width: 1280px) {
+
+}
+  
+  /* lg */
+@media (max-width: 1024px) {
+
+}
+  
+  /* md */
+@media (max-width: 768px) {
+
+}
+  
+  /* sm */
+  @media (max-width: 640px) {
+
+  }
+  
+  /* xs */
+  @media (max-width: 475px) {
+
+
+  }
+
+
+
