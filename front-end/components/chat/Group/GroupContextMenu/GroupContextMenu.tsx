@@ -16,19 +16,14 @@ export default function GroupContextMenu({
   const { socket, Data } = useSocketContext();
 
   const leave = () => {
-    socket.emit(
-      "leaveChatRoom",
-      {
-        username: Data.response.user.username,
-        chatRoomName: room.chatRooms.RoomId,
-      },
-      (response: any) => {
-        if (response.message === "User kicked successfully")
-        socket.emit("updateUI", {
-          message: `leaveChatRoom ${Data.response.user.username}`,
-        });
-      }
-    );
+    socket.emit("leaveChatRoom", {
+      username: Data.response.user.username,
+      chatRoomName: room.chatRooms.RoomId,
+    });
+
+    socket.emit("updateUI", {
+      message: `leaveChatRoom ${Data.response.user.username}`,
+    });
   };
 
   return (
