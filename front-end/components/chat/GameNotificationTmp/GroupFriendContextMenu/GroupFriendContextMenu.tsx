@@ -20,15 +20,6 @@ export default function GroupFriendContextMenu({
     router.push(`gameMap?type=accept-${user.username}`);
   };
 
-  const handleReject = () => {
-    gameSocket.emit("rejectrequest", {
-      username: Data.response.user.username,
-      userCompetitor: user.username,
-    });
-    socket.emit("updateUI", { message: `rejectrequest ${user.username}` });
-    setMenuOpen((prev: boolean) => !prev);
-  };
-
   return (
     <>
       <div
@@ -42,12 +33,6 @@ export default function GroupFriendContextMenu({
         <menu className={Style.context__menu}>
           <li className={Style.context__menu__opt} onClick={handleAccept}>
             <p>accept Request</p>
-          </li>
-          <li
-            className={`${Style.context__menu__opt} ${Style.borders}`}
-            onClick={handleReject}
-          >
-            <p>reject Request</p>
           </li>
         </menu>
       </div>

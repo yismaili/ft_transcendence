@@ -37,16 +37,9 @@ export default function ChangeGroupInput({ setOpen, room, picture }: props) {
     password: string | null
   ) => {
     if (!status) status = room.chatRooms.status;
-    // console.log("room to change:", room);
-    // console.log("new name:", name);
-    
-    if (picture == undefined) picture = null;
-    
-    // console.log("picture:", picture);
-    
-    // console.log("name:", name, "status:", status, "password:", password);
 
-    
+    if (picture == undefined) picture = null;
+
     socket.emit(
       "updateChatRoomInfo",
       {
@@ -56,9 +49,6 @@ export default function ChangeGroupInput({ setOpen, room, picture }: props) {
         status: status,
         password: password,
         picture: picture,
-      },
-      (response: any) => {
-       // console.log("res", response);
       }
     );
   };
@@ -78,9 +68,9 @@ export default function ChangeGroupInput({ setOpen, room, picture }: props) {
       const secure = formData.get("password")?.toString();
       if (formData.get("secure")?.toString() === "protected" && secure) {
         updateData(newName, "protected", secure);
-      } else {
+      } else if (formData.get("secure")?.toString() === "private") {
         updateData(newName, "private", null);
-      }
+      } else updateData(newName, "public", null);
     }
   };
 

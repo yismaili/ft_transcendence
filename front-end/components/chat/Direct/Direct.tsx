@@ -22,7 +22,7 @@ export default function Direct({ data, choseChat, left }: props) {
 
   useEffect(() => {
     socket.on("updateUI", (messaged: string) => {
-      console.log(messaged);
+      // console.log(messaged);
       if (messaged.split(" ")[0] === "status") {
         setStatus(messaged.split(" ")[1]);
       }
