@@ -10,7 +10,7 @@ This project is an opportunity to demonstrate your proficiency in web developmen
 
 ## Features
 
-- **User Accounts:** Users can create accounts using the 42 intranet OAuth system. They can set a unique display name and upload avatars. Two-factor authentication is supported.
+- **User Accounts:** Users can create accounts using the 42 intra and google OAuth system. They can set a unique display name and upload avatars. Two-factor authentication is supported.
 
 - **Chat System:** Users can create public or private chat channels, send direct messages, block other users, and invite users to play Pong through the chat interface.
 
