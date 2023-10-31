@@ -25,7 +25,7 @@ To set up the project locally, follow these steps:
    ```bash
    git clone https://github.com/yismaili/ft_transcendence.git
    cd ft_transcendence
-2. Configure the environment variables.
+2. Configure the environment variables and database settings.
 3. Start the application:
    ```bash
    docker-compose up --build
